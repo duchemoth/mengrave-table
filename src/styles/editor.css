@@ -1,0 +1,190 @@
+.developer-panel {
+  border-color: rgba(124, 37, 34, 0.44);
+  background:
+    linear-gradient(135deg, rgba(216, 195, 154, 0.96), rgba(184, 154, 101, 0.94));
+}
+
+.panel-header-row {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.danger-button {
+  border: 1px solid rgba(124, 37, 34, 0.45);
+  border-radius: 999px;
+  padding: 9px 12px;
+  color: #fff3cf;
+  background: linear-gradient(180deg, var(--blood-seal-light), var(--blood-seal));
+  box-shadow: 0 8px 18px rgba(36, 26, 18, 0.22);
+  cursor: pointer;
+}
+
+.danger-button:hover {
+  filter: brightness(1.08);
+}
+
+.editor-form {
+  display: grid;
+  gap: 14px;
+  margin-top: 16px;
+}
+
+.editor-form label {
+  display: grid;
+  gap: 6px;
+  color: var(--ink);
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.editor-form input,
+.editor-form textarea {
+  width: 100%;
+  border: 1px solid rgba(36, 26, 18, 0.32);
+  border-radius: 12px;
+  padding: 10px 12px;
+  color: var(--ink);
+  background: rgba(255, 244, 210, 0.46);
+  outline: none;
+}
+
+.editor-form textarea {
+  resize: vertical;
+}
+
+.editor-form input:focus,
+.editor-form textarea:focus {
+  border-color: rgba(124, 37, 34, 0.65);
+  box-shadow: 0 0 0 3px rgba(124, 37, 34, 0.12);
+}
+
+.editor-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.checkbox-row {
+  grid-template-columns: auto 1fr !important;
+  align-items: center;
+}
+
+.checkbox-row input {
+  width: 18px;
+  height: 18px;
+}
+
+.editor-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.dev-table {
+  display: grid;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.dev-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr auto;
+  gap: 10px;
+  align-items: center;
+  border: 1px solid rgba(36, 26, 18, 0.22);
+  border-radius: 12px;
+  padding: 10px;
+  color: var(--ink-soft);
+  background: rgba(234, 216, 173, 0.42);
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 13px;
+}
+
+.dev-row code {
+  color: var(--blood-seal);
+  font-weight: 800;
+}
+
+.dev-row-button {
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+}
+
+.dev-row-button:hover,
+.dev-row-button.active {
+  border-color: rgba(124, 37, 34, 0.54);
+  background: rgba(124, 37, 34, 0.12);
+}
+
+.archive-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.import-button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid rgba(36, 26, 18, 0.36);
+  border-radius: 999px;
+  padding: 9px 12px;
+  color: var(--paper-light);
+  background: linear-gradient(180deg, var(--leather-light), var(--leather));
+  box-shadow: 0 8px 18px rgba(36, 26, 18, 0.22);
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.import-button:hover {
+  border-color: rgba(215, 166, 90, 0.75);
+  background: linear-gradient(180deg, #4a2b20, var(--leather));
+}
+
+.import-button input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.text-list-editor {
+  display: grid;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.text-list-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+}
+
+.text-list-row input {
+  width: 100%;
+  border: 1px solid rgba(36, 26, 18, 0.32);
+  border-radius: 12px;
+  padding: 10px 12px;
+  color: var(--ink);
+  background: rgba(255, 244, 210, 0.46);
+  outline: none;
+}
+
+.text-list-row input:focus {
+  border-color: rgba(124, 37, 34, 0.65);
+  box-shadow: 0 0 0 3px rgba(124, 37, 34, 0.12);
+}
+
+@media (max-width: 900px) {
+  .dev-row {
+    grid-template-columns: 1fr;
+  }
+}

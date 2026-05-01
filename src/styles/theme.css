@@ -1,0 +1,31 @@
+:root {
+  --paper: #d8c39a;
+  --paper-light: #ead8ad;
+  --paper-dark: #b89a65;
+
+  --ink: #241a12;
+  --ink-soft: rgba(36, 26, 18, 0.72);
+
+  --leather: #24120d;
+  --leather-light: #3a2118;
+  --leather-deep: #120a08;
+
+  --brass: #b47a35;
+  --brass-light: #d7a65a;
+  --steel: #5f6670;
+
+  --blood-seal: #7c2522;
+  --blood-seal-light: #a3322f;
+
+  --archive-violet: #46324d;
+  --archive-violet-light: #6d4b78;
+
+  --shadow-heavy: rgba(18, 10, 8, 0.42);
+  --shadow-soft: rgba(18, 10, 8, 0.22);
+
+  --map-image: none;
+  --map-overlay: linear-gradient(
+    rgba(216, 195, 154, 0.08),
+    rgba(184, 154, 101, 0.08)
+  );
+}

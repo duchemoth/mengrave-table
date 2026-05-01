@@ -1,0 +1,67 @@
+.quest-editor-list {
+  display: grid;
+  gap: 14px;
+  margin-top: 14px;
+}
+
+.quest-editor-card {
+  display: grid;
+  gap: 12px;
+  border: 1px solid rgba(36, 26, 18, 0.22);
+  border-radius: 16px;
+  padding: 12px;
+  background: rgba(234, 216, 173, 0.42);
+}
+
+.quest-list {
+  display: grid;
+  gap: 10px;
+}
+
+.quest-card {
+  border: 1px solid rgba(36, 26, 18, 0.22);
+  border-radius: 16px;
+  padding: 12px;
+  background: rgba(255, 244, 210, 0.34);
+}
+
+.quest-card-header {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.quest-card h3 {
+  margin: 0;
+  color: var(--ink);
+  font-size: 17px;
+  line-height: 1.1;
+}
+
+.quest-card span {
+  border-radius: 999px;
+  padding: 4px 8px;
+  color: var(--paper-light);
+  background: linear-gradient(180deg, var(--leather-light), var(--leather));
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.quest-card p {
+  margin-bottom: 0;
+}
+
+.quest-card-completed {
+  opacity: 0.72;
+}
+
+.quest-card-failed {
+  border-color: rgba(124, 37, 34, 0.48);
+}
+
+.quest-card-hidden {
+  border-color: rgba(70, 50, 77, 0.48);
+}
