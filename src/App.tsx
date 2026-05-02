@@ -164,6 +164,16 @@ function App() {
         onSelectLocation={setSelectedLocationId}
         onOpenSidebar={openSidebar}
         onExitCleanMapMode={exitCleanMapMode}
+        onMoveLocation={(id, x, y) => {
+  const location = locations.find((l) => l.id === id);
+  if (!location) return;
+
+  updateLocation({
+    ...location,
+    x,
+    y,
+  });
+}}
       />
 
 <BottomDrawer

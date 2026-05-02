@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useMapViewport } from "../hooks/useMapViewport";
 import type { Location, UserMode } from "../types/campaign";
 
@@ -11,6 +12,7 @@ type MapViewProps = {
   onSelectLocation: (locationId: string) => void;
   onOpenSidebar: () => void;
   onExitCleanMapMode: () => void;
+  onMoveLocation: (id: string, x: number, y: number) => void;
 };
 
 function getModeTitle(mode: UserMode) {
@@ -29,8 +31,11 @@ export function MapView({
   onSelectLocation,
   onOpenSidebar,
   onExitCleanMapMode,
+  onMoveLocation,
 }: MapViewProps) {
-    const {
+  const [draggedLocationId, setDraggedLocationId] = useState<string | null>(null);
+
+  const {
     scale,
     offsetX,
     offsetY,
@@ -41,15 +46,62 @@ export function MapView({
     stopMapDrag,
     resetMapView,
   } = useMapViewport();
-    return (
+
+  function startMarkerDrag(
+    event: React.MouseEvent<HTMLButtonElement>,
+    locationId: string,
+  ) {
+    if (!isDeveloperMode) {
+      return;
+    }
+
+    event.stopPropagation();
+    setDraggedLocationId(locationId);
+  }
+
+  function handleMarkerMove(event: React.MouseEvent<HTMLDivElement>) {
+    if (!draggedLocationId) {
+      return;
+    }
+
+    const map = event.currentTarget.querySelector(".map") as HTMLDivElement | null;
+
+    if (!map) {
+      return;
+    }
+
+    const rect = map.getBoundingClientRect();
+
+    const x = ((event.clientX - rect.left) / rect.width) * 100;
+    const y = ((event.clientY - rect.top) / rect.height) * 100;
+
+    onMoveLocation(draggedLocationId, x, y);
+  }
+
+  function stopMarkerDrag() {
+    setDraggedLocationId(null);
+  }
+
+  return (
     <section className="map-stage">
       <div
-        className={`map-viewport ${isDraggingMap ? "map-dragging" : ""}`}
+        className={`map-viewport ${
+          isDraggingMap || draggedLocationId ? "map-dragging" : ""
+        }`}
         onWheel={handleWheel}
         onMouseDown={startMapDrag}
-        onMouseMove={moveMap}
-        onMouseUp={stopMapDrag}
-        onMouseLeave={stopMapDrag}
+        onMouseMove={(event) => {
+          moveMap(event);
+          handleMarkerMove(event);
+        }}
+        onMouseUp={() => {
+          stopMapDrag();
+          stopMarkerDrag();
+        }}
+        onMouseLeave={() => {
+          stopMapDrag();
+          stopMarkerDrag();
+        }}
         onContextMenu={(event) => event.preventDefault()}
       >
         <div
@@ -87,6 +139,7 @@ export function MapView({
                   className={`map-pin map-pin-${location.category} ${
                     isSelected ? "active" : ""
                   } ${location.isSecret ? "secret" : ""}`}
+                  onMouseDown={(event) => startMarkerDrag(event, location.id)}
                   onClick={(event) => {
                     event.stopPropagation();
                     onSelectLocation(location.id);
@@ -103,6 +156,7 @@ export function MapView({
                     className={`map-marker-label ${
                       location.isSecret ? "secret" : ""
                     }`}
+                    onMouseDown={(event) => startMarkerDrag(event, location.id)}
                     onClick={(event) => {
                       event.stopPropagation();
                       onSelectLocation(location.id);
