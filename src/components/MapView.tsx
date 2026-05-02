@@ -15,6 +15,10 @@ type MapViewProps = {
   onMoveLocation: (id: string, x: number, y: number) => void;
 };
 
+function clamp(value: number) {
+  return Math.max(0, Math.min(100, value));
+}
+
 function getModeTitle(mode: UserMode) {
   if (mode === "player") return "Игрок";
   if (mode === "master") return "Мастер";
@@ -34,6 +38,7 @@ export function MapView({
   onMoveLocation,
 }: MapViewProps) {
   const [draggedLocationId, setDraggedLocationId] = useState<string | null>(null);
+  const [isDraggingMarker, setIsDraggingMarker] = useState(false);
 
   const {
     scale,
@@ -57,6 +62,7 @@ export function MapView({
 
     event.stopPropagation();
     setDraggedLocationId(locationId);
+    setIsDraggingMarker(true);
   }
 
   function handleMarkerMove(event: React.MouseEvent<HTMLDivElement>) {
@@ -72,14 +78,15 @@ export function MapView({
 
     const rect = map.getBoundingClientRect();
 
-    const x = ((event.clientX - rect.left) / rect.width) * 100;
-    const y = ((event.clientY - rect.top) / rect.height) * 100;
+    const x = clamp(((event.clientX - rect.left) / rect.width) * 100);
+    const y = clamp(((event.clientY - rect.top) / rect.height) * 100);
 
     onMoveLocation(draggedLocationId, x, y);
   }
 
   function stopMarkerDrag() {
     setDraggedLocationId(null);
+    setIsDraggingMarker(false);
   }
 
   return (
@@ -141,6 +148,8 @@ export function MapView({
                   } ${location.isSecret ? "secret" : ""}`}
                   onMouseDown={(event) => startMarkerDrag(event, location.id)}
                   onClick={(event) => {
+                    if (isDraggingMarker) return;
+
                     event.stopPropagation();
                     onSelectLocation(location.id);
                     onOpenSidebar();
@@ -158,6 +167,7 @@ export function MapView({
                     }`}
                     onMouseDown={(event) => startMarkerDrag(event, location.id)}
                     onClick={(event) => {
+                      if (isDraggingMarker) return;
                       event.stopPropagation();
                       onSelectLocation(location.id);
                       onOpenSidebar();
