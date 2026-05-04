@@ -45,6 +45,7 @@ export type MapGroupFaction =
   | "brigand"
   | "infiltrator"
   | "freeblade"
+  | "valour"
   | "echomorph";
 
 export type GroupMember = {

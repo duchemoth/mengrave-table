@@ -268,8 +268,8 @@
 }
 
 .map-group-token {
-  width: 46px;
-  height: 46px;
+  width: 30px;
+  height: 30px;
   border: 2px solid rgba(234, 216, 173, 0.72);
   border-radius: 14px;
   color: #fff3cf;
@@ -288,7 +288,7 @@
   display: grid;
   place-items: center;
   font-family: Inter, system-ui, sans-serif;
-  font-size: 22px;
+  font-size: 15px;
   font-weight: 900;
 }
 
@@ -318,8 +318,15 @@
 }
 
 .map-group-players .map-group-token {
-  border-color: rgba(215, 166, 90, 0.95);
-  background: linear-gradient(135deg, #6d3d25, #24120d);
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  border-color: rgba(255, 244, 210, 0.98);
+  background: linear-gradient(135deg, #8a4b24, #24120d);
+  box-shadow:
+    0 0 0 3px rgba(215, 166, 90, 0.32),
+    0 12px 24px rgba(18, 10, 8, 0.46),
+    inset 0 0 0 1px rgba(255, 244, 210, 0.22);
 }
 
 .map-group-fief .map-group-token {
@@ -357,7 +364,25 @@
   background: linear-gradient(135deg, #46324d, #120a08);
 }
 
+.map-group-valour .map-group-token {
+  
+  border-color: rgba(215, 166, 90, 0.95);
+  background: linear-gradient(135deg, #8a5a2b, #24120d);
+  box-shadow:
+    0 0 0 2px rgba(215, 166, 90, 0.35),
+    0 10px 22px rgba(18, 10, 8, 0.42),
+    inset 0 0 0 1px rgba(255, 230, 180, 0.25);
+}
+
 .map-group-echomorph .map-group-token {
   border-color: rgba(109, 75, 120, 0.95);
   background: linear-gradient(135deg, #46324d, #120a08);
+}
+
+.map-group-token.selected {
+  outline: 2px solid rgba(255, 244, 210, 0.95);
+  box-shadow:
+    0 0 0 4px rgba(215, 166, 90, 0.24),
+    0 0 18px rgba(255, 244, 210, 0.42),
+    0 12px 24px rgba(18, 10, 8, 0.46);
 }

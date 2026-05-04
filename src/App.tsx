@@ -25,6 +25,8 @@ function App() {
     createLocation: createCampaignLocation,
     updateLocation,
     updateGroup,
+    createGroup,
+    deleteGroup,
     deleteLocation,
     exportCampaign,
     importCampaign,
@@ -48,6 +50,8 @@ function App() {
 
 
   const [selectedLocationId, setSelectedLocationId] = useState("old-harbor");
+
+  const [selectedGroupId, setSelectedGroupId] = useState<string | null>(null);
 
   const visibleLocations = locations.filter((location) => {
     return !isPlayerMode || !location.isSecret;
@@ -169,6 +173,7 @@ function App() {
   isCleanMapMode={isCleanMapMode}
   onMapClick={handleMapClick}
   onSelectLocation={setSelectedLocationId}
+  onSelectGroup={setSelectedGroupId}
   onOpenSidebar={openSidebar}
   onExitCleanMapMode={exitCleanMapMode}
   onMoveLocation={(id, x, y) => {
@@ -214,6 +219,18 @@ function App() {
         onChangeItems={setItems}
         onToggleOpen={toggleSidebar}
         onUpdateLocation={updateSelectedLocation}
+        groups={groups}
+        selectedGroupId={selectedGroupId}
+        onSelectGroup={setSelectedGroupId}
+        onCreateGroup={createGroup}
+        onUpdateGroup={updateGroup}
+        onDeleteGroup={(groupId) => {
+          deleteGroup(groupId);
+
+        if (selectedGroupId === groupId) {
+          setSelectedGroupId(null);
+        }
+      }}
         onCreateLocation={createLocation}
         onDeleteLocation={deleteSelectedLocation}
         onResetLocations={resetLocations}

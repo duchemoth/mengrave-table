@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { campaignData } from "../data/campaign";
-import type { Location, Quest, MapGroup } from "../types/campaign";
+import type { Location, MapGroup, Quest } from "../types/campaign";
 import { normalizeLocation, normalizeQuest } from "../lib/campaignNormalize";
 import {
   GROUPS_STORAGE_KEY,
@@ -79,6 +79,12 @@ export function useCampaign() {
     );
   }
 
+  function deleteLocation(locationId: string) {
+    setLocations((currentLocations) =>
+      currentLocations.filter((location) => location.id !== locationId),
+    );
+  }
+
   function updateGroup(updatedGroup: MapGroup) {
     setGroups((currentGroups) =>
       currentGroups.map((group) =>
@@ -87,9 +93,20 @@ export function useCampaign() {
     );
   }
 
-  function deleteLocation(locationId: string) {
-    setLocations((currentLocations) =>
-      currentLocations.filter((location) => location.id !== locationId),
+  function createGroup(group: Omit<MapGroup, "id">) {
+    const newGroup: MapGroup = {
+      ...group,
+      id: `group-${Date.now()}`,
+    };
+
+    setGroups((currentGroups) => [...currentGroups, newGroup]);
+
+    return newGroup;
+  }
+
+  function deleteGroup(groupId: string) {
+    setGroups((currentGroups) =>
+      currentGroups.filter((group) => group.id !== groupId),
     );
   }
 
@@ -155,13 +172,13 @@ export function useCampaign() {
 
         if (Array.isArray(parsedData.campaign?.groups)) {
           setGroups(
-            parsedData.campaign.groups.map((group: MapGroup) => ({
-            ...group,
-            isSecret: Boolean(group.isSecret),
-            members: Array.isArray(group.members) ? group.members : [],
-          })),
-        );
-      }
+            parsedData.campaign.groups.map((group) => ({
+              ...group,
+              isSecret: Boolean(group.isSecret),
+              members: Array.isArray(group.members) ? group.members : [],
+            })),
+          );
+        }
 
         if (Array.isArray(parsedData.campaign?.quests)) {
           setQuests(parsedData.campaign.quests.map(normalizeQuest));
@@ -201,8 +218,12 @@ export function useCampaign() {
     resetLocations,
     createLocation,
     updateLocation,
-    updateGroup,
     deleteLocation,
+
+    updateGroup,
+    createGroup,
+    deleteGroup,
+
     exportCampaign,
     importCampaign,
   };

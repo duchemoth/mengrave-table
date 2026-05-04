@@ -12,6 +12,7 @@ type MapViewProps = {
   isCleanMapMode: boolean;
   onMapClick: (event: React.MouseEvent<HTMLDivElement>) => void;
   onSelectLocation: (locationId: string) => void;
+  onSelectGroup: (id: string) => void;
   onOpenSidebar: () => void;
   onExitCleanMapMode: () => void;
   onMoveLocation: (id: string, x: number, y: number) => void;
@@ -36,6 +37,7 @@ const MAP_GROUP_FACTION_META = {
   brigand: { label: "Бриганты", icon: "☠" },
   infiltrator: { label: "Наймиты", icon: "◐" },
   freeblade: { label: "Вольники", icon: "✦" },
+  valour: { label: "Валор Обскурия", icon: "⚜" },
   echomorph: { label: "Эхоморфы", icon: "☉" },
 } as const;
 
@@ -43,6 +45,7 @@ export function MapView({
   locations,
   groups,
   onMoveGroup,
+  onSelectGroup,
   selectedLocationId,
   userMode,
   isDeveloperMode,
@@ -251,6 +254,9 @@ export function MapView({
           if (isDraggingMarker) return;
 
           event.stopPropagation();
+
+          onSelectGroup(group.id);
+
           onOpenSidebar();
           onExitCleanMapMode();
         }}
