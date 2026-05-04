@@ -27,30 +27,9 @@
   transition: transform 80ms linear;
   border: 2px solid rgba(36, 26, 18, 0.42);
   border-radius: 28px;
-  background:
-    var(--map-overlay),
-    var(--map-image),
-    radial-gradient(circle at 22% 60%, rgba(124, 37, 34, 0.13), transparent 12%),
-    radial-gradient(circle at 62% 30%, rgba(70, 50, 77, 0.16), transparent 12%),
-    radial-gradient(circle at 78% 72%, rgba(95, 102, 112, 0.13), transparent 13%),
-    linear-gradient(135deg, rgba(234, 216, 173, 0.75), rgba(184, 154, 101, 0.65)),
-    var(--paper);
-  background-size:
-    cover,
-    contain,
-    auto,
-    auto,
-    auto,
-    auto,
-    auto;
-  background-position:
-    center,
-    center,
-    center,
-    center,
-    center,
-    center,
-    center;
+  background-image: url("/map.jpg");
+  background-size: cover;
+  background-position: center;
   background-repeat:
     no-repeat,
     no-repeat,
@@ -207,6 +186,17 @@
   cursor: pointer;
 }
 
+.map-marker-label {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+}
+
+.map-marker:hover .map-marker-label {
+  opacity: 1;
+  pointer-events: auto;
+}
+
 .map-marker-label:hover,
 .map-marker.active .map-marker-label {
   border-color: rgba(124, 37, 34, 0.48);
@@ -272,19 +262,102 @@
   position: absolute;
   z-index: 5;
   translate: -50% -50%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .map-group-token {
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
-  border: 2px solid #d7a65a;
-  background: #2a1a14;
+  width: 46px;
+  height: 46px;
+  border: 2px solid rgba(234, 216, 173, 0.72);
+  border-radius: 14px;
   color: #fff3cf;
-  font-weight: 900;
+  background: linear-gradient(135deg, #3a2118, #120a08);
+  box-shadow:
+    0 10px 22px rgba(18, 10, 8, 0.42),
+    inset 0 0 0 1px rgba(255, 244, 210, 0.16);
   cursor: grab;
 }
 
 .map-group-token:active {
   cursor: grabbing;
+}
+
+.map-group-icon {
+  display: grid;
+  place-items: center;
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 22px;
+  font-weight: 900;
+}
+
+.map-group-label {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(4px);
+  transition: opacity 0.15s ease, transform 0.15s ease;
+
+  border: 1px solid rgba(234, 216, 173, 0.42);
+  border-radius: 999px;
+  padding: 6px 10px;
+  color: var(--paper-light);
+  background: linear-gradient(180deg, rgba(36, 18, 13, 0.94), rgba(18, 10, 8, 0.9));
+  box-shadow: 0 8px 18px rgba(18, 10, 8, 0.32);
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 800;
+  white-space: nowrap;
+  cursor: grab;
+}
+
+.map-group:hover .map-group-label {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.map-group-players .map-group-token {
+  border-color: rgba(215, 166, 90, 0.95);
+  background: linear-gradient(135deg, #6d3d25, #24120d);
+}
+
+.map-group-fief .map-group-token {
+  border-color: rgba(95, 102, 112, 0.95);
+  background: linear-gradient(135deg, #5f6670, #24120d);
+}
+
+.map-group-euler .map-group-token {
+  border-color: rgba(122, 166, 255, 0.95);
+  background: linear-gradient(135deg, #2f4c7f, #120a08);
+}
+
+.map-group-voyager .map-group-token {
+  border-color: rgba(196, 168, 106, 0.95);
+  background: linear-gradient(135deg, #6b552a, #120a08);
+}
+
+.map-group-evergal .map-group-token {
+  border-color: rgba(123, 209, 167, 0.95);
+  background: linear-gradient(135deg, #2f6b4f, #120a08);
+}
+
+.map-group-brigand .map-group-token {
+  border-color: rgba(163, 50, 47, 0.95);
+  background: linear-gradient(135deg, #7c2522, #120a08);
+}
+
+.map-group-infiltrator .map-group-token {
+  border-color: rgba(138, 138, 138, 0.95);
+  background: linear-gradient(135deg, #444, #120a08);
+}
+
+.map-group-freeblade .map-group-token {
+  border-color: rgba(215, 166, 90, 0.95);
+  background: linear-gradient(135deg, #46324d, #120a08);
+}
+
+.map-group-echomorph .map-group-token {
+  border-color: rgba(109, 75, 120, 0.95);
+  background: linear-gradient(135deg, #46324d, #120a08);
 }

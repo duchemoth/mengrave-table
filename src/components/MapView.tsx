@@ -27,6 +27,18 @@ function getModeTitle(mode: UserMode) {
   return "Эхо";
 }
 
+const MAP_GROUP_FACTION_META = {
+  players: { label: "Отряд игроков", icon: "⚔" },
+  fief: { label: "Феодальные силы", icon: "♜" },
+  euler: { label: "Дом Эйлеров", icon: "⚙" },
+  voyager: { label: "Купеческие вояджеры", icon: "◆" },
+  evergal: { label: "Эвергальский конклав", icon: "✚" },
+  brigand: { label: "Бриганты", icon: "☠" },
+  infiltrator: { label: "Наймиты", icon: "◐" },
+  freeblade: { label: "Вольники", icon: "✦" },
+  echomorph: { label: "Эхоморфы", icon: "☉" },
+} as const;
+
 export function MapView({
   locations,
   groups,
@@ -220,31 +232,50 @@ export function MapView({
             );
           })}
 
-          {groups.map((group) => (
-            <div
-              key={group.id}
-              className={`map-group map-group-${group.faction}`}
-              style={{
-                left: `${group.x}%`,
-                top: `${group.y}%`,
-              }}
-            >
-              <button
-                className="map-group-token"
-                onMouseDown={(event) => startGroupDrag(event, group.id)}
-                onClick={(event) => {
-                  if (isDraggingMarker) return;
+          {groups.map((group) => {
+  const meta = MAP_GROUP_FACTION_META[group.faction];
 
-                  event.stopPropagation();
-                  onOpenSidebar();
-                  onExitCleanMapMode();
-                }}
-                title={group.name}
-              >
-                {group.name[0]}
-              </button>
-            </div>
-          ))}
+  return (
+    <div
+      key={group.id}
+      className={`map-group map-group-${group.faction}`}
+      style={{
+        left: `${group.x}%`,
+        top: `${group.y}%`,
+      }}
+    >
+      <button
+        className="map-group-token"
+        onMouseDown={(event) => startGroupDrag(event, group.id)}
+        onClick={(event) => {
+          if (isDraggingMarker) return;
+
+          event.stopPropagation();
+          onOpenSidebar();
+          onExitCleanMapMode();
+        }}
+        title={`${meta.label}: ${group.name}`}
+      >
+        <span className="map-group-icon">{meta.icon}</span>
+      </button>
+
+      {!isCleanMapMode && (
+        <button
+          className="map-group-label"
+          onMouseDown={(event) => startGroupDrag(event, group.id)}
+          onClick={(event) => {
+            if (isDraggingMarker) return;
+
+            event.stopPropagation();
+            onOpenSidebar();
+          }}
+        >
+          {group.name}
+        </button>
+      )}
+    </div>
+  );
+})}
         </div>
       </div>
 
