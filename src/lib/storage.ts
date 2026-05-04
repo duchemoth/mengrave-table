@@ -1,11 +1,12 @@
 import { campaignData } from "../data/campaign";
-import type { Location } from "../types/campaign";
+import type { Location, MapGroup } from "../types/campaign";
 import { normalizeLocation, normalizeQuest } from "./campaignNormalize";
 
 export const LOCATIONS_STORAGE_KEY = "nri-table-locations";
 export const QUESTS_STORAGE_KEY = "nri-table-quests";
 export const NPCS_STORAGE_KEY = "nri-table-npcs";
 export const ITEMS_STORAGE_KEY = "nri-table-items";
+export const GROUPS_STORAGE_KEY = "nri-table-groups";
 
 export function loadSavedLocations() {
   const savedLocations = localStorage.getItem(LOCATIONS_STORAGE_KEY);
@@ -69,4 +70,28 @@ export function loadSavedTextList(storageKey: string, fallbackItems: string[]) {
 
 export function saveToStorage(storageKey: string, value: unknown) {
   localStorage.setItem(storageKey, JSON.stringify(value));
+}
+
+export function loadSavedGroups() {
+  const savedGroups = localStorage.getItem(GROUPS_STORAGE_KEY);
+
+  if (!savedGroups) {
+    return campaignData.groups;
+  }
+
+  try {
+    const parsedGroups = JSON.parse(savedGroups) as MapGroup[];
+
+    if (!Array.isArray(parsedGroups)) {
+      return campaignData.groups;
+    }
+
+    return parsedGroups.map((group) => ({
+      ...group,
+      isSecret: Boolean(group.isSecret),
+      members: Array.isArray(group.members) ? group.members : [],
+    }));
+  } catch {
+    return campaignData.groups;
+  }
 }

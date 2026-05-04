@@ -33,4 +33,34 @@ export type CampaignData = {
   quests: Quest[];
   npcs: string[];
   items: string[];
+  groups: MapGroup[];
+};
+
+export type MapGroupFaction =
+  | "players"
+  | "fief"
+  | "euler"
+  | "voyager"
+  | "evergal"
+  | "brigand"
+  | "infiltrator"
+  | "freeblade"
+  | "echomorph";
+
+export type GroupMember = {
+  id: string;
+  name: string;
+  role: string;
+  description: string;
+};
+
+export type MapGroup = {
+  id: string;
+  name: string;
+  faction: MapGroupFaction;
+  description: string;
+  x: number;
+  y: number;
+  isSecret: boolean;
+  members: GroupMember[];
 };

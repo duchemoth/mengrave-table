@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import { campaignData } from "../data/campaign";
-import type { Location, Quest } from "../types/campaign";
+import type { Location, Quest, MapGroup } from "../types/campaign";
 import { normalizeLocation, normalizeQuest } from "../lib/campaignNormalize";
 import {
+  GROUPS_STORAGE_KEY,
   ITEMS_STORAGE_KEY,
   LOCATIONS_STORAGE_KEY,
   NPCS_STORAGE_KEY,
   QUESTS_STORAGE_KEY,
+  loadSavedGroups,
   loadSavedLocations,
   loadSavedQuests,
   loadSavedTextList,
@@ -15,6 +17,7 @@ import {
 
 export function useCampaign() {
   const [locations, setLocations] = useState<Location[]>(loadSavedLocations);
+  const [groups, setGroups] = useState<MapGroup[]>(loadSavedGroups);
   const [quests, setQuests] = useState<Quest[]>(loadSavedQuests);
 
   const [npcs, setNpcs] = useState<string[]>(() =>
@@ -28,6 +31,10 @@ export function useCampaign() {
   useEffect(() => {
     saveToStorage(LOCATIONS_STORAGE_KEY, locations);
   }, [locations]);
+
+  useEffect(() => {
+    saveToStorage(GROUPS_STORAGE_KEY, groups);
+  }, [groups]);
 
   useEffect(() => {
     saveToStorage(QUESTS_STORAGE_KEY, quests);
@@ -72,6 +79,14 @@ export function useCampaign() {
     );
   }
 
+  function updateGroup(updatedGroup: MapGroup) {
+    setGroups((currentGroups) =>
+      currentGroups.map((group) =>
+        group.id === updatedGroup.id ? updatedGroup : group,
+      ),
+    );
+  }
+
   function deleteLocation(locationId: string) {
     setLocations((currentLocations) =>
       currentLocations.filter((location) => location.id !== locationId),
@@ -85,6 +100,7 @@ export function useCampaign() {
       type: "mogila-chelovechestva-campaign",
       campaign: {
         locations,
+        groups,
         quests,
         npcs,
         items,
@@ -112,6 +128,7 @@ export function useCampaign() {
         const parsedData = JSON.parse(text) as {
           campaign?: {
             locations?: Location[];
+            groups?: MapGroup[];
             quests?: unknown[];
             npcs?: string[];
             items?: string[];
@@ -135,6 +152,16 @@ export function useCampaign() {
         }
 
         setLocations(normalizedLocations);
+
+        if (Array.isArray(parsedData.campaign?.groups)) {
+          setGroups(
+            parsedData.campaign.groups.map((group: MapGroup) => ({
+            ...group,
+            isSecret: Boolean(group.isSecret),
+            members: Array.isArray(group.members) ? group.members : [],
+          })),
+        );
+      }
 
         if (Array.isArray(parsedData.campaign?.quests)) {
           setQuests(parsedData.campaign.quests.map(normalizeQuest));
@@ -161,17 +188,20 @@ export function useCampaign() {
 
   return {
     locations,
+    groups,
     quests,
     npcs,
     items,
 
     setQuests,
     setNpcs,
+    setGroups,
     setItems,
 
     resetLocations,
     createLocation,
     updateLocation,
+    updateGroup,
     deleteLocation,
     exportCampaign,
     importCampaign,

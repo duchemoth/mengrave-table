@@ -63,4 +63,41 @@ export const campaignData: CampaignData = {
   npcs: ["Ильмар Кривой Компас", "Сестра Аделия", "Молчаливый лодочник"],
 
   items: ["Ржавый ключ", "Карта приливов", "Письмо с восковой печатью"],
+
+  groups: [
+  {
+    id: "group-players",
+    name: "Вольный Клинок",
+    faction: "players",
+    description: "Отряд игроков, действующий на границе известных земель.",
+    x: 42,
+    y: 58,
+    isSecret: false,
+    members: [
+      {
+        id: "member-1",
+        name: "Каин",
+        role: "Следопыт",
+        description: "Ведёт отряд через опасные земли.",
+      },
+    ],
+  },
+  {
+    id: "group-echomorph-1",
+    name: "Стая эхоморфов",
+    faction: "echomorph",
+    description: "Нестабильная группа тварей у старого тракта.",
+    x: 68,
+    y: 44,
+    isSecret: true,
+    members: [
+      {
+        id: "member-echo-1",
+        name: "Искажённая туша",
+        role: "Крупная тварь",
+        description: "Медленная, но крайне живучая.",
+      },
+    ],
+  },
+],
 };

@@ -14,6 +14,7 @@ import { InventoryPanel } from "./components/panels/InventoryPanel";
 function App() {
   const {
     locations,
+    groups,
     quests,
     npcs,
     items,
@@ -23,6 +24,7 @@ function App() {
     resetLocations: resetCampaignLocations,
     createLocation: createCampaignLocation,
     updateLocation,
+    updateGroup,
     deleteLocation,
     exportCampaign,
     importCampaign,
@@ -49,6 +51,10 @@ function App() {
 
   const visibleLocations = locations.filter((location) => {
     return !isPlayerMode || !location.isSecret;
+  });
+
+  const visibleGroups = groups.filter((group) => {
+    return !isPlayerMode || !group.isSecret;
   });
 
   const selectedLocation =
@@ -155,26 +161,37 @@ function App() {
       />
 
       <MapView
-        locations={visibleLocations}
-        selectedLocationId={selectedLocationId}
-        userMode={userMode}
-        isDeveloperMode={isDeveloperMode}
-        isCleanMapMode={isCleanMapMode}
-        onMapClick={handleMapClick}
-        onSelectLocation={setSelectedLocationId}
-        onOpenSidebar={openSidebar}
-        onExitCleanMapMode={exitCleanMapMode}
-        onMoveLocation={(id, x, y) => {
-  const location = locations.find((l) => l.id === id);
-  if (!location) return;
+  locations={visibleLocations}
+  groups={visibleGroups}
+  selectedLocationId={selectedLocationId}
+  userMode={userMode}
+  isDeveloperMode={isDeveloperMode}
+  isCleanMapMode={isCleanMapMode}
+  onMapClick={handleMapClick}
+  onSelectLocation={setSelectedLocationId}
+  onOpenSidebar={openSidebar}
+  onExitCleanMapMode={exitCleanMapMode}
+  onMoveLocation={(id, x, y) => {
+    const location = locations.find((l) => l.id === id);
+    if (!location) return;
 
-  updateLocation({
-    ...location,
-    x,
-    y,
-  });
-}}
-      />
+    updateLocation({
+      ...location,
+      x,
+      y,
+    });
+  }}
+  onMoveGroup={(id, x, y) => {
+    const group = groups.find((g) => g.id === id);
+    if (!group) return;
+
+    updateGroup({
+      ...group,
+      x,
+      y,
+    });
+  }}
+/>
 
 <BottomDrawer
   isOpen={isBottomDrawerOpen && !isCleanMapMode}

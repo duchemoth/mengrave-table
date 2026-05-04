@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { useMapViewport } from "../hooks/useMapViewport";
-import type { Location, UserMode } from "../types/campaign";
+import type { Location, MapGroup, UserMode } from "../types/campaign";
 
 type MapViewProps = {
   locations: Location[];
+  groups: MapGroup[];
+  onMoveGroup: (id: string, x: number, y: number) => void;
   selectedLocationId: string;
   userMode: UserMode;
   isDeveloperMode: boolean;
@@ -27,6 +29,8 @@ function getModeTitle(mode: UserMode) {
 
 export function MapView({
   locations,
+  groups,
+  onMoveGroup,
   selectedLocationId,
   userMode,
   isDeveloperMode,
@@ -38,6 +42,7 @@ export function MapView({
   onMoveLocation,
 }: MapViewProps) {
   const [draggedLocationId, setDraggedLocationId] = useState<string | null>(null);
+  const [draggedGroupId, setDraggedGroupId] = useState<string | null>(null);
   const [isDraggingMarker, setIsDraggingMarker] = useState(false);
 
   const {
@@ -65,6 +70,19 @@ export function MapView({
     setIsDraggingMarker(true);
   }
 
+  function startGroupDrag(
+  event: React.MouseEvent<HTMLButtonElement>,
+  groupId: string,
+) {
+  if (userMode === "player") {
+    return;
+  }
+
+  event.stopPropagation();
+  setDraggedGroupId(groupId);
+  setIsDraggingMarker(true);
+}
+
   function handleMarkerMove(event: React.MouseEvent<HTMLDivElement>) {
     if (!draggedLocationId) {
       return;
@@ -84,8 +102,28 @@ export function MapView({
     onMoveLocation(draggedLocationId, x, y);
   }
 
+  function handleGroupMove(event: React.MouseEvent<HTMLDivElement>) {
+    if (!draggedGroupId) {
+      return;
+    }
+
+    const map = event.currentTarget.querySelector(".map") as HTMLDivElement | null;
+
+    if (!map) {
+      return;
+    }
+
+    const rect = map.getBoundingClientRect();
+
+    const x = clamp(((event.clientX - rect.left) / rect.width) * 100);
+    const y = clamp(((event.clientY - rect.top) / rect.height) * 100);
+
+    onMoveGroup(draggedGroupId, x, y);
+  }
+
   function stopMarkerDrag() {
     setDraggedLocationId(null);
+    setDraggedGroupId(null);
     setIsDraggingMarker(false);
   }
 
@@ -93,13 +131,14 @@ export function MapView({
     <section className="map-stage">
       <div
         className={`map-viewport ${
-          isDraggingMap || draggedLocationId ? "map-dragging" : ""
+          isDraggingMap || draggedLocationId || draggedGroupId ? "map-dragging" : ""
         }`}
         onWheel={handleWheel}
         onMouseDown={startMapDrag}
         onMouseMove={(event) => {
           moveMap(event);
           handleMarkerMove(event);
+          handleGroupMove(event);
         }}
         onMouseUp={() => {
           stopMapDrag();
@@ -168,6 +207,7 @@ export function MapView({
                     onMouseDown={(event) => startMarkerDrag(event, location.id)}
                     onClick={(event) => {
                       if (isDraggingMarker) return;
+
                       event.stopPropagation();
                       onSelectLocation(location.id);
                       onOpenSidebar();
@@ -179,6 +219,32 @@ export function MapView({
               </div>
             );
           })}
+
+          {groups.map((group) => (
+            <div
+              key={group.id}
+              className={`map-group map-group-${group.faction}`}
+              style={{
+                left: `${group.x}%`,
+                top: `${group.y}%`,
+              }}
+            >
+              <button
+                className="map-group-token"
+                onMouseDown={(event) => startGroupDrag(event, group.id)}
+                onClick={(event) => {
+                  if (isDraggingMarker) return;
+
+                  event.stopPropagation();
+                  onOpenSidebar();
+                  onExitCleanMapMode();
+                }}
+                title={group.name}
+              >
+                {group.name[0]}
+              </button>
+            </div>
+          ))}
         </div>
       </div>
 

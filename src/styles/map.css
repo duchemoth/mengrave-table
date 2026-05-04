@@ -268,3 +268,23 @@
     bottom: 102px;
   }
 }
+.map-group {
+  position: absolute;
+  z-index: 5;
+  translate: -50% -50%;
+}
+
+.map-group-token {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  border: 2px solid #d7a65a;
+  background: #2a1a14;
+  color: #fff3cf;
+  font-weight: 900;
+  cursor: grab;
+}
+
+.map-group-token:active {
+  cursor: grabbing;
+}
