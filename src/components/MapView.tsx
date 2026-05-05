@@ -10,12 +10,13 @@ type MapViewProps = {
   userMode: UserMode;
   isDeveloperMode: boolean;
   isCleanMapMode: boolean;
-  onMapClick: (event: React.MouseEvent<HTMLDivElement>) => void;
   onSelectLocation: (locationId: string) => void;
   onSelectGroup: (id: string) => void;
   onOpenSidebar: () => void;
   onExitCleanMapMode: () => void;
   onMoveLocation: (id: string, x: number, y: number) => void;
+  onOpenLocationEncounter: (location: Location) => void;
+  onOpenGroupEncounter: (group: MapGroup) => void;
 };
 
 function clamp(value: number) {
@@ -50,11 +51,12 @@ export function MapView({
   userMode,
   isDeveloperMode,
   isCleanMapMode,
-  onMapClick,
   onSelectLocation,
   onOpenSidebar,
   onExitCleanMapMode,
   onMoveLocation,
+  onOpenLocationEncounter,
+  onOpenGroupEncounter,
 }: MapViewProps) {
   const [draggedLocationId, setDraggedLocationId] = useState<string | null>(null);
   const [draggedGroupId, setDraggedGroupId] = useState<string | null>(null);
@@ -167,7 +169,6 @@ export function MapView({
       >
         <div
           className={`map ${isDeveloperMode ? "map-editable" : ""}`}
-          onClick={onMapClick}
           style={{
             transform: `translate(${offsetX}px, ${offsetY}px) scale(${scale})`,
           }}
@@ -206,7 +207,7 @@ export function MapView({
 
                     event.stopPropagation();
                     onSelectLocation(location.id);
-                    onOpenSidebar();
+                    onOpenLocationEncounter(location);
                     onExitCleanMapMode();
                   }}
                   title={location.title}
@@ -254,10 +255,8 @@ export function MapView({
           if (isDraggingMarker) return;
 
           event.stopPropagation();
-
           onSelectGroup(group.id);
-
-          onOpenSidebar();
+          onOpenGroupEncounter(group);
           onExitCleanMapMode();
         }}
         title={`${meta.label}: ${group.name}`}

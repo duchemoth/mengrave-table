@@ -6,9 +6,9 @@ import { TopBar } from "./components/TopBar";
 import { campaignData } from "./data/campaign";
 import { useCampaign } from "./hooks/useCampaign";
 import { useInterfaceMode } from "./hooks/useInterfaceMode";
-import { clampCoordinate, getRelativeMapCoordinate } from "./lib/coordinates";
-import type { Location } from "./types/campaign";
+import type { Location, MapGroup } from "./types/campaign";
 import { BottomDrawer } from "./components/BottomDrawer";
+import { EncounterModal } from "./components/EncounterModal";
 import { InventoryPanel } from "./components/panels/InventoryPanel";
 
 function App() {
@@ -53,6 +53,12 @@ function App() {
 
   const [selectedGroupId, setSelectedGroupId] = useState<string | null>(null);
 
+  const [encounterTarget, setEncounterTarget] = useState<
+    | { kind: "location"; data: Location }
+    | { kind: "group"; data: MapGroup }
+    | null
+  >(null);
+
   const visibleLocations = locations.filter((location) => {
     return !isPlayerMode || !location.isSecret;
   });
@@ -67,40 +73,6 @@ function App() {
 
   function updateSelectedLocation(updatedLocation: Location) {
     updateLocation(updatedLocation);
-  }
-
-  function moveSelectedLocation(x: number, y: number) {
-    updateSelectedLocation({
-      ...selectedLocation,
-      x: clampCoordinate(x),
-      y: clampCoordinate(y),
-    });
-  }
-
-  function handleMapClick(event: React.MouseEvent<HTMLDivElement>) {
-    if (!isDeveloperMode) {
-      return;
-    }
-
-    if (event.target !== event.currentTarget) {
-      return;
-    }
-
-    const mapRectangle = event.currentTarget.getBoundingClientRect();
-
-    const x = getRelativeMapCoordinate(
-      event.clientX,
-      mapRectangle.left,
-      mapRectangle.width,
-    );
-
-    const y = getRelativeMapCoordinate(
-      event.clientY,
-      mapRectangle.top,
-      mapRectangle.height,
-    );
-
-    moveSelectedLocation(x, y);
   }
 
   function resetLocations() {
@@ -171,14 +143,16 @@ function App() {
   userMode={userMode}
   isDeveloperMode={isDeveloperMode}
   isCleanMapMode={isCleanMapMode}
-  onMapClick={handleMapClick}
   onSelectLocation={setSelectedLocationId}
   onSelectGroup={setSelectedGroupId}
   onOpenSidebar={openSidebar}
   onExitCleanMapMode={exitCleanMapMode}
   onMoveLocation={(id, x, y) => {
-    const location = locations.find((l) => l.id === id);
-    if (!location) return;
+    const location = locations.find((currentLocation) => currentLocation.id === id);
+
+    if (!location) {
+      return;
+    }
 
     updateLocation({
       ...location,
@@ -187,14 +161,23 @@ function App() {
     });
   }}
   onMoveGroup={(id, x, y) => {
-    const group = groups.find((g) => g.id === id);
-    if (!group) return;
+    const group = groups.find((currentGroup) => currentGroup.id === id);
+
+    if (!group) {
+      return;
+    }
 
     updateGroup({
       ...group,
       x,
       y,
     });
+  }}
+  onOpenLocationEncounter={(location) => {
+    setEncounterTarget({ kind: "location", data: location });
+  }}
+  onOpenGroupEncounter={(group) => {
+    setEncounterTarget({ kind: "group", data: group });
   }}
 />
 
@@ -238,6 +221,12 @@ function App() {
         onExportCampaign={exportCampaign}
         onImportCampaign={handleImportCampaign}
       />
+
+      <EncounterModal
+  target={encounterTarget}
+  onClose={() => setEncounterTarget(null)}
+/>
+
     </main>
   );
 }
