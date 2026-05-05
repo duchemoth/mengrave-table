@@ -112,3 +112,22 @@
     flex: 1;
   }
 }
+
+.topbar-title {
+  display: grid;
+  gap: 4px;
+}
+
+.topbar-world {
+  margin: 0;
+  color: var(--blood-seal);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.topbar-title h1 {
+  font-size: clamp(24px, 2.4vw, 36px);
+}

@@ -20,9 +20,9 @@ export function TopBar({
       <header
         className={`floating-topbar ${isCleanMapMode ? "hidden-ui" : ""}`}
       >
-        <div>
-          <p className="eyebrow">Вольный Клинок</p>
-          <h1>Могила Человечества</h1>
+        <div className="topbar-title">
+          <p className="topbar-world">Могила Человечества</p>
+          <h1>Вольный Клинок</h1>
         </div>
 
         <div className="topbar-actions">
@@ -42,9 +42,8 @@ export function TopBar({
             </button>
 
             <button
-              className={`mode-toggle ${
-                userMode === "developer" ? "active" : ""
-              }`}
+              className={`mode-toggle ${userMode === "developer" ? "active" : ""
+                }`}
               onClick={() => onChangeMode("developer")}
             >
               Эхо
