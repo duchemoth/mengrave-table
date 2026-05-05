@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { Location, MapGroup } from "../types/campaign";
 
 const FACTION_LABELS: Record<string, string> = {
@@ -18,15 +18,74 @@ type EncounterTarget =
   | { kind: "location"; data: Location }
   | { kind: "group"; data: MapGroup };
 
+type SceneDraft = {
+  playerDescription: string;
+  masterNotes: string;
+};
+
 type EncounterModalProps = {
   target: EncounterTarget | null;
   onClose: () => void;
 };
 
+function getSceneStorageKey(target: EncounterTarget) {
+  return `nri-table-scene-${target.kind}-${target.data.id}`;
+}
+
+function loadSceneDraft(storageKey: string): SceneDraft {
+  try {
+    const savedScene = localStorage.getItem(storageKey);
+
+    if (!savedScene) {
+      return {
+        playerDescription: "",
+        masterNotes: "",
+      };
+    }
+
+    const parsedScene = JSON.parse(savedScene) as Partial<SceneDraft>;
+
+    return {
+      playerDescription: parsedScene.playerDescription ?? "",
+      masterNotes: parsedScene.masterNotes ?? "",
+    };
+  } catch {
+    return {
+      playerDescription: "",
+      masterNotes: "",
+    };
+  }
+}
+
+function saveSceneDraft(storageKey: string, draft: SceneDraft) {
+  localStorage.setItem(storageKey, JSON.stringify(draft));
+}
+
 export function EncounterModal({ target, onClose }: EncounterModalProps) {
   const [mode, setMode] = useState<"overview" | "scene">("overview");
   const [playerDescription, setPlayerDescription] = useState("");
   const [masterNotes, setMasterNotes] = useState("");
+
+  const sceneStorageKey = useMemo(() => {
+    if (!target) {
+      return null;
+    }
+
+    return getSceneStorageKey(target);
+  }, [target]);
+
+  useEffect(() => {
+    if (!sceneStorageKey) {
+      setPlayerDescription("");
+      setMasterNotes("");
+      return;
+    }
+
+    const savedDraft = loadSceneDraft(sceneStorageKey);
+
+    setPlayerDescription(savedDraft.playerDescription);
+    setMasterNotes(savedDraft.masterNotes);
+  }, [sceneStorageKey]);
 
   if (!target) {
     return null;
@@ -36,6 +95,32 @@ export function EncounterModal({ target, onClose }: EncounterModalProps) {
   const title = isLocation ? target.data.title : target.data.name;
   const typeLabel = isLocation ? target.data.type : "Группа на карте";
   const description = target.data.description || "Описание пока не добавлено.";
+
+  function updatePlayerDescription(nextPlayerDescription: string) {
+    setPlayerDescription(nextPlayerDescription);
+
+    if (!sceneStorageKey) {
+      return;
+    }
+
+    saveSceneDraft(sceneStorageKey, {
+      playerDescription: nextPlayerDescription,
+      masterNotes,
+    });
+  }
+
+  function updateMasterNotes(nextMasterNotes: string) {
+    setMasterNotes(nextMasterNotes);
+
+    if (!sceneStorageKey) {
+      return;
+    }
+
+    saveSceneDraft(sceneStorageKey, {
+      playerDescription,
+      masterNotes: nextMasterNotes,
+    });
+  }
 
   function closeModal() {
     setMode("overview");
@@ -126,7 +211,7 @@ export function EncounterModal({ target, onClose }: EncounterModalProps) {
                 <textarea
                   className="scene-textarea"
                   value={playerDescription}
-                  onChange={(event) => setPlayerDescription(event.target.value)}
+                  onChange={(event) => updatePlayerDescription(event.target.value)}
                   placeholder="Что мастер зачитывает игрокам: обстановка, запахи, шумы, первое впечатление..."
                   autoFocus
                 />
@@ -139,7 +224,7 @@ export function EncounterModal({ target, onClose }: EncounterModalProps) {
                 <textarea
                   className="scene-textarea"
                   value={masterNotes}
-                  onChange={(event) => setMasterNotes(event.target.value)}
+                  onChange={(event) => updateMasterNotes(event.target.value)}
                   placeholder="Что знает только мастер: мотивы NPC, ловушки, скрытые угрозы, варианты развития..."
                 />
               </section>
