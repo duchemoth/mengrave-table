@@ -34,6 +34,7 @@ export type CampaignData = {
   npcs: string[];
   items: string[];
   groups: MapGroup[];
+  events: MapEvent[];
 };
 
 export type MapGroupFaction =
@@ -64,4 +65,26 @@ export type MapGroup = {
   y: number;
   isSecret: boolean;
   members: GroupMember[];
+};
+
+export type MapEventCategory =
+  | "incident"
+  | "mystery"
+  | "aberration"
+  | "conflict"
+  | "object"
+  | "other";
+
+export type MapEventStatus = "hidden" | "active" | "completed";
+
+export type MapEvent = {
+  id: string;
+  title: string;
+  category: MapEventCategory;
+  status: MapEventStatus;
+  description: string;
+  masterNotes: string;
+  x: number;
+  y: number;
+  isSecret: boolean;
 };

@@ -11,7 +11,7 @@ import { InventoryPanel } from "./components/panels/InventoryPanel";
 import { campaignData } from "./data/campaign";
 import { useCampaign } from "./hooks/useCampaign";
 import { useInterfaceMode } from "./hooks/useInterfaceMode";
-import type { Location, MapGroup } from "./types/campaign";
+import type { Location, MapEvent, MapGroup } from "./types/campaign";
 
 const MASTER_NOTES_STORAGE_KEY = "nri-table-master-notes";
 
@@ -19,6 +19,7 @@ function App() {
   const {
     locations,
     groups,
+    events,
     quests,
     npcs,
     items,
@@ -29,8 +30,11 @@ function App() {
     createLocation: createCampaignLocation,
     updateLocation,
     updateGroup,
+    updateEvent,
     createGroup,
+    createEvent,
     deleteGroup,
+    deleteEvent,
     deleteLocation,
     exportCampaign,
     importCampaign,
@@ -54,10 +58,12 @@ function App() {
 
   const [selectedLocationId, setSelectedLocationId] = useState("old-harbor");
   const [selectedGroupId, setSelectedGroupId] = useState<string | null>(null);
+  const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
 
   const [encounterTarget, setEncounterTarget] = useState<
     | { kind: "location"; data: Location }
     | { kind: "group"; data: MapGroup }
+    | { kind: "event"; data: MapEvent }
     | null
   >(null);
 
@@ -77,6 +83,14 @@ function App() {
 
   const visibleGroups = groups.filter((group) => {
     return !isPlayerMode || !group.isSecret;
+  });
+
+  const visibleEvents = events.filter((event) => {
+    if (!isPlayerMode) {
+      return true;
+    }
+
+    return !event.isSecret && event.status !== "hidden";
   });
 
   const selectedLocation =
@@ -168,12 +182,32 @@ function App() {
     });
   }
 
+  function handleMoveEvent(id: string, x: number, y: number) {
+    const event = events.find((currentEvent) => {
+      return currentEvent.id === id;
+    });
+
+    if (!event) {
+      return;
+    }
+
+    updateEvent({
+      ...event,
+      x,
+      y,
+    });
+  }
+
   function handleOpenLocationEncounter(location: Location) {
     setEncounterTarget({ kind: "location", data: location });
   }
 
   function handleOpenGroupEncounter(group: MapGroup) {
     setEncounterTarget({ kind: "group", data: group });
+  }
+
+  function handleOpenEventEncounter(event: MapEvent) {
+    setEncounterTarget({ kind: "event", data: event });
   }
 
   function handleCreateSceneNote(note: string) {
@@ -194,6 +228,34 @@ function App() {
     }
   }
 
+  function handleDeleteEvent(eventId: string) {
+    deleteEvent(eventId);
+
+    if (selectedEventId === eventId) {
+      setSelectedEventId(null);
+    }
+
+    if (encounterTarget?.kind === "event" && encounterTarget.data.id === eventId) {
+      setEncounterTarget(null);
+    }
+  }
+
+  function handleCreateMapEvent() {
+    const newEvent = createEvent({
+      title: "Новое событие",
+      category: "incident",
+      status: "hidden",
+      description: "Краткое описание события пока не добавлено.",
+      masterNotes: "",
+      x: 50,
+      y: 50,
+      isSecret: true,
+    });
+
+    setSelectedEventId(newEvent.id);
+    setEncounterTarget({ kind: "event", data: newEvent });
+  }
+
   return (
     <main className="atlas-screen">
       <TopBar
@@ -207,18 +269,24 @@ function App() {
       <MapView
         locations={visibleLocations}
         groups={visibleGroups}
+        events={visibleEvents}
         selectedLocationId={selectedLocationId}
         selectedGroupId={selectedGroupId}
+        selectedEventId={selectedEventId}
         userMode={userMode}
         isDeveloperMode={isDeveloperMode}
         isCleanMapMode={isCleanMapMode}
         onSelectLocation={setSelectedLocationId}
         onSelectGroup={setSelectedGroupId}
+        onSelectEvent={setSelectedEventId}
         onExitCleanMapMode={exitCleanMapMode}
         onMoveLocation={handleMoveLocation}
         onMoveGroup={handleMoveGroup}
+        onMoveEvent={handleMoveEvent}
+        onCreateMapEvent={handleCreateMapEvent}
         onOpenLocationEncounter={handleOpenLocationEncounter}
         onOpenGroupEncounter={handleOpenGroupEncounter}
+        onOpenEventEncounter={handleOpenEventEncounter}
       />
 
       {!isCleanMapMode && (
@@ -238,6 +306,8 @@ function App() {
         locations={locations}
         groups={groups}
         selectedGroupId={selectedGroupId}
+        events={events}
+        selectedEventId={selectedEventId}
         quests={quests}
         npcs={npcs}
         items={items}
@@ -254,6 +324,10 @@ function App() {
         onCreateGroup={createGroup}
         onUpdateGroup={updateGroup}
         onDeleteGroup={handleDeleteGroup}
+        onSelectEvent={setSelectedEventId}
+        onCreateEvent={createEvent}
+        onUpdateEvent={updateEvent}
+        onDeleteEvent={handleDeleteEvent}
         onExportCampaign={exportCampaign}
         onImportCampaign={handleImportCampaign}
       />

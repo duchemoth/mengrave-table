@@ -1,5 +1,5 @@
 import { campaignData } from "../data/campaign";
-import type { Location, MapGroup } from "../types/campaign";
+import type { Location, MapEvent, MapGroup } from "../types/campaign";
 import { normalizeLocation, normalizeQuest } from "./campaignNormalize";
 
 export const LOCATIONS_STORAGE_KEY = "nri-table-locations";
@@ -7,6 +7,7 @@ export const QUESTS_STORAGE_KEY = "nri-table-quests";
 export const NPCS_STORAGE_KEY = "nri-table-npcs";
 export const ITEMS_STORAGE_KEY = "nri-table-items";
 export const GROUPS_STORAGE_KEY = "nri-table-groups";
+export const EVENTS_STORAGE_KEY = "nri-table-events";
 
 export function loadSavedLocations() {
   const savedLocations = localStorage.getItem(LOCATIONS_STORAGE_KEY);
@@ -93,5 +94,29 @@ export function loadSavedGroups() {
     }));
   } catch {
     return campaignData.groups;
+  }
+}
+
+export function loadSavedEvents() {
+  const savedEvents = localStorage.getItem(EVENTS_STORAGE_KEY);
+
+  if (!savedEvents) {
+    return campaignData.events;
+  }
+
+  try {
+    const parsedEvents = JSON.parse(savedEvents);
+
+    if (!Array.isArray(parsedEvents)) {
+      return campaignData.events;
+    }
+
+    return parsedEvents.map((event): MapEvent => ({
+      ...event,
+      status: event.status ?? "hidden",
+      isSecret: Boolean(event.isSecret),
+    }));
+  } catch {
+    return campaignData.events;
   }
 }

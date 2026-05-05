@@ -1,11 +1,12 @@
 import { CampaignArchive } from "./editors/CampaignArchive";
 import { GroupManager } from "./editors/GroupManager";
+import { EventManager } from "./editors/EventManager";
 import { LocationEditor } from "./editors/LocationEditor";
 import { QuestEditor } from "./editors/QuestEditor";
 import { TextListEditor } from "./editors/TextListEditor";
 import { LocationInfoPanel } from "./panels/LocationInfoPanel";
 import { QuestListPanel } from "./panels/QuestListPanel";
-import type { Location, MapGroup, Quest } from "../types/campaign";
+import type { Location, MapEvent, MapGroup, Quest } from "../types/campaign";
 
 type SideDrawerProps = {
   isOpen: boolean;
@@ -17,6 +18,9 @@ type SideDrawerProps = {
 
   groups: MapGroup[];
   selectedGroupId: string | null;
+
+  events: MapEvent[];
+  selectedEventId: string | null;
 
   quests: Quest[];
   npcs: string[];
@@ -34,6 +38,11 @@ type SideDrawerProps = {
   onCreateGroup: (group: Omit<MapGroup, "id">) => MapGroup;
   onUpdateGroup: (group: MapGroup) => void;
   onDeleteGroup: (groupId: string) => void;
+
+  onSelectEvent: (eventId: string | null) => void;
+  onCreateEvent: (event: Omit<MapEvent, "id">) => MapEvent;
+  onUpdateEvent: (event: MapEvent) => void;
+  onDeleteEvent: (eventId: string) => void;
 
   onExportCampaign: () => void;
   onImportCampaign: (file: File) => void;
@@ -54,6 +63,9 @@ export function SideDrawer({
   groups,
   selectedGroupId,
 
+  events,
+  selectedEventId,
+
   quests,
   npcs,
   items,
@@ -70,6 +82,11 @@ export function SideDrawer({
   onCreateGroup,
   onUpdateGroup,
   onDeleteGroup,
+
+  onSelectEvent,
+  onCreateEvent,
+  onUpdateEvent,
+  onDeleteEvent,
 
   onExportCampaign,
   onImportCampaign,
@@ -110,6 +127,17 @@ export function SideDrawer({
             onCreateGroup={onCreateGroup}
             onUpdateGroup={onUpdateGroup}
             onDeleteGroup={onDeleteGroup}
+          />
+        )}
+
+        {!isPlayerMode && (
+          <EventManager
+            events={events}
+            selectedEventId={selectedEventId}
+            onSelectEvent={onSelectEvent}
+            onCreateEvent={onCreateEvent}
+            onUpdateEvent={onUpdateEvent}
+            onDeleteEvent={onDeleteEvent}
           />
         )}
 

@@ -188,3 +188,25 @@
     grid-template-columns: 1fr;
   }
 }
+
+.editor-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ink-soft);
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.editor-checkbox input {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--blood-seal);
+}
+
+.editor-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}

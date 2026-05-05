@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
 import { campaignData } from "../data/campaign";
-import type { Location, MapGroup, Quest } from "../types/campaign";
+import type { Location, MapEvent, MapGroup, Quest } from "../types/campaign";
 import { normalizeLocation, normalizeQuest } from "../lib/campaignNormalize";
 import {
+  EVENTS_STORAGE_KEY,
   GROUPS_STORAGE_KEY,
   ITEMS_STORAGE_KEY,
   LOCATIONS_STORAGE_KEY,
   NPCS_STORAGE_KEY,
   QUESTS_STORAGE_KEY,
+  loadSavedEvents,
   loadSavedGroups,
   loadSavedLocations,
   loadSavedQuests,
@@ -18,6 +20,7 @@ import {
 export function useCampaign() {
   const [locations, setLocations] = useState<Location[]>(loadSavedLocations);
   const [groups, setGroups] = useState<MapGroup[]>(loadSavedGroups);
+  const [events, setEvents] = useState<MapEvent[]>(loadSavedEvents);
   const [quests, setQuests] = useState<Quest[]>(loadSavedQuests);
 
   const [npcs, setNpcs] = useState<string[]>(() =>
@@ -35,6 +38,10 @@ export function useCampaign() {
   useEffect(() => {
     saveToStorage(GROUPS_STORAGE_KEY, groups);
   }, [groups]);
+
+  useEffect(() => {
+    saveToStorage(EVENTS_STORAGE_KEY, events);
+  }, [events]);
 
   useEffect(() => {
     saveToStorage(QUESTS_STORAGE_KEY, quests);
@@ -110,6 +117,31 @@ export function useCampaign() {
     );
   }
 
+  function updateEvent(updatedEvent: MapEvent) {
+    setEvents((currentEvents) =>
+      currentEvents.map((event) =>
+        event.id === updatedEvent.id ? updatedEvent : event,
+      ),
+    );
+  }
+
+  function createEvent(event: Omit<MapEvent, "id">) {
+    const newEvent: MapEvent = {
+      ...event,
+      id: `event-${Date.now()}`,
+    };
+
+    setEvents((currentEvents) => [...currentEvents, newEvent]);
+
+    return newEvent;
+  }
+
+  function deleteEvent(eventId: string) {
+    setEvents((currentEvents) =>
+      currentEvents.filter((event) => event.id !== eventId),
+    );
+  }
+
   function exportCampaign() {
     const archiveData = {
       version: 1,
@@ -118,6 +150,7 @@ export function useCampaign() {
       campaign: {
         locations,
         groups,
+        events,
         quests,
         npcs,
         items,
@@ -146,6 +179,7 @@ export function useCampaign() {
           campaign?: {
             locations?: Location[];
             groups?: MapGroup[];
+            events?: MapEvent[];
             quests?: unknown[];
             npcs?: string[];
             items?: string[];
@@ -180,6 +214,16 @@ export function useCampaign() {
           );
         }
 
+        if (Array.isArray(parsedData.campaign?.events)) {
+          setEvents(
+            parsedData.campaign.events.map((event) => ({
+              ...event,
+              status: event.status ?? "hidden",
+              isSecret: Boolean(event.isSecret),
+            })),
+          );
+        }
+
         if (Array.isArray(parsedData.campaign?.quests)) {
           setQuests(parsedData.campaign.quests.map(normalizeQuest));
         }
@@ -206,6 +250,7 @@ export function useCampaign() {
   return {
     locations,
     groups,
+    events,
     quests,
     npcs,
     items,
@@ -213,6 +258,7 @@ export function useCampaign() {
     setQuests,
     setNpcs,
     setGroups,
+    setEvents,
     setItems,
 
     resetLocations,
@@ -223,6 +269,10 @@ export function useCampaign() {
     updateGroup,
     createGroup,
     deleteGroup,
+
+    updateEvent,
+    createEvent,
+    deleteEvent,
 
     exportCampaign,
     importCampaign,

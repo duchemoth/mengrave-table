@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import type { Location, MapGroup } from "../types/campaign";
+import type { Location, MapEvent, MapGroup } from "../types/campaign";
 
 const FACTION_LABELS: Record<string, string> = {
   players: "Игроки",
@@ -14,9 +14,19 @@ const FACTION_LABELS: Record<string, string> = {
   echomorph: "Эхоморфы",
 };
 
+const EVENT_CATEGORY_LABELS: Record<string, string> = {
+  incident: "Происшествие",
+  mystery: "Неясность",
+  aberration: "Аберрация",
+  conflict: "Столкновение",
+  object: "Объект",
+  other: "Другое",
+};
+
 type EncounterTarget =
   | { kind: "location"; data: Location }
-  | { kind: "group"; data: MapGroup };
+  | { kind: "group"; data: MapGroup }
+  | { kind: "event"; data: MapEvent };
 
 type SceneDraft = {
   playerDescription: string;
@@ -98,8 +108,21 @@ export function EncounterModal({
   }
 
   const isLocation = target.kind === "location";
-  const title = isLocation ? target.data.title : target.data.name;
-  const typeLabel = isLocation ? target.data.type : "Группа на карте";
+  const isGroup = target.kind === "group";
+  const isEvent = target.kind === "event";
+
+  const title = isLocation
+    ? target.data.title
+    : isGroup
+      ? target.data.name
+      : target.data.title;
+
+  const typeLabel = isLocation
+    ? target.data.type
+    : isGroup
+      ? "Группа на карте"
+      : "Событие на карте";
+
   const description = target.data.description || "Описание пока не добавлено.";
 
   function updatePlayerDescription(nextPlayerDescription: string) {
@@ -173,9 +196,16 @@ export function EncounterModal({
           <p className="eyebrow">{mode === "overview" ? typeLabel : "Сцена"}</p>
           <h2>{title}</h2>
 
-          {!isLocation && mode === "overview" && (
+          {isGroup && mode === "overview" && (
             <p className="encounter-faction">
               Фракция: {FACTION_LABELS[target.data.faction] ?? target.data.faction}
+            </p>
+          )}
+
+          {isEvent && mode === "overview" && (
+            <p className="encounter-faction">
+              Категория:{" "}
+              {EVENT_CATEGORY_LABELS[target.data.category] ?? target.data.category}
             </p>
           )}
         </header>
@@ -191,7 +221,7 @@ export function EncounterModal({
                 <h3>Описание</h3>
                 <p>{description}</p>
 
-                {!isLocation && (
+                {isGroup && (
                   <div className="encounter-details">
                     <h3>Состав группы</h3>
 
@@ -221,7 +251,11 @@ export function EncounterModal({
               </button>
 
               <button className="secondary-button" type="button">
-                {isLocation ? "Создать событие" : "Начать конфликт"}
+                {isLocation
+                  ? "Создать событие"
+                  : isGroup
+                    ? "Начать конфликт"
+                    : "Открыть событие"}
               </button>
 
               <button className="secondary-button" type="button">
