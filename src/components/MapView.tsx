@@ -5,16 +5,16 @@ import type { Location, MapGroup, UserMode } from "../types/campaign";
 type MapViewProps = {
   locations: Location[];
   groups: MapGroup[];
-  onMoveGroup: (id: string, x: number, y: number) => void;
   selectedLocationId: string;
   selectedGroupId: string | null;
   userMode: UserMode;
   isDeveloperMode: boolean;
   isCleanMapMode: boolean;
   onSelectLocation: (locationId: string) => void;
-  onSelectGroup: (id: string) => void;
+  onSelectGroup: (groupId: string) => void;
   onExitCleanMapMode: () => void;
   onMoveLocation: (id: string, x: number, y: number) => void;
+  onMoveGroup: (id: string, x: number, y: number) => void;
   onOpenLocationEncounter: (location: Location) => void;
   onOpenGroupEncounter: (group: MapGroup) => void;
 };
@@ -45,15 +45,16 @@ const MAP_GROUP_FACTION_META = {
 export function MapView({
   locations,
   groups,
-  onMoveGroup,
-  onSelectGroup,
   selectedLocationId,
+  selectedGroupId,
   userMode,
   isDeveloperMode,
   isCleanMapMode,
   onSelectLocation,
+  onSelectGroup,
   onExitCleanMapMode,
   onMoveLocation,
+  onMoveGroup,
   onOpenLocationEncounter,
   onOpenGroupEncounter,
 }: MapViewProps) {
@@ -87,17 +88,17 @@ export function MapView({
   }
 
   function startGroupDrag(
-  event: React.MouseEvent<HTMLButtonElement>,
-  groupId: string,
-) {
-  if (userMode === "player") {
-    return;
-  }
+    event: React.MouseEvent<HTMLButtonElement>,
+    groupId: string,
+  ) {
+    if (userMode === "player") {
+      return;
+    }
 
-  event.stopPropagation();
-  setDraggedGroupId(groupId);
-  setIsDraggingMarker(true);
-}
+    event.stopPropagation();
+    setDraggedGroupId(groupId);
+    setIsDraggingMarker(true);
+  }
 
   function handleMarkerMove(event: React.MouseEvent<HTMLDivElement>) {
     if (!draggedLocationId) {
@@ -146,9 +147,10 @@ export function MapView({
   return (
     <section className="map-stage">
       <div
-        className={`map-viewport ${
-          isDraggingMap || draggedLocationId || draggedGroupId ? "map-dragging" : ""
-        }`}
+        className={`map-viewport ${isDraggingMap || draggedLocationId || draggedGroupId
+            ? "map-dragging"
+            : ""
+          }`}
         onWheel={handleWheel}
         onMouseDown={startMapDrag}
         onMouseMove={(event) => {
@@ -180,7 +182,7 @@ export function MapView({
 
           {isDeveloperMode && !isCleanMapMode && (
             <div className="map-hint">
-              Клик по карте перемещает выбранную локацию
+              Зажми маркер, чтобы переместить локацию
             </div>
           )}
 
@@ -197,9 +199,8 @@ export function MapView({
                 }}
               >
                 <button
-                  className={`map-pin map-pin-${location.category} ${
-                    isSelected ? "active" : ""
-                  } ${location.isSecret ? "secret" : ""}`}
+                  className={`map-pin map-pin-${location.category} ${isSelected ? "active" : ""
+                    } ${location.isSecret ? "secret" : ""}`}
                   onMouseDown={(event) => startMarkerDrag(event, location.id)}
                   onClick={(event) => {
                     if (isDraggingMarker) return;
@@ -214,77 +215,72 @@ export function MapView({
                   <span />
                 </button>
 
-                {!isCleanMapMode && (
-                  <button
-                    className={`map-marker-label ${location.isSecret ? "secret" : ""} ${
-                      isCleanMapMode ? "hidden-in-clean-mode" : ""
-                    }`}
-                    onMouseDown={(event) => startMarkerDrag(event, location.id)}
-                    onClick={(event) => {
-                      if (isDraggingMarker) return;
+                <button
+                  className={`map-marker-label ${location.isSecret ? "secret" : ""
+                    } ${isCleanMapMode ? "hidden-in-clean-mode" : ""}`}
+                  onMouseDown={(event) => startMarkerDrag(event, location.id)}
+                  onClick={(event) => {
+                    if (isDraggingMarker) return;
 
-                      event.stopPropagation();
-                      onSelectLocation(location.id);
-                      onOpenLocationEncounter(location);
-                      onExitCleanMapMode();
-                    }}
-                  >
-                    {location.title}
-                  </button>
-                )}
+                    event.stopPropagation();
+                    onSelectLocation(location.id);
+                    onOpenLocationEncounter(location);
+                    onExitCleanMapMode();
+                  }}
+                >
+                  {location.title}
+                </button>
               </div>
             );
           })}
 
           {groups.map((group) => {
-  const meta = MAP_GROUP_FACTION_META[group.faction];
+            const meta = MAP_GROUP_FACTION_META[group.faction];
 
-  return (
-    <div
-      key={group.id}
-      className={`map-group map-group-${group.faction}`}
-      style={{
-        left: `${group.x}%`,
-        top: `${group.y}%`,
-      }}
-    >
-      <button
-        className="map-group-token"
-        onMouseDown={(event) => startGroupDrag(event, group.id)}
-        onClick={(event) => {
-          if (isDraggingMarker) return;
+            return (
+              <div
+                key={group.id}
+                className={`map-group map-group-${group.faction}`}
+                style={{
+                  left: `${group.x}%`,
+                  top: `${group.y}%`,
+                }}
+              >
+                <button
+                  className={`map-group-token ${selectedGroupId === group.id ? "selected" : ""
+                    }`}
+                  onMouseDown={(event) => startGroupDrag(event, group.id)}
+                  onClick={(event) => {
+                    if (isDraggingMarker) return;
 
-          event.stopPropagation();
-          onSelectGroup(group.id);
-          onOpenGroupEncounter(group);
-          onExitCleanMapMode();
-        }}
-        title={`${meta.label}: ${group.name}`}
-      >
-        <span className="map-group-icon">{meta.icon}</span>
-      </button>
+                    event.stopPropagation();
+                    onSelectGroup(group.id);
+                    onOpenGroupEncounter(group);
+                    onExitCleanMapMode();
+                  }}
+                  title={`${meta.label}: ${group.name}`}
+                >
+                  <span className="map-group-icon">{meta.icon}</span>
+                </button>
 
-      {!isCleanMapMode && (
-        <button
-          className={`map-group-label ${
-            isCleanMapMode ? "hidden-in-clean-mode" : ""
-          }`}
-          onMouseDown={(event) => startGroupDrag(event, group.id)}
-          onClick={(event) => {
-            if (isDraggingMarker) return;
+                <button
+                  className={`map-group-label ${isCleanMapMode ? "hidden-in-clean-mode" : ""
+                    }`}
+                  onMouseDown={(event) => startGroupDrag(event, group.id)}
+                  onClick={(event) => {
+                    if (isDraggingMarker) return;
 
-            event.stopPropagation();
-            onSelectGroup(group.id);
-            onOpenGroupEncounter(group);
-            onExitCleanMapMode();
-         }}
-        >
-          {group.name}
-        </button>
-      )}
-    </div>
-  );
-})}
+                    event.stopPropagation();
+                    onSelectGroup(group.id);
+                    onOpenGroupEncounter(group);
+                    onExitCleanMapMode();
+                  }}
+                >
+                  {group.name}
+                </button>
+              </div>
+            );
+          })}
         </div>
       </div>
 
