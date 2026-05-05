@@ -92,3 +92,21 @@
     width: min(380px, calc(100vw - 32px));
   }
 }
+
+.master-notes-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.master-notes-import {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.master-notes-import input {
+  display: none;
+}
