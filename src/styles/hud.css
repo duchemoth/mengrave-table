@@ -1,0 +1,94 @@
+.hud-tools {
+  position: absolute;
+  z-index: 20;
+  left: 24px;
+  bottom: 24px;
+  display: flex;
+  gap: 10px;
+}
+
+.hud-tool-button {
+  width: 48px;
+  height: 48px;
+  border: 1px solid rgba(234, 216, 173, 0.32);
+  border-radius: 14px;
+  color: var(--paper-light);
+  background: linear-gradient(180deg, var(--leather-light), var(--leather));
+  box-shadow:
+    0 10px 22px rgba(18, 10, 8, 0.34),
+    inset 0 0 0 1px rgba(255, 244, 210, 0.16);
+  cursor: pointer;
+  font-size: 21px;
+}
+
+.hud-tool-button:hover,
+.hud-tool-button.active {
+  border-color: rgba(215, 166, 90, 0.8);
+  background: linear-gradient(180deg, #4a2b20, var(--leather));
+}
+
+.master-notes-window {
+  position: absolute;
+  z-index: 25;
+  left: 24px;
+  bottom: 86px;
+  width: min(420px, calc(100vw - 48px));
+  height: min(520px, calc(100dvh - 140px));
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgba(234, 216, 173, 0.28);
+  border-radius: 24px;
+  padding: 16px;
+  background:
+    linear-gradient(135deg, rgba(234, 216, 173, 0.98), rgba(216, 195, 154, 0.96));
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.42);
+}
+
+.master-notes-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.master-notes-header h2 {
+  margin: 0;
+}
+
+.drawer-tab.compact {
+  position: static;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+}
+
+.master-notes-textarea {
+  flex: 1;
+  resize: none;
+  border: 1px solid rgba(36, 26, 18, 0.26);
+  border-radius: 16px;
+  padding: 14px;
+  color: var(--ink);
+  background: rgba(255, 244, 210, 0.44);
+  font: 600 14px/1.55 Inter, system-ui, sans-serif;
+  outline: none;
+}
+
+.master-notes-textarea:focus {
+  border-color: rgba(124, 37, 34, 0.48);
+  box-shadow: 0 0 0 3px rgba(124, 37, 34, 0.12);
+}
+
+@media (max-width: 900px) {
+  .hud-tools {
+    left: 16px;
+    bottom: 16px;
+  }
+
+  .master-notes-window {
+    left: 16px;
+    bottom: 76px;
+    width: min(380px, calc(100vw - 32px));
+  }
+}

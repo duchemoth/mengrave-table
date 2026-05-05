@@ -2,20 +2,16 @@ import type { UserMode } from "../types/campaign";
 
 type TopBarProps = {
   userMode: UserMode;
-  isSidebarOpen: boolean;
   isCleanMapMode: boolean;
   onChangeMode: (mode: UserMode) => void;
-  onToggleSidebar: () => void;
   onEnableCleanMapMode: () => void;
   onRestoreInterface: () => void;
 };
 
 export function TopBar({
   userMode,
-  isSidebarOpen,
   isCleanMapMode,
   onChangeMode,
-  onToggleSidebar,
   onEnableCleanMapMode,
   onRestoreInterface,
 }: TopBarProps) {
@@ -54,10 +50,6 @@ export function TopBar({
               Эхо
             </button>
           </div>
-
-          <button className="sidebar-toggle" onClick={onToggleSidebar}>
-            {isSidebarOpen ? "Скрыть панель" : "Открыть панель"}
-          </button>
 
           <button className="sidebar-toggle" onClick={onEnableCleanMapMode}>
             Чистая карта

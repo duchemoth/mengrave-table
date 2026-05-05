@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./App.css";
 import { MapView } from "./components/MapView";
 import { SideDrawer } from "./components/SideDrawer";
@@ -10,6 +10,8 @@ import type { Location, MapGroup } from "./types/campaign";
 import { BottomDrawer } from "./components/BottomDrawer";
 import { EncounterModal } from "./components/EncounterModal";
 import { InventoryPanel } from "./components/panels/InventoryPanel";
+import { HudTools } from "./components/HudTools";
+import { MasterNotes } from "./components/MasterNotes";
 
 function App() {
   const {
@@ -58,6 +60,15 @@ function App() {
     | { kind: "group"; data: MapGroup }
     | null
   >(null);
+
+  const [isNotesOpen, setIsNotesOpen] = useState(false);
+  const [masterNotes, setMasterNotes] = useState(() => {
+    return localStorage.getItem("nri-table-master-notes") ?? "";
+  });
+
+  useEffect(() => {
+  localStorage.setItem("nri-table-master-notes", masterNotes);
+}, [masterNotes]);
 
   const visibleLocations = locations.filter((location) => {
     return !isPlayerMode || !location.isSecret;
@@ -128,10 +139,8 @@ function App() {
     <main className="atlas-screen">
       <TopBar
         userMode={userMode}
-        isSidebarOpen={isSidebarOpen}
         isCleanMapMode={isCleanMapMode}
         onChangeMode={changeMode}
-        onToggleSidebar={toggleSidebar}
         onEnableCleanMapMode={enableCleanMapMode}
         onRestoreInterface={restoreInterface}
       />
@@ -145,7 +154,6 @@ function App() {
   isCleanMapMode={isCleanMapMode}
   onSelectLocation={setSelectedLocationId}
   onSelectGroup={setSelectedGroupId}
-  onOpenSidebar={openSidebar}
   onExitCleanMapMode={exitCleanMapMode}
   onMoveLocation={(id, x, y) => {
     const location = locations.find((currentLocation) => currentLocation.id === id);
@@ -181,15 +189,19 @@ function App() {
   }}
 />
 
-<BottomDrawer
-  isOpen={isBottomDrawerOpen && !isCleanMapMode}
+{!isCleanMapMode && (
+ <BottomDrawer
+  isOpen={isBottomDrawerOpen}
   onToggleOpen={toggleBottomDrawer}
+  isHidden={isCleanMapMode}
 >
   <InventoryPanel npcs={npcs} items={items} />
 </BottomDrawer>
+)}
 
-      <SideDrawer
-        isOpen={isSidebarOpen && !isCleanMapMode}
+<SideDrawer
+  isOpen={isSidebarOpen}
+  isHidden={isCleanMapMode}
         isPlayerMode={isPlayerMode}
         isDeveloperMode={isDeveloperMode}
         selectedLocation={selectedLocation}
@@ -221,6 +233,20 @@ function App() {
         onExportCampaign={exportCampaign}
         onImportCampaign={handleImportCampaign}
       />
+
+<HudTools
+  isPlayerMode={isPlayerMode}
+  isNotesOpen={isNotesOpen}
+  onToggleNotes={() => setIsNotesOpen((current) => !current)}
+/>
+
+{!isPlayerMode && isNotesOpen && (
+  <MasterNotes
+    notes={masterNotes}
+    onChangeNotes={setMasterNotes}
+    onClose={() => setIsNotesOpen(false)}
+  />
+)}
 
       <EncounterModal
   target={encounterTarget}

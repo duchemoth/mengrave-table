@@ -12,7 +12,6 @@ type MapViewProps = {
   isCleanMapMode: boolean;
   onSelectLocation: (locationId: string) => void;
   onSelectGroup: (id: string) => void;
-  onOpenSidebar: () => void;
   onExitCleanMapMode: () => void;
   onMoveLocation: (id: string, x: number, y: number) => void;
   onOpenLocationEncounter: (location: Location) => void;
@@ -52,7 +51,6 @@ export function MapView({
   isDeveloperMode,
   isCleanMapMode,
   onSelectLocation,
-  onOpenSidebar,
   onExitCleanMapMode,
   onMoveLocation,
   onOpenLocationEncounter,
@@ -217,8 +215,8 @@ export function MapView({
 
                 {!isCleanMapMode && (
                   <button
-                    className={`map-marker-label ${
-                      location.isSecret ? "secret" : ""
+                    className={`map-marker-label ${location.isSecret ? "secret" : ""} ${
+                      isCleanMapMode ? "hidden-in-clean-mode" : ""
                     }`}
                     onMouseDown={(event) => startMarkerDrag(event, location.id)}
                     onClick={(event) => {
@@ -226,7 +224,8 @@ export function MapView({
 
                       event.stopPropagation();
                       onSelectLocation(location.id);
-                      onOpenSidebar();
+                      onOpenLocationEncounter(location);
+                      onExitCleanMapMode();
                     }}
                   >
                     {location.title}
@@ -266,14 +265,18 @@ export function MapView({
 
       {!isCleanMapMode && (
         <button
-          className="map-group-label"
+          className={`map-group-label ${
+            isCleanMapMode ? "hidden-in-clean-mode" : ""
+          }`}
           onMouseDown={(event) => startGroupDrag(event, group.id)}
           onClick={(event) => {
             if (isDraggingMarker) return;
 
             event.stopPropagation();
-            onOpenSidebar();
-          }}
+            onSelectGroup(group.id);
+            onOpenGroupEncounter(group);
+            onExitCleanMapMode();
+         }}
         >
           {group.name}
         </button>

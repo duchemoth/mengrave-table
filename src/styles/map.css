@@ -1,5 +1,6 @@
 .map-stage {
-  position: absolute;
+  position: fixed;
+  z-index: 1;
   inset: 0;
   display: grid;
   place-items: center;
@@ -8,8 +9,12 @@
 
 .map-viewport {
   position: relative;
-  width: min(calc(100vw - 36px), calc((100dvh - 36px) * 16 / 9));
-  height: min(calc(100dvh - 36px), calc((100vw - 36px) * 9 / 16));
+  width: 100%;
+  height: 100%;
+  max-width: 1600px;
+  aspect-ratio: 16 / 9;
+  margin: 0 auto;
+
   overflow: hidden;
   border-radius: 28px;
   cursor: default;
@@ -154,10 +159,9 @@
 .map-marker {
   position: absolute;
   z-index: 3;
+  width: 38px;
+  height: 38px;
   translate: -50% -50%;
-  display: flex;
-  align-items: center;
-  gap: 8px;
 }
 
 .map-marker.active {
@@ -173,6 +177,11 @@
 }
 
 .map-marker-label {
+  position: absolute;
+  left: calc(100% + 8px);
+  top: 50%;
+  translate: 0 -50%;
+
   border: 1px solid rgba(36, 26, 18, 0.28);
   border-radius: 999px;
   padding: 6px 9px;
@@ -229,7 +238,7 @@
   }
 }
 .map-reset-button {
-  position: absolute;
+  position: fixed;
   z-index: 6;
   left: 32px;
   bottom: 118px;
@@ -258,13 +267,13 @@
     bottom: 102px;
   }
 }
+
 .map-group {
   position: absolute;
   z-index: 5;
+  width: 30px;
+  height: 30px;
   translate: -50% -50%;
-  display: flex;
-  align-items: center;
-  gap: 8px;
 }
 
 .map-group-token {
@@ -293,6 +302,11 @@
 }
 
 .map-group-label {
+  position: absolute;
+  left: calc(100% + 8px);
+  top: 50%;
+  translate: 0 -50%;
+
   opacity: 0;
   pointer-events: none;
   transform: translateY(4px);
@@ -385,4 +399,9 @@
     0 0 0 4px rgba(215, 166, 90, 0.24),
     0 0 18px rgba(255, 244, 210, 0.42),
     0 12px 24px rgba(18, 10, 8, 0.46);
+}
+
+.hidden-in-clean-mode {
+  visibility: hidden;
+  pointer-events: none;
 }
