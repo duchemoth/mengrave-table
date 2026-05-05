@@ -26,6 +26,7 @@ type SceneDraft = {
 type EncounterModalProps = {
   target: EncounterTarget | null;
   onClose: () => void;
+  onCreateSceneNote: (note: string) => void;
 };
 
 function getSceneStorageKey(target: EncounterTarget) {
@@ -61,10 +62,15 @@ function saveSceneDraft(storageKey: string, draft: SceneDraft) {
   localStorage.setItem(storageKey, JSON.stringify(draft));
 }
 
-export function EncounterModal({ target, onClose }: EncounterModalProps) {
+export function EncounterModal({
+  target,
+  onClose,
+  onCreateSceneNote,
+}: EncounterModalProps) {
   const [mode, setMode] = useState<"overview" | "scene">("overview");
   const [playerDescription, setPlayerDescription] = useState("");
   const [masterNotes, setMasterNotes] = useState("");
+  const [isSceneNoteCreated, setIsSceneNoteCreated] = useState(false);
 
   const sceneStorageKey = useMemo(() => {
     if (!target) {
@@ -120,6 +126,32 @@ export function EncounterModal({ target, onClose }: EncounterModalProps) {
       playerDescription,
       masterNotes: nextMasterNotes,
     });
+  }
+
+  function createSceneNote() {
+    if (!target) {
+      return;
+    }
+
+    const note = [
+      `## Сцена: ${title}`,
+      "",
+      "### Для игроков",
+      playerDescription.trim() || "Описание сцены не заполнено.",
+      "",
+      "### Для мастера",
+      masterNotes.trim() || "Скрытые заметки не заполнены.",
+      "",
+      "---",
+      "",
+    ].join("\n");
+
+    onCreateSceneNote(note);
+    setIsSceneNoteCreated(true);
+
+    window.setTimeout(() => {
+      setIsSceneNoteCreated(false);
+    }, 1600);
   }
 
   function closeModal() {
@@ -239,8 +271,12 @@ export function EncounterModal({ target, onClose }: EncounterModalProps) {
                 Вернуться к обзору
               </button>
 
-              <button className="secondary-button" type="button">
-                Создать заметку сцены
+              <button
+                className="secondary-button"
+                type="button"
+                onClick={createSceneNote}
+              >
+                {isSceneNoteCreated ? "Заметка создана" : "Создать заметку сцены"}
               </button>
 
               <button className="secondary-button" type="button">

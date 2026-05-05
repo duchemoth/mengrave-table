@@ -176,6 +176,16 @@ function App() {
     setEncounterTarget({ kind: "group", data: group });
   }
 
+  function handleCreateSceneNote(note: string) {
+    setMasterNotes((currentNotes) => {
+      const separator = currentNotes.trim().length > 0 ? "\n\n" : "";
+
+      return `${currentNotes}${separator}${note}`;
+    });
+
+    setIsNotesOpen(true);
+  }
+
   function handleDeleteGroup(groupId: string) {
     deleteGroup(groupId);
 
@@ -267,6 +277,7 @@ function App() {
       <EncounterModal
         target={encounterTarget}
         onClose={() => setEncounterTarget(null)}
+        onCreateSceneNote={handleCreateSceneNote}
       />
     </main>
   );
