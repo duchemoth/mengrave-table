@@ -1,3 +1,4 @@
+/* Layout */
 .map-stage {
   position: absolute;
   inset: 0;
@@ -101,6 +102,7 @@
   box-shadow: 0 8px 18px rgba(36, 26, 18, 0.22);
 }
 
+/* Location markers */
 .map-pin {
   position: absolute;
   z-index: 3;
@@ -165,7 +167,6 @@
   left: auto;
   top: auto;
   translate: none;
-  flex: 0 0 auto;
 }
 
 .map-marker-label {
@@ -173,6 +174,10 @@
   left: calc(100% + 8px);
   top: 50%;
   translate: 0 -50%;
+
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
 
   border: 1px solid rgba(36, 26, 18, 0.28);
   border-radius: 999px;
@@ -185,12 +190,6 @@
   font-weight: 800;
   white-space: nowrap;
   cursor: pointer;
-}
-
-.map-marker-label {
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.15s ease;
 }
 
 .map-marker:hover .map-marker-label {
@@ -214,6 +213,7 @@
   );
 }
 
+/* Responsive */
 @media (max-width: 900px) {
   .map-stage {
     padding: 10px;
@@ -260,6 +260,7 @@
   }
 }
 
+/* Group markers */
 .map-group {
   position: absolute;
   z-index: 5;
@@ -371,13 +372,13 @@
 }
 
 .map-group-valour .map-group-token {
-  
-  border-color: rgba(215, 166, 90, 0.95);
-  background: linear-gradient(135deg, #8a5a2b, #24120d);
+  border-color: rgba(180, 190, 205, 0.95);
+  border-radius: 8px;
+  background: linear-gradient(135deg, #4a5563, #120a08);
   box-shadow:
-    0 0 0 2px rgba(215, 166, 90, 0.35),
+    0 0 0 2px rgba(180, 190, 205, 0.25),
     0 10px 22px rgba(18, 10, 8, 0.42),
-    inset 0 0 0 1px rgba(255, 230, 180, 0.25);
+    inset 0 0 0 1px rgba(220, 230, 255, 0.18);
 }
 
 .map-group-echomorph .map-group-token {
@@ -393,6 +394,7 @@
     0 12px 24px rgba(18, 10, 8, 0.46);
 }
 
+/* Utilities */
 .hidden-in-clean-mode {
   visibility: hidden;
   pointer-events: none;
