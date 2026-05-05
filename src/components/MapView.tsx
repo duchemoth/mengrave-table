@@ -7,6 +7,7 @@ type MapViewProps = {
   groups: MapGroup[];
   onMoveGroup: (id: string, x: number, y: number) => void;
   selectedLocationId: string;
+  selectedGroupId: string | null;
   userMode: UserMode;
   isDeveloperMode: boolean;
   isCleanMapMode: boolean;

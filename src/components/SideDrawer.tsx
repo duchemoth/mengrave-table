@@ -9,7 +9,6 @@ import type { Location, MapGroup, Quest } from "../types/campaign";
 
 type SideDrawerProps = {
   isOpen: boolean;
-  isHidden: boolean;
   isPlayerMode: boolean;
   isDeveloperMode: boolean;
 
@@ -46,7 +45,6 @@ type SideDrawerProps = {
 
 export function SideDrawer({
   isOpen,
-  isHidden,
   isPlayerMode,
   isDeveloperMode,
 
@@ -81,11 +79,7 @@ export function SideDrawer({
   onChangeItems,
 }: SideDrawerProps) {
   return (
-    <aside
-     className={`side-drawer ${isOpen ? "open" : "closed"} ${
-      isHidden ? "visually-hidden-panel" : ""
-    }`}
-    >
+    <aside className={`side-drawer ${isOpen ? "open" : "closed"}`}>
       <button className="drawer-tab" onClick={onToggleOpen}>
         {isOpen ? "→" : "←"}
       </button>

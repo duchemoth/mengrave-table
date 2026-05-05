@@ -1,17 +1,19 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
+import { BottomDrawer } from "./components/BottomDrawer";
+import { EncounterModal } from "./components/EncounterModal";
+import { HudTools } from "./components/HudTools";
 import { MapView } from "./components/MapView";
+import { MasterNotes } from "./components/MasterNotes";
 import { SideDrawer } from "./components/SideDrawer";
 import { TopBar } from "./components/TopBar";
+import { InventoryPanel } from "./components/panels/InventoryPanel";
 import { campaignData } from "./data/campaign";
 import { useCampaign } from "./hooks/useCampaign";
 import { useInterfaceMode } from "./hooks/useInterfaceMode";
 import type { Location, MapGroup } from "./types/campaign";
-import { BottomDrawer } from "./components/BottomDrawer";
-import { EncounterModal } from "./components/EncounterModal";
-import { InventoryPanel } from "./components/panels/InventoryPanel";
-import { HudTools } from "./components/HudTools";
-import { MasterNotes } from "./components/MasterNotes";
+
+const MASTER_NOTES_STORAGE_KEY = "nri-table-master-notes";
 
 function App() {
   const {
@@ -50,9 +52,7 @@ function App() {
     restoreInterface,
   } = useInterfaceMode();
 
-
   const [selectedLocationId, setSelectedLocationId] = useState("old-harbor");
-
   const [selectedGroupId, setSelectedGroupId] = useState<string | null>(null);
 
   const [encounterTarget, setEncounterTarget] = useState<
@@ -62,13 +62,14 @@ function App() {
   >(null);
 
   const [isNotesOpen, setIsNotesOpen] = useState(false);
+
   const [masterNotes, setMasterNotes] = useState(() => {
-    return localStorage.getItem("nri-table-master-notes") ?? "";
+    return localStorage.getItem(MASTER_NOTES_STORAGE_KEY) ?? "";
   });
 
   useEffect(() => {
-  localStorage.setItem("nri-table-master-notes", masterNotes);
-}, [masterNotes]);
+    localStorage.setItem(MASTER_NOTES_STORAGE_KEY, masterNotes);
+  }, [masterNotes]);
 
   const visibleLocations = locations.filter((location) => {
     return !isPlayerMode || !location.isSecret;
@@ -120,9 +121,9 @@ function App() {
       return;
     }
 
-    const remainingLocations = locations.filter(
-      (location) => location.id !== selectedLocation.id,
-    );
+    const remainingLocations = locations.filter((location) => {
+      return location.id !== selectedLocation.id;
+    });
 
     deleteLocation(selectedLocation.id);
     setSelectedLocationId(remainingLocations[0].id);
@@ -133,6 +134,54 @@ function App() {
       setSelectedLocationId(firstLocationId);
       openSidebar();
     });
+  }
+
+  function handleMoveLocation(id: string, x: number, y: number) {
+    const location = locations.find((currentLocation) => {
+      return currentLocation.id === id;
+    });
+
+    if (!location) {
+      return;
+    }
+
+    updateLocation({
+      ...location,
+      x,
+      y,
+    });
+  }
+
+  function handleMoveGroup(id: string, x: number, y: number) {
+    const group = groups.find((currentGroup) => {
+      return currentGroup.id === id;
+    });
+
+    if (!group) {
+      return;
+    }
+
+    updateGroup({
+      ...group,
+      x,
+      y,
+    });
+  }
+
+  function handleOpenLocationEncounter(location: Location) {
+    setEncounterTarget({ kind: "location", data: location });
+  }
+
+  function handleOpenGroupEncounter(group: MapGroup) {
+    setEncounterTarget({ kind: "group", data: group });
+  }
+
+  function handleDeleteGroup(groupId: string) {
+    deleteGroup(groupId);
+
+    if (selectedGroupId === groupId) {
+      setSelectedGroupId(null);
+    }
   }
 
   return (
@@ -146,66 +195,39 @@ function App() {
       />
 
       <MapView
-  locations={visibleLocations}
-  groups={visibleGroups}
-  selectedLocationId={selectedLocationId}
-  userMode={userMode}
-  isDeveloperMode={isDeveloperMode}
-  isCleanMapMode={isCleanMapMode}
-  onSelectLocation={setSelectedLocationId}
-  onSelectGroup={setSelectedGroupId}
-  onExitCleanMapMode={exitCleanMapMode}
-  onMoveLocation={(id, x, y) => {
-    const location = locations.find((currentLocation) => currentLocation.id === id);
+        locations={visibleLocations}
+        groups={visibleGroups}
+        selectedLocationId={selectedLocationId}
+        selectedGroupId={selectedGroupId}
+        userMode={userMode}
+        isDeveloperMode={isDeveloperMode}
+        isCleanMapMode={isCleanMapMode}
+        onSelectLocation={setSelectedLocationId}
+        onSelectGroup={setSelectedGroupId}
+        onExitCleanMapMode={exitCleanMapMode}
+        onMoveLocation={handleMoveLocation}
+        onMoveGroup={handleMoveGroup}
+        onOpenLocationEncounter={handleOpenLocationEncounter}
+        onOpenGroupEncounter={handleOpenGroupEncounter}
+      />
 
-    if (!location) {
-      return;
-    }
+      {!isCleanMapMode && (
+        <BottomDrawer
+          isOpen={isBottomDrawerOpen}
+          onToggleOpen={toggleBottomDrawer}
+        >
+          <InventoryPanel npcs={npcs} items={items} />
+        </BottomDrawer>
+      )}
 
-    updateLocation({
-      ...location,
-      x,
-      y,
-    });
-  }}
-  onMoveGroup={(id, x, y) => {
-    const group = groups.find((currentGroup) => currentGroup.id === id);
-
-    if (!group) {
-      return;
-    }
-
-    updateGroup({
-      ...group,
-      x,
-      y,
-    });
-  }}
-  onOpenLocationEncounter={(location) => {
-    setEncounterTarget({ kind: "location", data: location });
-  }}
-  onOpenGroupEncounter={(group) => {
-    setEncounterTarget({ kind: "group", data: group });
-  }}
-/>
-
-{!isCleanMapMode && (
- <BottomDrawer
-  isOpen={isBottomDrawerOpen}
-  onToggleOpen={toggleBottomDrawer}
-  isHidden={isCleanMapMode}
->
-  <InventoryPanel npcs={npcs} items={items} />
-</BottomDrawer>
-)}
-
-<SideDrawer
-  isOpen={isSidebarOpen}
-  isHidden={isCleanMapMode}
+      <SideDrawer
+        isOpen={isSidebarOpen && !isCleanMapMode}
         isPlayerMode={isPlayerMode}
         isDeveloperMode={isDeveloperMode}
         selectedLocation={selectedLocation}
         locations={locations}
+        groups={groups}
+        selectedGroupId={selectedGroupId}
         quests={quests}
         npcs={npcs}
         items={items}
@@ -214,45 +236,38 @@ function App() {
         onChangeItems={setItems}
         onToggleOpen={toggleSidebar}
         onUpdateLocation={updateSelectedLocation}
-        groups={groups}
-        selectedGroupId={selectedGroupId}
-        onSelectGroup={setSelectedGroupId}
-        onCreateGroup={createGroup}
-        onUpdateGroup={updateGroup}
-        onDeleteGroup={(groupId) => {
-          deleteGroup(groupId);
-
-        if (selectedGroupId === groupId) {
-          setSelectedGroupId(null);
-        }
-      }}
         onCreateLocation={createLocation}
         onDeleteLocation={deleteSelectedLocation}
         onResetLocations={resetLocations}
         onSelectLocation={setSelectedLocationId}
+        onSelectGroup={setSelectedGroupId}
+        onCreateGroup={createGroup}
+        onUpdateGroup={updateGroup}
+        onDeleteGroup={handleDeleteGroup}
         onExportCampaign={exportCampaign}
         onImportCampaign={handleImportCampaign}
       />
 
-<HudTools
-  isPlayerMode={isPlayerMode}
-  isNotesOpen={isNotesOpen}
-  onToggleNotes={() => setIsNotesOpen((current) => !current)}
-/>
+      {!isCleanMapMode && (
+        <HudTools
+          isPlayerMode={isPlayerMode}
+          isNotesOpen={isNotesOpen}
+          onToggleNotes={() => setIsNotesOpen((current) => !current)}
+        />
+      )}
 
-{!isPlayerMode && isNotesOpen && (
-  <MasterNotes
-    notes={masterNotes}
-    onChangeNotes={setMasterNotes}
-    onClose={() => setIsNotesOpen(false)}
-  />
-)}
+      {!isCleanMapMode && !isPlayerMode && isNotesOpen && (
+        <MasterNotes
+          notes={masterNotes}
+          onChangeNotes={setMasterNotes}
+          onClose={() => setIsNotesOpen(false)}
+        />
+      )}
 
       <EncounterModal
-  target={encounterTarget}
-  onClose={() => setEncounterTarget(null)}
-/>
-
+        target={encounterTarget}
+        onClose={() => setEncounterTarget(null)}
+      />
     </main>
   );
 }
