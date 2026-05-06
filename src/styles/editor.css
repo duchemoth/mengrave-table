@@ -285,3 +285,13 @@
   color: var(--ink);
   background: rgba(255, 244, 210, 0.62);
 }
+
+.event-filter-tabs-secondary {
+  margin-top: -4px;
+}
+
+.event-filter-tabs-secondary .event-filter-tab {
+  font-size: 11px;
+  padding: 6px 9px;
+  opacity: 0.92;
+}

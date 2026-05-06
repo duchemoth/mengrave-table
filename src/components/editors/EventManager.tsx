@@ -21,6 +21,7 @@ const EVENT_STATUS_LABELS: Record<MapEventStatus, string> = {
 };
 
 type EventStatusFilter = "all" | MapEventStatus;
+type EventCategoryFilter = "all" | MapEventCategory;
 
 type EventManagerProps = {
     events: MapEvent[];
@@ -41,12 +42,17 @@ export function EventManager({
 }: EventManagerProps) {
     const [statusFilter, setStatusFilter] = useState<EventStatusFilter>("all");
 
-    const filteredEvents = events.filter((event) => {
-        if (statusFilter === "all") {
-            return true;
-        }
+    const [categoryFilter, setCategoryFilter] =
+        useState<EventCategoryFilter>("all");
 
-        return event.status === statusFilter;
+    const filteredEvents = events.filter((event) => {
+        const matchesStatus =
+            statusFilter === "all" || event.status === statusFilter;
+
+        const matchesCategory =
+            categoryFilter === "all" || event.category === categoryFilter;
+
+        return matchesStatus && matchesCategory;
     });
 
     const selectedEvent =
@@ -130,6 +136,70 @@ export function EventManager({
                     onClick={() => setStatusFilter("completed")}
                 >
                     Завершённые
+                </button>
+            </div>
+
+            <div className="event-filter-tabs event-filter-tabs-secondary">
+                <button
+                    className={`event-filter-tab ${categoryFilter === "all" ? "active" : ""}`}
+                    type="button"
+                    onClick={() => setCategoryFilter("all")}
+                >
+                    Все типы
+                </button>
+
+                <button
+                    className={`event-filter-tab ${categoryFilter === "incident" ? "active" : ""
+                        }`}
+                    type="button"
+                    onClick={() => setCategoryFilter("incident")}
+                >
+                    Происшествия
+                </button>
+
+                <button
+                    className={`event-filter-tab ${categoryFilter === "mystery" ? "active" : ""
+                        }`}
+                    type="button"
+                    onClick={() => setCategoryFilter("mystery")}
+                >
+                    Неясности
+                </button>
+
+                <button
+                    className={`event-filter-tab ${categoryFilter === "aberration" ? "active" : ""
+                        }`}
+                    type="button"
+                    onClick={() => setCategoryFilter("aberration")}
+                >
+                    Аберрации
+                </button>
+
+                <button
+                    className={`event-filter-tab ${categoryFilter === "conflict" ? "active" : ""
+                        }`}
+                    type="button"
+                    onClick={() => setCategoryFilter("conflict")}
+                >
+                    Столкновения
+                </button>
+
+                <button
+                    className={`event-filter-tab ${categoryFilter === "object" ? "active" : ""
+                        }`}
+                    type="button"
+                    onClick={() => setCategoryFilter("object")}
+                >
+                    Объекты
+                </button>
+
+                <button
+                    className={`event-filter-tab ${categoryFilter === "other" ? "active" : ""
+                        }`}
+                    type="button"
+                    onClick={() => setCategoryFilter("other")}
+                >
+                    Другое
                 </button>
             </div>
 
