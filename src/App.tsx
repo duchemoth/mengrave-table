@@ -380,8 +380,8 @@ function App() {
         onDeleteGroup={handleDeleteGroup}
         onSelectEvent={setSelectedEventId}
         onCreateEvent={createEvent}
-        onUpdateEvent={updateEvent}
         onDeleteEvent={handleDeleteEvent}
+        onOpenEvent={handleOpenEventEncounter}
         onExportCampaign={exportCampaign}
         onImportCampaign={handleImportCampaign}
       />

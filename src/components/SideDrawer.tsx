@@ -41,8 +41,8 @@ type SideDrawerProps = {
 
   onSelectEvent: (eventId: string | null) => void;
   onCreateEvent: (event: Omit<MapEvent, "id">) => MapEvent;
-  onUpdateEvent: (event: MapEvent) => void;
   onDeleteEvent: (eventId: string) => void;
+  onOpenEvent: (event: MapEvent) => void;
 
   onExportCampaign: () => void;
   onImportCampaign: (file: File) => void;
@@ -85,8 +85,8 @@ export function SideDrawer({
 
   onSelectEvent,
   onCreateEvent,
-  onUpdateEvent,
   onDeleteEvent,
+  onOpenEvent,
 
   onExportCampaign,
   onImportCampaign,
@@ -136,8 +136,8 @@ export function SideDrawer({
             selectedEventId={selectedEventId}
             onSelectEvent={onSelectEvent}
             onCreateEvent={onCreateEvent}
-            onUpdateEvent={onUpdateEvent}
             onDeleteEvent={onDeleteEvent}
+            onOpenEvent={onOpenEvent}
           />
         )}
 
