@@ -259,3 +259,29 @@
   gap: 8px;
   margin-top: 12px;
 }
+
+.event-filter-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.event-filter-tab {
+  border: 1px solid rgba(36, 26, 18, 0.24);
+  border-radius: 999px;
+  padding: 7px 10px;
+  color: var(--ink-soft);
+  background: rgba(255, 244, 210, 0.28);
+  cursor: pointer;
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.event-filter-tab:hover,
+.event-filter-tab.active {
+  border-color: rgba(124, 37, 34, 0.42);
+  color: var(--ink);
+  background: rgba(255, 244, 210, 0.62);
+}
