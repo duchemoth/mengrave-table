@@ -221,6 +221,26 @@ export function EncounterModal({
     setMode("eventEdit");
   }
 
+  function toggleEventCompletion() {
+    if (!target || target.kind !== "event") {
+      return;
+    }
+
+    const nextStatus = target.data.status === "completed" ? "active" : "completed";
+
+    const updatedEvent: MapEvent = {
+      ...target.data,
+      status: nextStatus,
+    };
+
+    onUpdateMapEvent(updatedEvent);
+
+    setEventDraft((currentDraft) => ({
+      ...currentDraft,
+      status: nextStatus,
+    }));
+  }
+
   function saveEventDraft() {
     if (!target || target.kind !== "event") {
       return;
@@ -369,9 +389,21 @@ export function EncounterModal({
                       : "Редактировать событие"}
               </button>
 
-              <button className="secondary-button" type="button">
-                Открыть локальную карту
-              </button>
+              {isEvent ? (
+                <button
+                  className="secondary-button"
+                  type="button"
+                  onClick={toggleEventCompletion}
+                >
+                  {target.data.status === "completed"
+                    ? "Вернуть в активные"
+                    : "Завершить событие"}
+                </button>
+              ) : (
+                <button className="secondary-button" type="button">
+                  Открыть локальную карту
+                </button>
+              )}
 
               <button className="secondary-button" type="button" onClick={closeModal}>
                 Закрыть
