@@ -419,7 +419,7 @@ export function MapView({
               >
                 <button
                   className={`map-event-token ${selectedEventId === mapEvent.id ? "selected" : ""
-                    }`}
+                    } ${isCompleted ? "completed" : ""}`}
                   onMouseDown={(event) => startEventDrag(event, mapEvent.id)}
                   onClick={(event) => {
                     if (isDraggingMarker || didJustDragMarker) return;
@@ -431,7 +431,7 @@ export function MapView({
                   }}
                   title={`${meta.label}: ${mapEvent.title}`}
                 >
-                  <span className="map-event-icon">{isCompleted ? "✓" : meta.icon}</span>
+                  <span className="map-event-icon">{isCompleted ? "✔" : meta.icon}</span>
                 </button>
 
                 <button

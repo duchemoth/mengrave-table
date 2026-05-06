@@ -538,3 +538,52 @@
     0 0 0 3px rgba(180, 122, 53, 0.18),
     0 12px 26px rgba(18, 10, 8, 0.28);
 }
+
+.map-event.completed .map-event-token {
+  border-color: rgba(138, 138, 138, 0.8);
+  background: linear-gradient(135deg, #4a4a4a, #120a08);
+  box-shadow:
+    0 8px 18px rgba(18, 10, 8, 0.24),
+    inset 0 0 0 1px rgba(255, 244, 210, 0.1);
+}
+
+.map-event.completed .map-event-label {
+  opacity: 0;
+}
+
+.map-event.completed:hover .map-event-label {
+  opacity: 1;
+}
+
+.map-event-token.completed {
+  opacity: 0.88;
+  border-color: rgba(234, 216, 173, 0.7);
+  background: linear-gradient(135deg, #5b5142, #24120d);
+  box-shadow:
+    0 8px 18px rgba(18, 10, 8, 0.28),
+    inset 0 0 0 1px rgba(255, 244, 210, 0.14);
+  filter: saturate(0.72);
+}
+
+.map-event-token.completed.selected {
+  opacity: 1;
+  outline: 2px solid rgba(255, 244, 210, 0.78);
+  box-shadow:
+    0 0 0 4px rgba(215, 166, 90, 0.18),
+    0 0 16px rgba(255, 244, 210, 0.28),
+    0 10px 22px rgba(18, 10, 8, 0.34);
+}
+
+.map-event-token.completed .map-event-icon {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  color: #fff3cf;
+  font-size: 18px;
+  font-weight: 900;
+  line-height: 1;
+  text-shadow:
+    0 1px 2px rgba(18, 10, 8, 0.9),
+    0 0 8px rgba(255, 244, 210, 0.35);
+}
