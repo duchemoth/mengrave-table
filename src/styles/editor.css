@@ -287,7 +287,9 @@
 }
 
 .event-filter-tabs-secondary {
-  margin-top: -4px;
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(36, 26, 18, 0.12);
 }
 
 .event-filter-tabs-secondary .event-filter-tab {
