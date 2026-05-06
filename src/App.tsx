@@ -171,6 +171,10 @@ function App() {
     });
   }
 
+  function clampMapCoordinate(value: number) {
+    return Math.max(0, Math.min(100, value));
+  }
+
   function handleMoveLocation(id: string, x: number, y: number) {
     const location = locations.find((currentLocation) => {
       return currentLocation.id === id;
@@ -308,6 +312,24 @@ function App() {
     setIsPlacingEvent(false);
   }
 
+  function handleCreateLocationEvent(location: Location) {
+    const newEvent = createEvent({
+      title: `Событие: ${location.title}`,
+      category: "incident",
+      status: "hidden",
+      description: "Краткое описание события пока не добавлено.",
+      masterNotes: "",
+      x: clampMapCoordinate(location.x + 2),
+      y: clampMapCoordinate(location.y + 2),
+      isSecret: true,
+    });
+
+    setSelectedEventId(newEvent.id);
+    setEncounterTarget({ kind: "event", data: newEvent });
+
+    return newEvent;
+  }
+
   return (
     <main className="atlas-screen">
       <TopBar
@@ -407,6 +429,7 @@ function App() {
         onClose={() => setEncounterTarget(null)}
         onCreateSceneNote={handleCreateSceneNote}
         onUpdateMapEvent={handleUpdateEncounterEvent}
+        onCreateLocationEvent={handleCreateLocationEvent}
       />
     </main>
   );

@@ -38,6 +38,7 @@ type EncounterModalProps = {
   onClose: () => void;
   onCreateSceneNote: (note: string) => void;
   onUpdateMapEvent: (event: MapEvent) => void;
+  onCreateLocationEvent: (location: Location) => MapEvent;
 };
 
 type EventDraft = {
@@ -87,6 +88,7 @@ export function EncounterModal({
   onClose,
   onCreateSceneNote,
   onUpdateMapEvent,
+  onCreateLocationEvent,
 }: EncounterModalProps) {
   const [mode, setMode] = useState<"overview" | "scene" | "eventEdit">(
     "overview",
@@ -198,6 +200,25 @@ export function EncounterModal({
     }));
 
     setIsEventSaved(false);
+  }
+
+  function createEventFromCurrentLocation() {
+    if (!target || target.kind !== "location") {
+      return;
+    }
+
+    const newEvent = onCreateLocationEvent(target.data);
+
+    setEventDraft({
+      title: newEvent.title,
+      category: newEvent.category,
+      status: newEvent.status,
+      description: newEvent.description,
+      masterNotes: newEvent.masterNotes,
+      isSecret: newEvent.isSecret,
+    });
+
+    setMode("eventEdit");
   }
 
   function saveEventDraft() {
@@ -329,6 +350,11 @@ export function EncounterModal({
                 className="secondary-button"
                 type="button"
                 onClick={() => {
+                  if (isLocation && target.kind === "location") {
+                    createEventFromCurrentLocation();
+                    return;
+                  }
+
                   if (isEvent) {
                     setMode("eventEdit");
                   }
@@ -407,126 +433,126 @@ export function EncounterModal({
               </button>
             </footer>
           </>
-      ) : (
-      <>
-        <div className="event-edit-layout">
-          <section className="event-edit-card">
-            <p className="eyebrow">Событие</p>
-            <h3>Редактирование события</h3>
+        ) : (
+          <>
+            <div className="event-edit-layout">
+              <section className="event-edit-card">
+                <p className="eyebrow">Событие</p>
+                <h3>Редактирование события</h3>
 
-            <div className="event-form-grid">
-              <label className="event-field">
-                Название
-                <input
-                  value={eventDraft.title}
+                <div className="event-form-grid">
+                  <label className="event-field">
+                    Название
+                    <input
+                      value={eventDraft.title}
+                      onChange={(event) =>
+                        updateEventDraft({ title: event.target.value })
+                      }
+                      placeholder="Название события"
+                    />
+                  </label>
+
+                  <label className="event-field">
+                    Категория
+                    <select
+                      value={eventDraft.category}
+                      onChange={(event) =>
+                        updateEventDraft({
+                          category: event.target.value as MapEvent["category"],
+                        })
+                      }
+                    >
+                      <option value="incident">Происшествие</option>
+                      <option value="mystery">Неясность</option>
+                      <option value="aberration">Аберрация</option>
+                      <option value="conflict">Столкновение</option>
+                      <option value="object">Объект</option>
+                      <option value="other">Другое</option>
+                    </select>
+                  </label>
+
+                  <label className="event-field">
+                    Статус
+                    <select
+                      value={eventDraft.status}
+                      onChange={(event) =>
+                        updateEventDraft({
+                          status: event.target.value as MapEvent["status"],
+                        })
+                      }
+                    >
+                      <option value="hidden">Скрыто</option>
+                      <option value="active">Активно</option>
+                      <option value="completed">Завершено</option>
+                    </select>
+                  </label>
+
+                  <label className="event-checkbox">
+                    <input
+                      type="checkbox"
+                      checked={eventDraft.isSecret}
+                      onChange={(event) =>
+                        updateEventDraft({ isSecret: event.target.checked })
+                      }
+                    />
+                    Скрыто от игроков
+                  </label>
+                </div>
+              </section>
+
+              <section className="event-edit-card">
+                <p className="eyebrow">Для игроков</p>
+                <h3>Описание</h3>
+
+                <textarea
+                  className="scene-textarea"
+                  value={eventDraft.description}
                   onChange={(event) =>
-                    updateEventDraft({ title: event.target.value })
+                    updateEventDraft({ description: event.target.value })
                   }
-                  placeholder="Название события"
+                  placeholder="Что игроки видят, слышат или замечают..."
                 />
-              </label>
+              </section>
 
-              <label className="event-field">
-                Категория
-                <select
-                  value={eventDraft.category}
-                  onChange={(event) =>
-                    updateEventDraft({
-                      category: event.target.value as MapEvent["category"],
-                    })
-                  }
-                >
-                  <option value="incident">Происшествие</option>
-                  <option value="mystery">Неясность</option>
-                  <option value="aberration">Аберрация</option>
-                  <option value="conflict">Столкновение</option>
-                  <option value="object">Объект</option>
-                  <option value="other">Другое</option>
-                </select>
-              </label>
+              <section className="event-edit-card">
+                <p className="eyebrow">Для мастера</p>
+                <h3>Скрытые заметки</h3>
 
-              <label className="event-field">
-                Статус
-                <select
-                  value={eventDraft.status}
+                <textarea
+                  className="scene-textarea"
+                  value={eventDraft.masterNotes}
                   onChange={(event) =>
-                    updateEventDraft({
-                      status: event.target.value as MapEvent["status"],
-                    })
+                    updateEventDraft({ masterNotes: event.target.value })
                   }
-                >
-                  <option value="hidden">Скрыто</option>
-                  <option value="active">Активно</option>
-                  <option value="completed">Завершено</option>
-                </select>
-              </label>
-
-              <label className="event-checkbox">
-                <input
-                  type="checkbox"
-                  checked={eventDraft.isSecret}
-                  onChange={(event) =>
-                    updateEventDraft({ isSecret: event.target.checked })
-                  }
+                  placeholder="Что знает только мастер: причины, последствия, скрытые угрозы..."
                 />
-                Скрыто от игроков
-              </label>
+              </section>
             </div>
-          </section>
 
-          <section className="event-edit-card">
-            <p className="eyebrow">Для игроков</p>
-            <h3>Описание</h3>
+            <footer className="encounter-actions">
+              <button
+                className="secondary-button"
+                type="button"
+                onClick={() => setMode("overview")}
+              >
+                Вернуться к обзору
+              </button>
 
-            <textarea
-              className="scene-textarea"
-              value={eventDraft.description}
-              onChange={(event) =>
-                updateEventDraft({ description: event.target.value })
-              }
-              placeholder="Что игроки видят, слышат или замечают..."
-            />
-          </section>
+              <button
+                className="secondary-button"
+                type="button"
+                onClick={saveEventDraft}
+              >
+                Сохранить событие
+              </button>
 
-          <section className="event-edit-card">
-            <p className="eyebrow">Для мастера</p>
-            <h3>Скрытые заметки</h3>
-
-            <textarea
-              className="scene-textarea"
-              value={eventDraft.masterNotes}
-              onChange={(event) =>
-                updateEventDraft({ masterNotes: event.target.value })
-              }
-              placeholder="Что знает только мастер: причины, последствия, скрытые угрозы..."
-            />
-          </section>
-        </div>
-
-        <footer className="encounter-actions">
-          <button
-            className="secondary-button"
-            type="button"
-            onClick={() => setMode("overview")}
-          >
-            Вернуться к обзору
-          </button>
-
-          <button
-            className="secondary-button"
-            type="button"
-            onClick={saveEventDraft}
-          >
-            Сохранить событие
-          </button>
-
-          <button className="secondary-button" type="button" onClick={closeModal}>
-            Закрыть
-          </button>
-        </footer>
-      </>
+              <button className="secondary-button" type="button" onClick={closeModal}>
+                Закрыть
+              </button>
+            </footer>
+          </>
         )}
-    </section>
+      </section>
     </div >
   );
 }
