@@ -199,3 +199,82 @@
     min-height: 260px;
   }
 }
+
+.event-edit-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 18px;
+}
+
+.event-edit-card {
+  min-height: 320px;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgba(36, 26, 18, 0.22);
+  border-radius: 20px;
+  padding: 18px;
+  background: rgba(255, 244, 210, 0.32);
+}
+
+.event-edit-card h3 {
+  margin: 0 0 12px;
+  color: var(--ink);
+  font-size: 24px;
+  line-height: 1.05;
+}
+
+.event-form-grid {
+  display: grid;
+  gap: 12px;
+}
+
+.event-field {
+  display: grid;
+  gap: 6px;
+  color: var(--ink-soft);
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.event-field input,
+.event-field select {
+  border: 1px solid rgba(36, 26, 18, 0.24);
+  border-radius: 12px;
+  padding: 10px 12px;
+  color: var(--ink);
+  background: rgba(255, 244, 210, 0.58);
+  outline: none;
+}
+
+.event-field input:focus,
+.event-field select:focus {
+  border-color: rgba(124, 37, 34, 0.48);
+  box-shadow: 0 0 0 3px rgba(124, 37, 34, 0.12);
+}
+
+.event-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ink-soft);
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.event-checkbox input {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--blood-seal);
+}
+
+@media (max-width: 900px) {
+  .event-edit-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .event-edit-card {
+    min-height: 240px;
+  }
+}

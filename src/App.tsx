@@ -59,6 +59,7 @@ function App() {
   const [selectedLocationId, setSelectedLocationId] = useState("old-harbor");
   const [selectedGroupId, setSelectedGroupId] = useState<string | null>(null);
   const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
+  const [isPlacingEvent, setIsPlacingEvent] = useState(false);
 
   const [encounterTarget, setEncounterTarget] = useState<
     | { kind: "location"; data: Location }
@@ -76,6 +77,26 @@ function App() {
   useEffect(() => {
     localStorage.setItem(MASTER_NOTES_STORAGE_KEY, masterNotes);
   }, [masterNotes]);
+
+  useEffect(() => {
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setIsPlacingEvent(false);
+      }
+    }
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (isPlayerMode) {
+      setIsPlacingEvent(false);
+    }
+  }, [isPlayerMode]);
 
   const visibleLocations = locations.filter((location) => {
     return !isPlayerMode || !location.isSecret;
@@ -210,6 +231,24 @@ function App() {
     setEncounterTarget({ kind: "event", data: event });
   }
 
+  function handleUpdateEncounterEvent(updatedEvent: MapEvent) {
+    updateEvent(updatedEvent);
+
+    setEncounterTarget((currentTarget) => {
+      if (
+        currentTarget?.kind === "event" &&
+        currentTarget.data.id === updatedEvent.id
+      ) {
+        return {
+          kind: "event",
+          data: updatedEvent,
+        };
+      }
+
+      return currentTarget;
+    });
+  }
+
   function handleCreateSceneNote(note: string) {
     setMasterNotes((currentNotes) => {
       const separator = currentNotes.trim().length > 0 ? "\n\n" : "";
@@ -240,20 +279,33 @@ function App() {
     }
   }
 
-  function handleCreateMapEvent() {
+  function handleToggleEventPlacement() {
+    if (isPlayerMode) {
+      return;
+    }
+
+    setIsPlacingEvent((currentValue) => !currentValue);
+  }
+
+  function handleCreateMapEventAt(x: number, y: number) {
+    if (isPlayerMode) {
+      return;
+    }
+
     const newEvent = createEvent({
       title: "Новое событие",
       category: "incident",
       status: "hidden",
       description: "Краткое описание события пока не добавлено.",
       masterNotes: "",
-      x: 50,
-      y: 50,
+      x,
+      y,
       isSecret: true,
     });
 
     setSelectedEventId(newEvent.id);
     setEncounterTarget({ kind: "event", data: newEvent });
+    setIsPlacingEvent(false);
   }
 
   return (
@@ -283,7 +335,9 @@ function App() {
         onMoveLocation={handleMoveLocation}
         onMoveGroup={handleMoveGroup}
         onMoveEvent={handleMoveEvent}
-        onCreateMapEvent={handleCreateMapEvent}
+        isPlacingEvent={isPlacingEvent}
+        onToggleEventPlacement={handleToggleEventPlacement}
+        onCreateMapEventAt={handleCreateMapEventAt}
         onOpenLocationEncounter={handleOpenLocationEncounter}
         onOpenGroupEncounter={handleOpenGroupEncounter}
         onOpenEventEncounter={handleOpenEventEncounter}
@@ -352,6 +406,7 @@ function App() {
         target={encounterTarget}
         onClose={() => setEncounterTarget(null)}
         onCreateSceneNote={handleCreateSceneNote}
+        onUpdateMapEvent={handleUpdateEncounterEvent}
       />
     </main>
   );

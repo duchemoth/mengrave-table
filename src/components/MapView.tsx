@@ -12,6 +12,7 @@ type MapViewProps = {
   userMode: UserMode;
   isDeveloperMode: boolean;
   isCleanMapMode: boolean;
+  isPlacingEvent: boolean;
   onSelectLocation: (locationId: string) => void;
   onSelectGroup: (groupId: string) => void;
   onSelectEvent: (eventId: string) => void;
@@ -19,7 +20,8 @@ type MapViewProps = {
   onMoveLocation: (id: string, x: number, y: number) => void;
   onMoveGroup: (id: string, x: number, y: number) => void;
   onMoveEvent: (id: string, x: number, y: number) => void;
-  onCreateMapEvent: () => void;
+  onToggleEventPlacement: () => void;
+  onCreateMapEventAt: (x: number, y: number) => void;
   onOpenLocationEncounter: (location: Location) => void;
   onOpenGroupEncounter: (group: MapGroup) => void;
   onOpenEventEncounter: (event: MapEvent) => void;
@@ -67,6 +69,7 @@ export function MapView({
   userMode,
   isDeveloperMode,
   isCleanMapMode,
+  isPlacingEvent,
   onSelectLocation,
   onSelectGroup,
   onSelectEvent,
@@ -74,7 +77,8 @@ export function MapView({
   onMoveLocation,
   onMoveGroup,
   onMoveEvent,
-  onCreateMapEvent,
+  onToggleEventPlacement,
+  onCreateMapEventAt,
   onOpenLocationEncounter,
   onOpenGroupEncounter,
   onOpenEventEncounter,
@@ -192,6 +196,20 @@ export function MapView({
     onMoveEvent(draggedEventId, x, y);
   }
 
+  function handleMapClick(event: React.MouseEvent<HTMLDivElement>) {
+    if (!isPlacingEvent || userMode === "player") {
+      return;
+    }
+
+    const rect = event.currentTarget.getBoundingClientRect();
+
+    const x = clamp(((event.clientX - rect.left) / rect.width) * 100);
+    const y = clamp(((event.clientY - rect.top) / rect.height) * 100);
+
+    event.stopPropagation();
+    onCreateMapEventAt(x, y);
+  }
+
   function stopMarkerDrag() {
     setDraggedLocationId(null);
     setDraggedGroupId(null);
@@ -225,10 +243,17 @@ export function MapView({
         onContextMenu={(event) => event.preventDefault()}
       >
         <div
-          className={`map ${isDeveloperMode ? "map-editable" : ""}`}
+          className={`map ${isDeveloperMode ? "map-editable" : ""} ${isPlacingEvent ? "map-placing-event" : ""
+            }`}
           style={{
             transform: `translate(${offsetX}px, ${offsetY}px) scale(${scale})`,
           }}
+          onMouseDown={(event) => {
+            if (isPlacingEvent) {
+              event.stopPropagation();
+            }
+          }}
+          onClick={handleMapClick}
         >
           {!isCleanMapMode && (
             <div className="map-label">
@@ -236,7 +261,13 @@ export function MapView({
             </div>
           )}
 
-          {isDeveloperMode && !isCleanMapMode && (
+          {!isCleanMapMode && isPlacingEvent && (
+            <div className="map-hint">
+              Кликни по карте, чтобы разместить событие · Esc — отмена
+            </div>
+          )}
+
+          {isDeveloperMode && !isCleanMapMode && !isPlacingEvent && (
             <div className="map-hint">
               Зажми маркер, чтобы переместить локацию
             </div>
@@ -394,8 +425,12 @@ export function MapView({
       )}
 
       {!isCleanMapMode && userMode !== "player" && (
-        <button className="map-create-event-button" onClick={onCreateMapEvent}>
-          Создать событие
+        <button
+          className={`map-create-event-button ${isPlacingEvent ? "active" : ""
+            }`}
+          onClick={onToggleEventPlacement}
+        >
+          {isPlacingEvent ? "Отменить событие" : "Разместить событие"}
         </button>
       )}
 

@@ -37,6 +37,16 @@ type EncounterModalProps = {
   target: EncounterTarget | null;
   onClose: () => void;
   onCreateSceneNote: (note: string) => void;
+  onUpdateMapEvent: (event: MapEvent) => void;
+};
+
+type EventDraft = {
+  title: string;
+  category: MapEvent["category"];
+  status: MapEvent["status"];
+  description: string;
+  masterNotes: string;
+  isSecret: boolean;
 };
 
 function getSceneStorageKey(target: EncounterTarget) {
@@ -76,11 +86,24 @@ export function EncounterModal({
   target,
   onClose,
   onCreateSceneNote,
+  onUpdateMapEvent,
 }: EncounterModalProps) {
-  const [mode, setMode] = useState<"overview" | "scene">("overview");
+  const [mode, setMode] = useState<"overview" | "scene" | "eventEdit">(
+    "overview",
+  );
   const [playerDescription, setPlayerDescription] = useState("");
   const [masterNotes, setMasterNotes] = useState("");
   const [isSceneNoteCreated, setIsSceneNoteCreated] = useState(false);
+  const [eventDraft, setEventDraft] = useState<EventDraft>({
+    title: "",
+    category: "incident",
+    status: "hidden",
+    description: "",
+    masterNotes: "",
+    isSecret: true,
+  });
+
+  const [isEventSaved, setIsEventSaved] = useState(false);
 
   const sceneStorageKey = useMemo(() => {
     if (!target) {
@@ -102,6 +125,23 @@ export function EncounterModal({
     setPlayerDescription(savedDraft.playerDescription);
     setMasterNotes(savedDraft.masterNotes);
   }, [sceneStorageKey]);
+
+  useEffect(() => {
+    if (!target || target.kind !== "event") {
+      return;
+    }
+
+    setEventDraft({
+      title: target.data.title,
+      category: target.data.category,
+      status: target.data.status,
+      description: target.data.description,
+      masterNotes: target.data.masterNotes,
+      isSecret: target.data.isSecret,
+    });
+
+    setIsEventSaved(false);
+  }, [target]);
 
   if (!target) {
     return null;
@@ -149,6 +189,41 @@ export function EncounterModal({
       playerDescription,
       masterNotes: nextMasterNotes,
     });
+  }
+
+  function updateEventDraft(updatedFields: Partial<EventDraft>) {
+    setEventDraft((currentDraft) => ({
+      ...currentDraft,
+      ...updatedFields,
+    }));
+
+    setIsEventSaved(false);
+  }
+
+  function saveEventDraft() {
+    if (!target || target.kind !== "event") {
+      return;
+    }
+
+    const updatedEvent: MapEvent = {
+      ...target.data,
+      title: eventDraft.title.trim() || "Безымянное событие",
+      category: eventDraft.category,
+      status: eventDraft.status,
+      description:
+        eventDraft.description.trim() ||
+        "Краткое описание события пока не добавлено.",
+      masterNotes: eventDraft.masterNotes,
+      isSecret: eventDraft.isSecret,
+    };
+
+    onUpdateMapEvent(updatedEvent);
+    setIsEventSaved(true);
+    setMode("overview");
+
+    window.setTimeout(() => {
+      setIsEventSaved(false);
+    }, 1600);
   }
 
   function createSceneNote() {
@@ -250,12 +325,22 @@ export function EncounterModal({
                 Открыть сцену
               </button>
 
-              <button className="secondary-button" type="button">
+              <button
+                className="secondary-button"
+                type="button"
+                onClick={() => {
+                  if (isEvent) {
+                    setMode("eventEdit");
+                  }
+                }}
+              >
                 {isLocation
                   ? "Создать событие"
                   : isGroup
                     ? "Начать конфликт"
-                    : "Открыть событие"}
+                    : isEventSaved
+                      ? "Событие сохранено"
+                      : "Редактировать событие"}
               </button>
 
               <button className="secondary-button" type="button">
@@ -267,7 +352,7 @@ export function EncounterModal({
               </button>
             </footer>
           </>
-        ) : (
+        ) : mode === "scene" ? (
           <>
             <div className="scene-layout">
               <section className="scene-card">
@@ -322,8 +407,126 @@ export function EncounterModal({
               </button>
             </footer>
           </>
+      ) : (
+      <>
+        <div className="event-edit-layout">
+          <section className="event-edit-card">
+            <p className="eyebrow">Событие</p>
+            <h3>Редактирование события</h3>
+
+            <div className="event-form-grid">
+              <label className="event-field">
+                Название
+                <input
+                  value={eventDraft.title}
+                  onChange={(event) =>
+                    updateEventDraft({ title: event.target.value })
+                  }
+                  placeholder="Название события"
+                />
+              </label>
+
+              <label className="event-field">
+                Категория
+                <select
+                  value={eventDraft.category}
+                  onChange={(event) =>
+                    updateEventDraft({
+                      category: event.target.value as MapEvent["category"],
+                    })
+                  }
+                >
+                  <option value="incident">Происшествие</option>
+                  <option value="mystery">Неясность</option>
+                  <option value="aberration">Аберрация</option>
+                  <option value="conflict">Столкновение</option>
+                  <option value="object">Объект</option>
+                  <option value="other">Другое</option>
+                </select>
+              </label>
+
+              <label className="event-field">
+                Статус
+                <select
+                  value={eventDraft.status}
+                  onChange={(event) =>
+                    updateEventDraft({
+                      status: event.target.value as MapEvent["status"],
+                    })
+                  }
+                >
+                  <option value="hidden">Скрыто</option>
+                  <option value="active">Активно</option>
+                  <option value="completed">Завершено</option>
+                </select>
+              </label>
+
+              <label className="event-checkbox">
+                <input
+                  type="checkbox"
+                  checked={eventDraft.isSecret}
+                  onChange={(event) =>
+                    updateEventDraft({ isSecret: event.target.checked })
+                  }
+                />
+                Скрыто от игроков
+              </label>
+            </div>
+          </section>
+
+          <section className="event-edit-card">
+            <p className="eyebrow">Для игроков</p>
+            <h3>Описание</h3>
+
+            <textarea
+              className="scene-textarea"
+              value={eventDraft.description}
+              onChange={(event) =>
+                updateEventDraft({ description: event.target.value })
+              }
+              placeholder="Что игроки видят, слышат или замечают..."
+            />
+          </section>
+
+          <section className="event-edit-card">
+            <p className="eyebrow">Для мастера</p>
+            <h3>Скрытые заметки</h3>
+
+            <textarea
+              className="scene-textarea"
+              value={eventDraft.masterNotes}
+              onChange={(event) =>
+                updateEventDraft({ masterNotes: event.target.value })
+              }
+              placeholder="Что знает только мастер: причины, последствия, скрытые угрозы..."
+            />
+          </section>
+        </div>
+
+        <footer className="encounter-actions">
+          <button
+            className="secondary-button"
+            type="button"
+            onClick={() => setMode("overview")}
+          >
+            Вернуться к обзору
+          </button>
+
+          <button
+            className="secondary-button"
+            type="button"
+            onClick={saveEventDraft}
+          >
+            Сохранить событие
+          </button>
+
+          <button className="secondary-button" type="button" onClick={closeModal}>
+            Закрыть
+          </button>
+        </footer>
+      </>
         )}
-      </section>
-    </div>
+    </section>
+    </div >
   );
 }
