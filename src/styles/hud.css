@@ -832,69 +832,200 @@
   font-weight: 800;
 }
 
+@page {
+  size: A4 portrait;
+  margin: 10mm;
+}
+
 @media print {
+
+  html,
+  body {
+    width: auto !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: white !important;
+  }
+
+  #root,
+  #root>*,
+  main,
+  .app,
+  .map-app,
+  .map-shell,
+  .game-shell {
+    position: static !important;
+    width: auto !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
   body * {
     visibility: hidden !important;
   }
 
+  .character-roster-window,
   .character-preview-backdrop,
-  .character-preview-backdrop * {
+  .character-preview-window,
+  .character-print-sheet,
+  .character-print-sheet * {
     visibility: visible !important;
   }
 
+  .character-roster-window {
+    position: static !important;
+    width: auto !important;
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+    padding: 0 !important;
+    border: 0 !important;
+    background: white !important;
+    box-shadow: none !important;
+  }
+
   .character-preview-backdrop {
-    position: static;
-    display: block;
-    padding: 0;
-    background: white;
-    backdrop-filter: none;
+    position: static !important;
+    inset: auto !important;
+    display: block !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+    padding: 0 !important;
+    background: white !important;
+    backdrop-filter: none !important;
   }
 
   .character-preview-window {
-    width: auto;
-    max-height: none;
-    overflow: visible;
-    border: 0;
-    border-radius: 0;
-    padding: 0;
-    background: white;
-    box-shadow: none;
+    position: static !important;
+    width: 100% !important;
+    max-width: none !important;
+    max-height: none !important;
+    overflow: visible !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+    background: white !important;
+    box-shadow: none !important;
   }
 
-  .no-print {
+  .no-print,
+  .character-preview-toolbar,
+  .character-tabs,
+  .character-list-panel,
+  .character-editor-panel {
     display: none !important;
   }
 
   .character-print-sheet {
-    color: black;
-    background: white;
+    display: block !important;
+    width: 100% !important;
+    color: black !important;
+    background: white !important;
+    font-size: 10pt !important;
   }
 
-  .character-print-header,
-  .character-print-section,
+  .character-print-header {
+    margin-bottom: 8mm !important;
+    padding: 6mm !important;
+    border: 2px solid black !important;
+    border-radius: 0 !important;
+    background: white !important;
+    page-break-inside: avoid !important;
+  }
+
+  .character-print-header h1 {
+    color: black !important;
+    font-size: 26pt !important;
+  }
+
+  .character-print-header p,
+  .character-print-kicker {
+    color: black !important;
+  }
+
+  .character-print-section {
+    margin-bottom: 6mm !important;
+    padding: 4mm !important;
+    border: 1px solid black !important;
+    border-radius: 0 !important;
+    background: white !important;
+    page-break-inside: auto !important;
+    break-inside: auto !important;
+  }
+
+  .character-print-section h2 {
+    color: black !important;
+    font-size: 16pt !important;
+  }
+
+  .character-print-grid,
+  .character-print-resources,
+  .character-print-skills {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 3mm !important;
+  }
+
+  .character-print-resources {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  }
+
   .character-print-field,
   .character-print-text-block,
   .character-print-resource,
   .character-print-skill {
-    background: white;
-    border-color: black;
+    border: 1px solid black !important;
+    border-radius: 0 !important;
+    padding: 2.5mm !important;
+    background: white !important;
+    color: black !important;
   }
 
-  .character-print-header h1,
-  .character-print-section h2,
-  .character-print-field strong,
-  .character-print-resource strong,
-  .character-print-text-block p,
-  .character-print-skill {
-    color: black;
-  }
-
-  .character-print-kicker,
-  .character-print-header p,
   .character-print-field span,
   .character-print-text-block span,
   .character-print-resource span {
-    color: #333;
+    color: #333 !important;
+  }
+
+  .character-print-field strong,
+  .character-print-resource strong,
+  .character-print-text-block p,
+  .character-print-skill,
+  .character-print-skill strong {
+    color: black !important;
+  }
+
+  .character-print-text-block p {
+    white-space: pre-wrap !important;
+  }
+
+  .master-only-print {
+    page-break-before: auto !important;
+  }
+
+  .character-print-sheet {
+    display: block !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
+    color: black !important;
+    background: white !important;
+    font-size: 10pt !important;
+  }
+
+  .character-print-text-block,
+  .character-print-skills,
+  .character-print-grid,
+  .character-print-resources {
+    page-break-inside: auto !important;
+    break-inside: auto !important;
   }
 }
 
