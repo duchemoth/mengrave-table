@@ -177,5 +177,6 @@ export type PlayerCharacter = {
   patrons: string;
 
   progressionNotes: string;
+  secretHooks: string;
   masterNotes: string;
 };

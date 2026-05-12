@@ -384,6 +384,7 @@ export function useCampaign() {
       patrons: "",
 
       progressionNotes: "",
+      secretHooks: "",
       masterNotes: "",
     };
 

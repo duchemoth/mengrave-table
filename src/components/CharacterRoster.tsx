@@ -68,7 +68,7 @@ type RelationsSection =
     | "patrons"
     | "oldName";
 
-type MasterSection = "notes" | "progression" | "danger";
+type MasterSection = "notes" | "secretHooks" | "progression" | "danger";
 
 type CharacterRosterProps = {
     characters: PlayerCharacter[];
@@ -114,6 +114,7 @@ export function CharacterRoster({
         Record<MasterSection, boolean>
     >({
         notes: true,
+        secretHooks: false,
         progression: false,
         danger: false,
     });
@@ -1049,6 +1050,36 @@ export function CharacterRoster({
                                                                 })
                                                             }
                                                             placeholder="Секреты, страхи, личные крючки, скрытые связи, что важно помнить мастеру..."
+                                                        />
+                                                    </label>
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        <div className="character-accordion">
+                                            <button
+                                                className="character-accordion-header"
+                                                type="button"
+                                                onClick={() => toggleMasterSection("secretHooks")}
+                                            >
+                                                <span>
+                                                    {openMasterSections.secretHooks ? "▼" : "▶"} Секреты и крючки
+                                                </span>
+                                                <small>личные квесты, скрытые последствия, будущие сцены</small>
+                                            </button>
+
+                                            {openMasterSections.secretHooks && (
+                                                <div className="character-accordion-body">
+                                                    <label className="character-field wide">
+                                                        Секреты и крючки
+                                                        <textarea
+                                                            value={selectedCharacter.secretHooks}
+                                                            onChange={(event) =>
+                                                                updateSelectedCharacter({
+                                                                    secretHooks: event.target.value,
+                                                                })
+                                                            }
+                                                            placeholder="Скрытые последствия, личный квест, фракционные зацепки, кто может выйти на персонажа, что всплывёт позже..."
                                                         />
                                                     </label>
                                                 </div>

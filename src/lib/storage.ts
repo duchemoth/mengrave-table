@@ -210,6 +210,7 @@ function normalizeCharacter(character: PlayerCharacter): PlayerCharacter {
     patrons: character.patrons ?? "",
 
     progressionNotes: character.progressionNotes ?? "",
+    secretHooks: character.secretHooks ?? "",
     masterNotes: character.masterNotes ?? "",
   };
 }
