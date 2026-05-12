@@ -12,6 +12,7 @@ import { InventoryPanel } from "./components/panels/InventoryPanel";
 import { campaignData } from "./data/campaign";
 import { useCampaign } from "./hooks/useCampaign";
 import { useInterfaceMode } from "./hooks/useInterfaceMode";
+import { ReferenceLibrary } from "./components/ReferenceLibrary";
 import type { Location, MapEvent, MapGroup, } from "./types/campaign";
 
 const MASTER_NOTES_STORAGE_KEY = "nri-table-master-notes";
@@ -22,6 +23,7 @@ function App() {
     groups,
     events,
     characters,
+    referenceArticles,
     quests,
     npcs,
     items,
@@ -36,10 +38,13 @@ function App() {
     createGroup,
     createEvent,
     createCharacter,
+    createReferenceArticle,
     updateCharacter,
+    updateReferenceArticle,
     deleteGroup,
     deleteEvent,
     deleteCharacter,
+    deleteReferenceArticle,
     deleteLocation,
     exportCampaign,
     importCampaign,
@@ -76,6 +81,8 @@ function App() {
   const [isNotesOpen, setIsNotesOpen] = useState(false);
 
   const [isCharactersOpen, setIsCharactersOpen] = useState(false);
+
+  const [isReferenceOpen, setIsReferenceOpen] = useState(false);
 
   const [masterNotes, setMasterNotes] = useState(() => {
     return localStorage.getItem(MASTER_NOTES_STORAGE_KEY) ?? "";
@@ -424,8 +431,10 @@ function App() {
           isPlayerMode={isPlayerMode}
           isNotesOpen={isNotesOpen}
           isCharactersOpen={isCharactersOpen}
+          isReferenceOpen={isReferenceOpen}
           onToggleNotes={() => setIsNotesOpen((current) => !current)}
           onToggleCharacters={() => setIsCharactersOpen((current) => !current)}
+          onToggleReference={() => setIsReferenceOpen((current) => !current)}
         />
       )}
 
@@ -444,6 +453,18 @@ function App() {
           onUpdateCharacter={updateCharacter}
           onDeleteCharacter={handleDeleteCharacter}
           onClose={() => setIsCharactersOpen(false)}
+        />
+      )}
+
+      {!isCleanMapMode && isReferenceOpen && (
+        <ReferenceLibrary
+          articles={referenceArticles}
+          isPlayerMode={isPlayerMode}
+          isDeveloperMode={isDeveloperMode}
+          onCreateArticle={createReferenceArticle}
+          onUpdateArticle={updateReferenceArticle}
+          onDeleteArticle={deleteReferenceArticle}
+          onClose={() => setIsReferenceOpen(false)}
         />
       )}
 
