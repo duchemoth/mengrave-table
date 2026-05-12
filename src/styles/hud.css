@@ -605,3 +605,7 @@
 .character-accordion-danger .character-accordion-header:hover {
   background: rgba(124, 37, 34, 0.11);
 }
+
+.character-skills-accordion-list {
+  margin-top: 16px;
+}

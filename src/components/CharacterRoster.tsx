@@ -59,7 +59,14 @@ type CharacterTab =
     | "relations"
     | "master";
 
-type EquipmentSection = "weapons" | "armor" | "quickAccess" | "backpack" | "cryptotoken";
+type EquipmentSection =
+    | "weapons"
+    | "armor"
+    | "quickAccess"
+    | "backpack"
+    | "cryptotoken";
+
+type SkillsSection = "specializations" | "traits";
 
 type RelationsSection =
     | "contacts"
@@ -98,6 +105,13 @@ export function CharacterRoster({
         quickAccess: false,
         backpack: false,
         cryptotoken: false,
+    });
+
+    const [openSkillsSections, setOpenSkillsSections] = useState<
+        Record<SkillsSection, boolean>
+    >({
+        specializations: true,
+        traits: false,
     });
 
     const [openRelationsSections, setOpenRelationsSections] = useState<
@@ -170,6 +184,13 @@ export function CharacterRoster({
 
     function toggleEquipmentSection(section: EquipmentSection) {
         setOpenEquipmentSections((currentSections) => ({
+            ...currentSections,
+            [section]: !currentSections[section],
+        }));
+    }
+
+    function toggleSkillsSection(section: SkillsSection) {
+        setOpenSkillsSections((currentSections) => ({
             ...currentSections,
             [section]: !currentSections[section],
         }));
@@ -692,31 +713,65 @@ export function CharacterRoster({
                                         })}
                                     </div>
 
-                                    <label className="character-field wide">
-                                        Специализации
-                                        <textarea
-                                            value={selectedCharacter.specializations}
-                                            onChange={(event) =>
-                                                updateSelectedCharacter({
-                                                    specializations: event.target.value,
-                                                })
-                                            }
-                                            placeholder="Например: Стрельба — пистольверы; Ремонт — комген; Навигация — караванные тропы..."
-                                        />
-                                    </label>
+                                    <div className="character-accordion-list character-skills-accordion-list">
+                                        <div className="character-accordion">
+                                            <button
+                                                className="character-accordion-header"
+                                                type="button"
+                                                onClick={() => toggleSkillsSection("specializations")}
+                                            >
+                                                <span>
+                                                    {openSkillsSections.specializations ? "▼" : "▶"} Специализации
+                                                </span>
+                                                <small>узкие области внутри навыков: оружие, тропы, фракции, режимы</small>
+                                            </button>
 
-                                    <label className="character-field wide">
-                                        Черты
-                                        <textarea
-                                            value={selectedCharacter.traits}
-                                            onChange={(event) =>
-                                                updateSelectedCharacter({
-                                                    traits: event.target.value,
-                                                })
-                                            }
-                                            placeholder="Положительные и отрицательные черты персонажа..."
-                                        />
-                                    </label>
+                                            {openSkillsSections.specializations && (
+                                                <div className="character-accordion-body">
+                                                    <label className="character-field wide">
+                                                        Специализации
+                                                        <textarea
+                                                            value={selectedCharacter.specializations}
+                                                            onChange={(event) =>
+                                                                updateSelectedCharacter({
+                                                                    specializations: event.target.value,
+                                                                })
+                                                            }
+                                                            placeholder="Например: Стрельба — пистольверы; Ремонт — комген; Навигация — караванные тропы; Венцы — форсаж..."
+                                                        />
+                                                    </label>
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        <div className="character-accordion">
+                                            <button
+                                                className="character-accordion-header"
+                                                type="button"
+                                                onClick={() => toggleSkillsSection("traits")}
+                                            >
+                                                <span>{openSkillsSections.traits ? "▼" : "▶"} Черты</span>
+                                                <small>положительные, отрицательные, сюжетные и реалистичные особенности</small>
+                                            </button>
+
+                                            {openSkillsSections.traits && (
+                                                <div className="character-accordion-body">
+                                                    <label className="character-field wide">
+                                                        Черты
+                                                        <textarea
+                                                            value={selectedCharacter.traits}
+                                                            onChange={(event) =>
+                                                                updateSelectedCharacter({
+                                                                    traits: event.target.value,
+                                                                })
+                                                            }
+                                                            placeholder="Например: Крепкий, Плохой сон, Долг, Узнаваемое лицо, Непереносимость Венца..."
+                                                        />
+                                                    </label>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
                                 </section>
                             )}
 
