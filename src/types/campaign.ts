@@ -30,12 +30,13 @@ export type Quest = {
 
 export type CampaignData = {
   locations: Location[];
-  quests: Quest[];
-  npcs: string[];
-  items: string[];
   groups: MapGroup[];
   events: MapEvent[];
   characters: PlayerCharacter[];
+  referenceArticles: ReferenceArticle[];
+  quests: Quest[];
+  npcs: string[];
+  items: string[];
 };
 
 export type MapGroupFaction =
@@ -179,4 +180,32 @@ export type PlayerCharacter = {
   progressionNotes: string;
   secretHooks: string;
   masterNotes: string;
+};
+
+export type ReferenceVisibility = "players" | "master" | "echo";
+
+export type ReferenceSection =
+  | "rules"
+  | "lore"
+  | "bestiary"
+  | "equipment"
+  | "factions"
+  | "glossary"
+  | "other";
+
+export type ReferenceArticle = {
+  id: string;
+
+  section: ReferenceSection;
+  title: string;
+  content: string;
+
+  visibility: ReferenceVisibility;
+
+  tags: string;
+
+  imageUrls: string[];
+  assetIds: string[];
+
+  updatedAt: string;
 };

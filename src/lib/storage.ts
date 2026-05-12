@@ -1,5 +1,11 @@
 import { campaignData } from "../data/campaign";
-import type { Location, MapEvent, MapGroup, PlayerCharacter } from "../types/campaign";
+import type {
+  Location,
+  MapEvent,
+  MapGroup,
+  PlayerCharacter,
+  ReferenceArticle,
+} from "../types/campaign";
 import { normalizeLocation, normalizeQuest } from "./campaignNormalize";
 
 export const LOCATIONS_STORAGE_KEY = "nri-table-locations";
@@ -9,6 +15,7 @@ export const ITEMS_STORAGE_KEY = "nri-table-items";
 export const GROUPS_STORAGE_KEY = "nri-table-groups";
 export const EVENTS_STORAGE_KEY = "nri-table-events";
 export const CHARACTERS_STORAGE_KEY = "nri-table-characters";
+export const REFERENCE_ARTICLES_STORAGE_KEY = "nri-table-reference-articles";
 
 export function loadSavedLocations() {
   const savedLocations = localStorage.getItem(LOCATIONS_STORAGE_KEY);
@@ -234,5 +241,49 @@ export function loadSavedCharacters() {
     );
   } catch {
     return campaignData.characters;
+  }
+}
+
+function normalizeReferenceArticle(
+  article: ReferenceArticle,
+): ReferenceArticle {
+  return {
+    ...article,
+
+    id: article.id ?? `reference-${Date.now()}`,
+    section: article.section ?? "other",
+    title: article.title ?? "Новая статья",
+    content: article.content ?? "",
+
+    visibility: article.visibility ?? "master",
+
+    tags: article.tags ?? "",
+
+    imageUrls: Array.isArray(article.imageUrls) ? article.imageUrls : [],
+    assetIds: Array.isArray(article.assetIds) ? article.assetIds : [],
+
+    updatedAt: article.updatedAt ?? new Date().toISOString(),
+  };
+}
+
+export function loadSavedReferenceArticles() {
+  const savedArticles = localStorage.getItem(REFERENCE_ARTICLES_STORAGE_KEY);
+
+  if (!savedArticles) {
+    return campaignData.referenceArticles;
+  }
+
+  try {
+    const parsedArticles = JSON.parse(savedArticles);
+
+    if (!Array.isArray(parsedArticles)) {
+      return campaignData.referenceArticles;
+    }
+
+    return parsedArticles.map((article) =>
+      normalizeReferenceArticle(article as ReferenceArticle),
+    );
+  } catch {
+    return campaignData.referenceArticles;
   }
 }

@@ -6,10 +6,12 @@ import type {
   MapGroup,
   PlayerCharacter,
   Quest,
+  ReferenceArticle,
 } from "../types/campaign";
 import { normalizeLocation, normalizeQuest } from "../lib/campaignNormalize";
 import {
   CHARACTERS_STORAGE_KEY,
+  REFERENCE_ARTICLES_STORAGE_KEY,
   EVENTS_STORAGE_KEY,
   GROUPS_STORAGE_KEY,
   ITEMS_STORAGE_KEY,
@@ -17,6 +19,7 @@ import {
   NPCS_STORAGE_KEY,
   QUESTS_STORAGE_KEY,
   loadSavedCharacters,
+  loadSavedReferenceArticles,
   loadSavedEvents,
   loadSavedGroups,
   loadSavedLocations,
@@ -32,6 +35,9 @@ export function useCampaign() {
   const [characters, setCharacters] =
     useState<PlayerCharacter[]>(loadSavedCharacters);
   const [quests, setQuests] = useState<Quest[]>(loadSavedQuests);
+  const [referenceArticles, setReferenceArticles] = useState<ReferenceArticle[]>(
+    loadSavedReferenceArticles,
+  );
 
   const [npcs, setNpcs] = useState<string[]>(() =>
     loadSavedTextList(NPCS_STORAGE_KEY, campaignData.npcs),
@@ -56,6 +62,10 @@ export function useCampaign() {
   useEffect(() => {
     saveToStorage(CHARACTERS_STORAGE_KEY, characters);
   }, [characters]);
+
+  useEffect(() => {
+    saveToStorage(REFERENCE_ARTICLES_STORAGE_KEY, referenceArticles);
+  }, [referenceArticles]);
 
   useEffect(() => {
     saveToStorage(QUESTS_STORAGE_KEY, quests);
@@ -166,6 +176,7 @@ export function useCampaign() {
         groups,
         events,
         characters,
+        referenceArticles,
         quests,
         npcs,
         items,
@@ -196,6 +207,7 @@ export function useCampaign() {
             groups?: MapGroup[];
             events?: MapEvent[];
             characters?: PlayerCharacter[];
+            referenceArticles?: ReferenceArticle[];
             quests?: unknown[];
             npcs?: string[];
             items?: string[];
@@ -244,6 +256,10 @@ export function useCampaign() {
           setCharacters(parsedData.campaign.characters);
         }
 
+        if (Array.isArray(parsedData.campaign?.referenceArticles)) {
+          setReferenceArticles(parsedData.campaign.referenceArticles);
+        }
+
         if (Array.isArray(parsedData.campaign?.quests)) {
           setQuests(parsedData.campaign.quests.map(normalizeQuest));
         }
@@ -272,6 +288,7 @@ export function useCampaign() {
     groups,
     events,
     characters,
+    referenceArticles,
     quests,
     npcs,
     items,
@@ -280,13 +297,16 @@ export function useCampaign() {
     setNpcs,
     setItems,
     setCharacters,
+    setReferenceArticles,
 
     resetLocations,
     createLocation,
+    createReferenceArticle,
     updateLocation,
     deleteLocation,
 
     updateGroup,
+    updateReferenceArticle,
     createGroup,
     deleteGroup,
 
@@ -297,6 +317,7 @@ export function useCampaign() {
     createCharacter,
     updateCharacter,
     deleteCharacter,
+    deleteReferenceArticle,
 
     exportCampaign,
     importCampaign,
@@ -404,6 +425,48 @@ export function useCampaign() {
   function deleteCharacter(characterId: string) {
     setCharacters((currentCharacters) =>
       currentCharacters.filter((character) => character.id !== characterId),
+    );
+  }
+
+  function createReferenceArticle() {
+    const newArticle: ReferenceArticle = {
+      id: `reference-${Date.now()}`,
+
+      section: "rules",
+      title: "Новая статья",
+      content: "",
+
+      visibility: "master",
+
+      tags: "",
+
+      imageUrls: [],
+      assetIds: [],
+
+      updatedAt: new Date().toISOString(),
+    };
+
+    setReferenceArticles((currentArticles) => [...currentArticles, newArticle]);
+
+    return newArticle;
+  }
+
+  function updateReferenceArticle(updatedArticle: ReferenceArticle) {
+    setReferenceArticles((currentArticles) =>
+      currentArticles.map((article) =>
+        article.id === updatedArticle.id
+          ? {
+            ...updatedArticle,
+            updatedAt: new Date().toISOString(),
+          }
+          : article,
+      ),
+    );
+  }
+
+  function deleteReferenceArticle(articleId: string) {
+    setReferenceArticles((currentArticles) =>
+      currentArticles.filter((article) => article.id !== articleId),
     );
   }
 

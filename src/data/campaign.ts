@@ -105,4 +105,6 @@ export const campaignData: CampaignData = {
 
   characters: [],
 
+  referenceArticles: [],
+
 };
