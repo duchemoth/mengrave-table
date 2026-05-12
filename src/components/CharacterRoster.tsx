@@ -59,6 +59,8 @@ type CharacterTab =
     | "relations"
     | "master";
 
+type EquipmentSection = "weapons" | "armor" | "quickAccess" | "backpack" | "cryptotoken";
+
 type CharacterRosterProps = {
     characters: PlayerCharacter[];
     onCreateCharacter: () => PlayerCharacter;
@@ -78,6 +80,16 @@ export function CharacterRoster({
         characters[0]?.id ?? null,
     );
     const [activeTab, setActiveTab] = useState<CharacterTab>("dossier");
+
+    const [openEquipmentSections, setOpenEquipmentSections] = useState<
+        Record<EquipmentSection, boolean>
+    >({
+        weapons: true,
+        armor: false,
+        quickAccess: false,
+        backpack: false,
+        cryptotoken: false,
+    });
 
     const selectedCharacter =
         characters.find((character) => character.id === selectedCharacterId) ?? null;
@@ -126,6 +138,13 @@ export function CharacterRoster({
                 [skillKey]: normalizedValue,
             },
         });
+    }
+
+    function toggleEquipmentSection(section: EquipmentSection) {
+        setOpenEquipmentSections((currentSections) => ({
+            ...currentSections,
+            [section]: !currentSections[section],
+        }));
     }
 
     function deleteSelectedCharacter() {
@@ -662,73 +681,153 @@ export function CharacterRoster({
                             {activeTab === "equipment" && (
                                 <section className="character-editor-section">
                                     <p className="eyebrow">Снаряжение</p>
+                                    <h3 className="character-section-title">Снаряжение персонажа</h3>
 
-                                    <div className="character-form-grid">
-                                        <label className="character-field">
-                                            Оружие
-                                            <textarea
-                                                value={selectedCharacter.weapons}
-                                                onChange={(event) =>
-                                                    updateSelectedCharacter({
-                                                        weapons: event.target.value,
-                                                    })
-                                                }
-                                                placeholder="Карабин, тесак, пистольвер..."
-                                            />
-                                        </label>
+                                    <div className="character-accordion-list">
+                                        <div className="character-accordion">
+                                            <button
+                                                className="character-accordion-header"
+                                                type="button"
+                                                onClick={() => toggleEquipmentSection("weapons")}
+                                            >
+                                                <span>{openEquipmentSections.weapons ? "▼" : "▶"} Оружие</span>
+                                                <small>основное и запасное вооружение</small>
+                                            </button>
 
-                                        <label className="character-field">
-                                            Броня
-                                            <textarea
-                                                value={selectedCharacter.armor}
-                                                onChange={(event) =>
-                                                    updateSelectedCharacter({
-                                                        armor: event.target.value,
-                                                    })
-                                                }
-                                                placeholder="Каска, стёганка, бронежилет..."
-                                            />
-                                        </label>
+                                            {openEquipmentSections.weapons && (
+                                                <div className="character-accordion-body">
+                                                    <label className="character-field wide">
+                                                        Оружие
+                                                        <textarea
+                                                            value={selectedCharacter.weapons}
+                                                            onChange={(event) =>
+                                                                updateSelectedCharacter({
+                                                                    weapons: event.target.value,
+                                                                })
+                                                            }
+                                                            placeholder="Карабин, тесак, пистольвер, рогатина, нож..."
+                                                        />
+                                                    </label>
+                                                </div>
+                                            )}
+                                        </div>
 
-                                        <label className="character-field">
-                                            Быстрый доступ
-                                            <textarea
-                                                value={selectedCharacter.quickAccess}
-                                                onChange={(event) =>
-                                                    updateSelectedCharacter({
-                                                        quickAccess: event.target.value,
-                                                    })
-                                                }
-                                                placeholder="Жгуты, фонарь, боезапас, стимулятор..."
-                                            />
-                                        </label>
+                                        <div className="character-accordion">
+                                            <button
+                                                className="character-accordion-header"
+                                                type="button"
+                                                onClick={() => toggleEquipmentSection("armor")}
+                                            >
+                                                <span>{openEquipmentSections.armor ? "▼" : "▶"} Броня</span>
+                                                <small>голова, тело, венец, защита</small>
+                                            </button>
 
-                                        <label className="character-field">
-                                            Криптожетон
-                                            <textarea
-                                                value={selectedCharacter.cryptotoken}
-                                                onChange={(event) =>
-                                                    updateSelectedCharacter({
-                                                        cryptotoken: event.target.value,
-                                                    })
-                                                }
-                                                placeholder="Действующий, стёртый, чужой, повреждённый..."
-                                            />
-                                        </label>
+                                            {openEquipmentSections.armor && (
+                                                <div className="character-accordion-body">
+                                                    <label className="character-field wide">
+                                                        Броня
+                                                        <textarea
+                                                            value={selectedCharacter.armor}
+                                                            onChange={(event) =>
+                                                                updateSelectedCharacter({
+                                                                    armor: event.target.value,
+                                                                })
+                                                            }
+                                                            placeholder="Каска, стёганка, бронежилет, Венец Кислова..."
+                                                        />
+                                                    </label>
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        <div className="character-accordion">
+                                            <button
+                                                className="character-accordion-header"
+                                                type="button"
+                                                onClick={() => toggleEquipmentSection("quickAccess")}
+                                            >
+                                                <span>
+                                                    {openEquipmentSections.quickAccess ? "▼" : "▶"} Быстрый доступ
+                                                </span>
+                                                <small>то, что можно достать быстро</small>
+                                            </button>
+
+                                            {openEquipmentSections.quickAccess && (
+                                                <div className="character-accordion-body">
+                                                    <label className="character-field wide">
+                                                        Быстрый доступ
+                                                        <textarea
+                                                            value={selectedCharacter.quickAccess}
+                                                            onChange={(event) =>
+                                                                updateSelectedCharacter({
+                                                                    quickAccess: event.target.value,
+                                                                })
+                                                            }
+                                                            placeholder="Жгуты, фонарь, боезапас, стимулятор, нож, фляга..."
+                                                        />
+                                                    </label>
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        <div className="character-accordion">
+                                            <button
+                                                className="character-accordion-header"
+                                                type="button"
+                                                onClick={() => toggleEquipmentSection("backpack")}
+                                            >
+                                                <span>{openEquipmentSections.backpack ? "▼" : "▶"} Рюкзак и груз</span>
+                                                <small>медленный доступ, припасы, тяжёлые вещи</small>
+                                            </button>
+
+                                            {openEquipmentSections.backpack && (
+                                                <div className="character-accordion-body">
+                                                    <label className="character-field wide">
+                                                        Рюкзак и груз
+                                                        <textarea
+                                                            value={selectedCharacter.backpackAndLoad}
+                                                            onChange={(event) =>
+                                                                updateSelectedCharacter({
+                                                                    backpackAndLoad: event.target.value,
+                                                                })
+                                                            }
+                                                            placeholder="Рюкзак, груз, крупные предметы, вода, провизия, детали..."
+                                                        />
+                                                    </label>
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        <div className="character-accordion">
+                                            <button
+                                                className="character-accordion-header"
+                                                type="button"
+                                                onClick={() => toggleEquipmentSection("cryptotoken")}
+                                            >
+                                                <span>
+                                                    {openEquipmentSections.cryptotoken ? "▼" : "▶"} Криптожетон
+                                                </span>
+                                                <small>статус личности, амперии, прошлое</small>
+                                            </button>
+
+                                            {openEquipmentSections.cryptotoken && (
+                                                <div className="character-accordion-body">
+                                                    <label className="character-field wide">
+                                                        Криптожетон
+                                                        <textarea
+                                                            value={selectedCharacter.cryptotoken}
+                                                            onChange={(event) =>
+                                                                updateSelectedCharacter({
+                                                                    cryptotoken: event.target.value,
+                                                                })
+                                                            }
+                                                            placeholder="Действующий, частично стёртый, аннулированный, чужой, повреждённый..."
+                                                        />
+                                                    </label>
+                                                </div>
+                                            )}
+                                        </div>
                                     </div>
-
-                                    <label className="character-field wide">
-                                        Рюкзак и груз
-                                        <textarea
-                                            value={selectedCharacter.backpackAndLoad}
-                                            onChange={(event) =>
-                                                updateSelectedCharacter({
-                                                    backpackAndLoad: event.target.value,
-                                                })
-                                            }
-                                            placeholder="Рюкзак, груз, крупные предметы, припасы..."
-                                        />
-                                    </label>
                                 </section>
                             )}
 
