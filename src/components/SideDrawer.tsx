@@ -141,7 +141,7 @@ export function SideDrawer({
           />
         )}
 
-        {isDeveloperMode && (
+        {!isPlayerMode && (
           <CampaignArchive
             onExportCampaign={onExportCampaign}
             onImportCampaign={onImportCampaign}

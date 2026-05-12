@@ -103,4 +103,6 @@ export const campaignData: CampaignData = {
 
   events: [],
 
+  characters: [],
+
 };

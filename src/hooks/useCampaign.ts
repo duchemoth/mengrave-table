@@ -1,14 +1,22 @@
 import { useEffect, useState } from "react";
 import { campaignData } from "../data/campaign";
-import type { Location, MapEvent, MapGroup, Quest } from "../types/campaign";
+import type {
+  Location,
+  MapEvent,
+  MapGroup,
+  PlayerCharacter,
+  Quest,
+} from "../types/campaign";
 import { normalizeLocation, normalizeQuest } from "../lib/campaignNormalize";
 import {
+  CHARACTERS_STORAGE_KEY,
   EVENTS_STORAGE_KEY,
   GROUPS_STORAGE_KEY,
   ITEMS_STORAGE_KEY,
   LOCATIONS_STORAGE_KEY,
   NPCS_STORAGE_KEY,
   QUESTS_STORAGE_KEY,
+  loadSavedCharacters,
   loadSavedEvents,
   loadSavedGroups,
   loadSavedLocations,
@@ -21,6 +29,8 @@ export function useCampaign() {
   const [locations, setLocations] = useState<Location[]>(loadSavedLocations);
   const [groups, setGroups] = useState<MapGroup[]>(loadSavedGroups);
   const [events, setEvents] = useState<MapEvent[]>(loadSavedEvents);
+  const [characters, setCharacters] =
+    useState<PlayerCharacter[]>(loadSavedCharacters);
   const [quests, setQuests] = useState<Quest[]>(loadSavedQuests);
 
   const [npcs, setNpcs] = useState<string[]>(() =>
@@ -42,6 +52,10 @@ export function useCampaign() {
   useEffect(() => {
     saveToStorage(EVENTS_STORAGE_KEY, events);
   }, [events]);
+
+  useEffect(() => {
+    saveToStorage(CHARACTERS_STORAGE_KEY, characters);
+  }, [characters]);
 
   useEffect(() => {
     saveToStorage(QUESTS_STORAGE_KEY, quests);
@@ -151,6 +165,7 @@ export function useCampaign() {
         locations,
         groups,
         events,
+        characters,
         quests,
         npcs,
         items,
@@ -180,6 +195,7 @@ export function useCampaign() {
             locations?: Location[];
             groups?: MapGroup[];
             events?: MapEvent[];
+            characters?: PlayerCharacter[];
             quests?: unknown[];
             npcs?: string[];
             items?: string[];
@@ -224,6 +240,10 @@ export function useCampaign() {
           );
         }
 
+        if (Array.isArray(parsedData.campaign?.characters)) {
+          setCharacters(parsedData.campaign.characters);
+        }
+
         if (Array.isArray(parsedData.campaign?.quests)) {
           setQuests(parsedData.campaign.quests.map(normalizeQuest));
         }
@@ -251,15 +271,15 @@ export function useCampaign() {
     locations,
     groups,
     events,
+    characters,
     quests,
     npcs,
     items,
 
     setQuests,
     setNpcs,
-    setGroups,
-    setEvents,
     setItems,
+    setCharacters,
 
     resetLocations,
     createLocation,
@@ -274,7 +294,116 @@ export function useCampaign() {
     createEvent,
     deleteEvent,
 
+    createCharacter,
+    updateCharacter,
+    deleteCharacter,
+
     exportCampaign,
     importCampaign,
   };
+
+  function createEmptyCharacterSkills() {
+    return {
+      melee: 0,
+      shooting: 0,
+      specialWeapons: 0,
+      athletics: 0,
+      endurance: 0,
+      stealth: 0,
+      observation: 0,
+      tracking: 0,
+      navigation: 0,
+      survival: 0,
+      firstAid: 0,
+      medicine: 0,
+      repair: 0,
+      devices: 0,
+      crowns: 0,
+      driving: 0,
+      tactics: 0,
+      intimidation: 0,
+      negotiation: 0,
+      insight: 0,
+      criminal: 0,
+      factions: 0,
+      neurography: 0,
+      echoInfophone: 0,
+    };
+  }
+
+  function createCharacter() {
+    const newCharacter: PlayerCharacter = {
+      id: `character-${Date.now()}`,
+
+      ownerPlayerName: "",
+      status: "approved",
+      isVisibleToPlayers: false,
+
+      playerName: "",
+      characterName: "Новый Вольный Клинок",
+      nickname: "",
+      oldName: "",
+      oldNameKnownBy: "",
+
+      age: "",
+      origin: "",
+      formerActivity: "",
+      reasonToBecomeFreeblade: "",
+      personalGoal: "",
+      squadConnection: "",
+
+      mass: "normal",
+      empathy: "normal",
+
+      physicalReserve: 4,
+      psyche: 4,
+      spirit: 3,
+      fate: 1,
+
+      maxPhysicalReserve: 4,
+      maxPsyche: 4,
+      maxSpirit: 3,
+      maxFate: 1,
+
+      skills: createEmptyCharacterSkills(),
+      specializations: "",
+      traits: "",
+
+      woundsAndConditions: "",
+      reflectionNotes: "",
+
+      quickAccess: "",
+      backpackAndLoad: "",
+      weapons: "",
+      armor: "",
+      cryptotoken: "",
+
+      contacts: "",
+      debts: "",
+      enemies: "",
+      patrons: "",
+
+      progressionNotes: "",
+      masterNotes: "",
+    };
+
+    setCharacters((currentCharacters) => [...currentCharacters, newCharacter]);
+
+    return newCharacter;
+  }
+
+  function updateCharacter(updatedCharacter: PlayerCharacter) {
+    setCharacters((currentCharacters) =>
+      currentCharacters.map((character) =>
+        character.id === updatedCharacter.id ? updatedCharacter : character,
+      ),
+    );
+  }
+
+  function deleteCharacter(characterId: string) {
+    setCharacters((currentCharacters) =>
+      currentCharacters.filter((character) => character.id !== characterId),
+    );
+  }
+
 }

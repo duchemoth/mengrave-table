@@ -35,6 +35,7 @@ export type CampaignData = {
   items: string[];
   groups: MapGroup[];
   events: MapEvent[];
+  characters: PlayerCharacter[];
 };
 
 export type MapGroupFaction =
@@ -87,4 +88,94 @@ export type MapEvent = {
   x: number;
   y: number;
   isSecret: boolean;
+};
+
+export type CharacterMass = "deficit" | "normal" | "excess";
+
+export type CharacterEmpathy = "low" | "normal" | "high";
+
+export type CharacterStatus = "draft" | "pendingReview" | "approved";
+
+export type CharacterSkillKey =
+  | "melee"
+  | "shooting"
+  | "specialWeapons"
+  | "athletics"
+  | "endurance"
+  | "stealth"
+  | "observation"
+  | "tracking"
+  | "navigation"
+  | "survival"
+  | "firstAid"
+  | "medicine"
+  | "repair"
+  | "devices"
+  | "crowns"
+  | "driving"
+  | "tactics"
+  | "intimidation"
+  | "negotiation"
+  | "insight"
+  | "criminal"
+  | "factions"
+  | "neurography"
+  | "echoInfophone";
+
+export type CharacterSkills = Record<CharacterSkillKey, number>;
+
+export type PlayerCharacter = {
+  id: string;
+
+  ownerPlayerId?: string;
+  ownerPlayerName: string;
+  status: CharacterStatus;
+  isVisibleToPlayers: boolean;
+
+  playerName: string;
+  characterName: string;
+  nickname: string;
+  oldName: string;
+  oldNameKnownBy: string;
+
+  age: string;
+  origin: string;
+  formerActivity: string;
+  reasonToBecomeFreeblade: string;
+  personalGoal: string;
+  squadConnection: string;
+
+  mass: CharacterMass;
+  empathy: CharacterEmpathy;
+
+  physicalReserve: number;
+  psyche: number;
+  spirit: number;
+  fate: number;
+
+  maxPhysicalReserve: number;
+  maxPsyche: number;
+  maxSpirit: number;
+  maxFate: number;
+
+  skills: CharacterSkills;
+  specializations: string;
+  traits: string;
+
+  woundsAndConditions: string;
+  reflectionNotes: string;
+
+  quickAccess: string;
+  backpackAndLoad: string;
+  weapons: string;
+  armor: string;
+  cryptotoken: string;
+
+  contacts: string;
+  debts: string;
+  enemies: string;
+  patrons: string;
+
+  progressionNotes: string;
+  masterNotes: string;
 };

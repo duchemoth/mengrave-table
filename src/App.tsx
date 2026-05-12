@@ -5,13 +5,14 @@ import { EncounterModal } from "./components/EncounterModal";
 import { HudTools } from "./components/HudTools";
 import { MapView } from "./components/MapView";
 import { MasterNotes } from "./components/MasterNotes";
+import { CharacterRoster } from "./components/CharacterRoster";
 import { SideDrawer } from "./components/SideDrawer";
 import { TopBar } from "./components/TopBar";
 import { InventoryPanel } from "./components/panels/InventoryPanel";
 import { campaignData } from "./data/campaign";
 import { useCampaign } from "./hooks/useCampaign";
 import { useInterfaceMode } from "./hooks/useInterfaceMode";
-import type { Location, MapEvent, MapGroup } from "./types/campaign";
+import type { Location, MapEvent, MapGroup, } from "./types/campaign";
 
 const MASTER_NOTES_STORAGE_KEY = "nri-table-master-notes";
 
@@ -20,6 +21,7 @@ function App() {
     locations,
     groups,
     events,
+    characters,
     quests,
     npcs,
     items,
@@ -33,8 +35,11 @@ function App() {
     updateEvent,
     createGroup,
     createEvent,
+    createCharacter,
+    updateCharacter,
     deleteGroup,
     deleteEvent,
+    deleteCharacter,
     deleteLocation,
     exportCampaign,
     importCampaign,
@@ -69,6 +74,8 @@ function App() {
   >(null);
 
   const [isNotesOpen, setIsNotesOpen] = useState(false);
+
+  const [isCharactersOpen, setIsCharactersOpen] = useState(false);
 
   const [masterNotes, setMasterNotes] = useState(() => {
     return localStorage.getItem(MASTER_NOTES_STORAGE_KEY) ?? "";
@@ -253,6 +260,10 @@ function App() {
     });
   }
 
+  function handleDeleteCharacter(characterId: string) {
+    deleteCharacter(characterId);
+  }
+
   function handleCreateSceneNote(note: string) {
     setMasterNotes((currentNotes) => {
       const separator = currentNotes.trim().length > 0 ? "\n\n" : "";
@@ -412,7 +423,9 @@ function App() {
         <HudTools
           isPlayerMode={isPlayerMode}
           isNotesOpen={isNotesOpen}
+          isCharactersOpen={isCharactersOpen}
           onToggleNotes={() => setIsNotesOpen((current) => !current)}
+          onToggleCharacters={() => setIsCharactersOpen((current) => !current)}
         />
       )}
 
@@ -421,6 +434,16 @@ function App() {
           notes={masterNotes}
           onChangeNotes={setMasterNotes}
           onClose={() => setIsNotesOpen(false)}
+        />
+      )}
+
+      {!isCleanMapMode && !isPlayerMode && isCharactersOpen && (
+        <CharacterRoster
+          characters={characters}
+          onCreateCharacter={createCharacter}
+          onUpdateCharacter={updateCharacter}
+          onDeleteCharacter={handleDeleteCharacter}
+          onClose={() => setIsCharactersOpen(false)}
         />
       )}
 
