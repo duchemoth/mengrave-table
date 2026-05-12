@@ -61,6 +61,13 @@ type CharacterTab =
 
 type EquipmentSection = "weapons" | "armor" | "quickAccess" | "backpack" | "cryptotoken";
 
+type RelationsSection =
+    | "contacts"
+    | "debts"
+    | "enemies"
+    | "patrons"
+    | "oldName";
+
 type CharacterRosterProps = {
     characters: PlayerCharacter[];
     onCreateCharacter: () => PlayerCharacter;
@@ -89,6 +96,16 @@ export function CharacterRoster({
         quickAccess: false,
         backpack: false,
         cryptotoken: false,
+    });
+
+    const [openRelationsSections, setOpenRelationsSections] = useState<
+        Record<RelationsSection, boolean>
+    >({
+        contacts: true,
+        debts: false,
+        enemies: false,
+        patrons: false,
+        oldName: false,
     });
 
     const selectedCharacter =
@@ -142,6 +159,13 @@ export function CharacterRoster({
 
     function toggleEquipmentSection(section: EquipmentSection) {
         setOpenEquipmentSections((currentSections) => ({
+            ...currentSections,
+            [section]: !currentSections[section],
+        }));
+    }
+
+    function toggleRelationsSection(section: RelationsSection) {
+        setOpenRelationsSections((currentSections) => ({
             ...currentSections,
             [section]: !currentSections[section],
         }));
@@ -834,73 +858,149 @@ export function CharacterRoster({
                             {activeTab === "relations" && (
                                 <section className="character-editor-section">
                                     <p className="eyebrow">Связи</p>
+                                    <h3 className="character-section-title">Связи персонажа</h3>
 
-                                    <div className="character-form-grid">
-                                        <label className="character-field">
-                                            Контакты
-                                            <textarea
-                                                value={selectedCharacter.contacts}
-                                                onChange={(event) =>
-                                                    updateSelectedCharacter({
-                                                        contacts: event.target.value,
-                                                    })
-                                                }
-                                                placeholder="Кто может помочь персонажу?"
-                                            />
-                                        </label>
+                                    <div className="character-accordion-list">
+                                        <div className="character-accordion">
+                                            <button
+                                                className="character-accordion-header"
+                                                type="button"
+                                                onClick={() => toggleRelationsSection("contacts")}
+                                            >
+                                                <span>{openRelationsSections.contacts ? "▼" : "▶"} Контакты</span>
+                                                <small>люди, которые могут помочь, продать, предупредить или спрятать</small>
+                                            </button>
 
-                                        <label className="character-field">
-                                            Долги
-                                            <textarea
-                                                value={selectedCharacter.debts}
-                                                onChange={(event) =>
-                                                    updateSelectedCharacter({
-                                                        debts: event.target.value,
-                                                    })
-                                                }
-                                                placeholder="Кому персонаж должен?"
-                                            />
-                                        </label>
+                                            {openRelationsSections.contacts && (
+                                                <div className="character-accordion-body">
+                                                    <label className="character-field wide">
+                                                        Контакты
+                                                        <textarea
+                                                            value={selectedCharacter.contacts}
+                                                            onChange={(event) =>
+                                                                updateSelectedCharacter({
+                                                                    contacts: event.target.value,
+                                                                })
+                                                            }
+                                                            placeholder="Кто может помочь персонажу? Знакомые, посредники, старые сослуживцы, врачи, проводники..."
+                                                        />
+                                                    </label>
+                                                </div>
+                                            )}
+                                        </div>
 
-                                        <label className="character-field">
-                                            Враги
-                                            <textarea
-                                                value={selectedCharacter.enemies}
-                                                onChange={(event) =>
-                                                    updateSelectedCharacter({
-                                                        enemies: event.target.value,
-                                                    })
-                                                }
-                                                placeholder="Кто хочет навредить персонажу?"
-                                            />
-                                        </label>
+                                        <div className="character-accordion">
+                                            <button
+                                                className="character-accordion-header"
+                                                type="button"
+                                                onClick={() => toggleRelationsSection("debts")}
+                                            >
+                                                <span>{openRelationsSections.debts ? "▼" : "▶"} Долги</span>
+                                                <small>кому персонаж должен деньги, услугу, молчание или жизнь</small>
+                                            </button>
 
-                                        <label className="character-field">
-                                            Покровители
-                                            <textarea
-                                                value={selectedCharacter.patrons}
-                                                onChange={(event) =>
-                                                    updateSelectedCharacter({
-                                                        patrons: event.target.value,
-                                                    })
-                                                }
-                                                placeholder="Кто прикрывает или использует персонажа?"
-                                            />
-                                        </label>
+                                            {openRelationsSections.debts && (
+                                                <div className="character-accordion-body">
+                                                    <label className="character-field wide">
+                                                        Долги
+                                                        <textarea
+                                                            value={selectedCharacter.debts}
+                                                            onChange={(event) =>
+                                                                updateSelectedCharacter({
+                                                                    debts: event.target.value,
+                                                                })
+                                                            }
+                                                            placeholder="Кому персонаж должен? Фракция, врач, бригадир, покровитель, старый отряд..."
+                                                        />
+                                                    </label>
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        <div className="character-accordion">
+                                            <button
+                                                className="character-accordion-header"
+                                                type="button"
+                                                onClick={() => toggleRelationsSection("enemies")}
+                                            >
+                                                <span>{openRelationsSections.enemies ? "▼" : "▶"} Враги</span>
+                                                <small>те, кто ищет, ненавидит, шантажирует или готовит расплату</small>
+                                            </button>
+
+                                            {openRelationsSections.enemies && (
+                                                <div className="character-accordion-body">
+                                                    <label className="character-field wide">
+                                                        Враги
+                                                        <textarea
+                                                            value={selectedCharacter.enemies}
+                                                            onChange={(event) =>
+                                                                updateSelectedCharacter({
+                                                                    enemies: event.target.value,
+                                                                })
+                                                            }
+                                                            placeholder="Кто хочет навредить персонажу? Темерат, бриганты, старые сослуживцы, родственники погибших..."
+                                                        />
+                                                    </label>
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        <div className="character-accordion">
+                                            <button
+                                                className="character-accordion-header"
+                                                type="button"
+                                                onClick={() => toggleRelationsSection("patrons")}
+                                            >
+                                                <span>{openRelationsSections.patrons ? "▼" : "▶"} Покровители</span>
+                                                <small>защита, интерес, контроль или опасная поддержка</small>
+                                            </button>
+
+                                            {openRelationsSections.patrons && (
+                                                <div className="character-accordion-body">
+                                                    <label className="character-field wide">
+                                                        Покровители
+                                                        <textarea
+                                                            value={selectedCharacter.patrons}
+                                                            onChange={(event) =>
+                                                                updateSelectedCharacter({
+                                                                    patrons: event.target.value,
+                                                                })
+                                                            }
+                                                            placeholder="Кто прикрывает или использует персонажа? Кастелян, Эвергаль, Вояжер, баронский человек..."
+                                                        />
+                                                    </label>
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        <div className="character-accordion">
+                                            <button
+                                                className="character-accordion-header"
+                                                type="button"
+                                                onClick={() => toggleRelationsSection("oldName")}
+                                            >
+                                                <span>{openRelationsSections.oldName ? "▼" : "▶"} Старое имя</span>
+                                                <small>кто знает прошлое, настоящее имя, старый криптожетон или старую вину</small>
+                                            </button>
+
+                                            {openRelationsSections.oldName && (
+                                                <div className="character-accordion-body">
+                                                    <label className="character-field wide">
+                                                        Кто знает старое имя
+                                                        <textarea
+                                                            value={selectedCharacter.oldNameKnownBy}
+                                                            onChange={(event) =>
+                                                                updateSelectedCharacter({
+                                                                    oldNameKnownBy: event.target.value,
+                                                                })
+                                                            }
+                                                            placeholder="Кто знает старое имя персонажа? Кто может связать его с прошлым, долгом, преступлением или семьёй?"
+                                                        />
+                                                    </label>
+                                                </div>
+                                            )}
+                                        </div>
                                     </div>
-
-                                    <label className="character-field wide">
-                                        Старое имя знает
-                                        <textarea
-                                            value={selectedCharacter.oldNameKnownBy}
-                                            onChange={(event) =>
-                                                updateSelectedCharacter({
-                                                    oldNameKnownBy: event.target.value,
-                                                })
-                                            }
-                                            placeholder="Кто знает старое имя персонажа?"
-                                        />
-                                    </label>
                                 </section>
                             )}
 
