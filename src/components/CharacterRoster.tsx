@@ -183,10 +183,15 @@ export function CharacterRoster({
                             {characters.map((character) => {
                                 const isSelected = character.id === selectedCharacterId;
 
+                                const hasCriticalResource =
+                                    character.physicalReserve <= 0 ||
+                                    character.psyche <= 0 ||
+                                    character.spirit <= 0;
+
                                 return (
                                     <button
                                         key={character.id}
-                                        className={`character-card-button ${isSelected ? "active" : ""
+                                        className={`character-card-button ${isSelected ? "active" : ""} ${hasCriticalResource ? "critical" : ""
                                             }`}
                                         type="button"
                                         onClick={() => setSelectedCharacterId(character.id)}
@@ -201,6 +206,15 @@ export function CharacterRoster({
 
                                         <span className="character-card-goal">
                                             {character.personalGoal || "Личная цель не указана"}
+                                            <span className="character-card-resources">
+                                                ФЗ {character.physicalReserve}/{character.maxPhysicalReserve} · Психика{" "}
+                                                {character.psyche}/{character.maxPsyche}
+                                            </span>
+
+                                            <span className="character-card-resources">
+                                                Дух {character.spirit}/{character.maxSpirit} · Судьба {character.fate}/
+                                                {character.maxFate}
+                                            </span>
                                         </span>
                                     </button>
                                 );
@@ -483,6 +497,7 @@ export function CharacterRoster({
                                             label="Судьба"
                                             value={selectedCharacter.fate}
                                             maxValue={selectedCharacter.maxFate}
+                                            maxAllowed={3}
                                             onChangeValue={(value) =>
                                                 updateSelectedCharacter({ fate: value })
                                             }
@@ -825,6 +840,7 @@ type ResourceFieldProps = {
     label: string;
     value: number;
     maxValue: number;
+    maxAllowed?: number;
     onChangeValue: (value: number) => void;
     onChangeMaxValue: (value: number) => void;
 };
@@ -833,11 +849,16 @@ function ResourceField({
     label,
     value,
     maxValue,
+    maxAllowed = 20,
     onChangeValue,
     onChangeMaxValue,
 }: ResourceFieldProps) {
     function clampResource(nextValue: number, nextMaxValue: number) {
         return Math.max(0, Math.min(nextMaxValue, nextValue));
+    }
+
+    function clampMaxValue(nextMaxValue: number) {
+        return Math.max(0, Math.min(maxAllowed, nextMaxValue));
     }
 
     return (
@@ -869,10 +890,10 @@ function ResourceField({
                 <input
                     type="number"
                     min="0"
-                    max="20"
+                    max={maxAllowed}
                     value={maxValue}
                     onChange={(event) => {
-                        const nextMaxValue = Number(event.target.value);
+                        const nextMaxValue = clampMaxValue(Number(event.target.value));
 
                         onChangeMaxValue(nextMaxValue);
                         onChangeValue(clampResource(value, nextMaxValue));

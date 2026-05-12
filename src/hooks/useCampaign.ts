@@ -363,7 +363,7 @@ export function useCampaign() {
       maxPhysicalReserve: 4,
       maxPsyche: 4,
       maxSpirit: 3,
-      maxFate: 1,
+      maxFate: 3,
 
       skills: createEmptyCharacterSkills(),
       specializations: "",

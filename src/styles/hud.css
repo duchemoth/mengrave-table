@@ -507,3 +507,20 @@
     grid-template-columns: 1fr;
   }
 }
+
+.character-card-resources {
+  color: var(--ink);
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 11px;
+  font-weight: 900;
+  opacity: 0.88;
+}
+
+.character-card-button.critical {
+  border-color: rgba(124, 37, 34, 0.54);
+  background: rgba(124, 37, 34, 0.09);
+}
+
+.character-card-button.critical .character-card-name {
+  color: var(--blood-seal);
+}

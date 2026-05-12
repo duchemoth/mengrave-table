@@ -185,7 +185,7 @@ function normalizeCharacter(character: PlayerCharacter): PlayerCharacter {
     maxPhysicalReserve: character.maxPhysicalReserve ?? 4,
     maxPsyche: character.maxPsyche ?? 4,
     maxSpirit: character.maxSpirit ?? 3,
-    maxFate: character.maxFate ?? 1,
+    maxFate: character.maxFate ?? 3,
 
     skills: {
       ...emptySkills,
