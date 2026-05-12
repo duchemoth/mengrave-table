@@ -609,3 +609,35 @@
 .character-skills-accordion-list {
   margin-top: 16px;
 }
+
+.character-import-export-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.character-import-export-row .secondary-button {
+  display: grid;
+  place-items: center;
+  min-height: 38px;
+  text-align: center;
+}
+
+.character-import-export-row .secondary-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.48;
+}
+
+.character-import-button {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.character-import-button input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+}
