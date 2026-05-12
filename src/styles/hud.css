@@ -524,3 +524,22 @@
 .character-card-button.critical .character-card-name {
   color: var(--blood-seal);
 }
+
+.character-card-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 2px;
+}
+
+.character-card-badge {
+  border: 1px solid rgba(124, 37, 34, 0.34);
+  border-radius: 999px;
+  padding: 3px 7px;
+  color: var(--blood-seal);
+  background: rgba(124, 37, 34, 0.08);
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 10px;
+  font-weight: 900;
+  line-height: 1;
+}

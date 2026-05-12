@@ -183,10 +183,21 @@ export function CharacterRoster({
                             {characters.map((character) => {
                                 const isSelected = character.id === selectedCharacterId;
 
-                                const hasCriticalResource =
-                                    character.physicalReserve <= 0 ||
-                                    character.psyche <= 0 ||
-                                    character.spirit <= 0;
+                                const hasWounds = character.woundsAndConditions.trim().length > 0;
+                                const hasReflection = character.reflectionNotes.trim().length > 0;
+                                const isExhausted = character.physicalReserve <= 0;
+                                const isBroken = character.psyche <= 0;
+                                const isSpiritBroken = character.spirit <= 0;
+
+                                const hasCriticalResource = isExhausted || isBroken || isSpiritBroken;
+
+                                const conditionBadges = [
+                                    hasWounds ? "Ранен" : null,
+                                    hasReflection ? "Отражение" : null,
+                                    isExhausted ? "Истощён" : null,
+                                    isBroken ? "Срыв" : null,
+                                    isSpiritBroken ? "Надлом" : null,
+                                ].filter(Boolean);
 
                                 return (
                                     <button
@@ -215,6 +226,17 @@ export function CharacterRoster({
                                                 Дух {character.spirit}/{character.maxSpirit} · Судьба {character.fate}/
                                                 {character.maxFate}
                                             </span>
+
+                                            {conditionBadges.length > 0 && (
+                                                <span className="character-card-badges">
+                                                    {conditionBadges.map((badge) => (
+                                                        <span key={badge} className="character-card-badge">
+                                                            {badge}
+                                                        </span>
+                                                    ))}
+                                                </span>
+                                            )}
+
                                         </span>
                                     </button>
                                 );
