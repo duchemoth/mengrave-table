@@ -68,6 +68,8 @@ type RelationsSection =
     | "patrons"
     | "oldName";
 
+type MasterSection = "notes" | "progression" | "danger";
+
 type CharacterRosterProps = {
     characters: PlayerCharacter[];
     onCreateCharacter: () => PlayerCharacter;
@@ -106,6 +108,14 @@ export function CharacterRoster({
         enemies: false,
         patrons: false,
         oldName: false,
+    });
+
+    const [openMasterSections, setOpenMasterSections] = useState<
+        Record<MasterSection, boolean>
+    >({
+        notes: true,
+        progression: false,
+        danger: false,
     });
 
     const selectedCharacter =
@@ -166,6 +176,13 @@ export function CharacterRoster({
 
     function toggleRelationsSection(section: RelationsSection) {
         setOpenRelationsSections((currentSections) => ({
+            ...currentSections,
+            [section]: !currentSections[section],
+        }));
+    }
+
+    function toggleMasterSection(section: MasterSection) {
+        setOpenMasterSections((currentSections) => ({
             ...currentSections,
             [section]: !currentSections[section],
         }));
@@ -1007,41 +1024,96 @@ export function CharacterRoster({
                             {activeTab === "master" && (
                                 <section className="character-editor-section">
                                     <p className="eyebrow">Мастер</p>
+                                    <h3 className="character-section-title">Мастерская часть</h3>
 
-                                    <label className="character-field wide">
-                                        Заметки мастера
-                                        <textarea
-                                            value={selectedCharacter.masterNotes}
-                                            onChange={(event) =>
-                                                updateSelectedCharacter({
-                                                    masterNotes: event.target.value,
-                                                })
-                                            }
-                                            placeholder="Секреты, страхи, личные крючки, скрытые связи..."
-                                        />
-                                    </label>
+                                    <div className="character-accordion-list">
+                                        <div className="character-accordion">
+                                            <button
+                                                className="character-accordion-header"
+                                                type="button"
+                                                onClick={() => toggleMasterSection("notes")}
+                                            >
+                                                <span>{openMasterSections.notes ? "▼" : "▶"} Заметки мастера</span>
+                                                <small>скрытые детали, личные крючки, наблюдения по игре</small>
+                                            </button>
 
-                                    <label className="character-field wide">
-                                        Прогресс и развитие
-                                        <textarea
-                                            value={selectedCharacter.progressionNotes}
-                                            onChange={(event) =>
-                                                updateSelectedCharacter({
-                                                    progressionNotes: event.target.value,
-                                                })
-                                            }
-                                            placeholder="Что персонаж осваивает, пережил, доказал или потерял..."
-                                        />
-                                    </label>
+                                            {openMasterSections.notes && (
+                                                <div className="character-accordion-body">
+                                                    <label className="character-field wide">
+                                                        Заметки мастера
+                                                        <textarea
+                                                            value={selectedCharacter.masterNotes}
+                                                            onChange={(event) =>
+                                                                updateSelectedCharacter({
+                                                                    masterNotes: event.target.value,
+                                                                })
+                                                            }
+                                                            placeholder="Секреты, страхи, личные крючки, скрытые связи, что важно помнить мастеру..."
+                                                        />
+                                                    </label>
+                                                </div>
+                                            )}
+                                        </div>
 
-                                    <div className="character-actions">
-                                        <button
-                                            className="danger-button"
-                                            type="button"
-                                            onClick={deleteSelectedCharacter}
-                                        >
-                                            Удалить персонажа
-                                        </button>
+                                        <div className="character-accordion">
+                                            <button
+                                                className="character-accordion-header"
+                                                type="button"
+                                                onClick={() => toggleMasterSection("progression")}
+                                            >
+                                                <span>
+                                                    {openMasterSections.progression ? "▼" : "▶"} Прогресс и развитие
+                                                </span>
+                                                <small>что персонаж пережил, чему учится, куда меняется</small>
+                                            </button>
+
+                                            {openMasterSections.progression && (
+                                                <div className="character-accordion-body">
+                                                    <label className="character-field wide">
+                                                        Прогресс и развитие
+                                                        <textarea
+                                                            value={selectedCharacter.progressionNotes}
+                                                            onChange={(event) =>
+                                                                updateSelectedCharacter({
+                                                                    progressionNotes: event.target.value,
+                                                                })
+                                                            }
+                                                            placeholder="Что персонаж осваивает, пережил, доказал, потерял или начал менять в себе..."
+                                                        />
+                                                    </label>
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        <div className="character-accordion character-accordion-danger">
+                                            <button
+                                                className="character-accordion-header"
+                                                type="button"
+                                                onClick={() => toggleMasterSection("danger")}
+                                            >
+                                                <span>{openMasterSections.danger ? "▼" : "▶"} Опасная зона</span>
+                                                <small>удаление персонажа и необратимые действия</small>
+                                            </button>
+
+                                            {openMasterSections.danger && (
+                                                <div className="character-accordion-body">
+                                                    <p className="character-help-text">
+                                                        Удаление персонажа нельзя отменить. Используй только если это
+                                                        тестовая карточка или персонаж точно больше не нужен.
+                                                    </p>
+
+                                                    <div className="character-actions">
+                                                        <button
+                                                            className="danger-button"
+                                                            type="button"
+                                                            onClick={deleteSelectedCharacter}
+                                                        >
+                                                            Удалить персонажа
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
                                     </div>
                                 </section>
                             )}

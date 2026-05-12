@@ -591,3 +591,17 @@
   padding: 12px 14px 14px;
   border-top: 1px solid rgba(36, 26, 18, 0.12);
 }
+
+.character-accordion-danger {
+  border-color: rgba(124, 37, 34, 0.28);
+  background: rgba(124, 37, 34, 0.05);
+}
+
+.character-accordion-danger .character-accordion-header {
+  color: var(--blood-seal);
+  background: rgba(124, 37, 34, 0.07);
+}
+
+.character-accordion-danger .character-accordion-header:hover {
+  background: rgba(124, 37, 34, 0.11);
+}
