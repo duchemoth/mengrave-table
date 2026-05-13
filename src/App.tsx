@@ -488,6 +488,24 @@ function App() {
     setIsHidingRevealedArea(false);
   }
 
+  function handleClearRevealedAreas() {
+    if (isPlayerMode) {
+      return;
+    }
+
+    const shouldClear = window.confirm(
+      "Очистить все ручные раскрытые области тумана войны?",
+    );
+
+    if (!shouldClear) {
+      return;
+    }
+
+    setRevealedAreas([]);
+    setIsRevealingFog(false);
+    setIsHidingRevealedArea(false);
+  }
+
   function handleCreateMapEventAt(x: number, y: number) {
     if (isPlayerMode) {
       return;
@@ -562,6 +580,7 @@ function App() {
         onToggleFogHide={handleToggleFogHide}
         onCreateRevealedAreaAt={handleCreateRevealedAreaAt}
         onDeleteRevealedAreaAt={handleDeleteRevealedAreaAt}
+        onClearRevealedAreas={handleClearRevealedAreas}
         onToggleEventPlacement={handleToggleEventPlacement}
         onCreateMapEventAt={handleCreateMapEventAt}
         onOpenLocationEncounter={handleOpenLocationEncounter}

@@ -37,6 +37,7 @@ type MapViewProps = {
   onCreateMapEventAt: (x: number, y: number) => void;
   onCreateRevealedAreaAt: (x: number, y: number) => void;
   onDeleteRevealedAreaAt: (x: number, y: number) => void;
+  onClearRevealedAreas: () => void;
   onOpenLocationEncounter: (location: Location) => void;
   onOpenGroupEncounter: (group: MapGroup) => void;
   onOpenEventEncounter: (event: MapEvent) => void;
@@ -101,6 +102,7 @@ export function MapView({
   onCreateMapEventAt,
   onCreateRevealedAreaAt,
   onDeleteRevealedAreaAt,
+  onClearRevealedAreas,
   onOpenLocationEncounter,
   onOpenGroupEncounter,
   onOpenEventEncounter,
@@ -756,6 +758,16 @@ export function MapView({
           onClick={onToggleFogHide}
         >
           {isHidingRevealedArea ? "Отменить скрытие" : "Скрыть область"}
+        </button>
+      )}
+
+      {!isCleanMapMode && userMode !== "player" && revealedAreas.length > 0 && (
+        <button
+          className="map-clear-fog-button"
+          type="button"
+          onClick={onClearRevealedAreas}
+        >
+          Очистить области
         </button>
       )}
 
