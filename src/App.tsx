@@ -17,6 +17,68 @@ import type { Location, MapEvent, MapGroup, } from "./types/campaign";
 
 const MASTER_NOTES_STORAGE_KEY = "nri-table-master-notes";
 
+const SCENE_STORAGE_PREFIX = "nri-table-scene-";
+const LOCAL_MAP_STORAGE_PREFIX = "nri-table-local-map-";
+const GLOBAL_MAP_IMAGE_URL = "/map.jpg";
+
+type JsonStorageArchive = Record<string, unknown>;
+
+function collectJsonStorageByPrefix(prefix: string): JsonStorageArchive {
+  const archive: JsonStorageArchive = {};
+
+  for (let index = 0; index < localStorage.length; index += 1) {
+    const key = localStorage.key(index);
+
+    if (!key || !key.startsWith(prefix)) {
+      continue;
+    }
+
+    const savedValue = localStorage.getItem(key);
+
+    if (!savedValue) {
+      continue;
+    }
+
+    try {
+      archive[key] = JSON.parse(savedValue);
+    } catch {
+      archive[key] = savedValue;
+    }
+  }
+
+  return archive;
+}
+
+function clearStorageByPrefix(prefix: string) {
+  const keysToRemove: string[] = [];
+
+  for (let index = 0; index < localStorage.length; index += 1) {
+    const key = localStorage.key(index);
+
+    if (key?.startsWith(prefix)) {
+      keysToRemove.push(key);
+    }
+  }
+
+  keysToRemove.forEach((key) => localStorage.removeItem(key));
+}
+
+function restoreJsonStorageArchive(prefix: string, archive: unknown) {
+  if (!archive || typeof archive !== "object" || Array.isArray(archive)) {
+    return;
+  }
+
+  clearStorageByPrefix(prefix);
+
+  Object.entries(archive as JsonStorageArchive).forEach(([key, value]) => {
+    if (!key.startsWith(prefix)) {
+      return;
+    }
+
+    localStorage.setItem(key, JSON.stringify(value));
+  });
+}
+
 const REVEALED_AREAS_STORAGE_KEY = "nri-table-revealed-areas";
 
 type RevealedMapArea = {
@@ -284,6 +346,16 @@ function App() {
         setMasterNotes(importedCampaign.masterNotes);
       }
 
+      restoreJsonStorageArchive(
+        SCENE_STORAGE_PREFIX,
+        importedCampaign?.sceneDrafts,
+      );
+
+      restoreJsonStorageArchive(
+        LOCAL_MAP_STORAGE_PREFIX,
+        importedCampaign?.localMaps,
+      );
+
       openSidebar();
     });
   }
@@ -292,6 +364,11 @@ function App() {
     exportCampaign({
       revealedAreas,
       masterNotes,
+      globalMap: {
+        imageUrl: GLOBAL_MAP_IMAGE_URL,
+      },
+      sceneDrafts: collectJsonStorageByPrefix(SCENE_STORAGE_PREFIX),
+      localMaps: collectJsonStorageByPrefix(LOCAL_MAP_STORAGE_PREFIX),
     });
   }
 

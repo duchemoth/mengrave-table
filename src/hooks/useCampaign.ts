@@ -203,6 +203,9 @@ export function useCampaign() {
       importedCampaign?: {
         revealedAreas?: unknown[];
         masterNotes?: unknown;
+        globalMap?: unknown;
+        sceneDrafts?: unknown;
+        localMaps?: unknown;
       },
     ) => void,
   ) {
@@ -223,6 +226,9 @@ export function useCampaign() {
             items?: string[];
             revealedAreas?: unknown[];
             masterNotes?: unknown;
+            globalMap?: unknown;
+            sceneDrafts?: unknown;
+            localMaps?: unknown;
           };
           locations?: Location[];
         };
