@@ -25,6 +25,8 @@ const SECTIONS: ReferenceSection[] = [
     "other",
 ];
 
+const EMPTY_SUBSECTION_LABEL = "Без подраздела";
+
 const VISIBILITY_LABELS: Record<ReferenceVisibility, string> = {
     players: "Игроки",
     master: "Мастер",
@@ -57,6 +59,33 @@ function articleMatchesSearch(article: ReferenceArticle, searchQuery: string) {
     return searchWords.every((word) => searchableText.includes(word));
 }
 
+type ReferenceSubsectionGroup = {
+    title: string;
+    articles: ReferenceArticle[];
+};
+
+function getSubsectionName(article: ReferenceArticle) {
+    return article.subsection.trim() || EMPTY_SUBSECTION_LABEL;
+}
+
+function groupArticlesBySubsection(
+    articles: ReferenceArticle[],
+): ReferenceSubsectionGroup[] {
+    const groups = new Map<string, ReferenceArticle[]>();
+
+    articles.forEach((article) => {
+        const subsectionName = getSubsectionName(article);
+        const existingArticles = groups.get(subsectionName) ?? [];
+
+        groups.set(subsectionName, [...existingArticles, article]);
+    });
+
+    return Array.from(groups.entries()).map(([title, groupedArticles]) => ({
+        title,
+        articles: groupedArticles,
+    }));
+}
+
 type ReferenceLibraryProps = {
     articles: ReferenceArticle[];
     isPlayerMode: boolean;
@@ -82,6 +111,9 @@ export function ReferenceLibrary({
     );
     const [isEditing, setIsEditing] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
+    const [openSubsections, setOpenSubsections] = useState<Record<string, boolean>>(
+        {},
+    );
 
     const visibleArticles = useMemo(() => {
         return articles.filter((article) => {
@@ -102,10 +134,23 @@ export function ReferenceLibrary({
             article.section === activeSection && articleMatchesSearch(article, searchQuery),
     );
 
+    const subsectionGroups = groupArticlesBySubsection(sectionArticles);
+
     const selectedArticle =
         visibleArticles.find((article) => article.id === selectedArticleId) ??
         sectionArticles[0] ??
         null;
+
+    function isSubsectionOpen(subsectionTitle: string) {
+        return openSubsections[subsectionTitle] ?? true;
+    }
+
+    function toggleSubsection(subsectionTitle: string) {
+        setOpenSubsections((currentSubsections) => ({
+            ...currentSubsections,
+            [subsectionTitle]: !isSubsectionOpen(subsectionTitle),
+        }));
+    }
 
     function selectSection(section: ReferenceSection) {
         setActiveSection(section);
@@ -245,25 +290,51 @@ export function ReferenceLibrary({
                                 : "В этом разделе пока нет доступных статей."}
                         </p>
                     ) : (
-                        <div className="reference-article-buttons">
-                            {sectionArticles.map((article) => (
-                                <button
-                                    key={article.id}
-                                    className={`reference-article-button ${selectedArticle?.id === article.id ? "active" : ""
-                                        }`}
-                                    type="button"
-                                    onClick={() => {
-                                        setSelectedArticleId(article.id);
-                                        setIsEditing(false);
-                                    }}
-                                >
-                                    <span>{article.title || "Без названия"}</span>
-                                    <small>
-                                        {SECTION_LABELS[article.section]} ·{" "}
-                                        {VISIBILITY_LABELS[article.visibility]}
-                                    </small>
-                                </button>
-                            ))}
+                        <div className="reference-subsection-list">
+                            {subsectionGroups.map((group) => {
+                                const isOpen = isSubsectionOpen(group.title);
+
+                                return (
+                                    <div key={group.title} className="reference-subsection">
+                                        <button
+                                            className="reference-subsection-header"
+                                            type="button"
+                                            onClick={() => toggleSubsection(group.title)}
+                                        >
+                                            <span>
+                                                {isOpen ? "▼" : "▶"} {group.title}
+                                            </span>
+
+                                            <small>{group.articles.length}</small>
+                                        </button>
+
+                                        {isOpen && (
+                                            <div className="reference-article-buttons">
+                                                {group.articles.map((article) => (
+                                                    <button
+                                                        key={article.id}
+                                                        className={`reference-article-button ${selectedArticle?.id === article.id ? "active" : ""
+                                                            }`}
+                                                        type="button"
+                                                        onClick={() => {
+                                                            setSelectedArticleId(article.id);
+                                                            setIsEditing(false);
+                                                        }}
+                                                    >
+                                                        <span>{article.title || "Без названия"}</span>
+                                                        <small>
+                                                            {VISIBILITY_LABELS[article.visibility]}
+                                                            {article.tags.trim().length > 0
+                                                                ? ` · ${article.tags.trim()}`
+                                                                : ""}
+                                                        </small>
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
+                                );
+                            })}
                         </div>
                     )}
                 </aside>
@@ -342,6 +413,17 @@ export function ReferenceLibrary({
                             </div>
 
                             <label className="reference-field">
+                                Подраздел
+                                <input
+                                    value={selectedArticle.subsection}
+                                    onChange={(event) =>
+                                        updateSelectedArticle({ subsection: event.target.value })
+                                    }
+                                    placeholder="Например: Базовая механика, Бой, Обскурия..."
+                                />
+                            </label>
+
+                            <label className="reference-field">
                                 Теги
                                 <input
                                     value={selectedArticle.tags}
@@ -381,8 +463,11 @@ export function ReferenceLibrary({
                             <header className="reference-reader-header">
                                 <div>
                                     <p className="eyebrow">
-                                        {SECTION_LABELS[selectedArticle.section]} ·{" "}
-                                        {VISIBILITY_LABELS[selectedArticle.visibility]}
+                                        {SECTION_LABELS[selectedArticle.section]}
+                                        {selectedArticle.subsection.trim()
+                                            ? ` · ${selectedArticle.subsection.trim()}`
+                                            : ""}{" "}
+                                        · {VISIBILITY_LABELS[selectedArticle.visibility]}
                                     </p>
                                     <h3>{selectedArticle.title || "Без названия"}</h3>
                                 </div>

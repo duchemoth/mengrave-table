@@ -252,6 +252,7 @@ function normalizeReferenceArticle(
 
     id: article.id ?? `reference-${Date.now()}`,
     section: article.section ?? "other",
+    subsection: article.subsection ?? "",
     title: article.title ?? "Новая статья",
     content: article.content ?? "",
 

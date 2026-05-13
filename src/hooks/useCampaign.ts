@@ -433,6 +433,7 @@ export function useCampaign() {
       id: `reference-${Date.now()}`,
 
       section: "rules",
+      subsection: "",
       title: "Новая статья",
       content: "",
 

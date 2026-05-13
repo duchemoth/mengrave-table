@@ -197,6 +197,7 @@ export type ReferenceArticle = {
   id: string;
 
   section: ReferenceSection;
+  subsection: string;
   title: string;
   content: string;
 
