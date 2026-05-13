@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import type { CSSProperties } from "react";
 import { useMapViewport } from "../hooks/useMapViewport";
 import type { Location, MapEvent, MapGroup, UserMode } from "../types/campaign";
 
@@ -102,6 +103,20 @@ export function MapView({
     stopMapDrag,
     resetMapView,
   } = useMapViewport();
+
+  const isPlayerMode = userMode === "player";
+
+  const playerMapGroup = groups.find((group) => group.faction === "players");
+
+  const fogAnchor = {
+    x: playerMapGroup?.x ?? 50,
+    y: playerMapGroup?.y ?? 50,
+  };
+
+  const fogStyle = {
+    "--fog-x": `${fogAnchor.x}%`,
+    "--fog-y": `${fogAnchor.y}%`,
+  } as CSSProperties;
 
   function startMarkerDrag(
     event: React.MouseEvent<HTMLButtonElement>,
@@ -306,6 +321,14 @@ export function MapView({
             <div className="map-hint">
               Зажми маркер, чтобы переместить локацию
             </div>
+          )}
+
+          {isPlayerMode && (
+            <div
+              className="map-fog-layer"
+              style={fogStyle}
+              aria-hidden="true"
+            />
           )}
 
           {locations.map((location) => {
