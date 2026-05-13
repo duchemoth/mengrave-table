@@ -444,7 +444,8 @@
 }
 
 .local-map-image {
-  object-fit: cover;
+  object-fit: contain;
+  background: rgba(255, 244, 210, 0.72);
 }
 
 .local-map-sidebar {
@@ -485,4 +486,94 @@
   .local-map-sidebar {
     grid-template-columns: 1fr;
   }
+}
+
+/* Local map wide-first layout */
+.encounter-modal:has(.local-map-layout) {
+  width: min(1380px, calc(100vw - 36px));
+}
+
+.encounter-modal:has(.local-map-layout) .encounter-header {
+  margin-bottom: 12px;
+}
+
+.encounter-modal:has(.local-map-layout) .encounter-header h2 {
+  font-size: clamp(38px, 5vw, 72px);
+}
+
+.encounter-modal:has(.local-map-layout) .local-map-layout {
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+
+.encounter-modal:has(.local-map-layout) .local-map-main {
+  display: flex;
+  justify-content: center;
+}
+
+.encounter-modal:has(.local-map-layout) .local-map-frame {
+  width: min(100%, 1040px);
+  min-height: 0;
+  max-height: none;
+  aspect-ratio: 16 / 9;
+}
+
+.encounter-modal:has(.local-map-layout) .local-map-sidebar {
+  display: grid;
+  grid-template-columns: minmax(0, 1.7fr) minmax(240px, 0.8fr);
+  gap: 14px;
+}
+
+.encounter-modal:has(.local-map-layout) .local-map-card:nth-child(1) {
+  order: 2;
+}
+
+.encounter-modal:has(.local-map-layout) .local-map-card:nth-child(2) {
+  order: 1;
+}
+
+.encounter-modal:has(.local-map-layout) .local-map-card {
+  min-height: 0;
+}
+
+.encounter-modal:has(.local-map-layout) .local-map-notes {
+  min-height: 170px;
+}
+
+.encounter-modal:has(.local-map-layout) .encounter-actions {
+  margin-top: 14px;
+}
+
+@media (max-width: 1100px) {
+  .encounter-modal:has(.local-map-layout) .local-map-frame {
+    min-height: auto;
+  }
+
+  .encounter-modal:has(.local-map-layout) .local-map-sidebar {
+    grid-template-columns: 1fr;
+  }
+}
+
+.encounter-modal:has(.local-map-layout) .local-map-field input {
+  padding: 8px 10px;
+  font-size: 12px;
+}
+
+.encounter-modal:has(.local-map-layout) .local-map-help {
+  margin: 8px 0 10px;
+  font-size: 11px;
+  line-height: 1.35;
+}
+
+.encounter-modal:has(.local-map-layout) .local-map-card:nth-child(1) h3 {
+  font-size: 18px;
+}
+
+.encounter-modal:has(.local-map-layout) .local-map-card:nth-child(1) .eyebrow {
+  margin-bottom: 5px;
+}
+
+.encounter-modal:has(.local-map-layout) {
+  max-height: calc(100dvh - 28px);
+  padding: 18px;
 }
