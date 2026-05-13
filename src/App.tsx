@@ -228,10 +228,70 @@ function App() {
     setSelectedLocationId(remainingLocations[0].id);
   }
 
+  function normalizeRevealedAreas(value: unknown): RevealedMapArea[] {
+    if (!Array.isArray(value)) {
+      return [];
+    }
+
+    return value
+      .map((area) => {
+        if (
+          typeof area !== "object" ||
+          area === null ||
+          !("id" in area) ||
+          !("x" in area) ||
+          !("y" in area) ||
+          !("radius" in area)
+        ) {
+          return null;
+        }
+
+        const normalizedArea = area as {
+          id: unknown;
+          x: unknown;
+          y: unknown;
+          radius: unknown;
+        };
+
+        if (
+          typeof normalizedArea.id !== "string" ||
+          typeof normalizedArea.x !== "number" ||
+          typeof normalizedArea.y !== "number" ||
+          typeof normalizedArea.radius !== "number"
+        ) {
+          return null;
+        }
+
+        return {
+          id: normalizedArea.id,
+          x: Math.max(0, Math.min(100, normalizedArea.x)),
+          y: Math.max(0, Math.min(100, normalizedArea.y)),
+          radius: Math.max(1, Math.min(30, normalizedArea.radius)),
+        };
+      })
+      .filter((area): area is RevealedMapArea => area !== null);
+  }
+
   function handleImportCampaign(file: File) {
-    importCampaign(file, (firstLocationId) => {
+    importCampaign(file, (firstLocationId, importedCampaign) => {
       setSelectedLocationId(firstLocationId);
+
+      setRevealedAreas(
+        normalizeRevealedAreas(importedCampaign?.revealedAreas),
+      );
+
+      if (typeof importedCampaign?.masterNotes === "string") {
+        setMasterNotes(importedCampaign.masterNotes);
+      }
+
       openSidebar();
+    });
+  }
+
+  function handleExportCampaign() {
+    exportCampaign({
+      revealedAreas,
+      masterNotes,
     });
   }
 
@@ -548,7 +608,7 @@ function App() {
         onCreateEvent={createEvent}
         onDeleteEvent={handleDeleteEvent}
         onOpenEvent={handleOpenEventEncounter}
-        onExportCampaign={exportCampaign}
+        onExportCampaign={handleExportCampaign}
         onImportCampaign={handleImportCampaign}
       />
 

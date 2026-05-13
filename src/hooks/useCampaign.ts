@@ -166,9 +166,9 @@ export function useCampaign() {
     );
   }
 
-  function exportCampaign() {
+  function exportCampaign(extraCampaignData: Record<string, unknown> = {}) {
     const archiveData = {
-      version: 1,
+      version: 2,
       exportedAt: new Date().toISOString(),
       type: "mogila-chelovechestva-campaign",
       campaign: {
@@ -180,6 +180,7 @@ export function useCampaign() {
         quests,
         npcs,
         items,
+        ...extraCampaignData,
       },
     };
 
@@ -195,7 +196,16 @@ export function useCampaign() {
     URL.revokeObjectURL(url);
   }
 
-  function importCampaign(file: File, onSuccess?: (firstLocationId: string) => void) {
+  function importCampaign(
+    file: File,
+    onSuccess?: (
+      firstLocationId: string,
+      importedCampaign?: {
+        revealedAreas?: unknown[];
+        masterNotes?: unknown;
+      },
+    ) => void,
+  ) {
     const reader = new FileReader();
 
     reader.onload = () => {
@@ -211,6 +221,8 @@ export function useCampaign() {
             quests?: unknown[];
             npcs?: string[];
             items?: string[];
+            revealedAreas?: unknown[];
+            masterNotes?: unknown;
           };
           locations?: Location[];
         };
@@ -272,7 +284,7 @@ export function useCampaign() {
           setItems(parsedData.campaign.items.map(String));
         }
 
-        onSuccess?.(normalizedLocations[0].id);
+        onSuccess?.(normalizedLocations[0].id, parsedData.campaign);
 
         window.alert("Кампания импортирована.");
       } catch {
