@@ -31,6 +31,32 @@ const VISIBILITY_LABELS: Record<ReferenceVisibility, string> = {
     echo: "Эхо",
 };
 
+function normalizeSearchText(value: string) {
+    return value.toLowerCase().replaceAll("ё", "е").replace(/\s+/g, " ").trim();
+}
+
+function articleMatchesSearch(article: ReferenceArticle, searchQuery: string) {
+    const normalizedQuery = normalizeSearchText(searchQuery);
+
+    if (!normalizedQuery) {
+        return true;
+    }
+
+    const searchWords = normalizedQuery.split(" ").filter(Boolean);
+
+    const searchableText = normalizeSearchText(
+        [
+            article.title,
+            article.tags,
+            article.content,
+            article.section,
+            article.visibility,
+        ].join(" "),
+    );
+
+    return searchWords.every((word) => searchableText.includes(word));
+}
+
 type ReferenceLibraryProps = {
     articles: ReferenceArticle[];
     isPlayerMode: boolean;
@@ -55,6 +81,7 @@ export function ReferenceLibrary({
         articles[0]?.id ?? null,
     );
     const [isEditing, setIsEditing] = useState(false);
+    const [searchQuery, setSearchQuery] = useState("");
 
     const visibleArticles = useMemo(() => {
         return articles.filter((article) => {
@@ -71,7 +98,8 @@ export function ReferenceLibrary({
     }, [articles, isDeveloperMode, isPlayerMode]);
 
     const sectionArticles = visibleArticles.filter(
-        (article) => article.section === activeSection,
+        (article) =>
+            article.section === activeSection && articleMatchesSearch(article, searchQuery),
     );
 
     const selectedArticle =
@@ -177,6 +205,27 @@ export function ReferenceLibrary({
                 ))}
             </div>
 
+            <div className="reference-search-row">
+                <label className="reference-search-field">
+                    Поиск по справке
+                    <input
+                        value={searchQuery}
+                        onChange={(event) => setSearchQuery(event.target.value)}
+                        placeholder="Название, тег или слово из текста..."
+                    />
+                </label>
+
+                {searchQuery.trim().length > 0 && (
+                    <button
+                        className="secondary-button reference-clear-search"
+                        type="button"
+                        onClick={() => setSearchQuery("")}
+                    >
+                        Очистить
+                    </button>
+                )}
+            </div>
+
             <div className="reference-layout">
                 <aside className="reference-article-list">
                     {isDeveloperMode && (
@@ -191,7 +240,9 @@ export function ReferenceLibrary({
 
                     {sectionArticles.length === 0 ? (
                         <p className="reference-empty-text">
-                            В этом разделе пока нет доступных статей.
+                            {searchQuery.trim().length > 0
+                                ? "По этому запросу в разделе ничего не найдено."
+                                : "В этом разделе пока нет доступных статей."}
                         </p>
                     ) : (
                         <div className="reference-article-buttons">
