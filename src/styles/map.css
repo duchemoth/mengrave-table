@@ -68,10 +68,16 @@
 
 .map-fog-layer {
   position: absolute;
-  z-index: 2;
+  z-index: 8;
   inset: 0;
+  width: 100%;
+  height: 100%;
   pointer-events: none;
+}
 
+.map-fog-texture {
+  width: 100%;
+  height: 100%;
   background:
     radial-gradient(circle at 18% 22%,
       rgba(124, 37, 34, 0.22),
@@ -87,25 +93,7 @@
     linear-gradient(135deg,
       rgba(36, 18, 13, 0.94),
       rgba(18, 10, 8, 0.98));
-
-  -webkit-mask:
-    radial-gradient(circle at var(--fog-x) var(--fog-y),
-      transparent 0%,
-      transparent 5.5%,
-      rgba(0, 0, 0, 0.34) 8%,
-      black 12%,
-      black 100%);
-
-  mask:
-    radial-gradient(circle at var(--fog-x) var(--fog-y),
-      transparent 0%,
-      transparent 5.5%,
-      rgba(0, 0, 0, 0.34) 8%,
-      black 12%,
-      black 100%);
-
   backdrop-filter: blur(5px) saturate(0.55);
-
   box-shadow:
     inset 0 0 160px rgba(0, 0, 0, 0.92),
     inset 0 0 46px rgba(70, 50, 77, 0.46);
@@ -117,6 +105,10 @@
 
 .map-placing-event {
   cursor: copy;
+}
+
+.map-revealing-fog {
+  cursor: cell;
 }
 
 .map-label {
@@ -550,9 +542,10 @@
     0 12px 24px rgba(18, 10, 8, 0.46);
 }
 
-.map-create-event-button {
+.map-create-event-button,
+.map-reveal-fog-button {
   position: absolute;
-  z-index: 6;
+  z-index: 12;
   left: 32px;
   bottom: 164px;
   border: 1px solid rgba(36, 26, 18, 0.36);
@@ -569,12 +562,18 @@
   font-weight: 800;
 }
 
-.map-create-event-button:hover {
+.map-reveal-fog-button {
+  bottom: 210px;
+}
+
+.map-create-event-button:hover,
+.map-reveal-fog-button:hover {
   border-color: rgba(215, 166, 90, 0.75);
   background: linear-gradient(180deg, #4a2b20, var(--leather));
 }
 
-.map-create-event-button.active {
+.map-create-event-button.active,
+.map-reveal-fog-button.active {
   border-color: rgba(215, 166, 90, 0.95);
   color: #fff3cf;
   background: linear-gradient(180deg, #6d3d25, #321a12);
@@ -631,4 +630,12 @@
   text-shadow:
     0 1px 2px rgba(18, 10, 8, 0.9),
     0 0 8px rgba(255, 244, 210, 0.35);
+}
+
+.map-label,
+.map-hint,
+.map-reset-button,
+.map-create-event-button,
+.map-reveal-fog-button {
+  z-index: 12;
 }

@@ -3,6 +3,13 @@ import type { CSSProperties } from "react";
 import { useMapViewport } from "../hooks/useMapViewport";
 import type { Location, MapEvent, MapGroup, UserMode } from "../types/campaign";
 
+type RevealedMapArea = {
+  id: string;
+  x: number;
+  y: number;
+  radius: number;
+};
+
 type MapViewProps = {
   locations: Location[];
   groups: MapGroup[];
@@ -14,6 +21,8 @@ type MapViewProps = {
   isDeveloperMode: boolean;
   isCleanMapMode: boolean;
   isPlacingEvent: boolean;
+  isRevealingFog: boolean;
+  revealedAreas: RevealedMapArea[];
   onSelectLocation: (locationId: string) => void;
   onSelectGroup: (groupId: string) => void;
   onSelectEvent: (eventId: string) => void;
@@ -22,7 +31,9 @@ type MapViewProps = {
   onMoveGroup: (id: string, x: number, y: number) => void;
   onMoveEvent: (id: string, x: number, y: number) => void;
   onToggleEventPlacement: () => void;
+  onToggleFogReveal: () => void;
   onCreateMapEventAt: (x: number, y: number) => void;
+  onCreateRevealedAreaAt: (x: number, y: number) => void;
   onOpenLocationEncounter: (location: Location) => void;
   onOpenGroupEncounter: (group: MapGroup) => void;
   onOpenEventEncounter: (event: MapEvent) => void;
@@ -71,6 +82,8 @@ export function MapView({
   isDeveloperMode,
   isCleanMapMode,
   isPlacingEvent,
+  isRevealingFog,
+  revealedAreas,
   onSelectLocation,
   onSelectGroup,
   onSelectEvent,
@@ -79,7 +92,9 @@ export function MapView({
   onMoveGroup,
   onMoveEvent,
   onToggleEventPlacement,
+  onToggleFogReveal,
   onCreateMapEventAt,
+  onCreateRevealedAreaAt,
   onOpenLocationEncounter,
   onOpenGroupEncounter,
   onOpenEventEncounter,
@@ -112,6 +127,9 @@ export function MapView({
     x: playerMapGroup?.x ?? 50,
     y: playerMapGroup?.y ?? 50,
   };
+
+  const playerRevealRadius = 5.5;
+  const revealedAreaVerticalScale = 16 / 9;
 
   const fogStyle = {
     "--fog-x": `${fogAnchor.x}%`,
@@ -233,7 +251,11 @@ export function MapView({
   }
 
   function handleMapClick(event: React.MouseEvent<HTMLDivElement>) {
-    if (!isPlacingEvent || userMode === "player") {
+    if (userMode === "player") {
+      return;
+    }
+
+    if (!isPlacingEvent && !isRevealingFog) {
       return;
     }
 
@@ -243,7 +265,15 @@ export function MapView({
     const y = clamp(((event.clientY - rect.top) / rect.height) * 100);
 
     event.stopPropagation();
-    onCreateMapEventAt(x, y);
+
+    if (isPlacingEvent) {
+      onCreateMapEventAt(x, y);
+      return;
+    }
+
+    if (isRevealingFog) {
+      onCreateRevealedAreaAt(x, y);
+    }
   }
 
   function stopMarkerDrag() {
@@ -294,12 +324,12 @@ export function MapView({
       >
         <div
           className={`map ${isDeveloperMode ? "map-editable" : ""} ${isPlacingEvent ? "map-placing-event" : ""
-            }`}
+            } ${isRevealingFog ? "map-revealing-fog" : ""}`}
           style={{
             transform: `translate(${offsetX}px, ${offsetY}px) scale(${scale})`,
           }}
           onMouseDown={(event) => {
-            if (isPlacingEvent) {
+            if (isPlacingEvent || isRevealingFog) {
               event.stopPropagation();
             }
           }}
@@ -317,6 +347,12 @@ export function MapView({
             </div>
           )}
 
+          {!isCleanMapMode && isRevealingFog && (
+            <div className="map-hint">
+              Кликни по карте, чтобы открыть область · Esc — отмена
+            </div>
+          )}
+
           {isDeveloperMode && !isCleanMapMode && !isPlacingEvent && (
             <div className="map-hint">
               Зажми маркер, чтобы переместить локацию
@@ -324,11 +360,120 @@ export function MapView({
           )}
 
           {isPlayerMode && (
-            <div
+            <svg
               className="map-fog-layer"
               style={fogStyle}
+              viewBox="0 0 100 100"
+              preserveAspectRatio="none"
               aria-hidden="true"
-            />
+            >
+              <defs>
+                <linearGradient id="map-fog-gradient" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stopColor="#24120d" />
+                  <stop offset="48%" stopColor="#2e1d24" />
+                  <stop offset="100%" stopColor="#120a08" />
+                </linearGradient>
+
+                <radialGradient id="map-fog-blood-stain" cx="18%" cy="22%" r="42%">
+                  <stop offset="0%" stopColor="#4b1718" stopOpacity="0.62" />
+                  <stop offset="100%" stopColor="#4b1718" stopOpacity="0" />
+                </radialGradient>
+
+                <radialGradient id="map-fog-violet-stain" cx="78%" cy="64%" r="48%">
+                  <stop offset="0%" stopColor="#342139" stopOpacity="0.72" />
+                  <stop offset="100%" stopColor="#342139" stopOpacity="0" />
+                </radialGradient>
+
+                <pattern
+                  id="map-fog-lines"
+                  width="8"
+                  height="8"
+                  patternUnits="userSpaceOnUse"
+                  patternTransform="rotate(45)"
+                >
+                  <rect width="1" height="8" fill="rgba(234, 216, 173, 0.055)" />
+                </pattern>
+
+                <mask id="map-fog-mask">
+                  <rect x="0" y="0" width="100" height="100" fill="white" />
+
+                  <ellipse
+                    cx={fogAnchor.x}
+                    cy={fogAnchor.y}
+                    rx={playerRevealRadius + 3}
+                    ry={(playerRevealRadius + 3) * revealedAreaVerticalScale}
+                    fill="rgba(0, 0, 0, 0.42)"
+                  />
+
+                  <ellipse
+                    cx={fogAnchor.x}
+                    cy={fogAnchor.y}
+                    rx={playerRevealRadius}
+                    ry={playerRevealRadius * revealedAreaVerticalScale}
+                    fill="black"
+                  />
+
+                  {revealedAreas.map((area) => (
+                    <ellipse
+                      key={`${area.id}-soft`}
+                      cx={area.x}
+                      cy={area.y}
+                      rx={area.radius + 3}
+                      ry={(area.radius + 3) * revealedAreaVerticalScale}
+                      fill="rgba(0, 0, 0, 0.42)"
+                    />
+                  ))}
+
+                  {revealedAreas.map((area) => (
+                    <ellipse
+                      key={area.id}
+                      cx={area.x}
+                      cy={area.y}
+                      rx={area.radius}
+                      ry={area.radius * revealedAreaVerticalScale}
+                      fill="black"
+                    />
+                  ))}
+                </mask>
+              </defs>
+
+              <rect
+                x="0"
+                y="0"
+                width="100"
+                height="100"
+                fill="url(#map-fog-gradient)"
+                mask="url(#map-fog-mask)"
+              />
+
+              <rect
+                x="0"
+                y="0"
+                width="100"
+                height="100"
+                fill="url(#map-fog-blood-stain)"
+                mask="url(#map-fog-mask)"
+              />
+
+              <rect
+                x="0"
+                y="0"
+                width="100"
+                height="100"
+                fill="url(#map-fog-violet-stain)"
+                mask="url(#map-fog-mask)"
+              />
+
+              <rect
+                x="0"
+                y="0"
+                width="100"
+                height="100"
+                fill="url(#map-fog-lines)"
+                opacity="0.75"
+                mask="url(#map-fog-mask)"
+              />
+            </svg>
           )}
 
           {locations.map((location) => {
@@ -491,6 +636,16 @@ export function MapView({
           onClick={onToggleEventPlacement}
         >
           {isPlacingEvent ? "Отменить событие" : "Разместить событие"}
+        </button>
+      )}
+
+      {!isCleanMapMode && userMode !== "player" && (
+        <button
+          className={`map-reveal-fog-button ${isRevealingFog ? "active" : ""}`}
+          type="button"
+          onClick={onToggleFogReveal}
+        >
+          {isRevealingFog ? "Отменить раскрытие" : "Открыть туман"}
         </button>
       )}
 

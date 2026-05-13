@@ -17,6 +17,15 @@ import type { Location, MapEvent, MapGroup, } from "./types/campaign";
 
 const MASTER_NOTES_STORAGE_KEY = "nri-table-master-notes";
 
+const REVEALED_AREAS_STORAGE_KEY = "nri-table-revealed-areas";
+
+type RevealedMapArea = {
+  id: string;
+  x: number;
+  y: number;
+  radius: number;
+};
+
 function App() {
   const {
     locations,
@@ -71,6 +80,35 @@ function App() {
   const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
   const [isPlacingEvent, setIsPlacingEvent] = useState(false);
 
+  const [isRevealingFog, setIsRevealingFog] = useState(false);
+
+  const [revealedAreas, setRevealedAreas] = useState<RevealedMapArea[]>(() => {
+    const savedAreas = localStorage.getItem(REVEALED_AREAS_STORAGE_KEY);
+
+    if (!savedAreas) {
+      return [];
+    }
+
+    try {
+      const parsedAreas = JSON.parse(savedAreas) as RevealedMapArea[];
+
+      if (!Array.isArray(parsedAreas)) {
+        return [];
+      }
+
+      return parsedAreas.filter((area) => {
+        return (
+          typeof area.id === "string" &&
+          typeof area.x === "number" &&
+          typeof area.y === "number" &&
+          typeof area.radius === "number"
+        );
+      });
+    } catch {
+      return [];
+    }
+  });
+
   const [encounterTarget, setEncounterTarget] = useState<
     | { kind: "location"; data: Location }
     | { kind: "group"; data: MapGroup }
@@ -93,9 +131,17 @@ function App() {
   }, [masterNotes]);
 
   useEffect(() => {
+    localStorage.setItem(
+      REVEALED_AREAS_STORAGE_KEY,
+      JSON.stringify(revealedAreas),
+    );
+  }, [revealedAreas]);
+
+  useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
       if (event.key === "Escape") {
         setIsPlacingEvent(false);
+        setIsRevealingFog(false);
       }
     }
 
@@ -109,6 +155,7 @@ function App() {
   useEffect(() => {
     if (isPlayerMode) {
       setIsPlacingEvent(false);
+      setIsRevealingFog(false);
     }
   }, [isPlayerMode]);
 
@@ -306,7 +353,33 @@ function App() {
       return;
     }
 
+    setIsRevealingFog(false);
     setIsPlacingEvent((currentValue) => !currentValue);
+  }
+
+  function handleToggleFogReveal() {
+    if (isPlayerMode) {
+      return;
+    }
+
+    setIsPlacingEvent(false);
+    setIsRevealingFog((currentValue) => !currentValue);
+  }
+
+  function handleCreateRevealedAreaAt(x: number, y: number) {
+    if (isPlayerMode) {
+      return;
+    }
+
+    const newArea: RevealedMapArea = {
+      id: `revealed-area-${Date.now()}`,
+      x,
+      y,
+      radius: 4,
+    };
+
+    setRevealedAreas((currentAreas) => [...currentAreas, newArea]);
+    setIsRevealingFog(false);
   }
 
   function handleCreateMapEventAt(x: number, y: number) {
@@ -376,8 +449,12 @@ function App() {
         onMoveGroup={handleMoveGroup}
         onMoveEvent={handleMoveEvent}
         isPlacingEvent={isPlacingEvent}
+        isRevealingFog={isRevealingFog}
+        revealedAreas={revealedAreas}
         onToggleEventPlacement={handleToggleEventPlacement}
+        onToggleFogReveal={handleToggleFogReveal}
         onCreateMapEventAt={handleCreateMapEventAt}
+        onCreateRevealedAreaAt={handleCreateRevealedAreaAt}
         onOpenLocationEncounter={handleOpenLocationEncounter}
         onOpenGroupEncounter={handleOpenGroupEncounter}
         onOpenEventEncounter={handleOpenEventEncounter}
