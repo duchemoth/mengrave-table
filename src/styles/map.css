@@ -111,6 +111,10 @@
   cursor: cell;
 }
 
+.map-hiding-fog {
+  cursor: not-allowed;
+}
+
 .map-label {
   position: absolute;
   z-index: 4;
@@ -543,7 +547,8 @@
 }
 
 .map-create-event-button,
-.map-reveal-fog-button {
+.map-reveal-fog-button,
+.map-hide-fog-button {
   position: absolute;
   z-index: 12;
   left: 32px;
@@ -566,14 +571,20 @@
   bottom: 210px;
 }
 
+.map-hide-fog-button {
+  bottom: 256px;
+}
+
 .map-create-event-button:hover,
-.map-reveal-fog-button:hover {
+.map-reveal-fog-button:hover,
+.map-hide-fog-button:hover {
   border-color: rgba(215, 166, 90, 0.75);
   background: linear-gradient(180deg, #4a2b20, var(--leather));
 }
 
 .map-create-event-button.active,
-.map-reveal-fog-button.active {
+.map-reveal-fog-button.active,
+.map-hide-fog-button.active {
   border-color: rgba(215, 166, 90, 0.95);
   color: #fff3cf;
   background: linear-gradient(180deg, #6d3d25, #321a12);
@@ -636,6 +647,31 @@
 .map-hint,
 .map-reset-button,
 .map-create-event-button,
-.map-reveal-fog-button {
+.map-reveal-fog-button,
+.map-hide-fog-button {
   z-index: 12;
+}
+
+.map-fog-area-outline {
+  fill: none;
+  stroke: rgba(234, 216, 173, 0.5);
+  stroke-width: 0.28;
+  stroke-dasharray: 0.8 0.55;
+  pointer-events: none;
+}
+
+.map-fog-preview-circle {
+  fill: none;
+  stroke: rgba(215, 166, 90, 0.95);
+  stroke-width: 0.35;
+  stroke-dasharray: 0.9 0.45;
+  pointer-events: none;
+}
+
+.map-fog-delete-cursor {
+  fill: rgba(124, 37, 34, 0.12);
+  stroke: rgba(163, 50, 47, 0.95);
+  stroke-width: 0.35;
+  stroke-dasharray: 0.7 0.45;
+  pointer-events: none;
 }

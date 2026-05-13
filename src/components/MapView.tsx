@@ -22,6 +22,7 @@ type MapViewProps = {
   isCleanMapMode: boolean;
   isPlacingEvent: boolean;
   isRevealingFog: boolean;
+  isHidingRevealedArea: boolean;
   revealedAreas: RevealedMapArea[];
   onSelectLocation: (locationId: string) => void;
   onSelectGroup: (groupId: string) => void;
@@ -32,8 +33,10 @@ type MapViewProps = {
   onMoveEvent: (id: string, x: number, y: number) => void;
   onToggleEventPlacement: () => void;
   onToggleFogReveal: () => void;
+  onToggleFogHide: () => void;
   onCreateMapEventAt: (x: number, y: number) => void;
   onCreateRevealedAreaAt: (x: number, y: number) => void;
+  onDeleteRevealedAreaAt: (x: number, y: number) => void;
   onOpenLocationEncounter: (location: Location) => void;
   onOpenGroupEncounter: (group: MapGroup) => void;
   onOpenEventEncounter: (event: MapEvent) => void;
@@ -83,6 +86,7 @@ export function MapView({
   isCleanMapMode,
   isPlacingEvent,
   isRevealingFog,
+  isHidingRevealedArea,
   revealedAreas,
   onSelectLocation,
   onSelectGroup,
@@ -93,8 +97,10 @@ export function MapView({
   onMoveEvent,
   onToggleEventPlacement,
   onToggleFogReveal,
+  onToggleFogHide,
   onCreateMapEventAt,
   onCreateRevealedAreaAt,
+  onDeleteRevealedAreaAt,
   onOpenLocationEncounter,
   onOpenGroupEncounter,
   onOpenEventEncounter,
@@ -104,6 +110,10 @@ export function MapView({
   const [draggedEventId, setDraggedEventId] = useState<string | null>(null);
   const [isDraggingMarker, setIsDraggingMarker] = useState(false);
   const [didJustDragMarker, setDidJustDragMarker] = useState(false);
+
+  const [fogPointer, setFogPointer] = useState<{ x: number; y: number } | null>(
+    null,
+  );
 
   const didMoveMarkerRef = useRef(false);
 
@@ -130,6 +140,9 @@ export function MapView({
 
   const playerRevealRadius = 5.5;
   const revealedAreaVerticalScale = 16 / 9;
+
+  const manualRevealRadius = 4;
+  const shouldShowFogLayer = isPlayerMode || isRevealingFog || isHidingRevealedArea;
 
   const fogStyle = {
     "--fog-x": `${fogAnchor.x}%`,
@@ -250,12 +263,33 @@ export function MapView({
     onMoveEvent(draggedEventId, x, y);
   }
 
+  function updateFogPointer(event: React.MouseEvent<HTMLDivElement>) {
+    if (userMode === "player" || (!isRevealingFog && !isHidingRevealedArea)) {
+      setFogPointer(null);
+      return;
+    }
+
+    const map = event.currentTarget.querySelector(".map") as HTMLDivElement | null;
+
+    if (!map) {
+      setFogPointer(null);
+      return;
+    }
+
+    const rect = map.getBoundingClientRect();
+
+    const x = clamp(((event.clientX - rect.left) / rect.width) * 100);
+    const y = clamp(((event.clientY - rect.top) / rect.height) * 100);
+
+    setFogPointer({ x, y });
+  }
+
   function handleMapClick(event: React.MouseEvent<HTMLDivElement>) {
     if (userMode === "player") {
       return;
     }
 
-    if (!isPlacingEvent && !isRevealingFog) {
+    if (!isPlacingEvent && !isRevealingFog && !isHidingRevealedArea) {
       return;
     }
 
@@ -273,6 +307,11 @@ export function MapView({
 
     if (isRevealingFog) {
       onCreateRevealedAreaAt(x, y);
+      return;
+    }
+
+    if (isHidingRevealedArea) {
+      onDeleteRevealedAreaAt(x, y);
     }
   }
 
@@ -311,6 +350,7 @@ export function MapView({
           handleMarkerMove(event);
           handleGroupMove(event);
           handleEventMove(event);
+          updateFogPointer(event);
         }}
         onMouseUp={() => {
           stopMapDrag();
@@ -319,17 +359,18 @@ export function MapView({
         onMouseLeave={() => {
           stopMapDrag();
           stopMarkerDrag();
+          setFogPointer(null);
         }}
         onContextMenu={(event) => event.preventDefault()}
       >
         <div
           className={`map ${isDeveloperMode ? "map-editable" : ""} ${isPlacingEvent ? "map-placing-event" : ""
-            } ${isRevealingFog ? "map-revealing-fog" : ""}`}
+            } ${isRevealingFog ? "map-revealing-fog" : ""} ${isHidingRevealedArea ? "map-hiding-fog" : ""}`}
           style={{
             transform: `translate(${offsetX}px, ${offsetY}px) scale(${scale})`,
           }}
           onMouseDown={(event) => {
-            if (isPlacingEvent || isRevealingFog) {
+            if (isPlacingEvent || isRevealingFog || isHidingRevealedArea) {
               event.stopPropagation();
             }
           }}
@@ -353,13 +394,19 @@ export function MapView({
             </div>
           )}
 
+          {!isCleanMapMode && isHidingRevealedArea && (
+            <div className="map-hint">
+              Кликни по открытой области, чтобы скрыть её · Esc — отмена
+            </div>
+          )}
+
           {isDeveloperMode && !isCleanMapMode && !isPlacingEvent && (
             <div className="map-hint">
               Зажми маркер, чтобы переместить локацию
             </div>
           )}
 
-          {isPlayerMode && (
+          {shouldShowFogLayer && (
             <svg
               className="map-fog-layer"
               style={fogStyle}
@@ -434,6 +481,25 @@ export function MapView({
                       fill="black"
                     />
                   ))}
+                  {!isPlayerMode && isRevealingFog && fogPointer && (
+                    <>
+                      <ellipse
+                        cx={fogPointer.x}
+                        cy={fogPointer.y}
+                        rx={manualRevealRadius + 3}
+                        ry={(manualRevealRadius + 3) * revealedAreaVerticalScale}
+                        fill="rgba(0, 0, 0, 0.42)"
+                      />
+
+                      <ellipse
+                        cx={fogPointer.x}
+                        cy={fogPointer.y}
+                        rx={manualRevealRadius}
+                        ry={manualRevealRadius * revealedAreaVerticalScale}
+                        fill="black"
+                      />
+                    </>
+                  )}
                 </mask>
               </defs>
 
@@ -473,6 +539,40 @@ export function MapView({
                 opacity="0.75"
                 mask="url(#map-fog-mask)"
               />
+              {!isPlayerMode && (isRevealingFog || isHidingRevealedArea) && (
+                <>
+                  {revealedAreas.map((area) => (
+                    <ellipse
+                      key={`${area.id}-outline`}
+                      className="map-fog-area-outline"
+                      cx={area.x}
+                      cy={area.y}
+                      rx={area.radius}
+                      ry={area.radius * revealedAreaVerticalScale}
+                    />
+                  ))}
+
+                  {isRevealingFog && fogPointer && (
+                    <ellipse
+                      className="map-fog-preview-circle"
+                      cx={fogPointer.x}
+                      cy={fogPointer.y}
+                      rx={manualRevealRadius}
+                      ry={manualRevealRadius * revealedAreaVerticalScale}
+                    />
+                  )}
+
+                  {isHidingRevealedArea && fogPointer && (
+                    <ellipse
+                      className="map-fog-delete-cursor"
+                      cx={fogPointer.x}
+                      cy={fogPointer.y}
+                      rx={manualRevealRadius}
+                      ry={manualRevealRadius * revealedAreaVerticalScale}
+                    />
+                  )}
+                </>
+              )}
             </svg>
           )}
 
@@ -646,6 +746,16 @@ export function MapView({
           onClick={onToggleFogReveal}
         >
           {isRevealingFog ? "Отменить раскрытие" : "Открыть туман"}
+        </button>
+      )}
+
+      {!isCleanMapMode && userMode !== "player" && (
+        <button
+          className={`map-hide-fog-button ${isHidingRevealedArea ? "active" : ""}`}
+          type="button"
+          onClick={onToggleFogHide}
+        >
+          {isHidingRevealedArea ? "Отменить скрытие" : "Скрыть область"}
         </button>
       )}
 

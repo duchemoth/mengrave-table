@@ -81,6 +81,7 @@ function App() {
   const [isPlacingEvent, setIsPlacingEvent] = useState(false);
 
   const [isRevealingFog, setIsRevealingFog] = useState(false);
+  const [isHidingRevealedArea, setIsHidingRevealedArea] = useState(false);
 
   const [revealedAreas, setRevealedAreas] = useState<RevealedMapArea[]>(() => {
     const savedAreas = localStorage.getItem(REVEALED_AREAS_STORAGE_KEY);
@@ -142,6 +143,7 @@ function App() {
       if (event.key === "Escape") {
         setIsPlacingEvent(false);
         setIsRevealingFog(false);
+        setIsHidingRevealedArea(false);
       }
     }
 
@@ -156,6 +158,7 @@ function App() {
     if (isPlayerMode) {
       setIsPlacingEvent(false);
       setIsRevealingFog(false);
+      setIsHidingRevealedArea(false);
     }
   }, [isPlayerMode]);
 
@@ -354,6 +357,7 @@ function App() {
     }
 
     setIsRevealingFog(false);
+    setIsHidingRevealedArea(false);
     setIsPlacingEvent((currentValue) => !currentValue);
   }
 
@@ -363,7 +367,18 @@ function App() {
     }
 
     setIsPlacingEvent(false);
+    setIsHidingRevealedArea(false);
     setIsRevealingFog((currentValue) => !currentValue);
+  }
+
+  function handleToggleFogHide() {
+    if (isPlayerMode) {
+      return;
+    }
+
+    setIsPlacingEvent(false);
+    setIsRevealingFog(false);
+    setIsHidingRevealedArea((currentValue) => !currentValue);
   }
 
   function handleCreateRevealedAreaAt(x: number, y: number) {
@@ -380,6 +395,37 @@ function App() {
 
     setRevealedAreas((currentAreas) => [...currentAreas, newArea]);
     setIsRevealingFog(false);
+  }
+
+  function handleDeleteRevealedAreaAt(x: number, y: number) {
+    if (isPlayerMode) {
+      return;
+    }
+
+    const revealedAreaVerticalScale = 16 / 9;
+
+    const clickedArea = revealedAreas.find((area) => {
+      const horizontalDistance = x - area.x;
+      const verticalDistance = y - area.y;
+      const verticalRadius = area.radius * revealedAreaVerticalScale;
+
+      const ellipseHitValue =
+        (horizontalDistance * horizontalDistance) / (area.radius * area.radius) +
+        (verticalDistance * verticalDistance) / (verticalRadius * verticalRadius);
+
+      return ellipseHitValue <= 1.25;
+    });
+
+    if (!clickedArea) {
+      window.alert("Здесь нет ручной открытой области.");
+      return;
+    }
+
+    setRevealedAreas((currentAreas) =>
+      currentAreas.filter((area) => area.id !== clickedArea.id),
+    );
+
+    setIsHidingRevealedArea(false);
   }
 
   function handleCreateMapEventAt(x: number, y: number) {
@@ -450,11 +496,14 @@ function App() {
         onMoveEvent={handleMoveEvent}
         isPlacingEvent={isPlacingEvent}
         isRevealingFog={isRevealingFog}
+        isHidingRevealedArea={isHidingRevealedArea}
         revealedAreas={revealedAreas}
-        onToggleEventPlacement={handleToggleEventPlacement}
         onToggleFogReveal={handleToggleFogReveal}
-        onCreateMapEventAt={handleCreateMapEventAt}
+        onToggleFogHide={handleToggleFogHide}
         onCreateRevealedAreaAt={handleCreateRevealedAreaAt}
+        onDeleteRevealedAreaAt={handleDeleteRevealedAreaAt}
+        onToggleEventPlacement={handleToggleEventPlacement}
+        onCreateMapEventAt={handleCreateMapEventAt}
         onOpenLocationEncounter={handleOpenLocationEncounter}
         onOpenGroupEncounter={handleOpenGroupEncounter}
         onOpenEventEncounter={handleOpenEventEncounter}
