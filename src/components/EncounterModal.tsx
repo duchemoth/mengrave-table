@@ -40,6 +40,7 @@ type LocalMapDraft = {
 
 type EncounterModalProps = {
   target: EncounterTarget | null;
+  isPlayerMode: boolean;
   onClose: () => void;
   onCreateSceneNote: (note: string) => void;
   onUpdateMapEvent: (event: MapEvent) => void;
@@ -123,6 +124,7 @@ function saveLocalMapDraft(storageKey: string, draft: LocalMapDraft) {
 
 export function EncounterModal({
   target,
+  isPlayerMode,
   onClose,
   onCreateSceneNote,
   onUpdateMapEvent,
@@ -468,45 +470,49 @@ export function EncounterModal({
               <button
                 className="secondary-button"
                 type="button"
-                onClick={() => {
-                  if (isLocation && target.kind === "location") {
-                    createEventFromCurrentLocation();
-                    return;
-                  }
-
-                  if (isEvent) {
-                    setMode("eventEdit");
-                  }
-                }}
-              >
-                {isLocation
-                  ? "Создать событие"
-                  : isGroup
-                    ? "Начать конфликт"
-                    : isEventSaved
-                      ? "Событие сохранено"
-                      : "Редактировать событие"}
-              </button>
-
-              {isEvent && (
-                <button
-                  className="secondary-button"
-                  type="button"
-                  onClick={toggleEventCompletion}
-                >
-                  {target.data.status === "completed"
-                    ? "Вернуть в активные"
-                    : "Завершить событие"}
-                </button>
-              )}
-
-              <button
-                className="secondary-button"
-                type="button"
                 onClick={() => setMode("localMap")}
               >
                 Открыть локальную карту
               </button>
+
+              {!isPlayerMode && (
+                <>
+                  <button
+                    className="secondary-button"
+                    type="button"
+                    onClick={() => {
+                      if (isLocation && target.kind === "location") {
+                        createEventFromCurrentLocation();
+                        return;
+                      }
+
+                      if (isEvent) {
+                        setMode("eventEdit");
+                      }
+                    }}
+                  >
+                    {isLocation
+                      ? "Создать событие"
+                      : isGroup
+                        ? "Начать конфликт"
+                        : isEventSaved
+                          ? "Событие сохранено"
+                          : "Редактировать событие"}
+                  </button>
+
+                  {isEvent && (
+                    <button
+                      className="secondary-button"
+                      type="button"
+                      onClick={toggleEventCompletion}
+                    >
+                      {target.data.status === "completed"
+                        ? "Вернуть в активные"
+                        : "Завершить событие"}
+                    </button>
+                  )}
+                </>
+              )}
 
               <button className="secondary-button" type="button" onClick={closeModal}>
                 Закрыть
@@ -515,32 +521,44 @@ export function EncounterModal({
           </>
         ) : mode === "scene" ? (
           <>
-            <div className="scene-layout">
+            <div className={`scene-layout ${isPlayerMode ? "player-only" : ""}`}>
               <section className="scene-card">
                 <p className="eyebrow">Для игроков</p>
                 <h3>Описание сцены</h3>
 
-                <textarea
-                  className="scene-textarea"
-                  value={playerDescription}
-                  onChange={(event) => updatePlayerDescription(event.target.value)}
-                  placeholder="Что мастер зачитывает игрокам: обстановка, запахи, шумы, первое впечатление..."
-                  autoFocus
-                />
+                {isPlayerMode ? (
+                  <div className="scene-readonly-text">
+                    {playerDescription.trim().length > 0 ? (
+                      <p>{playerDescription}</p>
+                    ) : (
+                      <p>Описание сцены пока не добавлено.</p>
+                    )}
+                  </div>
+                ) : (
+                  <textarea
+                    className="scene-textarea"
+                    value={playerDescription}
+                    onChange={(event) => updatePlayerDescription(event.target.value)}
+                    placeholder="Что мастер зачитывает игрокам: обстановка, запахи, шумы, первое впечатление..."
+                  />
+                )}
               </section>
 
-              <section className="scene-card">
-                <p className="eyebrow">Для мастера</p>
-                <h3>Скрытые заметки</h3>
+              {!isPlayerMode && (
 
-                <textarea
-                  className="scene-textarea"
-                  value={masterNotes}
-                  onChange={(event) => updateMasterNotes(event.target.value)}
-                  placeholder="Что знает только мастер: мотивы NPC, ловушки, скрытые угрозы, варианты развития..."
-                />
-              </section>
-            </div>
+                <section className="scene-card">
+                  <p className="eyebrow">Для мастера</p>
+                  <h3>Скрытые заметки</h3>
+
+                  <textarea
+                    className="scene-textarea"
+                    value={masterNotes}
+                    onChange={(event) => updateMasterNotes(event.target.value)}
+                    placeholder="Что знает только мастер: мотивы NPC, ловушки, скрытые угрозы, варианты развития..."
+                  />
+                </section>
+                )}
+          </div>
 
             <footer className="encounter-actions">
               <button
@@ -551,13 +569,15 @@ export function EncounterModal({
                 Вернуться к обзору
               </button>
 
-              <button
-                className="secondary-button"
-                type="button"
-                onClick={createSceneNote}
-              >
-                {isSceneNoteCreated ? "Заметка создана" : "Создать заметку сцены"}
-              </button>
+              {!isPlayerMode && (
+                <button
+                  className="secondary-button"
+                  type="button"
+                  onClick={createSceneNote}
+                >
+                  {isSceneNoteCreated ? "Заметка создана" : "Создать заметку сцены"}
+                </button>
+              )}
 
               <button
                 className="secondary-button"
@@ -596,51 +616,53 @@ export function EncounterModal({
                 </div>
               </section>
 
-              <aside className="local-map-sidebar">
-                <section className="local-map-card">
-                  <p className="eyebrow">Фон карты</p>
-                  <h3>Изображение</h3>
+              {!isPlayerMode && (
+                <aside className="local-map-sidebar">
+                  <section className="local-map-card">
+                    <p className="eyebrow">Фон карты</p>
+                    <h3>Изображение</h3>
 
-                  <label className="local-map-field">
-                    Путь или ссылка на картинку
-                    <input
-                      value={localMapImageUrl}
-                      onChange={(event) =>
-                        updateLocalMapImageUrl(event.target.value)
-                      }
-                      placeholder="/local-maps/old-harbor.webp"
+                    <label className="local-map-field">
+                      Путь или ссылка на картинку
+                      <input
+                        value={localMapImageUrl}
+                        onChange={(event) =>
+                          updateLocalMapImageUrl(event.target.value)
+                        }
+                        placeholder="/local-maps/old-harbor.webp"
+                      />
+                    </label>
+
+                    <p className="local-map-help">
+                      Рекомендуемый стандарт: 1920×1080, WebP или JPEG. Для
+                      локальных файлов положи изображение в папку public/local-maps
+                      и укажи путь от корня сайта.
+                    </p>
+
+                    {localMapImageUrl.trim().length > 0 && (
+                      <button
+                        className="danger-button"
+                        type="button"
+                        onClick={removeLocalMapImage}
+                      >
+                        Убрать карту
+                      </button>
+                    )}
+                  </section>
+
+                  <section className="local-map-card">
+                    <p className="eyebrow">Для мастера</p>
+                    <h3>Заметки к карте</h3>
+
+                    <textarea
+                      className="local-map-notes"
+                      value={localMapNotes}
+                      onChange={(event) => updateLocalMapNotes(event.target.value)}
+                      placeholder="Входы, укрытия, опасные зоны, засады, запертые двери, шумы, маршруты отхода..."
                     />
-                  </label>
-
-                  <p className="local-map-help">
-                    Рекомендуемый стандарт: 1920×1080, WebP или JPEG. Для
-                    локальных файлов положи изображение в папку public/local-maps
-                    и укажи путь от корня сайта.
-                  </p>
-
-                  {localMapImageUrl.trim().length > 0 && (
-                    <button
-                      className="danger-button"
-                      type="button"
-                      onClick={removeLocalMapImage}
-                    >
-                      Убрать карту
-                    </button>
-                  )}
-                </section>
-
-                <section className="local-map-card">
-                  <p className="eyebrow">Для мастера</p>
-                  <h3>Заметки к карте</h3>
-
-                  <textarea
-                    className="local-map-notes"
-                    value={localMapNotes}
-                    onChange={(event) => updateLocalMapNotes(event.target.value)}
-                    placeholder="Входы, укрытия, опасные зоны, засады, запертые двери, шумы, маршруты отхода..."
-                  />
-                </section>
-              </aside>
+                  </section>
+                </aside>
+              )}
             </div>
 
             <footer className="encounter-actions">
@@ -667,99 +689,109 @@ export function EncounterModal({
           </>
         ) : (
           <>
-            <div className="event-edit-layout">
-              <section className="event-edit-card">
-                <p className="eyebrow">Событие</p>
-                <h3>Редактирование события</h3>
+            {isPlayerMode ? (
+              <div className="scene-card">
+                <p className="eyebrow">Недоступно</p>
+                <h3>Редактирование скрыто</h3>
+                <p>
+                  Этот раздел доступен только Мастеру.
+                </p>
+              </div>
+            ) : (
+              <div className="event-edit-layout">
+                <section className="event-edit-card">
+                  <p className="eyebrow">Событие</p>
+                  <h3>Редактирование события</h3>
 
-                <div className="event-form-grid">
-                  <label className="event-field">
-                    Название
-                    <input
-                      value={eventDraft.title}
-                      onChange={(event) =>
-                        updateEventDraft({ title: event.target.value })
-                      }
-                      placeholder="Название события"
-                    />
-                  </label>
+                  <div className="event-form-grid">
+                    <label className="event-field">
+                      Название
+                      <input
+                        value={eventDraft.title}
+                        onChange={(event) =>
+                          updateEventDraft({ title: event.target.value })
+                        }
+                        placeholder="Название события"
+                      />
+                    </label>
 
-                  <label className="event-field">
-                    Категория
-                    <select
-                      value={eventDraft.category}
-                      onChange={(event) =>
-                        updateEventDraft({
-                          category: event.target.value as MapEvent["category"],
-                        })
-                      }
-                    >
-                      <option value="incident">Происшествие</option>
-                      <option value="mystery">Неясность</option>
-                      <option value="aberration">Аберрация</option>
-                      <option value="conflict">Столкновение</option>
-                      <option value="object">Объект</option>
-                      <option value="other">Другое</option>
-                    </select>
-                  </label>
+                    <label className="event-field">
+                      Категория
+                      <select
+                        value={eventDraft.category}
+                        onChange={(event) =>
+                          updateEventDraft({
+                            category: event.target.value as MapEvent["category"],
+                          })
+                        }
+                      >
+                        <option value="incident">Происшествие</option>
+                        <option value="mystery">Неясность</option>
+                        <option value="aberration">Аберрация</option>
+                        <option value="conflict">Столкновение</option>
+                        <option value="object">Объект</option>
+                        <option value="other">Другое</option>
+                      </select>
+                    </label>
 
-                  <label className="event-field">
-                    Статус
-                    <select
-                      value={eventDraft.status}
-                      onChange={(event) =>
-                        updateEventDraft({
-                          status: event.target.value as MapEvent["status"],
-                        })
-                      }
-                    >
-                      <option value="hidden">Скрыто</option>
-                      <option value="active">Активно</option>
-                      <option value="completed">Завершено</option>
-                    </select>
-                  </label>
+                    <label className="event-field">
+                      Статус
+                      <select
+                        value={eventDraft.status}
+                        onChange={(event) =>
+                          updateEventDraft({
+                            status: event.target.value as MapEvent["status"],
+                          })
+                        }
+                      >
+                        <option value="hidden">Скрыто</option>
+                        <option value="active">Активно</option>
+                        <option value="completed">Завершено</option>
+                      </select>
+                    </label>
 
-                  <label className="event-checkbox">
-                    <input
-                      type="checkbox"
-                      checked={eventDraft.isSecret}
-                      onChange={(event) =>
-                        updateEventDraft({ isSecret: event.target.checked })
-                      }
-                    />
-                    Скрыто от игроков
-                  </label>
-                </div>
-              </section>
+                    <label className="event-checkbox">
+                      <input
+                        type="checkbox"
+                        checked={eventDraft.isSecret}
+                        onChange={(event) =>
+                          updateEventDraft({ isSecret: event.target.checked })
+                        }
+                      />
+                      Скрыто от игроков
+                    </label>
+                  </div>
+                </section>
 
-              <section className="event-edit-card">
-                <p className="eyebrow">Для игроков</p>
-                <h3>Описание</h3>
+                <section className="event-edit-card">
+                  <p className="eyebrow">Для игроков</p>
+                  <h3>Описание</h3>
 
-                <textarea
-                  className="scene-textarea"
-                  value={eventDraft.description}
-                  onChange={(event) =>
-                    updateEventDraft({ description: event.target.value })
-                  }
-                  placeholder="Что игроки видят, слышат или замечают..."
-                />
-              </section>
+                  <textarea
+                    className="scene-textarea"
+                    value={eventDraft.description}
+                    onChange={(event) =>
+                      updateEventDraft({ description: event.target.value })
+                    }
+                    placeholder="Что игроки видят, слышат или замечают..."
+                  />
+                </section>
 
-              <section className="event-edit-card">
-                <p className="eyebrow">Для мастера</p>
-                <h3>Скрытые заметки</h3>
+                <section className="event-edit-card">
+                  <p className="eyebrow">Для мастера</p>
+                  <h3>Скрытые заметки</h3>
 
-                <textarea
-                  className="scene-textarea"
-                  value={eventDraft.masterNotes}
-                  onChange={(event) =>
-                    updateEventDraft({ masterNotes: event.target.value })
-                  }
-                  placeholder="Что знает только мастер: причины, последствия, скрытые угрозы..."
-                />
-              </section>
-            </div>
+                  <textarea
+                    className="scene-textarea"
+                    value={eventDraft.masterNotes}
+                    onChange={(event) =>
+                      updateEventDraft({ masterNotes: event.target.value })
+                    }
+                    placeholder="Что знает только мастер: причины, последствия, скрытые угрозы..."
+                  />
+                </section>
+              </div>
+            )}
 
             <footer className="encounter-actions">
               <button
@@ -785,6 +817,6 @@ export function EncounterModal({
           </>
         )}
       </section>
-    </div >
+    </div>
   );
 }

@@ -817,6 +817,7 @@ function App() {
 
       <EncounterModal
         target={encounterTarget}
+        isPlayerMode={isPlayerMode}
         onClose={() => setEncounterTarget(null)}
         onCreateSceneNote={handleCreateSceneNote}
         onUpdateMapEvent={handleUpdateEncounterEvent}

@@ -577,3 +577,22 @@
   max-height: calc(100dvh - 28px);
   padding: 18px;
 }
+
+.scene-layout.player-only {
+  grid-template-columns: 1fr;
+}
+
+.scene-readonly-text {
+  min-height: 260px;
+  border: 1px solid rgba(36, 26, 18, 0.24);
+  border-radius: 16px;
+  padding: 16px;
+  color: var(--ink);
+  background: rgba(255, 244, 210, 0.42);
+  font: 700 15px/1.6 Inter, system-ui, sans-serif;
+  white-space: pre-wrap;
+}
+
+.scene-readonly-text p {
+  margin: 0;
+}
