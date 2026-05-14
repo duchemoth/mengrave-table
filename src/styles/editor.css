@@ -298,13 +298,21 @@
   opacity: 0.92;
 }
 
-/* Arsenal */
-.arsenal-editor {
-  display: block;
-  width: 100%;
-  max-width: 100%;
+/* Arsenal in Reference Library */
+
+.reference-arsenal-panel {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.reference-arsenal-panel .arsenal-editor {
+  display: grid;
+  grid-template-rows: auto auto auto minmax(0, 1fr);
+  gap: 16px;
+  height: 100%;
+  min-height: 0;
   box-sizing: border-box;
-  margin-top: 18px;
   border: 1px solid rgba(36, 26, 18, 0.24);
   border-radius: 22px;
   padding: 18px;
@@ -316,40 +324,40 @@
   box-shadow:
     inset 0 1px 0 rgba(255, 244, 210, 0.3),
     0 14px 34px rgba(18, 10, 8, 0.22);
+  overflow: hidden;
 }
 
-.arsenal-editor>.eyebrow {
-  margin: 0 0 8px;
+.reference-arsenal-panel .arsenal-editor>.eyebrow {
+  margin: 0;
   color: var(--blood);
 }
 
-.arsenal-editor h2 {
-  margin: 0 0 10px;
+.reference-arsenal-panel .arsenal-editor h2 {
+  margin: 0;
   color: var(--ink);
   font-size: 30px;
   line-height: 1.05;
 }
 
-.arsenal-editor .editor-empty-text {
-  margin: 0 0 12px;
+.reference-arsenal-panel .arsenal-editor .editor-empty-text {
+  margin: 0;
   color: rgba(49, 36, 25, 0.78);
   line-height: 1.45;
   font-weight: 800;
 }
 
-.arsenal-toolbar {
+.reference-arsenal-panel .arsenal-toolbar {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 10px;
-  width: 100%;
-  margin-bottom: 12px;
+  grid-template-columns: minmax(0, 1fr) 220px;
+  gap: 12px;
+  min-width: 0;
 }
 
-.arsenal-toolbar input,
-.arsenal-toolbar select,
-.arsenal-details input,
-.arsenal-details select,
-.arsenal-details textarea {
+.reference-arsenal-panel .arsenal-toolbar input,
+.reference-arsenal-panel .arsenal-toolbar select,
+.reference-arsenal-panel .arsenal-details input,
+.reference-arsenal-panel .arsenal-details select,
+.reference-arsenal-panel .arsenal-details textarea {
   display: block;
   width: 100%;
   min-width: 0;
@@ -363,27 +371,61 @@
   font: 700 13px/1.4 Inter, system-ui, sans-serif;
 }
 
-.arsenal-layout {
+.reference-arsenal-panel .arsenal-layout {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 14px;
-  width: 100%;
-  min-width: 0;
-  margin-top: 12px;
+  grid-template-columns: minmax(240px, 300px) minmax(0, 1fr);
+  gap: 18px;
+  min-height: 0;
+  overflow: hidden;
 }
 
-.arsenal-list {
+.reference-arsenal-panel .arsenal-list {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 8px;
-  width: 100%;
-  max-height: 260px;
+  align-content: start;
+  gap: 10px;
+  min-height: 0;
   overflow-y: auto;
   overflow-x: hidden;
-  padding-right: 4px;
+  padding-right: 6px;
 }
 
-.arsenal-list-item {
+.reference-arsenal-panel .arsenal-group {
+  display: grid;
+  gap: 8px;
+}
+
+.reference-arsenal-panel .arsenal-group-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  border: 1px solid rgba(36, 26, 18, 0.18);
+  border-radius: 12px;
+  padding: 8px 10px;
+  color: var(--ink);
+  background: rgba(255, 244, 210, 0.38);
+  cursor: pointer;
+  text-align: left;
+  font: 900 13px/1.3 Inter, system-ui, sans-serif;
+}
+
+.reference-arsenal-panel .arsenal-group-header:hover {
+  background: rgba(255, 244, 210, 0.58);
+}
+
+.reference-arsenal-panel .arsenal-group-header strong {
+  color: var(--blood);
+  font-size: 12px;
+}
+
+.reference-arsenal-panel .arsenal-group-items {
+  display: grid;
+  gap: 8px;
+  padding-left: 6px;
+}
+
+.reference-arsenal-panel .arsenal-list-item {
   display: grid;
   gap: 4px;
   width: 100%;
@@ -394,17 +436,17 @@
   padding: 10px;
   text-align: left;
   color: var(--ink);
-  background: rgba(255, 244, 210, 0.36);
+  background: rgba(255, 244, 210, 0.38);
   cursor: pointer;
 }
 
-.arsenal-list-item:hover,
-.arsenal-list-item.active {
+.reference-arsenal-panel .arsenal-list-item:hover,
+.reference-arsenal-panel .arsenal-list-item.active {
   border-color: rgba(124, 37, 34, 0.48);
-  background: rgba(255, 244, 210, 0.64);
+  background: rgba(255, 244, 210, 0.66);
 }
 
-.arsenal-list-item strong {
+.reference-arsenal-panel .arsenal-list-item strong {
   display: block;
   overflow: hidden;
   font-size: 13px;
@@ -413,21 +455,24 @@
   white-space: nowrap;
 }
 
-.arsenal-list-item span {
+.reference-arsenal-panel .arsenal-list-item span {
   color: var(--ink-soft);
   font-size: 11px;
   font-weight: 800;
 }
 
-.arsenal-details {
+.reference-arsenal-panel .arsenal-details {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 10px;
-  width: 100%;
+  align-content: start;
+  gap: 12px;
   min-width: 0;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 6px;
 }
 
-.arsenal-details label {
+.reference-arsenal-panel .arsenal-details label {
   display: grid;
   gap: 6px;
   min-width: 0;
@@ -437,42 +482,41 @@
   font-weight: 900;
 }
 
-.arsenal-details textarea {
-  min-height: 86px;
+.reference-arsenal-panel .arsenal-details textarea {
+  min-height: 120px;
   resize: vertical;
 }
 
-.arsenal-form-grid {
+.reference-arsenal-panel .arsenal-form-grid {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 10px;
-  width: 100%;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
   min-width: 0;
 }
 
-.arsenal-readonly-card {
+.reference-arsenal-panel .arsenal-readonly-card {
   width: 100%;
   box-sizing: border-box;
   border: 1px solid rgba(36, 26, 18, 0.18);
   border-radius: 16px;
-  padding: 12px;
+  padding: 14px;
   background: rgba(255, 244, 210, 0.48);
 }
 
-.arsenal-readonly-card h3 {
+.reference-arsenal-panel .arsenal-readonly-card h3 {
   margin: 0 0 8px;
   color: var(--ink);
-  font-size: 22px;
+  font-size: 24px;
   line-height: 1.05;
 }
 
-.arsenal-readonly-card h4 {
+.reference-arsenal-panel .arsenal-readonly-card h4 {
   margin: 12px 0 4px;
   color: var(--ink);
   font-size: 15px;
 }
 
-.arsenal-readonly-card p {
+.reference-arsenal-panel .arsenal-readonly-card p {
   margin: 0;
   color: var(--ink-soft);
   line-height: 1.45;
@@ -480,7 +524,7 @@
   white-space: pre-wrap;
 }
 
-.arsenal-readonly-card dl {
+.reference-arsenal-panel .arsenal-readonly-card dl {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
   gap: 6px 10px;
@@ -490,68 +534,12 @@
   font-weight: 800;
 }
 
-.arsenal-readonly-card dt {
+.reference-arsenal-panel .arsenal-readonly-card dt {
   color: var(--blood);
 }
 
-.arsenal-readonly-card dd {
+.reference-arsenal-panel .arsenal-readonly-card dd {
   margin: 0;
-}
-
-.reference-arsenal-panel {
-  min-height: 0;
-}
-
-.reference-arsenal-panel .arsenal-editor {
-  display: grid;
-  gap: 18px;
-  width: 100%;
-  max-width: none;
-  margin: 0;
-  border: 1px solid rgba(36, 26, 18, 0.24);
-  border-radius: 22px;
-  padding: 18px;
-  color: var(--ink);
-  background:
-    linear-gradient(180deg,
-      rgba(225, 204, 158, 0.96),
-      rgba(193, 158, 101, 0.92));
-  box-shadow:
-    inset 0 1px 0 rgba(255, 244, 210, 0.3),
-    0 14px 34px rgba(18, 10, 8, 0.22);
-}
-
-.reference-arsenal-panel .arsenal-toolbar {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 220px;
-  gap: 12px;
-}
-
-.reference-arsenal-panel .arsenal-layout {
-  display: grid;
-  grid-template-columns: minmax(220px, 280px) minmax(0, 1fr);
-  gap: 18px;
-  align-items: start;
-}
-
-.reference-arsenal-panel .arsenal-list {
-  max-height: 580px;
-  overflow: auto;
-}
-
-.reference-arsenal-panel .arsenal-details {
-  display: grid;
-  gap: 12px;
-}
-
-.reference-arsenal-panel .arsenal-form-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-}
-
-.reference-arsenal-panel .arsenal-details textarea {
-  min-height: 120px;
 }
 
 @media (max-width: 900px) {
@@ -559,6 +547,87 @@
   .reference-arsenal-panel .arsenal-toolbar,
   .reference-arsenal-panel .arsenal-layout,
   .reference-arsenal-panel .arsenal-form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Final Arsenal layout fix: prevent toolbar/list overlap */
+.reference-arsenal-panel {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.reference-arsenal-panel .arsenal-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.reference-arsenal-panel .arsenal-toolbar {
+  flex: 0 0 auto;
+  margin: 0;
+}
+
+.reference-arsenal-panel .arsenal-editor>.editor-button,
+.reference-arsenal-panel .arsenal-editor>button {
+  flex: 0 0 auto;
+}
+
+.reference-arsenal-panel .arsenal-layout {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.reference-arsenal-panel .arsenal-list {
+  height: 100%;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.reference-arsenal-panel .arsenal-details {
+  height: 100%;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* Compact Arsenal header */
+.reference-arsenal-panel .arsenal-heading {
+  display: grid;
+  grid-template-columns: minmax(0, auto) minmax(220px, 1fr);
+  align-items: end;
+  gap: 18px;
+  flex: 0 0 auto;
+}
+
+.reference-arsenal-panel .arsenal-heading .eyebrow {
+  margin: 0 0 4px;
+  color: var(--blood);
+}
+
+.reference-arsenal-panel .arsenal-heading h2 {
+  margin: 0;
+  color: var(--ink);
+  font-size: 24px;
+  line-height: 1;
+}
+
+.reference-arsenal-panel .arsenal-heading p {
+  margin: 0;
+  color: rgba(49, 36, 25, 0.78);
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+@media (max-width: 900px) {
+  .reference-arsenal-panel .arsenal-heading {
     grid-template-columns: 1fr;
   }
 }

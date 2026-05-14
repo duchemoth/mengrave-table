@@ -61,6 +61,27 @@ type ArsenalEditorProps = {
     onChangeItems: (items: ArsenalItem[]) => void;
 };
 
+type ArsenalCategoryGroup = {
+    key: string;
+    label: string;
+};
+
+const ARSENAL_CATEGORY_GROUPS: ArsenalCategoryGroup[] = [
+    { key: "weapon", label: "Оружие" },
+    { key: "armor", label: "Броня" },
+    { key: "protection", label: "Защита" },
+    { key: "loadBearing", label: "Разгрузка" },
+    { key: "medicine", label: "Медицина" },
+    { key: "resource", label: "Ресурсы" },
+    { key: "tool", label: "Инструменты" },
+    { key: "other", label: "Прочее" },
+];
+
+function getArsenalCategoryLabel(category: string) {
+    const group = ARSENAL_CATEGORY_GROUPS.find((item) => item.key === category);
+    return group?.label ?? category;
+}
+
 export function ArsenalEditor({
     items,
     isDeveloperMode,
@@ -73,6 +94,17 @@ export function ArsenalEditor({
     const [categoryFilter, setCategoryFilter] = useState<ArsenalItemCategory | "all">(
         "all",
     );
+
+    const [openCategoryGroups, setOpenCategoryGroups] = useState<Record<string, boolean>>({
+        weapon: true,
+        armor: true,
+        protection: true,
+        loadBearing: true,
+        medicine: true,
+        resource: true,
+        tool: true,
+        other: true,
+    });
 
     const filteredItems = useMemo(() => {
         const normalizedSearch = searchQuery.trim().toLowerCase();
@@ -91,6 +123,20 @@ export function ArsenalEditor({
             return matchesSearch && matchesCategory;
         });
     }, [items, searchQuery, categoryFilter]);
+
+    const groupedItems = useMemo(() => {
+        return ARSENAL_CATEGORY_GROUPS.map((group) => ({
+            ...group,
+            items: filteredItems.filter((item) => item.category === group.key),
+        })).filter((group) => group.items.length > 0);
+    }, [filteredItems]);
+
+    function toggleCategoryGroup(categoryKey: string) {
+        setOpenCategoryGroups((current) => ({
+            ...current,
+            [categoryKey]: !current[categoryKey],
+        }));
+    }
 
     const selectedItem =
         items.find((item) => item.id === selectedItemId) ?? filteredItems[0] ?? null;
@@ -144,13 +190,16 @@ export function ArsenalEditor({
 
     return (
         <section className="arsenal-editor">
-            <p className="eyebrow">Арсенал</p>
-            <h2>Справочник снаряжения</h2>
+            <div className="arsenal-heading">
+                <div>
+                    <p className="eyebrow">Арсенал</p>
+                    <h2>Справочник снаряжения</h2>
+                </div>
 
-            <p className="editor-empty-text">
-                Эхо создаёт и правит карточки предметов. Мастер использует этот каталог,
-                чтобы выдавать вещи персонажам.
-            </p>
+                <p>
+                    Эхо редактирует карточки. Мастер выдаёт готовые вещи персонажам.
+                </p>
+            </div>
 
             <div className="arsenal-toolbar">
                 <input
@@ -181,26 +230,42 @@ export function ArsenalEditor({
             )}
 
             <div className="arsenal-layout">
-                <div className="arsenal-list">
-                    {filteredItems.length === 0 ? (
-                        <p className="editor-empty-text">В Арсенале пока нет предметов.</p>
-                    ) : (
-                        filteredItems.map((item) => (
-                            <button
-                                key={item.id}
-                                className={`arsenal-list-item ${selectedItem?.id === item.id ? "active" : ""
-                                    }`}
-                                type="button"
-                                onClick={() => setSelectedItemId(item.id)}
-                            >
-                                <strong>{item.name}</strong>
-                                <span>
-                                    {CATEGORY_OPTIONS.find((option) => option.value === item.category)
-                                        ?.label ?? "Прочее"}
-                                </span>
-                            </button>
-                        ))
-                    )}
+                <div className="arsenal-list grouped">
+                    {groupedItems.map((group) => {
+                        const isOpen = openCategoryGroups[group.key] ?? true;
+
+                        return (
+                            <div key={group.key} className="arsenal-group">
+                                <button
+                                    className="arsenal-group-header"
+                                    type="button"
+                                    onClick={() => toggleCategoryGroup(group.key)}
+                                >
+                                    <span>
+                                        {isOpen ? "▼" : "▶"} {group.label}
+                                    </span>
+
+                                    <strong>{group.items.length}</strong>
+                                </button>
+
+                                {isOpen && (
+                                    <div className="arsenal-group-items">
+                                        {group.items.map((item) => (
+                                            <button
+                                                key={item.id}
+                                                className={`arsenal-list-item ${selectedItem?.id === item.id ? "active" : ""}`}
+                                                type="button"
+                                                onClick={() => setSelectedItemId(item.id)}
+                                            >
+                                                <strong>{item.name}</strong>
+                                                <span>{getArsenalCategoryLabel(item.category)}</span>
+                                            </button>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        );
+                    })}
                 </div>
 
                 <div className="arsenal-details">
