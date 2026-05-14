@@ -1024,6 +1024,7 @@ function App() {
       {!isCleanMapMode && !isPlayerMode && isCharactersOpen && (
         <CharacterRoster
           characters={characters}
+          arsenalItems={arsenalItems}
           onCreateCharacter={createCharacter}
           onUpdateCharacter={updateCharacter}
           onDeleteCharacter={handleDeleteCharacter}

@@ -1,7 +1,10 @@
 import { useState } from "react";
 import { CharacterPreview } from "./CharacterPreview";
 import type {
+    ArsenalItem,
+    ArsenalItemSlot,
     CharacterEmpathy,
+    CharacterInventory,
     CharacterMass,
     CharacterSkillKey,
     PlayerCharacter,
@@ -80,6 +83,7 @@ type MasterSection = "notes" | "secretHooks" | "progression" | "danger";
 
 type CharacterRosterProps = {
     characters: PlayerCharacter[];
+    arsenalItems: ArsenalItem[];
     onCreateCharacter: () => PlayerCharacter;
     onUpdateCharacter: (character: PlayerCharacter) => void;
     onDeleteCharacter: (characterId: string) => void;
@@ -88,6 +92,7 @@ type CharacterRosterProps = {
 
 export function CharacterRoster({
     characters,
+    arsenalItems,
     onCreateCharacter,
     onUpdateCharacter,
     onDeleteCharacter,
@@ -170,6 +175,341 @@ export function CharacterRoster({
             ...selectedCharacter,
             ...updatedFields,
         });
+    }
+
+    function getArsenalItem(itemId: string | null) {
+        if (!itemId) {
+            return null;
+        }
+
+        return arsenalItems.find((item) => item.id === itemId) ?? null;
+    }
+
+    function getArsenalItemsForSlots(slots: ArsenalItemSlot[]) {
+        return arsenalItems.filter((item) => slots.includes(item.slot));
+    }
+
+    function getInventoryItemName(itemId: string | null) {
+        return getArsenalItem(itemId)?.name ?? "Пусто";
+    }
+
+    function updateInventory(nextInventory: CharacterInventory) {
+        updateSelectedCharacter({
+            inventory: nextInventory,
+        });
+    }
+
+    function updateWeaponSlot(
+        slotKey: keyof CharacterInventory["weaponSlots"],
+        itemId: string | null,
+    ) {
+        if (!selectedCharacter) {
+            return;
+        }
+
+        updateInventory({
+            ...selectedCharacter.inventory,
+            weaponSlots: {
+                ...selectedCharacter.inventory.weaponSlots,
+                [slotKey]: {
+                    ...selectedCharacter.inventory.weaponSlots[slotKey],
+                    itemId,
+                },
+            },
+        });
+    }
+
+    function updateWeaponSlotNote(
+        slotKey: keyof CharacterInventory["weaponSlots"],
+        note: string,
+    ) {
+        if (!selectedCharacter) {
+            return;
+        }
+
+        updateInventory({
+            ...selectedCharacter.inventory,
+            weaponSlots: {
+                ...selectedCharacter.inventory.weaponSlots,
+                [slotKey]: {
+                    ...selectedCharacter.inventory.weaponSlots[slotKey],
+                    note,
+                },
+            },
+        });
+    }
+
+    function updateArmorSlot(
+        slotKey: keyof CharacterInventory["armorSlots"],
+        itemId: string | null,
+    ) {
+        if (!selectedCharacter) {
+            return;
+        }
+
+        updateInventory({
+            ...selectedCharacter.inventory,
+            armorSlots: {
+                ...selectedCharacter.inventory.armorSlots,
+                [slotKey]: {
+                    ...selectedCharacter.inventory.armorSlots[slotKey],
+                    itemId,
+                },
+            },
+        });
+    }
+
+    function updateArmorSlotNote(
+        slotKey: keyof CharacterInventory["armorSlots"],
+        note: string,
+    ) {
+        if (!selectedCharacter) {
+            return;
+        }
+
+        updateInventory({
+            ...selectedCharacter.inventory,
+            armorSlots: {
+                ...selectedCharacter.inventory.armorSlots,
+                [slotKey]: {
+                    ...selectedCharacter.inventory.armorSlots[slotKey],
+                    note,
+                },
+            },
+        });
+    }
+
+    function updateProtectionSlot(itemId: string | null) {
+        if (!selectedCharacter) {
+            return;
+        }
+
+        updateInventory({
+            ...selectedCharacter.inventory,
+            protectionSlot: {
+                ...selectedCharacter.inventory.protectionSlot,
+                itemId,
+            },
+        });
+    }
+
+    function updateProtectionSlotNote(note: string) {
+        if (!selectedCharacter) {
+            return;
+        }
+
+        updateInventory({
+            ...selectedCharacter.inventory,
+            protectionSlot: {
+                ...selectedCharacter.inventory.protectionSlot,
+                note,
+            },
+        });
+    }
+
+    function getQuickSlotCountForLoadBearing(itemId: string | null) {
+        const loadBearingItem = getArsenalItem(itemId);
+
+        if (
+            loadBearingItem?.quickSlotCount === 2 ||
+            loadBearingItem?.quickSlotCount === 4 ||
+            loadBearingItem?.quickSlotCount === 6
+        ) {
+            return loadBearingItem.quickSlotCount;
+        }
+
+        return 2;
+    }
+
+    function getPreparedQuickSlots() {
+        if (!selectedCharacter) {
+            return [];
+        }
+
+        const quickSlotCount = getQuickSlotCountForLoadBearing(
+            selectedCharacter.inventory.loadBearing.itemId,
+        );
+
+        return Array.from({ length: quickSlotCount }, (_, index) => {
+            const existingSlot = selectedCharacter.inventory.loadBearing.quickSlots[index];
+
+            return {
+                id: existingSlot?.id ?? `quick-${index + 1}`,
+                itemId: existingSlot?.itemId ?? null,
+                quantity: existingSlot?.quantity ?? 1,
+                note: existingSlot?.note ?? "",
+            };
+        });
+    }
+
+    function updateLoadBearingItem(itemId: string | null) {
+        if (!selectedCharacter) {
+            return;
+        }
+
+        const quickSlotCount = getQuickSlotCountForLoadBearing(itemId);
+        const currentQuickSlots = selectedCharacter.inventory.loadBearing.quickSlots;
+
+        const nextQuickSlots = Array.from({ length: quickSlotCount }, (_, index) => {
+            const existingSlot = currentQuickSlots[index];
+
+            return {
+                id: existingSlot?.id ?? `quick-${index + 1}`,
+                itemId: existingSlot?.itemId ?? null,
+                quantity: existingSlot?.quantity ?? 1,
+                note: existingSlot?.note ?? "",
+            };
+        });
+
+        updateInventory({
+            ...selectedCharacter.inventory,
+            loadBearing: {
+                ...selectedCharacter.inventory.loadBearing,
+                itemId,
+                quickSlots: nextQuickSlots,
+            },
+        });
+    }
+
+    function updateLoadBearingNote(note: string) {
+        if (!selectedCharacter) {
+            return;
+        }
+
+        updateInventory({
+            ...selectedCharacter.inventory,
+            loadBearing: {
+                ...selectedCharacter.inventory.loadBearing,
+                note,
+            },
+        });
+    }
+
+    function updateQuickSlot(
+        slotIndex: number,
+        updatedFields: Partial<CharacterInventory["loadBearing"]["quickSlots"][number]>,
+    ) {
+        if (!selectedCharacter) {
+            return;
+        }
+
+        const quickSlots = getPreparedQuickSlots().map((slot, index) =>
+            index === slotIndex
+                ? {
+                    ...slot,
+                    ...updatedFields,
+                }
+                : slot,
+        );
+
+        updateInventory({
+            ...selectedCharacter.inventory,
+            loadBearing: {
+                ...selectedCharacter.inventory.loadBearing,
+                quickSlots,
+            },
+        });
+    }
+
+    function addBackpackEntry() {
+        if (!selectedCharacter) {
+            return;
+        }
+
+        const firstAvailableItem = arsenalItems[0];
+
+        if (!firstAvailableItem) {
+            window.alert("В Арсенале пока нет предметов.");
+            return;
+        }
+
+        updateInventory({
+            ...selectedCharacter.inventory,
+            backpack: [
+                ...selectedCharacter.inventory.backpack,
+                {
+                    id: `backpack-${Date.now()}`,
+                    itemId: firstAvailableItem.id,
+                    quantity: 1,
+                    note: "",
+                },
+            ],
+        });
+    }
+
+    function updateBackpackEntry(
+        entryId: string,
+        updatedFields: Partial<CharacterInventory["backpack"][number]>,
+    ) {
+        if (!selectedCharacter) {
+            return;
+        }
+
+        updateInventory({
+            ...selectedCharacter.inventory,
+            backpack: selectedCharacter.inventory.backpack.map((entry) =>
+                entry.id === entryId
+                    ? {
+                        ...entry,
+                        ...updatedFields,
+                    }
+                    : entry,
+            ),
+        });
+    }
+
+    function deleteBackpackEntry(entryId: string) {
+        if (!selectedCharacter) {
+            return;
+        }
+
+        updateInventory({
+            ...selectedCharacter.inventory,
+            backpack: selectedCharacter.inventory.backpack.filter(
+                (entry) => entry.id !== entryId,
+            ),
+        });
+    }
+
+    function renderInventorySelect(
+        value: string | null,
+        allowedSlots: ArsenalItemSlot[],
+        onChange: (itemId: string | null) => void,
+    ) {
+        const availableItems = getArsenalItemsForSlots(allowedSlots);
+
+        return (
+            <select
+                value={value ?? ""}
+                onChange={(event) => onChange(event.target.value || null)}
+            >
+                <option value="">Пусто</option>
+
+                {availableItems.map((item) => (
+                    <option key={item.id} value={item.id}>
+                        {item.name}
+                    </option>
+                ))}
+            </select>
+        );
+    }
+
+    function renderAnyItemSelect(
+        value: string,
+        onChange: (itemId: string) => void,
+    ) {
+        return (
+            <select
+                value={value}
+                onChange={(event) => onChange(event.target.value)}
+            >
+                {arsenalItems.map((item) => (
+                    <option key={item.id} value={item.id}>
+                        {item.name}
+                    </option>
+                ))}
+            </select>
+        );
     }
 
     function updateSelectedSkill(skillKey: CharacterSkillKey, nextValue: number) {
@@ -956,8 +1296,13 @@ export function CharacterRoster({
                                 <section className="character-editor-section">
                                     <p className="eyebrow">Снаряжение</p>
                                     <h3 className="character-section-title">
-                                        Снаряжение персонажа
+                                        Инвентарь персонажа
                                     </h3>
+
+                                    <p className="character-help-text">
+                                        Предметы выбираются из Арсенала. Эхо редактирует карточки,
+                                        Мастер выдаёт и снимает вещи у персонажей.
+                                    </p>
 
                                     <div className="character-accordion-list">
                                         <div className="character-accordion">
@@ -969,23 +1314,69 @@ export function CharacterRoster({
                                                 <span>
                                                     {openEquipmentSections.weapons ? "▼" : "▶"} Оружие
                                                 </span>
-                                                <small>основное и запасное вооружение</small>
+                                                <small>два плечевых слота и малое оружие</small>
                                             </button>
 
                                             {openEquipmentSections.weapons && (
                                                 <div className="character-accordion-body">
-                                                    <label className="character-field wide">
-                                                        Оружие
-                                                        <textarea
-                                                            value={selectedCharacter.weapons}
-                                                            onChange={(event) =>
-                                                                updateSelectedCharacter({
-                                                                    weapons: event.target.value,
-                                                                })
-                                                            }
-                                                            placeholder="Карабин, тесак, пистольвер, рогатина, нож..."
-                                                        />
-                                                    </label>
+                                                    <div className="character-inventory-grid">
+                                                        <div className="character-inventory-slot-card">
+                                                            <p className="eyebrow">Плечо 1</p>
+                                                            <h4>Основное оружие</h4>
+
+                                                            {renderInventorySelect(
+                                                                selectedCharacter.inventory.weaponSlots.shoulder1.itemId,
+                                                                ["shoulderWeapon"],
+                                                                (itemId) => updateWeaponSlot("shoulder1", itemId),
+                                                            )}
+
+                                                            <input
+                                                                value={selectedCharacter.inventory.weaponSlots.shoulder1.note}
+                                                                onChange={(event) =>
+                                                                    updateWeaponSlotNote("shoulder1", event.target.value)
+                                                                }
+                                                                placeholder="Заметка: ремень, состояние, боезапас..."
+                                                            />
+                                                        </div>
+
+                                                        <div className="character-inventory-slot-card">
+                                                            <p className="eyebrow">Плечо 2</p>
+                                                            <h4>Запасное оружие</h4>
+
+                                                            {renderInventorySelect(
+                                                                selectedCharacter.inventory.weaponSlots.shoulder2.itemId,
+                                                                ["shoulderWeapon"],
+                                                                (itemId) => updateWeaponSlot("shoulder2", itemId),
+                                                            )}
+
+                                                            <input
+                                                                value={selectedCharacter.inventory.weaponSlots.shoulder2.note}
+                                                                onChange={(event) =>
+                                                                    updateWeaponSlotNote("shoulder2", event.target.value)
+                                                                }
+                                                                placeholder="Заметка..."
+                                                            />
+                                                        </div>
+
+                                                        <div className="character-inventory-slot-card">
+                                                            <p className="eyebrow">Малый слот</p>
+                                                            <h4>Нож / пистольвер</h4>
+
+                                                            {renderInventorySelect(
+                                                                selectedCharacter.inventory.weaponSlots.small.itemId,
+                                                                ["smallWeapon"],
+                                                                (itemId) => updateWeaponSlot("small", itemId),
+                                                            )}
+
+                                                            <input
+                                                                value={selectedCharacter.inventory.weaponSlots.small.note}
+                                                                onChange={(event) =>
+                                                                    updateWeaponSlotNote("small", event.target.value)
+                                                                }
+                                                                placeholder="Голень, пояс, скрытое ношение..."
+                                                            />
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             )}
                                         </div>
@@ -997,25 +1388,109 @@ export function CharacterRoster({
                                                 onClick={() => toggleEquipmentSection("armor")}
                                             >
                                                 <span>
-                                                    {openEquipmentSections.armor ? "▼" : "▶"} Броня
+                                                    {openEquipmentSections.armor ? "▼" : "▶"} Броня и защита
                                                 </span>
-                                                <small>голова, тело, венец, защита</small>
+                                                <small>голова, торс, руки, ноги, Венец/противогаз</small>
                                             </button>
 
                                             {openEquipmentSections.armor && (
                                                 <div className="character-accordion-body">
-                                                    <label className="character-field wide">
-                                                        Броня
-                                                        <textarea
-                                                            value={selectedCharacter.armor}
-                                                            onChange={(event) =>
-                                                                updateSelectedCharacter({
-                                                                    armor: event.target.value,
-                                                                })
-                                                            }
-                                                            placeholder="Каска, стёганка, бронежилет, Венец Кислова..."
-                                                        />
-                                                    </label>
+                                                    <div className="character-inventory-grid">
+                                                        <div className="character-inventory-slot-card">
+                                                            <p className="eyebrow">Голова</p>
+                                                            <h4>Шлем</h4>
+
+                                                            {renderInventorySelect(
+                                                                selectedCharacter.inventory.armorSlots.head.itemId,
+                                                                ["headArmor"],
+                                                                (itemId) => updateArmorSlot("head", itemId),
+                                                            )}
+
+                                                            <input
+                                                                value={selectedCharacter.inventory.armorSlots.head.note}
+                                                                onChange={(event) =>
+                                                                    updateArmorSlotNote("head", event.target.value)
+                                                                }
+                                                                placeholder="Состояние, повреждения, особенности..."
+                                                            />
+                                                        </div>
+
+                                                        <div className="character-inventory-slot-card">
+                                                            <p className="eyebrow">Торс</p>
+                                                            <h4>Броня</h4>
+
+                                                            {renderInventorySelect(
+                                                                selectedCharacter.inventory.armorSlots.torso.itemId,
+                                                                ["torsoArmor"],
+                                                                (itemId) => updateArmorSlot("torso", itemId),
+                                                            )}
+
+                                                            <input
+                                                                value={selectedCharacter.inventory.armorSlots.torso.note}
+                                                                onChange={(event) =>
+                                                                    updateArmorSlotNote("torso", event.target.value)
+                                                                }
+                                                                placeholder="Плиты, стёганка, пробития..."
+                                                            />
+                                                        </div>
+
+                                                        <div className="character-inventory-slot-card">
+                                                            <p className="eyebrow">Руки</p>
+                                                            <h4>Защита рук</h4>
+
+                                                            {renderInventorySelect(
+                                                                selectedCharacter.inventory.armorSlots.arms.itemId,
+                                                                ["armsArmor"],
+                                                                (itemId) => updateArmorSlot("arms", itemId),
+                                                            )}
+
+                                                            <input
+                                                                value={selectedCharacter.inventory.armorSlots.arms.note}
+                                                                onChange={(event) =>
+                                                                    updateArmorSlotNote("arms", event.target.value)
+                                                                }
+                                                                placeholder="Наручи, перчатки, повреждения..."
+                                                            />
+                                                        </div>
+
+                                                        <div className="character-inventory-slot-card">
+                                                            <p className="eyebrow">Ноги</p>
+                                                            <h4>Защита ног</h4>
+
+                                                            {renderInventorySelect(
+                                                                selectedCharacter.inventory.armorSlots.legs.itemId,
+                                                                ["legsArmor"],
+                                                                (itemId) => updateArmorSlot("legs", itemId),
+                                                            )}
+
+                                                            <input
+                                                                value={selectedCharacter.inventory.armorSlots.legs.note}
+                                                                onChange={(event) =>
+                                                                    updateArmorSlotNote("legs", event.target.value)
+                                                                }
+                                                                placeholder="Поножи, ботинки, хромота..."
+                                                            />
+                                                        </div>
+
+                                                        <div className="character-inventory-slot-card wide">
+                                                            <p className="eyebrow">Защитное снаряжение</p>
+                                                            <h4>Венец / противогаз</h4>
+
+                                                            {renderInventorySelect(
+                                                                selectedCharacter.inventory.protectionSlot.itemId,
+                                                                ["protection"],
+                                                                updateProtectionSlot,
+                                                            )}
+
+                                                            <input
+                                                                value={selectedCharacter.inventory.protectionSlot.note}
+                                                                onChange={(event) =>
+                                                                    updateProtectionSlotNote(event.target.value)
+                                                                }
+                                                                placeholder="Режим Венца, фильтры, заряд, побочные эффекты..."
+                                                            />
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             )}
                                         </div>
@@ -1027,26 +1502,72 @@ export function CharacterRoster({
                                                 onClick={() => toggleEquipmentSection("quickAccess")}
                                             >
                                                 <span>
-                                                    {openEquipmentSections.quickAccess ? "▼" : "▶"}{" "}
-                                                    Быстрый доступ
+                                                    {openEquipmentSections.quickAccess ? "▼" : "▶"} Быстрый доступ
                                                 </span>
-                                                <small>то, что можно достать быстро</small>
+                                                <small>разгрузка и быстрые предметы</small>
                                             </button>
 
                                             {openEquipmentSections.quickAccess && (
                                                 <div className="character-accordion-body">
-                                                    <label className="character-field wide">
-                                                        Быстрый доступ
-                                                        <textarea
-                                                            value={selectedCharacter.quickAccess}
+                                                    <div className="character-inventory-slot-card wide">
+                                                        <p className="eyebrow">Разгрузка</p>
+                                                        <h4>Слот разгрузки</h4>
+
+                                                        {renderInventorySelect(
+                                                            selectedCharacter.inventory.loadBearing.itemId,
+                                                            ["loadBearing"],
+                                                            updateLoadBearingItem,
+                                                        )}
+
+                                                        <input
+                                                            value={selectedCharacter.inventory.loadBearing.note}
                                                             onChange={(event) =>
-                                                                updateSelectedCharacter({
-                                                                    quickAccess: event.target.value,
-                                                                })
+                                                                updateLoadBearingNote(event.target.value)
                                                             }
-                                                            placeholder="Жгуты, фонарь, боезапас, стимулятор, нож, фляга..."
+                                                            placeholder="Пояс, жилет, подсумки, состояние..."
                                                         />
-                                                    </label>
+                                                    </div>
+
+                                                    <div className="character-quick-slots">
+                                                        {getPreparedQuickSlots().map((slot, index) => (
+                                                            <div
+                                                                key={slot.id}
+                                                                className="character-inventory-slot-card"
+                                                            >
+                                                                <p className="eyebrow">Быстрый слот {index + 1}</p>
+                                                                <h4>{getInventoryItemName(slot.itemId)}</h4>
+
+                                                                {renderInventorySelect(
+                                                                    slot.itemId,
+                                                                    ["quick", "backpack", "none"],
+                                                                    (itemId) => updateQuickSlot(index, { itemId }),
+                                                                )}
+
+                                                                <input
+                                                                    type="number"
+                                                                    min={1}
+                                                                    value={slot.quantity}
+                                                                    onChange={(event) =>
+                                                                        updateQuickSlot(index, {
+                                                                            quantity: Math.max(
+                                                                                1,
+                                                                                Number(event.target.value) || 1,
+                                                                            ),
+                                                                        })
+                                                                    }
+                                                                    placeholder="Кол-во"
+                                                                />
+
+                                                                <input
+                                                                    value={slot.note}
+                                                                    onChange={(event) =>
+                                                                        updateQuickSlot(index, { note: event.target.value })
+                                                                    }
+                                                                    placeholder="Заметка..."
+                                                                />
+                                                            </div>
+                                                        ))}
+                                                    </div>
                                                 </div>
                                             )}
                                         </div>
@@ -1058,28 +1579,72 @@ export function CharacterRoster({
                                                 onClick={() => toggleEquipmentSection("backpack")}
                                             >
                                                 <span>
-                                                    {openEquipmentSections.backpack ? "▼" : "▶"} Рюкзак и
-                                                    груз
+                                                    {openEquipmentSections.backpack ? "▼" : "▶"} Рюкзак
                                                 </span>
-                                                <small>
-                                                    медленный доступ, припасы, тяжёлые вещи
-                                                </small>
+                                                <small>предметы медленного доступа</small>
                                             </button>
 
                                             {openEquipmentSections.backpack && (
                                                 <div className="character-accordion-body">
-                                                    <label className="character-field wide">
-                                                        Рюкзак и груз
-                                                        <textarea
-                                                            value={selectedCharacter.backpackAndLoad}
-                                                            onChange={(event) =>
-                                                                updateSelectedCharacter({
-                                                                    backpackAndLoad: event.target.value,
-                                                                })
-                                                            }
-                                                            placeholder="Рюкзак, груз, крупные предметы, вода, провизия, детали..."
-                                                        />
-                                                    </label>
+                                                    <button
+                                                        className="character-secondary-button"
+                                                        type="button"
+                                                        onClick={addBackpackEntry}
+                                                    >
+                                                        Добавить предмет в рюкзак
+                                                    </button>
+
+                                                    {selectedCharacter.inventory.backpack.length === 0 ? (
+                                                        <p className="character-help-text">
+                                                            Рюкзак пуст. Добавь предмет из Арсенала.
+                                                        </p>
+                                                    ) : (
+                                                        <div className="character-backpack-list">
+                                                            {selectedCharacter.inventory.backpack.map((entry) => (
+                                                                <div
+                                                                    key={entry.id}
+                                                                    className="character-backpack-row"
+                                                                >
+                                                                    {renderAnyItemSelect(entry.itemId, (itemId) =>
+                                                                        updateBackpackEntry(entry.id, { itemId }),
+                                                                    )}
+
+                                                                    <input
+                                                                        type="number"
+                                                                        min={1}
+                                                                        value={entry.quantity}
+                                                                        onChange={(event) =>
+                                                                            updateBackpackEntry(entry.id, {
+                                                                                quantity: Math.max(
+                                                                                    1,
+                                                                                    Number(event.target.value) || 1,
+                                                                                ),
+                                                                            })
+                                                                        }
+                                                                        placeholder="Кол-во"
+                                                                    />
+
+                                                                    <input
+                                                                        value={entry.note}
+                                                                        onChange={(event) =>
+                                                                            updateBackpackEntry(entry.id, {
+                                                                                note: event.target.value,
+                                                                            })
+                                                                        }
+                                                                        placeholder="Заметка"
+                                                                    />
+
+                                                                    <button
+                                                                        className="danger-button"
+                                                                        type="button"
+                                                                        onClick={() => deleteBackpackEntry(entry.id)}
+                                                                    >
+                                                                        Убрать
+                                                                    </button>
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                    )}
                                                 </div>
                                             )}
                                         </div>
