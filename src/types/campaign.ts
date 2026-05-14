@@ -88,6 +88,12 @@ export type CharacterBackpackEntry = {
   note: string;
 };
 
+export type CharacterWallet = {
+  amperies: number;
+  miliamperies: number;
+  note: string;
+};
+
 export type CharacterInventory = {
   weaponSlots: {
     shoulder1: CharacterInventorySlot;
@@ -257,7 +263,8 @@ export type PlayerCharacter = {
   weapons: string;
   armor: string;
   cryptotoken: string;
-  
+  wallet: CharacterWallet;
+
   inventory: CharacterInventory;
 
   contacts: string;

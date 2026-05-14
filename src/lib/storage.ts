@@ -2,6 +2,7 @@ import { campaignData } from "../data/campaign";
 import type {
   ArsenalItem,
   CharacterInventory,
+  CharacterWallet,
   Location,
   MapEvent,
   MapGroup,
@@ -145,6 +146,39 @@ export function createEmptyInventory(): CharacterInventory {
     },
 
     backpack: [],
+  };
+}
+
+export function createEmptyWallet(): CharacterWallet {
+  return {
+    amperies: 0,
+    miliamperies: 0,
+    note: "",
+  };
+}
+
+function normalizeWallet(value: unknown): CharacterWallet {
+  const emptyWallet = createEmptyWallet();
+
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    return emptyWallet;
+  }
+
+  const wallet = value as Partial<CharacterWallet>;
+
+  return {
+    amperies:
+      typeof wallet.amperies === "number" && Number.isFinite(wallet.amperies)
+        ? Math.max(0, Math.floor(wallet.amperies))
+        : 0,
+
+    miliamperies:
+      typeof wallet.miliamperies === "number" &&
+        Number.isFinite(wallet.miliamperies)
+        ? Math.max(0, Math.floor(wallet.miliamperies))
+        : 0,
+
+    note: typeof wallet.note === "string" ? wallet.note : "",
   };
 }
 
@@ -426,6 +460,7 @@ function normalizeCharacter(character: PlayerCharacter): PlayerCharacter {
     weapons: character.weapons ?? "",
     armor: character.armor ?? "",
     cryptotoken: character.cryptotoken ?? "",
+    wallet: normalizeWallet(character.wallet),
 
     inventory: normalizeInventory(character.inventory),
 

@@ -29,6 +29,7 @@ import {
   loadSavedTextList,
   saveToStorage,
   createEmptyInventory,
+  createEmptyWallet,
   loadSavedArsenalItems,
 } from "../lib/storage";
 
@@ -435,6 +436,7 @@ export function useCampaign() {
       weapons: "",
       armor: "",
       cryptotoken: "",
+      wallet: createEmptyWallet(),
 
       inventory: createEmptyInventory(),
 

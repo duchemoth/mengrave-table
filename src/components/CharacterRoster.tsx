@@ -411,6 +411,19 @@ export function CharacterRoster({
         });
     }
 
+    function updateWallet(updatedFields: Partial<PlayerCharacter["wallet"]>) {
+        if (!selectedCharacter) {
+            return;
+        }
+
+        updateSelectedCharacter({
+            wallet: {
+                ...selectedCharacter.wallet,
+                ...updatedFields,
+            },
+        });
+    }
+
     function addBackpackEntry() {
         if (!selectedCharacter) {
             return;
@@ -1676,6 +1689,74 @@ export function CharacterRoster({
                                                             placeholder="Действующий, частично стёртый, аннулированный, чужой, повреждённый..."
                                                         />
                                                     </label>
+
+                                                    <div className="character-wallet-card">
+                                                        <div>
+                                                            <p className="eyebrow">Кошелёк криптожето́на</p>
+                                                            <h4>
+                                                                {selectedCharacter.wallet.amperies} амп.{" "}
+                                                                {selectedCharacter.wallet.miliamperies} мА
+                                                            </h4>
+                                                        </div>
+
+                                                        <div className="character-wallet-grid">
+                                                            <label>
+                                                                Амперии
+                                                                <input
+                                                                    type="number"
+                                                                    min={0}
+                                                                    value={selectedCharacter.wallet.amperies}
+                                                                    onChange={(event) =>
+                                                                        updateWallet({
+                                                                            amperies: Math.max(
+                                                                                0,
+                                                                                Math.floor(Number(event.target.value) || 0),
+                                                                            ),
+                                                                        })
+                                                                    }
+                                                                />
+                                                            </label>
+
+                                                            <label>
+                                                                Милиамперии
+                                                                <input
+                                                                    type="number"
+                                                                    min={0}
+                                                                    max={999}
+                                                                    value={selectedCharacter.wallet.miliamperies}
+                                                                    onChange={(event) =>
+                                                                        updateWallet({
+                                                                            miliamperies: Math.min(
+                                                                                999,
+                                                                                Math.max(
+                                                                                    0,
+                                                                                    Math.floor(Number(event.target.value) || 0),
+                                                                                ),
+                                                                            ),
+                                                                        })
+                                                                    }
+                                                                />
+                                                            </label>
+                                                        </div>
+
+                                                        <label>
+                                                            Финансовая заметка
+                                                            <input
+                                                                value={selectedCharacter.wallet.note}
+                                                                onChange={(event) =>
+                                                                    updateWallet({
+                                                                        note: event.target.value,
+                                                                    })
+                                                                }
+                                                                placeholder="Долг, залог, доступ к счёту, чужой кошелёк..."
+                                                            />
+                                                        </label>
+
+                                                        <p className="character-help-text">
+                                                            1 амперий = 1000 милиампериев. Кошелёк отражает доступные
+                                                            средства на криптожето́не персонажа.
+                                                        </p>
+                                                    </div>
                                                 </div>
                                             )}
                                         </div>
