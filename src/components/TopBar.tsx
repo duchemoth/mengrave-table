@@ -2,16 +2,20 @@ import type { UserMode } from "../types/campaign";
 
 type TopBarProps = {
   userMode: UserMode;
+  isPlayerScreen: boolean;
   isCleanMapMode: boolean;
   onChangeMode: (mode: UserMode) => void;
+  onOpenPlayerScreen: () => void;
   onEnableCleanMapMode: () => void;
   onRestoreInterface: () => void;
 };
 
 export function TopBar({
   userMode,
+  isPlayerScreen,
   isCleanMapMode,
   onChangeMode,
+  onOpenPlayerScreen,
   onEnableCleanMapMode,
   onRestoreInterface,
 }: TopBarProps) {
@@ -26,33 +30,48 @@ export function TopBar({
         </div>
 
         <div className="topbar-actions">
-          <div className="mode-group">
-            <button
-              className={`mode-toggle ${userMode === "player" ? "active" : ""}`}
-              onClick={() => onChangeMode("player")}
-            >
-              Игрок
-            </button>
+          {isPlayerScreen ? (
+            <div className="player-screen-badge">Экран игроков</div>
+          ) : (
+            <div className="mode-group">
+              <button
+                className={`mode-toggle ${userMode === "player" ? "active" : ""}`}
+                onClick={() => onChangeMode("player")}
+              >
+                Игрок
+              </button>
 
-            <button
-              className={`mode-toggle ${userMode === "master" ? "active" : ""}`}
-              onClick={() => onChangeMode("master")}
-            >
-              Мастер
-            </button>
+              <button
+                className={`mode-toggle ${userMode === "master" ? "active" : ""}`}
+                onClick={() => onChangeMode("master")}
+              >
+                Мастер
+              </button>
 
-            <button
-              className={`mode-toggle ${userMode === "developer" ? "active" : ""
-                }`}
-              onClick={() => onChangeMode("developer")}
-            >
-              Эхо
+              <button
+                className={`mode-toggle ${userMode === "developer" ? "active" : ""}`}
+                onClick={() => onChangeMode("developer")}
+              >
+                Эхо
+              </button>
+            </div>
+          )}
+
+          <div className="topbar-presentation-actions">
+            {!isPlayerScreen && userMode !== "player" && (
+              <button
+                className="presentation-toggle"
+                type="button"
+                onClick={onOpenPlayerScreen}
+              >
+                Показ игрокам ↗
+              </button>
+            )}
+
+            <button className="sidebar-toggle" onClick={onEnableCleanMapMode}>
+              Чистая карта
             </button>
           </div>
-
-          <button className="sidebar-toggle" onClick={onEnableCleanMapMode}>
-            Чистая карта
-          </button>
         </div>
       </header>
 

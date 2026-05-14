@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./App.css";
 import { BottomDrawer } from "./components/BottomDrawer";
 import { EncounterModal } from "./components/EncounterModal";
@@ -63,6 +63,39 @@ function loadSavedGlobalMapSettings(): GlobalMapSettings {
 
 const SCENE_STORAGE_PREFIX = "nri-table-scene-";
 const LOCAL_MAP_STORAGE_PREFIX = "nri-table-local-map-";
+
+const PLAYER_SCREEN_SYNC_KEYS = [
+  "nri-table-locations",
+  "nri-table-groups",
+  "nri-table-events",
+  "nri-table-characters",
+  "nri-table-reference-articles",
+  "nri-table-quests",
+  "nri-table-npcs",
+  "nri-table-items",
+  "nri-table-master-notes",
+  "nri-table-revealed-areas",
+  "nri-table-global-map",
+];
+
+const PLAYER_SCREEN_SYNC_PREFIXES = [
+  "nri-table-scene-",
+  "nri-table-local-map-",
+];
+
+function shouldSyncPlayerScreen(storageKey: string | null) {
+  if (!storageKey) {
+    return false;
+  }
+
+  if (PLAYER_SCREEN_SYNC_KEYS.includes(storageKey)) {
+    return true;
+  }
+
+  return PLAYER_SCREEN_SYNC_PREFIXES.some((prefix) =>
+    storageKey.startsWith(prefix),
+  );
+}
 
 type JsonStorageArchive = Record<string, unknown>;
 
@@ -168,6 +201,7 @@ function App() {
     userMode,
     isPlayerMode,
     isDeveloperMode,
+    isPlayerScreen,
     isSidebarOpen,
     isBottomDrawerOpen,
     isCleanMapMode,
@@ -179,6 +213,8 @@ function App() {
     exitCleanMapMode,
     restoreInterface,
   } = useInterfaceMode();
+
+  const playerScreenSyncTimerRef = useRef<number | null>(null);
 
   const [selectedLocationId, setSelectedLocationId] = useState("old-harbor");
   const [selectedGroupId, setSelectedGroupId] = useState<string | null>(null);
@@ -279,6 +315,36 @@ function App() {
       setIsHidingRevealedArea(false);
     }
   }, [isPlayerMode]);
+
+  useEffect(() => {
+    if (!isPlayerScreen) {
+      return;
+    }
+
+    function handleStorageChange(event: StorageEvent) {
+      if (!shouldSyncPlayerScreen(event.key)) {
+        return;
+      }
+
+      if (playerScreenSyncTimerRef.current !== null) {
+        window.clearTimeout(playerScreenSyncTimerRef.current);
+      }
+
+      playerScreenSyncTimerRef.current = window.setTimeout(() => {
+        window.location.reload();
+      }, 350);
+    }
+
+    window.addEventListener("storage", handleStorageChange);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+
+      if (playerScreenSyncTimerRef.current !== null) {
+        window.clearTimeout(playerScreenSyncTimerRef.current);
+      }
+    };
+  }, [isPlayerScreen]);
 
   const visibleLocations = locations.filter((location) => {
     return !isPlayerMode || !location.isSecret;
@@ -684,12 +750,22 @@ function App() {
     return newEvent;
   }
 
+  function handleOpenPlayerScreen() {
+    const playerUrl = new URL(window.location.href);
+
+    playerUrl.searchParams.set("view", "player");
+
+    window.open(playerUrl.toString(), "_blank", "noopener,noreferrer");
+  }
+
   return (
     <main className="atlas-screen">
       <TopBar
         userMode={userMode}
+        isPlayerScreen={isPlayerScreen}
         isCleanMapMode={isCleanMapMode}
         onChangeMode={changeMode}
+        onOpenPlayerScreen={handleOpenPlayerScreen}
         onEnableCleanMapMode={enableCleanMapMode}
         onRestoreInterface={restoreInterface}
       />

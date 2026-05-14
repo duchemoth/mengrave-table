@@ -4,15 +4,24 @@ import type { UserMode } from "../types/campaign";
 const DEVELOPER_PASSWORD = "550034";
 
 export function useInterfaceMode() {
-  const [userMode, setUserMode] = useState<UserMode>("master");
+  const isPlayerScreen =
+    new URLSearchParams(window.location.search).get("view") === "player";
+
+  const [userMode, setUserMode] = useState<UserMode>(() => {
+    return isPlayerScreen ? "player" : "master";
+  });
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isBottomDrawerOpen, setIsBottomDrawerOpen] = useState(false);
   const [isCleanMapMode, setIsCleanMapMode] = useState(false);
 
-  const isPlayerMode = userMode === "player";
-  const isDeveloperMode = userMode === "developer";
+  const isPlayerMode = isPlayerScreen || userMode === "player";
+  const isDeveloperMode = !isPlayerScreen && userMode === "developer";
 
   function changeMode(nextMode: UserMode) {
+    if (isPlayerScreen) {
+      return;
+    }
+
     if (nextMode === "developer" && userMode !== "developer") {
       const password = window.prompt("Введите пароль Эха");
 
@@ -32,8 +41,8 @@ export function useInterfaceMode() {
   }
 
   function toggleBottomDrawer() {
-  setIsBottomDrawerOpen((current) => !current);
-}
+    setIsBottomDrawerOpen((current) => !current);
+  }
 
   function openSidebar() {
     setIsSidebarOpen(true);
@@ -61,6 +70,7 @@ export function useInterfaceMode() {
     userMode,
     isPlayerMode,
     isDeveloperMode,
+    isPlayerScreen,
     isSidebarOpen,
     isCleanMapMode,
     isBottomDrawerOpen,
