@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { campaignData } from "../data/campaign";
 import type {
+  ArsenalItem,
   Location,
   MapEvent,
   MapGroup,
@@ -15,6 +16,7 @@ import {
   EVENTS_STORAGE_KEY,
   GROUPS_STORAGE_KEY,
   ITEMS_STORAGE_KEY,
+  ARSENAL_ITEMS_STORAGE_KEY,
   LOCATIONS_STORAGE_KEY,
   NPCS_STORAGE_KEY,
   QUESTS_STORAGE_KEY,
@@ -26,6 +28,8 @@ import {
   loadSavedQuests,
   loadSavedTextList,
   saveToStorage,
+  createEmptyInventory,
+  loadSavedArsenalItems,
 } from "../lib/storage";
 
 export function useCampaign() {
@@ -46,6 +50,9 @@ export function useCampaign() {
   const [items, setItems] = useState<string[]>(() =>
     loadSavedTextList(ITEMS_STORAGE_KEY, campaignData.items),
   );
+
+  const [arsenalItems, setArsenalItems] =
+    useState<ArsenalItem[]>(loadSavedArsenalItems);
 
   useEffect(() => {
     saveToStorage(LOCATIONS_STORAGE_KEY, locations);
@@ -78,6 +85,10 @@ export function useCampaign() {
   useEffect(() => {
     saveToStorage(ITEMS_STORAGE_KEY, items);
   }, [items]);
+
+  useEffect(() => {
+    saveToStorage(ARSENAL_ITEMS_STORAGE_KEY, arsenalItems);
+  }, [arsenalItems]);
 
   function resetLocations() {
     setLocations(campaignData.locations);
@@ -180,6 +191,7 @@ export function useCampaign() {
         quests,
         npcs,
         items,
+        arsenalItems,
         ...extraCampaignData,
       },
     };
@@ -224,6 +236,7 @@ export function useCampaign() {
             quests?: unknown[];
             npcs?: string[];
             items?: string[];
+            arsenalItems?: ArsenalItem[];
             revealedAreas?: unknown[];
             masterNotes?: unknown;
             globalMap?: unknown;
@@ -290,6 +303,10 @@ export function useCampaign() {
           setItems(parsedData.campaign.items.map(String));
         }
 
+        if (Array.isArray(parsedData.campaign?.arsenalItems)) {
+          setArsenalItems(parsedData.campaign.arsenalItems);
+        }
+
         onSuccess?.(normalizedLocations[0].id, parsedData.campaign);
 
         window.alert("Кампания импортирована.");
@@ -310,10 +327,12 @@ export function useCampaign() {
     quests,
     npcs,
     items,
+    arsenalItems,
 
     setQuests,
     setNpcs,
     setItems,
+    setArsenalItems,
     setCharacters,
     setReferenceArticles,
 
@@ -416,6 +435,8 @@ export function useCampaign() {
       weapons: "",
       armor: "",
       cryptotoken: "",
+
+      inventory: createEmptyInventory(),
 
       contacts: "",
       debts: "",

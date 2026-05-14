@@ -64,6 +64,8 @@ export const campaignData: CampaignData = {
 
   items: ["Ржавый ключ", "Карта приливов", "Письмо с восковой печатью"],
 
+  arsenalItems: [],
+
   groups: [
     {
       id: "group-players",

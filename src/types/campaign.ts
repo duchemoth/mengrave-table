@@ -28,6 +28,91 @@ export type Quest = {
   isSecret?: boolean;
 };
 
+export type ArsenalItemCategory =
+  | "weapon"
+  | "armor"
+  | "protection"
+  | "loadBearing"
+  | "tool"
+  | "medicine"
+  | "resource"
+  | "quest"
+  | "misc";
+
+export type ArsenalItemSlot =
+  | "shoulderWeapon"
+  | "smallWeapon"
+  | "headArmor"
+  | "torsoArmor"
+  | "armsArmor"
+  | "legsArmor"
+  | "protection"
+  | "loadBearing"
+  | "quick"
+  | "backpack"
+  | "none";
+
+export type ArsenalItem = {
+  id: string;
+  name: string;
+  category: ArsenalItemCategory;
+  slot: ArsenalItemSlot;
+
+  description: string;
+  rules: string;
+  tags: string;
+  rarity: string;
+  weight: string;
+  price: string;
+
+  quickSlotCount?: 2 | 4 | 6;
+  isVisibleToPlayers: boolean;
+};
+
+export type CharacterInventorySlot = {
+  itemId: string | null;
+  note: string;
+};
+
+export type CharacterInventoryQuickSlot = {
+  id: string;
+  itemId: string | null;
+  quantity: number;
+  note: string;
+};
+
+export type CharacterBackpackEntry = {
+  id: string;
+  itemId: string;
+  quantity: number;
+  note: string;
+};
+
+export type CharacterInventory = {
+  weaponSlots: {
+    shoulder1: CharacterInventorySlot;
+    shoulder2: CharacterInventorySlot;
+    small: CharacterInventorySlot;
+  };
+
+  armorSlots: {
+    head: CharacterInventorySlot;
+    torso: CharacterInventorySlot;
+    arms: CharacterInventorySlot;
+    legs: CharacterInventorySlot;
+  };
+
+  protectionSlot: CharacterInventorySlot;
+
+  loadBearing: {
+    itemId: string | null;
+    note: string;
+    quickSlots: CharacterInventoryQuickSlot[];
+  };
+
+  backpack: CharacterBackpackEntry[];
+};
+
 export type CampaignData = {
   locations: Location[];
   groups: MapGroup[];
@@ -37,6 +122,7 @@ export type CampaignData = {
   quests: Quest[];
   npcs: string[];
   items: string[];
+  arsenalItems: ArsenalItem[];
 };
 
 export type MapGroupFaction =
@@ -171,6 +257,8 @@ export type PlayerCharacter = {
   weapons: string;
   armor: string;
   cryptotoken: string;
+  
+  inventory: CharacterInventory;
 
   contacts: string;
   debts: string;

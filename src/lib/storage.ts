@@ -1,5 +1,7 @@
 import { campaignData } from "../data/campaign";
 import type {
+  ArsenalItem,
+  CharacterInventory,
   Location,
   MapEvent,
   MapGroup,
@@ -12,6 +14,7 @@ export const LOCATIONS_STORAGE_KEY = "nri-table-locations";
 export const QUESTS_STORAGE_KEY = "nri-table-quests";
 export const NPCS_STORAGE_KEY = "nri-table-npcs";
 export const ITEMS_STORAGE_KEY = "nri-table-items";
+export const ARSENAL_ITEMS_STORAGE_KEY = "nri-table-arsenal-items";
 export const GROUPS_STORAGE_KEY = "nri-table-groups";
 export const EVENTS_STORAGE_KEY = "nri-table-events";
 export const CHARACTERS_STORAGE_KEY = "nri-table-characters";
@@ -79,6 +82,219 @@ export function loadSavedTextList(storageKey: string, fallbackItems: string[]) {
 
 export function saveToStorage(storageKey: string, value: unknown) {
   localStorage.setItem(storageKey, JSON.stringify(value));
+}
+
+export function createEmptyInventory(): CharacterInventory {
+  return {
+    weaponSlots: {
+      shoulder1: {
+        itemId: null,
+        note: "",
+      },
+      shoulder2: {
+        itemId: null,
+        note: "",
+      },
+      small: {
+        itemId: null,
+        note: "",
+      },
+    },
+
+    armorSlots: {
+      head: {
+        itemId: null,
+        note: "",
+      },
+      torso: {
+        itemId: null,
+        note: "",
+      },
+      arms: {
+        itemId: null,
+        note: "",
+      },
+      legs: {
+        itemId: null,
+        note: "",
+      },
+    },
+
+    protectionSlot: {
+      itemId: null,
+      note: "",
+    },
+
+    loadBearing: {
+      itemId: null,
+      note: "",
+      quickSlots: [
+        {
+          id: "quick-1",
+          itemId: null,
+          quantity: 1,
+          note: "",
+        },
+        {
+          id: "quick-2",
+          itemId: null,
+          quantity: 1,
+          note: "",
+        },
+      ],
+    },
+
+    backpack: [],
+  };
+}
+
+function normalizeInventory(value: unknown): CharacterInventory {
+  const emptyInventory = createEmptyInventory();
+
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    return emptyInventory;
+  }
+
+  const inventory = value as Partial<CharacterInventory>;
+
+  return {
+    weaponSlots: {
+      shoulder1: {
+        ...emptyInventory.weaponSlots.shoulder1,
+        ...(inventory.weaponSlots?.shoulder1 ?? {}),
+      },
+      shoulder2: {
+        ...emptyInventory.weaponSlots.shoulder2,
+        ...(inventory.weaponSlots?.shoulder2 ?? {}),
+      },
+      small: {
+        ...emptyInventory.weaponSlots.small,
+        ...(inventory.weaponSlots?.small ?? {}),
+      },
+    },
+
+    armorSlots: {
+      head: {
+        ...emptyInventory.armorSlots.head,
+        ...(inventory.armorSlots?.head ?? {}),
+      },
+      torso: {
+        ...emptyInventory.armorSlots.torso,
+        ...(inventory.armorSlots?.torso ?? {}),
+      },
+      arms: {
+        ...emptyInventory.armorSlots.arms,
+        ...(inventory.armorSlots?.arms ?? {}),
+      },
+      legs: {
+        ...emptyInventory.armorSlots.legs,
+        ...(inventory.armorSlots?.legs ?? {}),
+      },
+    },
+
+    protectionSlot: {
+      ...emptyInventory.protectionSlot,
+      ...(inventory.protectionSlot ?? {}),
+    },
+
+    loadBearing: {
+      itemId:
+        typeof inventory.loadBearing?.itemId === "string"
+          ? inventory.loadBearing.itemId
+          : null,
+      note:
+        typeof inventory.loadBearing?.note === "string"
+          ? inventory.loadBearing.note
+          : "",
+      quickSlots: Array.isArray(inventory.loadBearing?.quickSlots)
+        ? inventory.loadBearing.quickSlots.slice(0, 6).map((slot, index) => ({
+          id:
+            typeof slot.id === "string" && slot.id.trim().length > 0
+              ? slot.id
+              : `quick-${index + 1}`,
+          itemId: typeof slot.itemId === "string" ? slot.itemId : null,
+          quantity:
+            typeof slot.quantity === "number" && Number.isFinite(slot.quantity)
+              ? Math.max(1, Math.floor(slot.quantity))
+              : 1,
+          note: typeof slot.note === "string" ? slot.note : "",
+        }))
+        : emptyInventory.loadBearing.quickSlots,
+    },
+
+    backpack: Array.isArray(inventory.backpack)
+      ? inventory.backpack
+        .filter((entry) => {
+          return (
+            entry &&
+            typeof entry === "object" &&
+            "itemId" in entry &&
+            typeof entry.itemId === "string"
+          );
+        })
+        .map((entry, index) => ({
+          id:
+            typeof entry.id === "string" && entry.id.trim().length > 0
+              ? entry.id
+              : `backpack-${Date.now()}-${index}`,
+          itemId: entry.itemId,
+          quantity:
+            typeof entry.quantity === "number" &&
+              Number.isFinite(entry.quantity)
+              ? Math.max(1, Math.floor(entry.quantity))
+              : 1,
+          note: typeof entry.note === "string" ? entry.note : "",
+        }))
+      : [],
+  };
+}
+
+function normalizeArsenalItem(item: Partial<ArsenalItem>): ArsenalItem {
+  return {
+    id:
+      typeof item.id === "string" && item.id.trim().length > 0
+        ? item.id
+        : `arsenal-item-${Date.now()}`,
+    name:
+      typeof item.name === "string" && item.name.trim().length > 0
+        ? item.name
+        : "Новый предмет",
+
+    category: item.category ?? "misc",
+    slot: item.slot ?? "backpack",
+
+    description: item.description ?? "",
+    rules: item.rules ?? "",
+    tags: item.tags ?? "",
+    rarity: item.rarity ?? "",
+    weight: item.weight ?? "",
+    price: item.price ?? "",
+
+    quickSlotCount: item.quickSlotCount,
+    isVisibleToPlayers: Boolean(item.isVisibleToPlayers),
+  };
+}
+
+export function loadSavedArsenalItems() {
+  const savedItems = localStorage.getItem(ARSENAL_ITEMS_STORAGE_KEY);
+
+  if (!savedItems) {
+    return campaignData.arsenalItems;
+  }
+
+  try {
+    const parsedItems = JSON.parse(savedItems);
+
+    if (!Array.isArray(parsedItems)) {
+      return campaignData.arsenalItems;
+    }
+
+    return parsedItems.map((item) =>
+      normalizeArsenalItem(item as Partial<ArsenalItem>),
+    );
+  } catch {
+    return campaignData.arsenalItems;
+  }
 }
 
 export function loadSavedGroups() {
@@ -210,6 +426,8 @@ function normalizeCharacter(character: PlayerCharacter): PlayerCharacter {
     weapons: character.weapons ?? "",
     armor: character.armor ?? "",
     cryptotoken: character.cryptotoken ?? "",
+
+    inventory: normalizeInventory(character.inventory),
 
     contacts: character.contacts ?? "",
     debts: character.debts ?? "",
