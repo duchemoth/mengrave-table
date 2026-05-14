@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { Location, MapEvent, MapGroup } from "../types/campaign";
 
 const FACTION_LABELS: Record<string, string> = {
@@ -51,6 +51,7 @@ type EncounterModalProps = {
     targetId: string,
     mode: EncounterDisplayMode,
   ) => void;
+  onShowGlobalMapToPlayers: () => void;
   onClose: () => void;
   onCreateSceneNote: (note: string) => void;
   onUpdateMapEvent: (event: MapEvent) => void;
@@ -138,6 +139,7 @@ export function EncounterModal({
   initialMode,
   canShowToPlayers,
   onShowToPlayers,
+  onShowGlobalMapToPlayers,
   onClose,
   onCreateSceneNote,
   onUpdateMapEvent,
@@ -159,6 +161,12 @@ export function EncounterModal({
   });
 
   const [isEventSaved, setIsEventSaved] = useState(false);
+
+  const [shownPlayerMode, setShownPlayerMode] = useState<
+    EncounterDisplayMode | "globalMap" | null
+  >(null);
+
+  const shownPlayerTimerRef = useRef<number | null>(null);
 
   const sceneStorageKey = useMemo(() => {
     if (!target) {
@@ -183,6 +191,14 @@ export function EncounterModal({
 
     setMode(initialMode);
   }, [target?.kind, target?.data.id, initialMode]);
+
+  useEffect(() => {
+    return () => {
+      if (shownPlayerTimerRef.current !== null) {
+        window.clearTimeout(shownPlayerTimerRef.current);
+      }
+    };
+  }, []);
 
   useEffect(() => {
     if (!sceneStorageKey) {
@@ -231,12 +247,50 @@ export function EncounterModal({
     return null;
   }
 
+  function markShownToPlayers(nextMode: EncounterDisplayMode | "globalMap") {
+    setShownPlayerMode(nextMode);
+
+    if (shownPlayerTimerRef.current !== null) {
+      window.clearTimeout(shownPlayerTimerRef.current);
+    }
+
+    shownPlayerTimerRef.current = window.setTimeout(() => {
+      setShownPlayerMode(null);
+    }, 1800);
+  }
+
   function showCurrentToPlayers(nextMode: EncounterDisplayMode) {
     if (!target) {
       return;
     }
 
     onShowToPlayers(target.kind, target.data.id, nextMode);
+    markShownToPlayers(nextMode);
+  }
+
+  function showGlobalMapToPlayers() {
+    onShowGlobalMapToPlayers();
+    markShownToPlayers("globalMap");
+  }
+
+  function getShownPlayerLabel() {
+    if (shownPlayerMode === "globalMap") {
+      return "Игроки возвращены на карту";
+    }
+
+    if (shownPlayerMode === "overview") {
+      return "Обзор показан игрокам";
+    }
+
+    if (shownPlayerMode === "scene") {
+      return "Сцена показана игрокам";
+    }
+
+    if (shownPlayerMode === "localMap") {
+      return "Карта показана игрокам";
+    }
+
+    return null;
   }
 
   const isLocation = target.kind === "location";
@@ -453,6 +507,24 @@ export function EncounterModal({
             </p>
           )}
         </header>
+
+        {canShowToPlayers && (
+          <div className="encounter-player-toolbar">
+            <button
+              className="secondary-button"
+              type="button"
+              onClick={showGlobalMapToPlayers}
+            >
+              Вернуть игроков на карту
+            </button>
+
+            {shownPlayerMode && (
+              <span className="encounter-player-status">
+                {getShownPlayerLabel()} ✓
+              </span>
+            )}
+          </div>
+        )}
 
         {mode === "overview" ? (
           <>

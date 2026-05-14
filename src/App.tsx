@@ -704,6 +704,17 @@ function App() {
     });
   }
 
+  function handleShowGlobalMapToPlayers() {
+    if (isPlayerMode) {
+      return;
+    }
+
+    savePlayerPresentation({
+      mode: "globalMap",
+      updatedAt: Date.now(),
+    });
+  }
+
   function handleUpdateEncounterEvent(updatedEvent: MapEvent) {
     updateEvent(updatedEvent);
 
@@ -895,7 +906,9 @@ function App() {
 
     playerUrl.searchParams.set("view", "player");
 
-    window.open(playerUrl.toString(), "_blank", "noopener,noreferrer");
+    const playerWindow = window.open(playerUrl.toString(), "nri-player-screen");
+
+    playerWindow?.focus();
   }
 
   return (
@@ -1036,6 +1049,7 @@ function App() {
         isPlayerMode={isPlayerMode}
         initialMode={encounterInitialMode}
         canShowToPlayers={!isPlayerMode && !isPlayerScreen}
+        onShowGlobalMapToPlayers={handleShowGlobalMapToPlayers}
         onShowToPlayers={handleShowToPlayers}
         onClose={() => setEncounterTarget(null)}
         onCreateSceneNote={handleCreateSceneNote}
