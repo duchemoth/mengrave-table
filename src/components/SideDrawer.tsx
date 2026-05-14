@@ -47,6 +47,9 @@ type SideDrawerProps = {
   onExportCampaign: () => void;
   onImportCampaign: (file: File) => void;
 
+  globalMapImageUrl: string;
+  onChangeGlobalMapImageUrl: (imageUrl: string) => void;
+
   onChangeQuests: (quests: Quest[]) => void;
   onChangeNpcs: (items: string[]) => void;
   onChangeItems: (items: string[]) => void;
@@ -90,6 +93,9 @@ export function SideDrawer({
 
   onExportCampaign,
   onImportCampaign,
+
+  globalMapImageUrl,
+  onChangeGlobalMapImageUrl,
 
   onChangeQuests,
   onChangeNpcs,
@@ -143,6 +149,8 @@ export function SideDrawer({
 
         {!isPlayerMode && (
           <CampaignArchive
+            globalMapImageUrl={globalMapImageUrl}
+            onChangeGlobalMapImageUrl={onChangeGlobalMapImageUrl}
             onExportCampaign={onExportCampaign}
             onImportCampaign={onImportCampaign}
           />

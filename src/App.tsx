@@ -16,10 +16,53 @@ import { ReferenceLibrary } from "./components/ReferenceLibrary";
 import type { Location, MapEvent, MapGroup, } from "./types/campaign";
 
 const MASTER_NOTES_STORAGE_KEY = "nri-table-master-notes";
+const GLOBAL_MAP_STORAGE_KEY = "nri-table-global-map";
+const DEFAULT_GLOBAL_MAP_IMAGE_URL = "/map.jpg";
+
+type GlobalMapSettings = {
+  imageUrl: string;
+};
+
+function normalizeGlobalMapSettings(value: unknown): GlobalMapSettings {
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    return {
+      imageUrl: DEFAULT_GLOBAL_MAP_IMAGE_URL,
+    };
+  }
+
+  const rawSettings = value as {
+    imageUrl?: unknown;
+  };
+
+  return {
+    imageUrl:
+      typeof rawSettings.imageUrl === "string" &&
+        rawSettings.imageUrl.trim().length > 0
+        ? rawSettings.imageUrl.trim()
+        : DEFAULT_GLOBAL_MAP_IMAGE_URL,
+  };
+}
+
+function loadSavedGlobalMapSettings(): GlobalMapSettings {
+  const savedSettings = localStorage.getItem(GLOBAL_MAP_STORAGE_KEY);
+
+  if (!savedSettings) {
+    return {
+      imageUrl: DEFAULT_GLOBAL_MAP_IMAGE_URL,
+    };
+  }
+
+  try {
+    return normalizeGlobalMapSettings(JSON.parse(savedSettings));
+  } catch {
+    return {
+      imageUrl: DEFAULT_GLOBAL_MAP_IMAGE_URL,
+    };
+  }
+}
 
 const SCENE_STORAGE_PREFIX = "nri-table-scene-";
 const LOCAL_MAP_STORAGE_PREFIX = "nri-table-local-map-";
-const GLOBAL_MAP_IMAGE_URL = "/map.jpg";
 
 type JsonStorageArchive = Record<string, unknown>;
 
@@ -189,9 +232,22 @@ function App() {
     return localStorage.getItem(MASTER_NOTES_STORAGE_KEY) ?? "";
   });
 
+  const [globalMapImageUrl, setGlobalMapImageUrl] = useState(() => {
+    return loadSavedGlobalMapSettings().imageUrl;
+  });
+
   useEffect(() => {
     localStorage.setItem(MASTER_NOTES_STORAGE_KEY, masterNotes);
   }, [masterNotes]);
+
+  useEffect(() => {
+    localStorage.setItem(
+      GLOBAL_MAP_STORAGE_KEY,
+      JSON.stringify({
+        imageUrl: globalMapImageUrl,
+      }),
+    );
+  }, [globalMapImageUrl]);
 
   useEffect(() => {
     localStorage.setItem(
@@ -356,6 +412,12 @@ function App() {
         importedCampaign?.localMaps,
       );
 
+      const importedGlobalMap = normalizeGlobalMapSettings(
+        importedCampaign?.globalMap,
+      );
+
+      setGlobalMapImageUrl(importedGlobalMap.imageUrl);
+
       openSidebar();
     });
   }
@@ -365,7 +427,7 @@ function App() {
       revealedAreas,
       masterNotes,
       globalMap: {
-        imageUrl: GLOBAL_MAP_IMAGE_URL,
+        imageUrl: globalMapImageUrl,
       },
       sceneDrafts: collectJsonStorageByPrefix(SCENE_STORAGE_PREFIX),
       localMaps: collectJsonStorageByPrefix(LOCAL_MAP_STORAGE_PREFIX),
@@ -636,6 +698,7 @@ function App() {
         locations={visibleLocations}
         groups={visibleGroups}
         events={visibleEvents}
+        globalMapImageUrl={globalMapImageUrl}
         selectedLocationId={selectedLocationId}
         selectedGroupId={selectedGroupId}
         selectedEventId={selectedEventId}
@@ -684,6 +747,8 @@ function App() {
         selectedGroupId={selectedGroupId}
         events={events}
         selectedEventId={selectedEventId}
+        globalMapImageUrl={globalMapImageUrl}
+        onChangeGlobalMapImageUrl={setGlobalMapImageUrl}
         quests={quests}
         npcs={npcs}
         items={items}

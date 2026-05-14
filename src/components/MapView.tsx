@@ -14,6 +14,7 @@ type MapViewProps = {
   locations: Location[];
   groups: MapGroup[];
   events: MapEvent[];
+  globalMapImageUrl: string;
   selectedLocationId: string;
   selectedGroupId: string | null;
   selectedEventId: string | null;
@@ -79,6 +80,7 @@ export function MapView({
   locations,
   groups,
   events,
+  globalMapImageUrl,
   selectedLocationId,
   selectedGroupId,
   selectedEventId,
@@ -370,6 +372,7 @@ export function MapView({
             } ${isRevealingFog ? "map-revealing-fog" : ""} ${isHidingRevealedArea ? "map-hiding-fog" : ""}`}
           style={{
             transform: `translate(${offsetX}px, ${offsetY}px) scale(${scale})`,
+            backgroundImage: `url("${globalMapImageUrl.trim() || "/map.jpg"}")`,
           }}
           onMouseDown={(event) => {
             if (isPlacingEvent || isRevealingFog || isHidingRevealedArea) {
