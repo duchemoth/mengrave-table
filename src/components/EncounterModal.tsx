@@ -33,6 +33,9 @@ type SceneDraft = {
   masterNotes: string;
 };
 
+type EncounterDisplayMode = "overview" | "scene" | "localMap";
+type EncounterMode = EncounterDisplayMode | "eventEdit";
+
 type LocalMapDraft = {
   imageUrl: string;
   notes: string;
@@ -41,6 +44,13 @@ type LocalMapDraft = {
 type EncounterModalProps = {
   target: EncounterTarget | null;
   isPlayerMode: boolean;
+  initialMode: EncounterDisplayMode;
+  canShowToPlayers: boolean;
+  onShowToPlayers: (
+    targetKind: EncounterTarget["kind"],
+    targetId: string,
+    mode: EncounterDisplayMode,
+  ) => void;
   onClose: () => void;
   onCreateSceneNote: (note: string) => void;
   onUpdateMapEvent: (event: MapEvent) => void;
@@ -125,14 +135,15 @@ function saveLocalMapDraft(storageKey: string, draft: LocalMapDraft) {
 export function EncounterModal({
   target,
   isPlayerMode,
+  initialMode,
+  canShowToPlayers,
+  onShowToPlayers,
   onClose,
   onCreateSceneNote,
   onUpdateMapEvent,
   onCreateLocationEvent,
 }: EncounterModalProps) {
-  const [mode, setMode] = useState<
-    "overview" | "scene" | "localMap" | "eventEdit"
-  >("overview");
+  const [mode, setMode] = useState<EncounterMode>(initialMode);
   const [playerDescription, setPlayerDescription] = useState("");
   const [masterNotes, setMasterNotes] = useState("");
   const [isSceneNoteCreated, setIsSceneNoteCreated] = useState(false);
@@ -164,6 +175,14 @@ export function EncounterModal({
 
     return getLocalMapStorageKey(target);
   }, [target]);
+
+  useEffect(() => {
+    if (!target) {
+      return;
+    }
+
+    setMode(initialMode);
+  }, [target?.kind, target?.data.id, initialMode]);
 
   useEffect(() => {
     if (!sceneStorageKey) {
@@ -210,6 +229,14 @@ export function EncounterModal({
 
   if (!target) {
     return null;
+  }
+
+  function showCurrentToPlayers(nextMode: EncounterDisplayMode) {
+    if (!target) {
+      return;
+    }
+
+    onShowToPlayers(target.kind, target.data.id, nextMode);
   }
 
   const isLocation = target.kind === "location";
@@ -459,6 +486,15 @@ export function EncounterModal({
             </div>
 
             <footer className="encounter-actions">
+              {canShowToPlayers && (
+                <button
+                  className="secondary-button"
+                  type="button"
+                  onClick={() => showCurrentToPlayers("overview")}
+                >
+                  Показать игрокам
+                </button>
+              )}
               <button
                 className="secondary-button"
                 type="button"
@@ -557,10 +593,19 @@ export function EncounterModal({
                     placeholder="Что знает только мастер: мотивы NPC, ловушки, скрытые угрозы, варианты развития..."
                   />
                 </section>
-                )}
-          </div>
+              )}
+            </div>
 
             <footer className="encounter-actions">
+              {canShowToPlayers && (
+                <button
+                  className="secondary-button"
+                  type="button"
+                  onClick={() => showCurrentToPlayers("scene")}
+                >
+                  Показать сцену игрокам
+                </button>
+              )}
               <button
                 className="secondary-button"
                 type="button"
@@ -666,6 +711,16 @@ export function EncounterModal({
             </div>
 
             <footer className="encounter-actions">
+              {canShowToPlayers && (
+                <button
+                  className="secondary-button"
+                  type="button"
+                  onClick={() => showCurrentToPlayers("localMap")}
+                >
+                  Показать карту игрокам
+                </button>
+              )}
+
               <button
                 className="secondary-button"
                 type="button"

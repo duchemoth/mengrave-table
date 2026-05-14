@@ -19,6 +19,75 @@ const MASTER_NOTES_STORAGE_KEY = "nri-table-master-notes";
 const GLOBAL_MAP_STORAGE_KEY = "nri-table-global-map";
 const DEFAULT_GLOBAL_MAP_IMAGE_URL = "/map.jpg";
 
+const PLAYER_PRESENTATION_STORAGE_KEY = "nri-table-player-presentation";
+
+type EncounterDisplayMode = "overview" | "scene" | "localMap";
+
+type PlayerPresentation =
+  | {
+    mode: "globalMap";
+    updatedAt: number;
+  }
+  | {
+    mode: EncounterDisplayMode;
+    targetKind: "location" | "group" | "event";
+    targetId: string;
+    updatedAt: number;
+  };
+
+function loadPlayerPresentation(): PlayerPresentation | null {
+  const savedPresentation = localStorage.getItem(PLAYER_PRESENTATION_STORAGE_KEY);
+
+  if (!savedPresentation) {
+    return null;
+  }
+
+  try {
+    const parsedPresentation = JSON.parse(savedPresentation) as Partial<PlayerPresentation>;
+
+    if (parsedPresentation.mode === "globalMap") {
+      return {
+        mode: "globalMap",
+        updatedAt:
+          typeof parsedPresentation.updatedAt === "number"
+            ? parsedPresentation.updatedAt
+            : Date.now(),
+      };
+    }
+
+    if (
+      (parsedPresentation.mode === "overview" ||
+        parsedPresentation.mode === "scene" ||
+        parsedPresentation.mode === "localMap") &&
+      (parsedPresentation.targetKind === "location" ||
+        parsedPresentation.targetKind === "group" ||
+        parsedPresentation.targetKind === "event") &&
+      typeof parsedPresentation.targetId === "string"
+    ) {
+      return {
+        mode: parsedPresentation.mode,
+        targetKind: parsedPresentation.targetKind,
+        targetId: parsedPresentation.targetId,
+        updatedAt:
+          typeof parsedPresentation.updatedAt === "number"
+            ? parsedPresentation.updatedAt
+            : Date.now(),
+      };
+    }
+
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+function savePlayerPresentation(presentation: PlayerPresentation) {
+  localStorage.setItem(
+    PLAYER_PRESENTATION_STORAGE_KEY,
+    JSON.stringify(presentation),
+  );
+}
+
 type GlobalMapSettings = {
   imageUrl: string;
 };
@@ -76,6 +145,7 @@ const PLAYER_SCREEN_SYNC_KEYS = [
   "nri-table-master-notes",
   "nri-table-revealed-areas",
   "nri-table-global-map",
+  "nri-table-player-presentation",
 ];
 
 const PLAYER_SCREEN_SYNC_PREFIXES = [
@@ -258,6 +328,9 @@ function App() {
     | null
   >(null);
 
+  const [encounterInitialMode, setEncounterInitialMode] =
+    useState<EncounterDisplayMode>("overview");
+
   const [isNotesOpen, setIsNotesOpen] = useState(false);
 
   const [isCharactersOpen, setIsCharactersOpen] = useState(false);
@@ -361,6 +434,53 @@ function App() {
 
     return !event.isSecret && event.status !== "hidden";
   });
+
+  function getPresentationTarget(presentation: PlayerPresentation) {
+    if (presentation.mode === "globalMap") {
+      return null;
+    }
+
+    if (presentation.targetKind === "location") {
+      const location = visibleLocations.find((item) => item.id === presentation.targetId);
+
+      return location ? { kind: "location" as const, data: location } : null;
+    }
+
+    if (presentation.targetKind === "group") {
+      const group = visibleGroups.find((item) => item.id === presentation.targetId);
+
+      return group ? { kind: "group" as const, data: group } : null;
+    }
+
+    const event = visibleEvents.find((item) => item.id === presentation.targetId);
+
+    return event ? { kind: "event" as const, data: event } : null;
+  }
+
+  useEffect(() => {
+    if (!isPlayerScreen) {
+      return;
+    }
+
+    const presentation = loadPlayerPresentation();
+
+    if (!presentation || presentation.mode === "globalMap") {
+      setEncounterTarget(null);
+      setEncounterInitialMode("overview");
+      return;
+    }
+
+    const presentationTarget = getPresentationTarget(presentation);
+
+    if (!presentationTarget) {
+      setEncounterTarget(null);
+      setEncounterInitialMode("overview");
+      return;
+    }
+
+    setEncounterInitialMode(presentation.mode);
+    setEncounterTarget(presentationTarget);
+  }, [isPlayerScreen]);
 
   const selectedLocation =
     locations.find((location) => location.id === selectedLocationId) ??
@@ -553,15 +673,35 @@ function App() {
   }
 
   function handleOpenLocationEncounter(location: Location) {
+    setEncounterInitialMode("overview");
     setEncounterTarget({ kind: "location", data: location });
   }
 
   function handleOpenGroupEncounter(group: MapGroup) {
+    setEncounterInitialMode("overview");
     setEncounterTarget({ kind: "group", data: group });
   }
 
   function handleOpenEventEncounter(event: MapEvent) {
+    setEncounterInitialMode("overview");
     setEncounterTarget({ kind: "event", data: event });
+  }
+
+  function handleShowToPlayers(
+    targetKind: "location" | "group" | "event",
+    targetId: string,
+    mode: EncounterDisplayMode,
+  ) {
+    if (isPlayerMode) {
+      return;
+    }
+
+    savePlayerPresentation({
+      mode,
+      targetKind,
+      targetId,
+      updatedAt: Date.now(),
+    });
   }
 
   function handleUpdateEncounterEvent(updatedEvent: MapEvent) {
@@ -894,6 +1034,9 @@ function App() {
       <EncounterModal
         target={encounterTarget}
         isPlayerMode={isPlayerMode}
+        initialMode={encounterInitialMode}
+        canShowToPlayers={!isPlayerMode && !isPlayerScreen}
+        onShowToPlayers={handleShowToPlayers}
         onClose={() => setEncounterTarget(null)}
         onCreateSceneNote={handleCreateSceneNote}
         onUpdateMapEvent={handleUpdateEncounterEvent}
