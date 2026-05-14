@@ -6,7 +6,12 @@ import { QuestEditor } from "./editors/QuestEditor";
 import { TextListEditor } from "./editors/TextListEditor";
 import { LocationInfoPanel } from "./panels/LocationInfoPanel";
 import { QuestListPanel } from "./panels/QuestListPanel";
-import type { Location, MapEvent, MapGroup, Quest } from "../types/campaign";
+import type {
+  Location,
+  MapEvent,
+  MapGroup,
+  Quest,
+} from "../types/campaign";
 
 type SideDrawerProps = {
   isOpen: boolean;
@@ -24,7 +29,6 @@ type SideDrawerProps = {
 
   quests: Quest[];
   npcs: string[];
-  items: string[];
 
   onToggleOpen: () => void;
 
@@ -52,7 +56,6 @@ type SideDrawerProps = {
 
   onChangeQuests: (quests: Quest[]) => void;
   onChangeNpcs: (items: string[]) => void;
-  onChangeItems: (items: string[]) => void;
 };
 
 export function SideDrawer({
@@ -71,7 +74,6 @@ export function SideDrawer({
 
   quests,
   npcs,
-  items,
 
   onToggleOpen,
 
@@ -99,7 +101,6 @@ export function SideDrawer({
 
   onChangeQuests,
   onChangeNpcs,
-  onChangeItems,
 }: SideDrawerProps) {
   return (
     <aside className={`side-drawer ${isOpen ? "open" : "closed"}`}>
@@ -171,14 +172,6 @@ export function SideDrawer({
           />
         )}
 
-        {isDeveloperMode && (
-          <TextListEditor
-            title="Редактор снаряжения"
-            items={items}
-            placeholder="Новое снаряжение"
-            onChangeItems={onChangeItems}
-          />
-        )}
       </div>
     </aside>
   );

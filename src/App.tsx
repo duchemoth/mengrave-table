@@ -244,9 +244,10 @@ function App() {
     quests,
     npcs,
     items,
+    arsenalItems,
     setQuests,
     setNpcs,
-    setItems,
+    setArsenalItems,
     resetLocations: resetCampaignLocations,
     createLocation: createCampaignLocation,
     updateLocation,
@@ -980,10 +981,8 @@ function App() {
         onChangeGlobalMapImageUrl={setGlobalMapImageUrl}
         quests={quests}
         npcs={npcs}
-        items={items}
         onChangeQuests={setQuests}
         onChangeNpcs={setNpcs}
-        onChangeItems={setItems}
         onToggleOpen={toggleSidebar}
         onUpdateLocation={updateSelectedLocation}
         onCreateLocation={createLocation}
@@ -1035,11 +1034,13 @@ function App() {
       {!isCleanMapMode && isReferenceOpen && (
         <ReferenceLibrary
           articles={referenceArticles}
+          arsenalItems={arsenalItems}
           isPlayerMode={isPlayerMode}
           isDeveloperMode={isDeveloperMode}
           onCreateArticle={createReferenceArticle}
           onUpdateArticle={updateReferenceArticle}
           onDeleteArticle={deleteReferenceArticle}
+          onChangeArsenalItems={setArsenalItems}
           onClose={() => setIsReferenceOpen(false)}
         />
       )}

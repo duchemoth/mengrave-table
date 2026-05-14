@@ -1,5 +1,7 @@
 import { useMemo, useState } from "react";
+import { ArsenalEditor } from "./editors/ArsenalEditor";
 import type {
+    ArsenalItem,
     ReferenceArticle,
     ReferenceSection,
     ReferenceVisibility,
@@ -24,6 +26,8 @@ const SECTIONS: ReferenceSection[] = [
     "glossary",
     "other",
 ];
+
+type ReferenceTab = ReferenceSection | "arsenal";
 
 const EMPTY_SUBSECTION_LABEL = "Без подраздела";
 
@@ -88,24 +92,28 @@ function groupArticlesBySubsection(
 
 type ReferenceLibraryProps = {
     articles: ReferenceArticle[];
+    arsenalItems: ArsenalItem[];
     isPlayerMode: boolean;
     isDeveloperMode: boolean;
     onCreateArticle: () => ReferenceArticle;
     onUpdateArticle: (article: ReferenceArticle) => void;
     onDeleteArticle: (articleId: string) => void;
+    onChangeArsenalItems: (items: ArsenalItem[]) => void;
     onClose: () => void;
 };
 
 export function ReferenceLibrary({
     articles,
+    arsenalItems,
     isPlayerMode,
     isDeveloperMode,
     onCreateArticle,
     onUpdateArticle,
     onDeleteArticle,
+    onChangeArsenalItems,
     onClose,
 }: ReferenceLibraryProps) {
-    const [activeSection, setActiveSection] = useState<ReferenceSection>("rules");
+    const [activeSection, setActiveSection] = useState<ReferenceTab>("rules");
     const [selectedArticleId, setSelectedArticleId] = useState<string | null>(
         articles[0]?.id ?? null,
     );
@@ -129,10 +137,14 @@ export function ReferenceLibrary({
         });
     }, [articles, isDeveloperMode, isPlayerMode]);
 
-    const sectionArticles = visibleArticles.filter(
-        (article) =>
-            article.section === activeSection && articleMatchesSearch(article, searchQuery),
-    );
+    const sectionArticles =
+        activeSection === "arsenal"
+            ? []
+            : visibleArticles.filter(
+                (article) =>
+                    article.section === activeSection &&
+                    articleMatchesSearch(article, searchQuery),
+            );
 
     const subsectionGroups = groupArticlesBySubsection(sectionArticles);
 
@@ -152,8 +164,14 @@ export function ReferenceLibrary({
         }));
     }
 
-    function selectSection(section: ReferenceSection) {
+    function selectSection(section: ReferenceTab) {
         setActiveSection(section);
+
+        if (section === "arsenal") {
+            setSelectedArticleId(null);
+            setIsEditing(false);
+            return;
+        }
 
         const firstArticleInSection = visibleArticles.find(
             (article) => article.section === section,
@@ -164,17 +182,18 @@ export function ReferenceLibrary({
     }
 
     function createArticle() {
-        const newArticle = onCreateArticle();
+        if (activeSection === "arsenal") {
+            return;
+        }
 
-        const updatedArticle: ReferenceArticle = {
-            ...newArticle,
+        const article = onCreateArticle();
+
+        onUpdateArticle({
+            ...article,
             section: activeSection,
-            visibility: "master",
-            updatedAt: new Date().toISOString(),
-        };
+        });
 
-        onUpdateArticle(updatedArticle);
-        setSelectedArticleId(updatedArticle.id);
+        setSelectedArticleId(article.id);
         setIsEditing(true);
     }
 
@@ -240,280 +259,302 @@ export function ReferenceLibrary({
                 {SECTIONS.map((section) => (
                     <button
                         key={section}
-                        className={`reference-tab ${activeSection === section ? "active" : ""
-                            }`}
+                        className={`reference-tab ${activeSection === section ? "active" : ""}`}
                         type="button"
                         onClick={() => selectSection(section)}
                     >
                         {SECTION_LABELS[section]}
                     </button>
                 ))}
-            </div>
 
-            <div className="reference-search-row">
-                <label className="reference-search-field">
-                    Поиск по справке
-                    <input
-                        value={searchQuery}
-                        onChange={(event) => setSearchQuery(event.target.value)}
-                        placeholder="Название, тег или слово из текста..."
-                    />
-                </label>
-
-                {searchQuery.trim().length > 0 && (
+                {!isPlayerMode && (
                     <button
-                        className="secondary-button reference-clear-search"
+                        className={`reference-tab ${activeSection === "arsenal" ? "active" : ""}`}
                         type="button"
-                        onClick={() => setSearchQuery("")}
+                        onClick={() => selectSection("arsenal")}
                     >
-                        Очистить
+                        Арсенал
                     </button>
                 )}
             </div>
 
-            <div className="reference-layout">
-                <aside className="reference-article-list">
-                    {isDeveloperMode && (
+            {activeSection !== "arsenal" && (
+                <div className="reference-search-row">
+                    <label className="reference-search-field">
+                        Поиск по справке
+                        <input
+                            value={searchQuery}
+                            onChange={(event) => setSearchQuery(event.target.value)}
+                            placeholder="Название, тег или слово из текста..."
+                        />
+                    </label>
+
+                    {searchQuery.trim().length > 0 && (
                         <button
-                            className="secondary-button reference-create-button"
+                            className="secondary-button reference-clear-search"
                             type="button"
-                            onClick={createArticle}
+                            onClick={() => setSearchQuery("")}
                         >
-                            Добавить статью
+                            Очистить
                         </button>
                     )}
+                </div>
+            )}
 
-                    {sectionArticles.length === 0 ? (
-                        <p className="reference-empty-text">
-                            {searchQuery.trim().length > 0
-                                ? "По этому запросу в разделе ничего не найдено."
-                                : "В этом разделе пока нет доступных статей."}
-                        </p>
-                    ) : (
-                        <div className="reference-subsection-list">
-                            {subsectionGroups.map((group) => {
-                                const isOpen = isSubsectionOpen(group.title);
 
-                                return (
-                                    <div key={group.title} className="reference-subsection">
-                                        <button
-                                            className="reference-subsection-header"
-                                            type="button"
-                                            onClick={() => toggleSubsection(group.title)}
-                                        >
-                                            <span>
-                                                {isOpen ? "▼" : "▶"} {group.title}
-                                            </span>
+            {activeSection === "arsenal" ? (
+                <div className="reference-arsenal-panel">
+                    <ArsenalEditor
+                        items={arsenalItems}
+                        isDeveloperMode={isDeveloperMode}
+                        onChangeItems={onChangeArsenalItems}
+                    />
+                </div>
+            ) : (
+                <div className="reference-layout">
+                    <aside className="reference-article-list">
+                        {isDeveloperMode && (
+                            <button
+                                className="secondary-button reference-create-button"
+                                type="button"
+                                onClick={createArticle}
+                            >
+                                Добавить статью
+                            </button>
+                        )}
 
-                                            <small>{group.articles.length}</small>
-                                        </button>
+                        {sectionArticles.length === 0 ? (
+                            <p className="reference-empty-text">
+                                {searchQuery.trim().length > 0
+                                    ? "По этому запросу в разделе ничего не найдено."
+                                    : "В этом разделе пока нет доступных статей."}
+                            </p>
+                        ) : (
+                            <div className="reference-subsection-list">
+                                {subsectionGroups.map((group) => {
+                                    const isOpen = isSubsectionOpen(group.title);
 
-                                        {isOpen && (
-                                            <div className="reference-article-buttons">
-                                                {group.articles.map((article) => (
-                                                    <button
-                                                        key={article.id}
-                                                        className={`reference-article-button ${selectedArticle?.id === article.id ? "active" : ""
-                                                            }`}
-                                                        type="button"
-                                                        onClick={() => {
-                                                            setSelectedArticleId(article.id);
-                                                            setIsEditing(false);
-                                                        }}
-                                                    >
-                                                        <span>{article.title || "Без названия"}</span>
-                                                        <small>
-                                                            {VISIBILITY_LABELS[article.visibility]}
-                                                            {article.tags.trim().length > 0
-                                                                ? ` · ${article.tags.trim()}`
-                                                                : ""}
-                                                        </small>
-                                                    </button>
-                                                ))}
-                                            </div>
-                                        )}
-                                    </div>
-                                );
-                            })}
-                        </div>
-                    )}
-                </aside>
+                                    return (
+                                        <div key={group.title} className="reference-subsection">
+                                            <button
+                                                className="reference-subsection-header"
+                                                type="button"
+                                                onClick={() => toggleSubsection(group.title)}
+                                            >
+                                                <span>
+                                                    {isOpen ? "▼" : "▶"} {group.title}
+                                                </span>
 
-                <main className="reference-content-panel">
-                    {!selectedArticle ? (
-                        <div className="reference-empty-state">
-                            <h3>Статья не выбрана</h3>
-                            <p>Выбери статью слева или создай новую в режиме Эхо.</p>
-                        </div>
-                    ) : isEditing && isDeveloperMode ? (
-                        <article className="reference-editor">
-                            <div className="reference-editor-actions">
-                                <button
-                                    className="secondary-button"
-                                    type="button"
-                                    onClick={() => setIsEditing(false)}
-                                >
-                                    Готово
-                                </button>
+                                                <small>{group.articles.length}</small>
+                                            </button>
 
-                                <button
-                                    className="danger-button"
-                                    type="button"
-                                    onClick={deleteSelectedArticle}
-                                >
-                                    Удалить
-                                </button>
+                                            {isOpen && (
+                                                <div className="reference-article-buttons">
+                                                    {group.articles.map((article) => (
+                                                        <button
+                                                            key={article.id}
+                                                            className={`reference-article-button ${selectedArticle?.id === article.id ? "active" : ""
+                                                                }`}
+                                                            type="button"
+                                                            onClick={() => {
+                                                                setSelectedArticleId(article.id);
+                                                                setIsEditing(false);
+                                                            }}
+                                                        >
+                                                            <span>{article.title || "Без названия"}</span>
+                                                            <small>
+                                                                {VISIBILITY_LABELS[article.visibility]}
+                                                                {article.tags.trim().length > 0
+                                                                    ? ` · ${article.tags.trim()}`
+                                                                    : ""}
+                                                            </small>
+                                                        </button>
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </div>
+                                    );
+                                })}
                             </div>
+                        )}
+                    </aside>
 
-                            <label className="reference-field">
-                                Название
-                                <input
-                                    value={selectedArticle.title}
-                                    onChange={(event) =>
-                                        updateSelectedArticle({ title: event.target.value })
-                                    }
-                                    placeholder="Название статьи"
-                                />
-                            </label>
-
-                            <div className="reference-form-grid">
-                                <label className="reference-field">
-                                    Раздел
-                                    <select
-                                        value={selectedArticle.section}
-                                        onChange={(event) =>
-                                            updateSelectedArticle({
-                                                section: event.target.value as ReferenceSection,
-                                            })
-                                        }
-                                    >
-                                        {SECTIONS.map((section) => (
-                                            <option key={section} value={section}>
-                                                {SECTION_LABELS[section]}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </label>
-
-                                <label className="reference-field">
-                                    Видимость
-                                    <select
-                                        value={selectedArticle.visibility}
-                                        onChange={(event) =>
-                                            updateSelectedArticle({
-                                                visibility: event.target.value as ReferenceVisibility,
-                                            })
-                                        }
-                                    >
-                                        <option value="players">Игроки</option>
-                                        <option value="master">Мастер</option>
-                                        <option value="echo">Эхо</option>
-                                    </select>
-                                </label>
+                    <main className="reference-content-panel">
+                        {!selectedArticle ? (
+                            <div className="reference-empty-state">
+                                <h3>Статья не выбрана</h3>
+                                <p>Выбери статью слева или создай новую в режиме Эхо.</p>
                             </div>
-
-                            <label className="reference-field">
-                                Подраздел
-                                <input
-                                    value={selectedArticle.subsection}
-                                    onChange={(event) =>
-                                        updateSelectedArticle({ subsection: event.target.value })
-                                    }
-                                    placeholder="Например: Базовая механика, Бой, Обскурия..."
-                                />
-                            </label>
-
-                            <label className="reference-field">
-                                Теги
-                                <input
-                                    value={selectedArticle.tags}
-                                    onChange={(event) =>
-                                        updateSelectedArticle({ tags: event.target.value })
-                                    }
-                                    placeholder="Например: d20, бой, инфофон"
-                                />
-                            </label>
-
-                            <label className="reference-field">
-                                Текст статьи
-                                <textarea
-                                    value={selectedArticle.content}
-                                    onChange={(event) =>
-                                        updateSelectedArticle({ content: event.target.value })
-                                    }
-                                    placeholder="Текст правила, лора, описания или заметки..."
-                                />
-                            </label>
-
-                            <label className="reference-field">
-                                Ссылки на изображения
-                                <textarea
-                                    value={getImageUrlsText(selectedArticle)}
-                                    onChange={(event) =>
-                                        updateSelectedArticle({
-                                            imageUrls: parseImageUrls(event.target.value),
-                                        })
-                                    }
-                                    placeholder="Каждая ссылка с новой строки. Файлы пока не загружаем, чтобы не раздувать прототип."
-                                />
-                            </label>
-                        </article>
-                    ) : (
-                        <article className="reference-reader">
-                            <header className="reference-reader-header">
-                                <div>
-                                    <p className="eyebrow">
-                                        {SECTION_LABELS[selectedArticle.section]}
-                                        {selectedArticle.subsection.trim()
-                                            ? ` · ${selectedArticle.subsection.trim()}`
-                                            : ""}{" "}
-                                        · {VISIBILITY_LABELS[selectedArticle.visibility]}
-                                    </p>
-                                    <h3>{selectedArticle.title || "Без названия"}</h3>
-                                </div>
-
-                                {isDeveloperMode && (
+                        ) : isEditing && isDeveloperMode ? (
+                            <article className="reference-editor">
+                                <div className="reference-editor-actions">
                                     <button
                                         className="secondary-button"
                                         type="button"
-                                        onClick={() => setIsEditing(true)}
+                                        onClick={() => setIsEditing(false)}
                                     >
-                                        Редактировать
+                                        Готово
                                     </button>
-                                )}
-                            </header>
 
-                            {selectedArticle.tags.trim().length > 0 && (
-                                <p className="reference-tags">{selectedArticle.tags}</p>
-                            )}
-
-                            {selectedArticle.imageUrls.length > 0 && (
-                                <div className="reference-images">
-                                    {selectedArticle.imageUrls.map((imageUrl) => (
-                                        <img key={imageUrl} src={imageUrl} alt="" />
-                                    ))}
+                                    <button
+                                        className="danger-button"
+                                        type="button"
+                                        onClick={deleteSelectedArticle}
+                                    >
+                                        Удалить
+                                    </button>
                                 </div>
-                            )}
 
-                            <div className="reference-article-text">
-                                {selectedArticle.content.trim().length > 0 ? (
-                                    selectedArticle.content
-                                        .split("\n")
-                                        .map((paragraph, index) => (
-                                            <p key={`${paragraph}-${index}`}>
-                                                {paragraph.trim() || "\u00A0"}
-                                            </p>
-                                        ))
-                                ) : (
-                                    <p className="reference-empty-text">
-                                        В статье пока нет текста.
-                                    </p>
+                                <label className="reference-field">
+                                    Название
+                                    <input
+                                        value={selectedArticle.title}
+                                        onChange={(event) =>
+                                            updateSelectedArticle({ title: event.target.value })
+                                        }
+                                        placeholder="Название статьи"
+                                    />
+                                </label>
+
+                                <div className="reference-form-grid">
+                                    <label className="reference-field">
+                                        Раздел
+                                        <select
+                                            value={selectedArticle.section}
+                                            onChange={(event) =>
+                                                updateSelectedArticle({
+                                                    section: event.target.value as ReferenceSection,
+                                                })
+                                            }
+                                        >
+                                            {SECTIONS.map((section) => (
+                                                <option key={section} value={section}>
+                                                    {SECTION_LABELS[section]}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </label>
+
+                                    <label className="reference-field">
+                                        Видимость
+                                        <select
+                                            value={selectedArticle.visibility}
+                                            onChange={(event) =>
+                                                updateSelectedArticle({
+                                                    visibility: event.target.value as ReferenceVisibility,
+                                                })
+                                            }
+                                        >
+                                            <option value="players">Игроки</option>
+                                            <option value="master">Мастер</option>
+                                            <option value="echo">Эхо</option>
+                                        </select>
+                                    </label>
+                                </div>
+
+                                <label className="reference-field">
+                                    Подраздел
+                                    <input
+                                        value={selectedArticle.subsection}
+                                        onChange={(event) =>
+                                            updateSelectedArticle({ subsection: event.target.value })
+                                        }
+                                        placeholder="Например: Базовая механика, Бой, Обскурия..."
+                                    />
+                                </label>
+
+                                <label className="reference-field">
+                                    Теги
+                                    <input
+                                        value={selectedArticle.tags}
+                                        onChange={(event) =>
+                                            updateSelectedArticle({ tags: event.target.value })
+                                        }
+                                        placeholder="Например: d20, бой, инфофон"
+                                    />
+                                </label>
+
+                                <label className="reference-field">
+                                    Текст статьи
+                                    <textarea
+                                        value={selectedArticle.content}
+                                        onChange={(event) =>
+                                            updateSelectedArticle({ content: event.target.value })
+                                        }
+                                        placeholder="Текст правила, лора, описания или заметки..."
+                                    />
+                                </label>
+
+                                <label className="reference-field">
+                                    Ссылки на изображения
+                                    <textarea
+                                        value={getImageUrlsText(selectedArticle)}
+                                        onChange={(event) =>
+                                            updateSelectedArticle({
+                                                imageUrls: parseImageUrls(event.target.value),
+                                            })
+                                        }
+                                        placeholder="Каждая ссылка с новой строки. Файлы пока не загружаем, чтобы не раздувать прототип."
+                                    />
+                                </label>
+                            </article>
+                        ) : (
+                            <article className="reference-reader">
+                                <header className="reference-reader-header">
+                                    <div>
+                                        <p className="eyebrow">
+                                            {SECTION_LABELS[selectedArticle.section]}
+                                            {selectedArticle.subsection.trim()
+                                                ? ` · ${selectedArticle.subsection.trim()}`
+                                                : ""}{" "}
+                                            · {VISIBILITY_LABELS[selectedArticle.visibility]}
+                                        </p>
+                                        <h3>{selectedArticle.title || "Без названия"}</h3>
+                                    </div>
+
+                                    {isDeveloperMode && (
+                                        <button
+                                            className="secondary-button"
+                                            type="button"
+                                            onClick={() => setIsEditing(true)}
+                                        >
+                                            Редактировать
+                                        </button>
+                                    )}
+                                </header>
+
+                                {selectedArticle.tags.trim().length > 0 && (
+                                    <p className="reference-tags">{selectedArticle.tags}</p>
                                 )}
-                            </div>
-                        </article>
-                    )}
-                </main>
-            </div>
+
+                                {selectedArticle.imageUrls.length > 0 && (
+                                    <div className="reference-images">
+                                        {selectedArticle.imageUrls.map((imageUrl) => (
+                                            <img key={imageUrl} src={imageUrl} alt="" />
+                                        ))}
+                                    </div>
+                                )}
+
+                                <div className="reference-article-text">
+                                    {selectedArticle.content.trim().length > 0 ? (
+                                        selectedArticle.content
+                                            .split("\n")
+                                            .map((paragraph, index) => (
+                                                <p key={`${paragraph}-${index}`}>
+                                                    {paragraph.trim() || "\u00A0"}
+                                                </p>
+                                            ))
+                                    ) : (
+                                        <p className="reference-empty-text">
+                                            В статье пока нет текста.
+                                        </p>
+                                    )}
+                                </div>
+                            </article>
+                        )}
+                    </main>
+                </div>
+            )}
         </section>
     );
 }
