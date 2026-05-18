@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { CharacterPreview } from "./CharacterPreview";
 import type {
     ArsenalItem,
@@ -84,6 +84,7 @@ type MasterSection = "notes" | "secretHooks" | "progression" | "danger";
 type CharacterRosterProps = {
     characters: PlayerCharacter[];
     arsenalItems: ArsenalItem[];
+    initialCharacterId?: string | null;
     onCreateCharacter: () => PlayerCharacter;
     onUpdateCharacter: (character: PlayerCharacter) => void;
     onDeleteCharacter: (characterId: string) => void;
@@ -93,6 +94,7 @@ type CharacterRosterProps = {
 export function CharacterRoster({
     characters,
     arsenalItems,
+    initialCharacterId,
     onCreateCharacter,
     onUpdateCharacter,
     onDeleteCharacter,
@@ -102,6 +104,30 @@ export function CharacterRoster({
         characters[0]?.id ?? null,
     );
     const [activeTab, setActiveTab] = useState<CharacterTab>("dossier");
+
+    const lastInitialCharacterIdRef = useRef<string | null>(null);
+
+    useEffect(() => {
+        if (!initialCharacterId) {
+            return;
+        }
+
+        if (lastInitialCharacterIdRef.current === initialCharacterId) {
+            return;
+        }
+
+        const characterExists = characters.some(
+            (character) => character.id === initialCharacterId,
+        );
+
+        if (!characterExists) {
+            return;
+        }
+
+        lastInitialCharacterIdRef.current = initialCharacterId;
+        setSelectedCharacterId(initialCharacterId);
+        setActiveTab("dossier");
+    }, [characters, initialCharacterId]);
 
     const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 

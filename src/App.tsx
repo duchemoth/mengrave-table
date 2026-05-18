@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import "./App.css";
 import { BottomDrawer } from "./components/BottomDrawer";
+import { PartyStatusPanel } from "./components/panels/PartyStatusPanel";
 import { EncounterModal } from "./components/EncounterModal";
 import { HudTools } from "./components/HudTools";
 import { MapView } from "./components/MapView";
@@ -8,7 +9,6 @@ import { MasterNotes } from "./components/MasterNotes";
 import { CharacterRoster } from "./components/CharacterRoster";
 import { SideDrawer } from "./components/SideDrawer";
 import { TopBar } from "./components/TopBar";
-import { InventoryPanel } from "./components/panels/InventoryPanel";
 import { campaignData } from "./data/campaign";
 import { useCampaign } from "./hooks/useCampaign";
 import { useInterfaceMode } from "./hooks/useInterfaceMode";
@@ -243,7 +243,6 @@ function App() {
     referenceArticles,
     quests,
     npcs,
-    items,
     arsenalItems,
     setQuests,
     setNpcs,
@@ -335,6 +334,10 @@ function App() {
   const [isNotesOpen, setIsNotesOpen] = useState(false);
 
   const [isCharactersOpen, setIsCharactersOpen] = useState(false);
+
+  const [characterRosterInitialId, setCharacterRosterInitialId] = useState<
+    string | null
+  >(null);
 
   const [isReferenceOpen, setIsReferenceOpen] = useState(false);
 
@@ -912,6 +915,11 @@ function App() {
     playerWindow?.focus();
   }
 
+  function handleOpenCharacterSheet(characterId: string) {
+    setCharacterRosterInitialId(characterId);
+    setIsCharactersOpen(true);
+  }
+
   return (
     <main className="atlas-screen">
       <TopBar
@@ -963,7 +971,11 @@ function App() {
           isOpen={isBottomDrawerOpen}
           onToggleOpen={toggleBottomDrawer}
         >
-          <InventoryPanel npcs={npcs} items={items} />
+          <PartyStatusPanel
+            characters={characters}
+            arsenalItems={arsenalItems}
+            onOpenCharacter={handleOpenCharacterSheet}
+          />
         </BottomDrawer>
       )}
 
@@ -1025,6 +1037,7 @@ function App() {
         <CharacterRoster
           characters={characters}
           arsenalItems={arsenalItems}
+          initialCharacterId={characterRosterInitialId}
           onCreateCharacter={createCharacter}
           onUpdateCharacter={updateCharacter}
           onDeleteCharacter={handleDeleteCharacter}
