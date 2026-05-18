@@ -2851,3 +2851,131 @@
     grid-template-columns: 1fr 1fr;
   }
 }
+
+/* Player expedition readability */
+
+.expedition-player-view {
+  position: relative;
+  border: 1px solid rgba(234, 216, 173, 0.16);
+  border-radius: 22px;
+  padding: 18px;
+  background:
+    linear-gradient(180deg,
+      rgba(34, 19, 16, 0.9),
+      rgba(22, 12, 11, 0.92));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 244, 210, 0.08),
+    0 18px 42px rgba(0, 0, 0, 0.34);
+  backdrop-filter: blur(10px);
+}
+
+.expedition-player-view .expedition-tracker-header h3 {
+  color: #ead8ad;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
+}
+
+.expedition-player-view .eyebrow {
+  color: #b64638;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.5);
+}
+
+.expedition-player-summary article,
+.expedition-player-resources article,
+.expedition-player-note {
+  background:
+    linear-gradient(180deg,
+      rgba(226, 206, 162, 0.82),
+      rgba(188, 158, 105, 0.76));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 244, 210, 0.18),
+    0 8px 18px rgba(0, 0, 0, 0.18);
+}
+
+.expedition-player-summary strong,
+.expedition-player-resources strong {
+  color: #261911;
+}
+
+.expedition-player-summary span,
+.expedition-player-resources span {
+  color: #5f211d;
+}
+
+.expedition-player-note {
+  color: #342417;
+}
+
+/* Player expedition contrast polish */
+
+.expedition-player-summary article,
+.expedition-player-resources article {
+  color: #241710;
+}
+
+.expedition-player-summary article.resource-critical,
+.expedition-player-resources article.resource-critical,
+.expedition-player-summary article.pressure-critical,
+.expedition-player-resources article.pressure-critical,
+.expedition-player-summary article.infophone-critical {
+  background:
+    linear-gradient(180deg,
+      rgba(214, 184, 128, 0.86),
+      rgba(150, 74, 58, 0.42));
+}
+
+.expedition-player-summary article.infophone-critical strong,
+.expedition-player-summary article.pressure-critical strong,
+.expedition-player-resources article.resource-critical strong {
+  color: #1f120d;
+  font-weight: 950;
+  text-shadow: 0 1px 0 rgba(255, 244, 210, 0.2);
+}
+
+.expedition-player-summary article.infophone-critical span,
+.expedition-player-summary article.pressure-critical span,
+.expedition-player-resources article.resource-critical span {
+  color: #6f1f19;
+  font-weight: 950;
+  text-shadow: 0 1px 0 rgba(255, 244, 210, 0.16);
+}
+
+.expedition-player-summary strong,
+.expedition-player-resources strong {
+  font-weight: 950;
+}
+
+.expedition-player-note {
+  background:
+    linear-gradient(180deg,
+      rgba(226, 206, 162, 0.9),
+      rgba(188, 158, 105, 0.84));
+  color: #241710;
+  font-weight: 950;
+}
+
+/* Player expedition: lighten pressure states too */
+
+.expedition-player-summary article.pressure-warning,
+.expedition-player-summary article.pressure-danger,
+.expedition-player-summary article.pressure-critical {
+  background:
+    linear-gradient(180deg,
+      rgba(214, 184, 128, 0.86),
+      rgba(150, 74, 58, 0.42));
+}
+
+.expedition-player-summary article.pressure-warning strong,
+.expedition-player-summary article.pressure-danger strong,
+.expedition-player-summary article.pressure-critical strong {
+  color: #1f120d;
+  font-weight: 950;
+  text-shadow: 0 1px 0 rgba(255, 244, 210, 0.2);
+}
+
+.expedition-player-summary article.pressure-warning span,
+.expedition-player-summary article.pressure-danger span,
+.expedition-player-summary article.pressure-critical span {
+  color: #6f1f19;
+  font-weight: 950;
+  text-shadow: 0 1px 0 rgba(255, 244, 210, 0.16);
+}
