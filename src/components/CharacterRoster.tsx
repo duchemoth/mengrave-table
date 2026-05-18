@@ -85,6 +85,7 @@ type CharacterRosterProps = {
     characters: PlayerCharacter[];
     arsenalItems: ArsenalItem[];
     initialCharacterId?: string | null;
+    isPlayerMode: boolean;
     onCreateCharacter: () => PlayerCharacter;
     onUpdateCharacter: (character: PlayerCharacter) => void;
     onDeleteCharacter: (characterId: string) => void;
@@ -95,11 +96,13 @@ export function CharacterRoster({
     characters,
     arsenalItems,
     initialCharacterId,
+    isPlayerMode,
     onCreateCharacter,
     onUpdateCharacter,
     onDeleteCharacter,
     onClose,
 }: CharacterRosterProps) {
+    const canEditCharacters = !isPlayerMode;
     const [selectedCharacterId, setSelectedCharacterId] = useState<string | null>(
         characters[0]?.id ?? null,
     );
@@ -128,6 +131,12 @@ export function CharacterRoster({
         setSelectedCharacterId(initialCharacterId);
         setActiveTab("dossier");
     }, [characters, initialCharacterId]);
+
+    useEffect(() => {
+        if (isPlayerMode && activeTab === "master") {
+            setActiveTab("dossier");
+        }
+    }, [isPlayerMode, activeTab]);
 
     const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
@@ -186,6 +195,10 @@ export function CharacterRoster({
         : false;
 
     function createCharacter() {
+        if (!canEditCharacters) {
+            return;
+        }
+
         const newCharacter = onCreateCharacter();
 
         setSelectedCharacterId(newCharacter.id);
@@ -193,7 +206,7 @@ export function CharacterRoster({
     }
 
     function updateSelectedCharacter(updatedFields: Partial<PlayerCharacter>) {
-        if (!selectedCharacter) {
+        if (!selectedCharacter || !canEditCharacters) {
             return;
         }
 
@@ -220,6 +233,10 @@ export function CharacterRoster({
     }
 
     function updateInventory(nextInventory: CharacterInventory) {
+        if (!canEditCharacters) {
+            return;
+        }
+
         updateSelectedCharacter({
             inventory: nextInventory,
         });
@@ -438,7 +455,7 @@ export function CharacterRoster({
     }
 
     function updateWallet(updatedFields: Partial<PlayerCharacter["wallet"]>) {
-        if (!selectedCharacter) {
+        if (!selectedCharacter || !canEditCharacters) {
             return;
         }
 
@@ -552,7 +569,7 @@ export function CharacterRoster({
     }
 
     function updateSelectedSkill(skillKey: CharacterSkillKey, nextValue: number) {
-        if (!selectedCharacter) {
+        if (!selectedCharacter || !canEditCharacters) {
             return;
         }
 
@@ -568,7 +585,7 @@ export function CharacterRoster({
     }
 
     function deleteSelectedCharacter() {
-        if (!selectedCharacter) {
+        if (!selectedCharacter || !canEditCharacters) {
             return;
         }
 
@@ -651,6 +668,9 @@ export function CharacterRoster({
     }
 
     function importCharacterFromFile(file: File) {
+        if (!canEditCharacters) {
+            return;
+        }
         const reader = new FileReader();
 
         reader.onload = () => {
@@ -731,11 +751,13 @@ export function CharacterRoster({
     }
 
     return (
-        <section className="character-roster-window">
+        <section
+            className={`character-roster-window ${isPlayerMode ? "read-only" : ""}`}
+        >
             <header className="character-roster-header">
                 <div>
-                    <p className="eyebrow">Мастерская</p>
-                    <h2>Досье отряда</h2>
+                    <p className="eyebrow">{isPlayerMode ? "Просмотр" : "Мастерская"}</p>
+                    <h2>{isPlayerMode ? "Карты персонажей" : "Досье отряда"}</h2>
                 </div>
 
                 <button className="drawer-tab compact" type="button" onClick={onClose}>
@@ -745,13 +767,15 @@ export function CharacterRoster({
 
             <div className="character-roster-layout">
                 <aside className="character-list-panel">
-                    <button
-                        className="secondary-button"
-                        type="button"
-                        onClick={createCharacter}
-                    >
-                        Добавить персонажа
-                    </button>
+                    {canEditCharacters && (
+                        <button
+                            className="secondary-button"
+                            type="button"
+                            onClick={createCharacter}
+                        >
+                            Добавить персонажа
+                        </button>
+                    )}
 
                     <div className="character-import-export-row">
                         <button
@@ -763,22 +787,24 @@ export function CharacterRoster({
                             Экспорт
                         </button>
 
-                        <label className="secondary-button character-import-button">
-                            Импорт
-                            <input
-                                type="file"
-                                accept=".json,application/json"
-                                onChange={(event) => {
-                                    const file = event.target.files?.[0];
+                        {canEditCharacters && (
+                            <label className="secondary-button character-import-button">
+                                Импорт
+                                <input
+                                    type="file"
+                                    accept=".json,application/json"
+                                    onChange={(event) => {
+                                        const file = event.target.files?.[0];
 
-                                    if (file) {
-                                        importCharacterFromFile(file);
-                                    }
+                                        if (file) {
+                                            importCharacterFromFile(file);
+                                        }
 
-                                    event.currentTarget.value = "";
-                                }}
-                            />
-                        </label>
+                                        event.currentTarget.value = "";
+                                    }}
+                                />
+                            </label>
+                        )}
                     </div>
 
                     <button
@@ -912,14 +938,15 @@ export function CharacterRoster({
                                 Связи
                             </button>
 
-                            <button
-                                className={`character-tab ${activeTab === "master" ? "active" : ""
-                                    }`}
-                                type="button"
-                                onClick={() => setActiveTab("master")}
-                            >
-                                Мастер
-                            </button>
+                            {!isPlayerMode && (
+                                <button
+                                    className={`character-tab ${activeTab === "master" ? "active" : ""}`}
+                                    type="button"
+                                    onClick={() => setActiveTab("master")}
+                                >
+                                    Мастер
+                                </button>
+                            )}
                         </div>
 
                         <div className="character-tab-content">

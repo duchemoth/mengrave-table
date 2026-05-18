@@ -1943,3 +1943,40 @@
     width: 290px;
   }
 }
+
+/* Character roster read-only player mode */
+
+.character-roster-window.read-only input,
+.character-roster-window.read-only textarea,
+.character-roster-window.read-only select {
+  pointer-events: none;
+  opacity: 0.82;
+}
+
+.character-roster-window.read-only .character-skill-controls button,
+.character-roster-window.read-only .character-resource-controls button,
+.character-roster-window.read-only .danger-button,
+.character-roster-window.read-only .character-secondary-button {
+  display: none;
+}
+
+.character-roster-window.read-only .character-field,
+.character-roster-window.read-only .character-inventory-slot-card,
+.character-roster-window.read-only .character-wallet-card,
+.character-roster-window.read-only .character-backpack-row {
+  opacity: 0.96;
+}
+
+.character-roster-window.read-only .character-tab-content::before {
+  content: "Режим просмотра: игрок не может изменять карту персонажа.";
+  display: block;
+  margin-bottom: 12px;
+  border: 1px solid rgba(36, 26, 18, 0.18);
+  border-radius: 14px;
+  padding: 9px 12px;
+  color: var(--ink-soft);
+  background: rgba(255, 244, 210, 0.32);
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 900;
+}

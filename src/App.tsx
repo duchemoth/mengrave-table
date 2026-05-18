@@ -439,6 +439,14 @@ function App() {
     return !event.isSecret && event.status !== "hidden";
   });
 
+  const visibleCharacters = isPlayerMode
+    ? characters.filter((character) => character.isVisibleToPlayers)
+    : characters;
+
+  const visibleArsenalItems = isPlayerMode
+    ? arsenalItems.filter((item) => item.isVisibleToPlayers)
+    : arsenalItems;
+
   function getPresentationTarget(presentation: PlayerPresentation) {
     if (presentation.mode === "globalMap") {
       return null;
@@ -972,8 +980,8 @@ function App() {
           onToggleOpen={toggleBottomDrawer}
         >
           <PartyStatusPanel
-            characters={characters}
-            arsenalItems={arsenalItems}
+            characters={visibleCharacters}
+            arsenalItems={visibleArsenalItems}
             onOpenCharacter={handleOpenCharacterSheet}
           />
         </BottomDrawer>
@@ -1033,11 +1041,12 @@ function App() {
         />
       )}
 
-      {!isCleanMapMode && !isPlayerMode && isCharactersOpen && (
+      {!isCleanMapMode && isCharactersOpen && (
         <CharacterRoster
           characters={characters}
           arsenalItems={arsenalItems}
           initialCharacterId={characterRosterInitialId}
+          isPlayerMode={isPlayerMode}
           onCreateCharacter={createCharacter}
           onUpdateCharacter={updateCharacter}
           onDeleteCharacter={handleDeleteCharacter}
