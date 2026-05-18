@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import type { ArsenalItem, PlayerCharacter } from "../../types/campaign";
 
 type PartyStatusPanelProps = {
@@ -30,6 +31,21 @@ export function PartyStatusPanel({
     arsenalItems,
     onOpenCharacter,
 }: PartyStatusPanelProps) {
+    const partyListRef = useRef<HTMLDivElement | null>(null);
+
+    function scrollPartyList(direction: "left" | "right") {
+        const listElement = partyListRef.current;
+
+        if (!listElement) {
+            return;
+        }
+
+        listElement.scrollBy({
+            left: direction === "left" ? -340 : 340,
+            behavior: "smooth",
+        });
+    }
+
     function getItemName(itemId: string | null | undefined) {
         if (!itemId) {
             return "—";
@@ -59,10 +75,30 @@ export function PartyStatusPanel({
                     <h3>Отряд</h3>
                 </div>
 
-                <span>{characters.length} персонажей</span>
+                <div className="party-status-controls">
+                    <span>{characters.length} персонажей</span>
+
+                    <div className="party-scroll-buttons">
+                        <button
+                            type="button"
+                            onClick={() => scrollPartyList("left")}
+                            aria-label="Листать отряд влево"
+                        >
+                            ←
+                        </button>
+
+                        <button
+                            type="button"
+                            onClick={() => scrollPartyList("right")}
+                            aria-label="Листать отряд вправо"
+                        >
+                            →
+                        </button>
+                    </div>
+                </div>
             </header>
 
-            <div className="party-status-list">
+            <div className="party-status-list" ref={partyListRef}>
                 {characters.map((character) => {
                     const criticalClass = getCriticalClass(character);
                     const inventory = character.inventory;
