@@ -46,6 +46,34 @@ function clampPressure(value: number) {
     return Math.min(10, Math.max(0, Math.floor(Number.isFinite(value) ? value : 0)));
 }
 
+function getPressureDangerClass(pressure: number) {
+    if (pressure >= 10) {
+        return "critical";
+    }
+
+    if (pressure >= 7) {
+        return "danger";
+    }
+
+    if (pressure >= 4) {
+        return "warning";
+    }
+
+    return "stable";
+}
+
+function getResourceDangerClass(value: number) {
+    if (value <= 0) {
+        return "critical";
+    }
+
+    if (value <= 2) {
+        return "warning";
+    }
+
+    return "stable";
+}
+
 export function ExpeditionTrackerPanel({
     expedition,
     canEdit,
@@ -84,6 +112,68 @@ export function ExpeditionTrackerPanel({
         updateExpedition({
             obscuriaPressure: clampPressure(expedition.obscuriaPressure + delta),
         });
+    }
+
+    if (!canEdit) {
+        return (
+            <section className="expedition-tracker-panel expedition-player-view">
+                <header className="expedition-tracker-header">
+                    <div>
+                        <p className="eyebrow">Экспедиция</p>
+                        <h3>Состояние маршрута</h3>
+                    </div>
+                </header>
+
+                <div className="expedition-player-summary">
+                    <article className={`infophone-${expedition.infophoneLevel}`}>
+                        <span>Инфофон</span>
+                        <strong>{INFOPHONE_LABELS[expedition.infophoneLevel]}</strong>
+                    </article>
+
+                    <article className={`pressure-${getPressureDangerClass(expedition.obscuriaPressure)}`}>
+                        <span>Натиск</span>
+                        <strong>{expedition.obscuriaPressure} / 10</strong>
+                    </article>
+
+                    <article>
+                        <span>Отрезок пути</span>
+                        <strong>{expedition.routeSegment}</strong>
+                    </article>
+
+                    <article>
+                        <span>Время</span>
+                        <strong>{TIME_LABELS[expedition.timeOfDay]}</strong>
+                    </article>
+                </div>
+
+                <div className="expedition-player-resources">
+                    {[
+                        ["supplies", "Припасы"],
+                        ["water", "Вода"],
+                        ["fuel", "Топливо"],
+                        ["medical", "Медрасход"],
+                        ["ammo", "Боезапас"],
+                    ].map(([key, label]) => {
+                        const resourceKey = key as "supplies" | "water" | "fuel" | "medical" | "ammo";
+
+                        return (
+                            <article
+                                key={resourceKey}
+                                className={`resource-${getResourceDangerClass(expedition[resourceKey])}`}
+                            >
+                                <span>{label}</span>
+                                <strong>{expedition[resourceKey]}</strong>
+                            </article>
+                        );
+                    })}
+                </div>
+
+                <p className="expedition-player-note">
+                    Это открытая сводка экспедиции. Мастерские заметки и управление
+                    маршрутом скрыты.
+                </p>
+            </section>
+        );
     }
 
     return (
@@ -125,7 +215,7 @@ export function ExpeditionTrackerPanel({
                             <strong>{INFOPHONE_LABELS[expedition.infophoneLevel]}</strong>
                         </article>
 
-                        <article>
+                        <article className={`pressure-${getPressureDangerClass(expedition.obscuriaPressure)}`}>
                             <span>Натиск</span>
                             <strong>{expedition.obscuriaPressure} / 10</strong>
                         </article>
@@ -257,7 +347,12 @@ export function ExpeditionTrackerPanel({
                                 const resourceKey = key as "supplies" | "water" | "fuel" | "medical" | "ammo";
 
                                 return (
-                                    <article key={resourceKey} className="expedition-resource-card">
+                                    <article
+                                        key={resourceKey}
+                                        className={`expedition-resource-card resource-${getResourceDangerClass(
+                                            expedition[resourceKey],
+                                        )}`}
+                                    >
                                         <span>{label}</span>
 
                                         <div>

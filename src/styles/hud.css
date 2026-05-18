@@ -2446,3 +2446,408 @@
     grid-template-columns: 1fr 1fr;
   }
 }
+
+/* Expedition tracker layout polish */
+
+.expedition-tracker-panel {
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 12px;
+}
+
+.expedition-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(320px, 0.75fr);
+  gap: 12px;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.expedition-main-column,
+.expedition-side-column {
+  display: grid;
+  gap: 12px;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.expedition-side-column {
+  grid-template-rows: auto minmax(0, 1fr);
+}
+
+.expedition-route-card,
+.expedition-resources-panel {
+  display: grid;
+  gap: 12px;
+  min-height: 0;
+  border: 1px solid rgba(36, 26, 18, 0.18);
+  border-radius: 18px;
+  padding: 12px;
+  background: rgba(255, 244, 210, 0.3);
+}
+
+.expedition-route-card h4,
+.expedition-resources-panel h4 {
+  margin: 0;
+  color: var(--ink);
+  font-size: 18px;
+  line-height: 1.1;
+}
+
+.expedition-controls-grid.compact {
+  grid-template-columns: 1fr 1fr;
+}
+
+.expedition-resources-grid {
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+.expedition-resource-card {
+  display: grid;
+  grid-template-columns: minmax(90px, 1fr) minmax(120px, auto);
+  align-items: center;
+  gap: 10px;
+  padding: 9px 10px;
+}
+
+.expedition-resource-card>div {
+  margin-top: 0;
+}
+
+.expedition-note-field {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.expedition-note-field textarea {
+  min-height: 160px;
+  height: 100%;
+  resize: none;
+}
+
+.expedition-help-text {
+  margin: 0;
+  border: 1px solid rgba(36, 26, 18, 0.12);
+  border-radius: 14px;
+  padding: 9px 10px;
+  color: var(--ink-soft);
+  background: rgba(255, 244, 210, 0.24);
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1.4;
+}
+
+@media (max-width: 1100px) {
+  .expedition-layout {
+    grid-template-columns: 1fr;
+    overflow: auto;
+  }
+
+  .expedition-side-column {
+    grid-template-rows: auto auto;
+  }
+
+  .expedition-controls-grid.compact {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .expedition-resources-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .expedition-note-field textarea {
+    min-height: 120px;
+  }
+}
+
+/* Expedition tab scroll fix */
+
+.bottom-panel-tab-content {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.expedition-tracker-panel {
+  height: 100%;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 8px;
+  padding-bottom: 14px;
+  box-sizing: border-box;
+}
+
+.expedition-layout {
+  min-height: auto;
+  overflow: visible;
+}
+
+.expedition-main-column,
+.expedition-side-column {
+  overflow: visible;
+}
+
+.expedition-note-field {
+  min-height: 170px;
+}
+
+.expedition-note-field textarea {
+  min-height: 130px;
+}
+
+/* Expedition tab final height/scroll override */
+
+.bottom-drawer.open {
+  max-height: min(62vh, 620px);
+}
+
+.bottom-drawer-content {
+  height: min(58vh, 580px);
+  max-height: min(58vh, 580px);
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.bottom-panel-workspace {
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.bottom-panel-tabs {
+  flex: 0 0 auto;
+}
+
+.bottom-panel-tab-content {
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.expedition-tracker-panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.expedition-tracker-header {
+  flex: 0 0 auto;
+}
+
+.expedition-layout {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 8px;
+  padding-bottom: 18px;
+  box-sizing: border-box;
+}
+
+.expedition-main-column,
+.expedition-side-column {
+  min-height: 0;
+  overflow: visible;
+}
+
+.expedition-note-field {
+  min-height: 170px;
+}
+
+.expedition-note-field textarea {
+  min-height: 130px;
+}
+
+/* Expedition helper text compact */
+
+.expedition-help-text {
+  align-self: start;
+  margin: 0;
+  max-height: none;
+  overflow: visible;
+  font-size: 11px;
+  line-height: 1.25;
+}
+
+.expedition-route-card {
+  align-content: start;
+}
+
+/* Expedition danger states */
+
+.expedition-summary-grid article.pressure-stable,
+.expedition-player-summary article.pressure-stable {
+  border-color: rgba(36, 26, 18, 0.18);
+}
+
+.expedition-summary-grid article.pressure-warning,
+.expedition-player-summary article.pressure-warning {
+  border-color: rgba(181, 125, 42, 0.62);
+  background:
+    linear-gradient(180deg,
+      rgba(255, 244, 210, 0.38),
+      rgba(181, 125, 42, 0.12));
+}
+
+.expedition-summary-grid article.pressure-danger,
+.expedition-player-summary article.pressure-danger {
+  border-color: rgba(124, 37, 34, 0.58);
+  background:
+    linear-gradient(180deg,
+      rgba(255, 244, 210, 0.36),
+      rgba(124, 37, 34, 0.14));
+}
+
+.expedition-summary-grid article.pressure-critical,
+.expedition-player-summary article.pressure-critical {
+  border-color: rgba(124, 37, 34, 0.85);
+  background:
+    linear-gradient(180deg,
+      rgba(255, 244, 210, 0.34),
+      rgba(124, 37, 34, 0.26));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 244, 210, 0.2),
+    0 0 0 2px rgba(124, 37, 34, 0.16);
+}
+
+.expedition-summary-grid article.infophone-clean,
+.expedition-player-summary article.infophone-clean {
+  border-color: rgba(36, 26, 18, 0.18);
+}
+
+.expedition-summary-grid article.infophone-dirty,
+.expedition-player-summary article.infophone-dirty {
+  border-color: rgba(181, 125, 42, 0.55);
+  background:
+    linear-gradient(180deg,
+      rgba(255, 244, 210, 0.38),
+      rgba(181, 125, 42, 0.1));
+}
+
+.expedition-summary-grid article.infophone-heavy,
+.expedition-player-summary article.infophone-heavy {
+  border-color: rgba(124, 37, 34, 0.55);
+  background:
+    linear-gradient(180deg,
+      rgba(255, 244, 210, 0.34),
+      rgba(124, 37, 34, 0.14));
+}
+
+.expedition-summary-grid article.infophone-critical,
+.expedition-player-summary article.infophone-critical {
+  border-color: rgba(124, 37, 34, 0.85);
+  background:
+    linear-gradient(180deg,
+      rgba(255, 244, 210, 0.32),
+      rgba(124, 37, 34, 0.24));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 244, 210, 0.2),
+    0 0 0 2px rgba(124, 37, 34, 0.14);
+}
+
+.expedition-resource-card.resource-warning,
+.expedition-player-resources article.resource-warning {
+  border-color: rgba(181, 125, 42, 0.58);
+  background:
+    linear-gradient(180deg,
+      rgba(255, 244, 210, 0.38),
+      rgba(181, 125, 42, 0.12));
+}
+
+.expedition-resource-card.resource-critical,
+.expedition-player-resources article.resource-critical {
+  border-color: rgba(124, 37, 34, 0.7);
+  background:
+    linear-gradient(180deg,
+      rgba(255, 244, 210, 0.34),
+      rgba(124, 37, 34, 0.18));
+}
+
+/* Expedition player-friendly view */
+
+.expedition-player-view {
+  display: grid;
+  grid-template-rows: auto auto auto auto;
+  gap: 14px;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.expedition-player-summary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(130px, 1fr));
+  gap: 10px;
+}
+
+.expedition-player-summary article {
+  display: grid;
+  gap: 6px;
+  border: 1px solid rgba(36, 26, 18, 0.18);
+  border-radius: 18px;
+  padding: 14px;
+  background: rgba(255, 244, 210, 0.34);
+}
+
+.expedition-player-summary span,
+.expedition-player-resources span {
+  color: var(--blood);
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.expedition-player-summary strong {
+  color: var(--ink);
+  font-size: 24px;
+  line-height: 1.05;
+}
+
+.expedition-player-resources {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(110px, 1fr));
+  gap: 10px;
+}
+
+.expedition-player-resources article {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid rgba(36, 26, 18, 0.18);
+  border-radius: 16px;
+  padding: 12px;
+  background: rgba(255, 244, 210, 0.32);
+}
+
+.expedition-player-resources strong {
+  color: var(--ink);
+  font-size: 22px;
+  line-height: 1;
+}
+
+.expedition-player-note {
+  margin: 0;
+  border: 1px solid rgba(36, 26, 18, 0.14);
+  border-radius: 16px;
+  padding: 10px 12px;
+  color: var(--ink-soft);
+  background: rgba(255, 244, 210, 0.24);
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+@media (max-width: 1100px) {
+  .expedition-player-summary {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .expedition-player-resources {
+    grid-template-columns: 1fr 1fr;
+  }
+}
