@@ -439,12 +439,10 @@ function App() {
     return !event.isSecret && event.status !== "hidden";
   });
 
-  const visibleCharacters = isPlayerMode
-    ? characters.filter((character) => character.isVisibleToPlayers)
-    : characters;
+  const visibleCharacters = characters;
 
   const visibleArsenalItems = isPlayerMode
-    ? arsenalItems.filter((item) => item.isVisibleToPlayers)
+    ? arsenalItems.filter((item) => item.isVisibleToPlayers !== false)
     : arsenalItems;
 
   function getPresentationTarget(presentation: PlayerPresentation) {
