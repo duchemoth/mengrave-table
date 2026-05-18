@@ -2,6 +2,11 @@ import { useEffect, useRef, useState } from "react";
 import "./App.css";
 import { BottomDrawer } from "./components/BottomDrawer";
 import { PartyStatusPanel } from "./components/panels/PartyStatusPanel";
+import {
+  ExpeditionTrackerPanel,
+  type ExpeditionState,
+  type ExpeditionTimeOfDay,
+} from "./components/panels/ExpeditionTrackerPanel";
 import { EncounterModal } from "./components/EncounterModal";
 import { HudTools } from "./components/HudTools";
 import { MapView } from "./components/MapView";
@@ -20,6 +25,118 @@ const GLOBAL_MAP_STORAGE_KEY = "nri-table-global-map";
 const DEFAULT_GLOBAL_MAP_IMAGE_URL = "/map.jpg";
 
 const PLAYER_PRESENTATION_STORAGE_KEY = "nri-table-player-presentation";
+
+const EXPEDITION_STORAGE_KEY = "nri-table-expedition";
+
+const DEFAULT_EXPEDITION_STATE: ExpeditionState = {
+  infophoneLevel: "clean",
+  obscuriaPressure: 0,
+  routeSegment: 0,
+  timeOfDay: "morning",
+
+  supplies: 0,
+  water: 0,
+  fuel: 0,
+  medical: 0,
+  ammo: 0,
+
+  note: "",
+};
+
+function normalizeExpeditionState(value: unknown): ExpeditionState {
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    return DEFAULT_EXPEDITION_STATE;
+  }
+
+  const expedition = value as Partial<ExpeditionState>;
+
+  return {
+    infophoneLevel:
+      expedition.infophoneLevel === "clean" ||
+        expedition.infophoneLevel === "dirty" ||
+        expedition.infophoneLevel === "heavy" ||
+        expedition.infophoneLevel === "critical"
+        ? expedition.infophoneLevel
+        : "clean",
+
+    obscuriaPressure:
+      typeof expedition.obscuriaPressure === "number" &&
+        Number.isFinite(expedition.obscuriaPressure)
+        ? Math.min(10, Math.max(0, Math.floor(expedition.obscuriaPressure)))
+        : 0,
+
+    routeSegment:
+      typeof expedition.routeSegment === "number" &&
+        Number.isFinite(expedition.routeSegment)
+        ? Math.max(0, Math.floor(expedition.routeSegment))
+        : 0,
+
+    timeOfDay:
+      expedition.timeOfDay === "morning" ||
+        expedition.timeOfDay === "day" ||
+        expedition.timeOfDay === "evening" ||
+        expedition.timeOfDay === "night"
+        ? expedition.timeOfDay
+        : "morning",
+
+    supplies:
+      typeof expedition.supplies === "number" && Number.isFinite(expedition.supplies)
+        ? Math.max(0, Math.floor(expedition.supplies))
+        : 0,
+
+    water:
+      typeof expedition.water === "number" && Number.isFinite(expedition.water)
+        ? Math.max(0, Math.floor(expedition.water))
+        : 0,
+
+    fuel:
+      typeof expedition.fuel === "number" && Number.isFinite(expedition.fuel)
+        ? Math.max(0, Math.floor(expedition.fuel))
+        : 0,
+
+    medical:
+      typeof expedition.medical === "number" && Number.isFinite(expedition.medical)
+        ? Math.max(0, Math.floor(expedition.medical))
+        : 0,
+
+    ammo:
+      typeof expedition.ammo === "number" && Number.isFinite(expedition.ammo)
+        ? Math.max(0, Math.floor(expedition.ammo))
+        : 0,
+
+    note: typeof expedition.note === "string" ? expedition.note : "",
+  };
+}
+
+function loadSavedExpeditionState() {
+  const savedExpedition = localStorage.getItem(EXPEDITION_STORAGE_KEY);
+
+  if (!savedExpedition) {
+    return DEFAULT_EXPEDITION_STATE;
+  }
+
+  try {
+    return normalizeExpeditionState(JSON.parse(savedExpedition));
+  } catch {
+    return DEFAULT_EXPEDITION_STATE;
+  }
+}
+
+function getNextTimeOfDay(timeOfDay: ExpeditionTimeOfDay): ExpeditionTimeOfDay {
+  if (timeOfDay === "morning") {
+    return "day";
+  }
+
+  if (timeOfDay === "day") {
+    return "evening";
+  }
+
+  if (timeOfDay === "evening") {
+    return "night";
+  }
+
+  return "morning";
+}
 
 type EncounterDisplayMode = "overview" | "scene" | "localMap";
 
@@ -234,6 +351,8 @@ type RevealedMapArea = {
   radius: number;
 };
 
+type BottomPanelTab = "party" | "expedition" | "journal";
+
 function App() {
   const {
     locations,
@@ -339,7 +458,14 @@ function App() {
     string | null
   >(null);
 
+  const [activeBottomPanelTab, setActiveBottomPanelTab] =
+    useState<BottomPanelTab>("party");
+
   const [isReferenceOpen, setIsReferenceOpen] = useState(false);
+
+  const [expeditionState, setExpeditionState] = useState<ExpeditionState>(
+    loadSavedExpeditionState,
+  );
 
   const [masterNotes, setMasterNotes] = useState(() => {
     return localStorage.getItem(MASTER_NOTES_STORAGE_KEY) ?? "";
@@ -422,6 +548,10 @@ function App() {
       }
     };
   }, [isPlayerScreen]);
+
+  useEffect(() => {
+    localStorage.setItem(EXPEDITION_STORAGE_KEY, JSON.stringify(expeditionState));
+  }, [expeditionState]);
 
   const visibleLocations = locations.filter((location) => {
     return !isPlayerMode || !location.isSecret;
@@ -613,6 +743,7 @@ function App() {
       );
 
       setGlobalMapImageUrl(importedGlobalMap.imageUrl);
+      setExpeditionState(normalizeExpeditionState(importedCampaign?.expedition));
 
       openSidebar();
     });
@@ -625,6 +756,7 @@ function App() {
       globalMap: {
         imageUrl: globalMapImageUrl,
       },
+      expedition: expeditionState,
       sceneDrafts: collectJsonStorageByPrefix(SCENE_STORAGE_PREFIX),
       localMaps: collectJsonStorageByPrefix(LOCAL_MAP_STORAGE_PREFIX),
     });
@@ -926,6 +1058,33 @@ function App() {
     setIsCharactersOpen(true);
   }
 
+  function handleAdvanceExpeditionSegment() {
+    if (isPlayerMode) {
+      return;
+    }
+
+    setExpeditionState((current) => ({
+      ...current,
+      routeSegment: current.routeSegment + 1,
+      timeOfDay: getNextTimeOfDay(current.timeOfDay),
+      obscuriaPressure: Math.min(10, current.obscuriaPressure + 1),
+    }));
+  }
+
+  function handleResetExpedition() {
+    if (isPlayerMode) {
+      return;
+    }
+
+    const shouldReset = window.confirm("Сбросить текущую экспедицию?");
+
+    if (!shouldReset) {
+      return;
+    }
+
+    setExpeditionState(DEFAULT_EXPEDITION_STATE);
+  }
+
   return (
     <main className="atlas-screen">
       <TopBar
@@ -977,11 +1136,73 @@ function App() {
           isOpen={isBottomDrawerOpen}
           onToggleOpen={toggleBottomDrawer}
         >
-          <PartyStatusPanel
-            characters={visibleCharacters}
-            arsenalItems={visibleArsenalItems}
-            onOpenCharacter={handleOpenCharacterSheet}
-          />
+          <section className="bottom-panel-workspace">
+            <nav className="bottom-panel-tabs" aria-label="Разделы нижней панели">
+              <button
+                className={`bottom-panel-tab ${activeBottomPanelTab === "party" ? "active" : ""
+                  }`}
+                type="button"
+                onClick={() => setActiveBottomPanelTab("party")}
+              >
+                Отряд
+              </button>
+
+              <button
+                className={`bottom-panel-tab ${activeBottomPanelTab === "expedition" ? "active" : ""
+                  }`}
+                type="button"
+                onClick={() => setActiveBottomPanelTab("expedition")}
+              >
+                Экспедиция
+              </button>
+
+              <button
+                className={`bottom-panel-tab ${activeBottomPanelTab === "journal" ? "active" : ""
+                  }`}
+                type="button"
+                onClick={() => setActiveBottomPanelTab("journal")}
+              >
+                Журнал
+              </button>
+            </nav>
+
+            <div className="bottom-panel-tab-content">
+              {activeBottomPanelTab === "party" && (
+                <PartyStatusPanel
+                  characters={visibleCharacters}
+                  arsenalItems={visibleArsenalItems}
+                  onOpenCharacter={handleOpenCharacterSheet}
+                />
+              )}
+
+              {activeBottomPanelTab === "expedition" && (
+                <ExpeditionTrackerPanel
+                  expedition={expeditionState}
+                  canEdit={!isPlayerMode}
+                  onChangeExpedition={setExpeditionState}
+                  onAdvanceSegment={handleAdvanceExpeditionSegment}
+                  onResetExpedition={handleResetExpedition}
+                />
+              )}
+
+              {activeBottomPanelTab === "journal" && (
+                <section className="bottom-panel-placeholder">
+                  <div>
+                    <p className="eyebrow">Журнал</p>
+                    <h3>Сводка сессии</h3>
+                  </div>
+
+                  <div className="journal-preview-list">
+                    <p>Записей пока нет.</p>
+                    <p>
+                      Позже здесь будут события партии: открытый туман, показанные
+                      сцены, полученные предметы, изменения Натиска и заметки Мастера.
+                    </p>
+                  </div>
+                </section>
+              )}
+            </div>
+          </section>
         </BottomDrawer>
       )}
 

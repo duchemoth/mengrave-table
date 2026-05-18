@@ -2250,3 +2250,199 @@
 .party-status-list {
   scroll-behavior: smooth;
 }
+
+/* Expedition tracker */
+
+.expedition-tracker-panel {
+  display: grid;
+  grid-template-rows: auto auto auto auto minmax(0, 1fr);
+  gap: 12px;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.expedition-tracker-header {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.expedition-tracker-header h3 {
+  margin: 0;
+  color: var(--ink);
+  font-size: 24px;
+  line-height: 1;
+}
+
+.expedition-tracker-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.expedition-action-button {
+  border: 1px solid rgba(36, 26, 18, 0.26);
+  border-radius: 999px;
+  padding: 8px 12px;
+  color: var(--ink);
+  background: rgba(255, 244, 210, 0.44);
+  font-size: 12px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.expedition-action-button.primary {
+  color: #fff3cf;
+  background: linear-gradient(180deg, #5a2d22, var(--leather));
+}
+
+.expedition-action-button:hover {
+  filter: brightness(1.08);
+}
+
+.expedition-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(130px, 1fr));
+  gap: 10px;
+}
+
+.expedition-summary-grid article,
+.expedition-resource-card,
+.expedition-stepper,
+.expedition-controls-grid label,
+.expedition-note-field {
+  border: 1px solid rgba(36, 26, 18, 0.18);
+  border-radius: 16px;
+  padding: 12px;
+  background: rgba(255, 244, 210, 0.34);
+}
+
+.expedition-summary-grid span,
+.expedition-resource-card span,
+.expedition-stepper span,
+.expedition-controls-grid label,
+.expedition-note-field {
+  color: var(--ink-soft);
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.expedition-summary-grid strong {
+  display: block;
+  margin-top: 6px;
+  color: var(--ink);
+  font-size: 20px;
+  line-height: 1.05;
+}
+
+.expedition-summary-card.infophone-dirty {
+  border-color: rgba(181, 125, 42, 0.48);
+}
+
+.expedition-summary-card.infophone-heavy {
+  border-color: rgba(124, 37, 34, 0.52);
+  background: rgba(124, 37, 34, 0.08);
+}
+
+.expedition-summary-card.infophone-critical {
+  border-color: rgba(124, 37, 34, 0.78);
+  background:
+    linear-gradient(180deg,
+      rgba(255, 244, 210, 0.34),
+      rgba(124, 37, 34, 0.18));
+}
+
+.expedition-controls-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 10px;
+}
+
+.expedition-controls-grid label,
+.expedition-note-field {
+  display: grid;
+  gap: 7px;
+}
+
+.expedition-controls-grid select,
+.expedition-note-field textarea {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  border: 1px solid rgba(36, 26, 18, 0.22);
+  border-radius: 10px;
+  padding: 8px 10px;
+  color: var(--ink);
+  background: rgba(255, 244, 210, 0.64);
+  outline: none;
+  font: 700 13px/1.35 Inter, system-ui, sans-serif;
+}
+
+.expedition-stepper>div,
+.expedition-resource-card>div {
+  display: grid;
+  grid-template-columns: 32px 1fr 32px;
+  align-items: center;
+  gap: 8px;
+  margin-top: 7px;
+}
+
+.expedition-stepper button,
+.expedition-resource-card button {
+  border: 1px solid rgba(36, 26, 18, 0.24);
+  border-radius: 999px;
+  height: 30px;
+  color: #fff3cf;
+  background: linear-gradient(180deg, #5a2d22, var(--leather));
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.expedition-stepper button:disabled,
+.expedition-resource-card button:disabled,
+.expedition-controls-grid select:disabled,
+.expedition-note-field textarea:disabled {
+  cursor: not-allowed;
+  opacity: 0.72;
+}
+
+.expedition-stepper strong,
+.expedition-resource-card strong {
+  color: var(--ink);
+  text-align: center;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.expedition-resources-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(100px, 1fr));
+  gap: 10px;
+}
+
+.expedition-note-field {
+  min-height: 0;
+}
+
+.expedition-note-field textarea {
+  min-height: 70px;
+  resize: none;
+}
+
+.expedition-tracker-panel.read-only input,
+.expedition-tracker-panel.read-only textarea,
+.expedition-tracker-panel.read-only select {
+  pointer-events: none;
+}
+
+@media (max-width: 1100px) {
+
+  .expedition-summary-grid,
+  .expedition-controls-grid,
+  .expedition-resources-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}

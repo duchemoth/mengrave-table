@@ -217,6 +217,7 @@ export function useCampaign() {
         revealedAreas?: unknown[];
         masterNotes?: unknown;
         globalMap?: unknown;
+        expedition?: unknown;
         sceneDrafts?: unknown;
         localMaps?: unknown;
       },
