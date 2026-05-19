@@ -2979,3 +2979,254 @@
   font-weight: 950;
   text-shadow: 0 1px 0 rgba(255, 244, 210, 0.16);
 }
+
+/* Session journal */
+
+.session-journal-panel {
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr);
+  gap: 12px;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.session-journal-panel.read-only {
+  grid-template-rows: auto minmax(0, 1fr);
+}
+
+.session-journal-header {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.session-journal-header h3 {
+  margin: 0;
+  color: var(--ink);
+  font-size: 24px;
+  line-height: 1;
+}
+
+.session-journal-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.session-journal-meta span {
+  color: var(--ink-soft);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.session-journal-meta button,
+.session-journal-add-button,
+.session-journal-delete-button {
+  border: 1px solid rgba(36, 26, 18, 0.26);
+  border-radius: 999px;
+  padding: 8px 12px;
+  color: #fff3cf;
+  background: linear-gradient(180deg, #5a2d22, var(--leather));
+  font-size: 12px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.session-journal-meta button:hover,
+.session-journal-add-button:hover,
+.session-journal-delete-button:hover {
+  filter: brightness(1.08);
+}
+
+.session-journal-draft {
+  display: grid;
+  gap: 10px;
+  border: 1px solid rgba(36, 26, 18, 0.18);
+  border-radius: 18px;
+  padding: 12px;
+  background: rgba(255, 244, 210, 0.3);
+}
+
+.session-journal-draft-grid {
+  display: grid;
+  grid-template-columns: 160px minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: end;
+}
+
+.session-journal-draft label {
+  display: grid;
+  gap: 6px;
+  color: var(--ink-soft);
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.session-journal-draft input,
+.session-journal-draft select,
+.session-journal-draft textarea {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  border: 1px solid rgba(36, 26, 18, 0.22);
+  border-radius: 10px;
+  padding: 8px 10px;
+  color: var(--ink);
+  background: rgba(255, 244, 210, 0.64);
+  outline: none;
+  font: 700 13px/1.35 Inter, system-ui, sans-serif;
+}
+
+.session-journal-draft textarea {
+  min-height: 52px;
+  resize: vertical;
+}
+
+.session-journal-hidden-toggle {
+  display: flex !important;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 8px !important;
+  padding-bottom: 8px;
+}
+
+.session-journal-hidden-toggle input {
+  width: 16px;
+  height: 16px;
+}
+
+.session-journal-add-button {
+  justify-self: start;
+}
+
+.session-journal-list {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 6px;
+  padding-bottom: 12px;
+}
+
+.session-journal-empty,
+.session-journal-entry {
+  border: 1px solid rgba(36, 26, 18, 0.18);
+  border-radius: 18px;
+  padding: 12px;
+  background: rgba(255, 244, 210, 0.34);
+}
+
+.session-journal-empty h4 {
+  margin: 0;
+  color: var(--ink);
+  font-size: 20px;
+}
+
+.session-journal-empty p {
+  margin: 0;
+  color: var(--ink-soft);
+  font-weight: 800;
+  line-height: 1.4;
+}
+
+.session-journal-entry {
+  display: grid;
+  gap: 8px;
+}
+
+.session-journal-entry.hidden-entry {
+  border-color: rgba(124, 37, 34, 0.36);
+  background:
+    linear-gradient(180deg,
+      rgba(255, 244, 210, 0.34),
+      rgba(124, 37, 34, 0.08));
+}
+
+.session-journal-entry-main {
+  display: grid;
+  gap: 6px;
+  width: 100%;
+  border: 0;
+  padding: 0;
+  color: var(--ink);
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+
+.session-journal-entry-main>div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.session-journal-entry-main strong {
+  color: var(--ink);
+  font-size: 17px;
+  line-height: 1.15;
+}
+
+.session-journal-entry-main p {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.session-journal-entry-main small {
+  color: rgba(49, 36, 25, 0.62);
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.journal-entry-type,
+.journal-entry-hidden-badge {
+  border: 1px solid rgba(36, 26, 18, 0.18);
+  border-radius: 999px;
+  padding: 4px 8px;
+  background: rgba(255, 244, 210, 0.42);
+  color: var(--blood);
+  font-size: 10px;
+  font-weight: 950;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.journal-entry-hidden-badge {
+  color: #fff3cf;
+  background: linear-gradient(180deg, var(--blood-seal-light), var(--blood-seal));
+}
+
+.session-journal-entry-details {
+  white-space: pre-wrap;
+  border: 1px solid rgba(36, 26, 18, 0.14);
+  border-radius: 14px;
+  padding: 10px;
+  color: var(--ink-soft);
+  background: rgba(255, 244, 210, 0.32);
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.4;
+}
+
+.session-journal-delete-button {
+  justify-self: start;
+  padding: 7px 10px;
+  background: linear-gradient(180deg, var(--blood-seal-light), var(--blood-seal));
+}
+
+@media (max-width: 1100px) {
+  .session-journal-draft-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .session-journal-hidden-toggle {
+    padding-bottom: 0;
+  }
+}

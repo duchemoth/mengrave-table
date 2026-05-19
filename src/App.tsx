@@ -7,6 +7,11 @@ import {
   type ExpeditionState,
   type ExpeditionTimeOfDay,
 } from "./components/panels/ExpeditionTrackerPanel";
+import {
+  SessionJournalPanel,
+  type SessionJournalEntry,
+  type SessionJournalEntryType,
+} from "./components/panels/SessionJournalPanel";
 import { EncounterModal } from "./components/EncounterModal";
 import { HudTools } from "./components/HudTools";
 import { MapView } from "./components/MapView";
@@ -27,6 +32,72 @@ const DEFAULT_GLOBAL_MAP_IMAGE_URL = "/map.jpg";
 const PLAYER_PRESENTATION_STORAGE_KEY = "nri-table-player-presentation";
 
 const EXPEDITION_STORAGE_KEY = "nri-table-expedition";
+
+const SESSION_JOURNAL_STORAGE_KEY = "nri-table-session-journal";
+
+function normalizeJournalEntry(value: unknown): SessionJournalEntry | null {
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    return null;
+  }
+
+  const entry = value as Partial<SessionJournalEntry>;
+
+  const allowedTypes: SessionJournalEntryType[] = [
+    "expedition",
+    "map",
+    "scene",
+    "inventory",
+    "master",
+    "other",
+  ];
+
+  return {
+    id:
+      typeof entry.id === "string" && entry.id.trim().length > 0
+        ? entry.id
+        : `journal-entry-${Date.now()}`,
+    createdAt:
+      typeof entry.createdAt === "number" && Number.isFinite(entry.createdAt)
+        ? entry.createdAt
+        : Date.now(),
+    type:
+      typeof entry.type === "string" &&
+        allowedTypes.includes(entry.type as SessionJournalEntryType)
+        ? (entry.type as SessionJournalEntryType)
+        : "other",
+    title:
+      typeof entry.title === "string" && entry.title.trim().length > 0
+        ? entry.title
+        : "Запись журнала",
+    text: typeof entry.text === "string" ? entry.text : "",
+    details: typeof entry.details === "string" ? entry.details : "",
+    isHiddenFromPlayers: Boolean(entry.isHiddenFromPlayers),
+  };
+}
+
+function normalizeJournalEntries(value: unknown): SessionJournalEntry[] {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+
+  return value
+    .map(normalizeJournalEntry)
+    .filter((entry): entry is SessionJournalEntry => entry !== null);
+}
+
+function loadSavedJournalEntries() {
+  const savedJournal = localStorage.getItem(SESSION_JOURNAL_STORAGE_KEY);
+
+  if (!savedJournal) {
+    return [];
+  }
+
+  try {
+    return normalizeJournalEntries(JSON.parse(savedJournal));
+  } catch {
+    return [];
+  }
+}
 
 const DEFAULT_EXPEDITION_STATE: ExpeditionState = {
   infophoneLevel: "clean",
@@ -263,6 +334,7 @@ const PLAYER_SCREEN_SYNC_KEYS = [
   "nri-table-revealed-areas",
   "nri-table-global-map",
   "nri-table-player-presentation",
+  "nri-table-session-journal",
 ];
 
 const PLAYER_SCREEN_SYNC_PREFIXES = [
@@ -467,6 +539,10 @@ function App() {
     loadSavedExpeditionState,
   );
 
+  const [journalEntries, setJournalEntries] = useState<SessionJournalEntry[]>(
+    loadSavedJournalEntries,
+  );
+
   const [masterNotes, setMasterNotes] = useState(() => {
     return localStorage.getItem(MASTER_NOTES_STORAGE_KEY) ?? "";
   });
@@ -552,6 +628,13 @@ function App() {
   useEffect(() => {
     localStorage.setItem(EXPEDITION_STORAGE_KEY, JSON.stringify(expeditionState));
   }, [expeditionState]);
+
+  useEffect(() => {
+    localStorage.setItem(
+      SESSION_JOURNAL_STORAGE_KEY,
+      JSON.stringify(journalEntries),
+    );
+  }, [journalEntries]);
 
   const visibleLocations = locations.filter((location) => {
     return !isPlayerMode || !location.isSecret;
@@ -744,6 +827,7 @@ function App() {
 
       setGlobalMapImageUrl(importedGlobalMap.imageUrl);
       setExpeditionState(normalizeExpeditionState(importedCampaign?.expedition));
+      setJournalEntries(normalizeJournalEntries(importedCampaign?.journalEntries));
 
       openSidebar();
     });
@@ -757,6 +841,7 @@ function App() {
         imageUrl: globalMapImageUrl,
       },
       expedition: expeditionState,
+      journalEntries,
       sceneDrafts: collectJsonStorageByPrefix(SCENE_STORAGE_PREFIX),
       localMaps: collectJsonStorageByPrefix(LOCAL_MAP_STORAGE_PREFIX),
     });
@@ -1067,7 +1152,6 @@ function App() {
       ...current,
       routeSegment: current.routeSegment + 1,
       timeOfDay: getNextTimeOfDay(current.timeOfDay),
-      obscuriaPressure: Math.min(10, current.obscuriaPressure + 1),
     }));
   }
 
@@ -1083,6 +1167,26 @@ function App() {
     }
 
     setExpeditionState(DEFAULT_EXPEDITION_STATE);
+  }
+
+  function handleAddJournalEntry(entry: SessionJournalEntry) {
+    setJournalEntries((current) => [entry, ...current]);
+  }
+
+  function handleDeleteJournalEntry(entryId: string) {
+    setJournalEntries((current) =>
+      current.filter((entry) => entry.id !== entryId),
+    );
+  }
+
+  function handleClearJournalEntries() {
+    const shouldClear = window.confirm("Очистить журнал сессии?");
+
+    if (!shouldClear) {
+      return;
+    }
+
+    setJournalEntries([]);
   }
 
   return (
@@ -1186,20 +1290,13 @@ function App() {
               )}
 
               {activeBottomPanelTab === "journal" && (
-                <section className="bottom-panel-placeholder">
-                  <div>
-                    <p className="eyebrow">Журнал</p>
-                    <h3>Сводка сессии</h3>
-                  </div>
-
-                  <div className="journal-preview-list">
-                    <p>Записей пока нет.</p>
-                    <p>
-                      Позже здесь будут события партии: открытый туман, показанные
-                      сцены, полученные предметы, изменения Натиска и заметки Мастера.
-                    </p>
-                  </div>
-                </section>
+                <SessionJournalPanel
+                  entries={journalEntries}
+                  canEdit={!isPlayerMode}
+                  onAddEntry={handleAddJournalEntry}
+                  onDeleteEntry={handleDeleteJournalEntry}
+                  onClearEntries={handleClearJournalEntries}
+                />
               )}
             </div>
           </section>

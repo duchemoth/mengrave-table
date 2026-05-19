@@ -218,6 +218,7 @@ export function useCampaign() {
         masterNotes?: unknown;
         globalMap?: unknown;
         expedition?: unknown;
+        journalEntries?: unknown;
         sceneDrafts?: unknown;
         localMaps?: unknown;
       },
