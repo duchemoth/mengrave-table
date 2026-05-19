@@ -38,6 +38,8 @@ const SESSION_JOURNAL_STORAGE_KEY = "nri-table-session-journal";
 
 const ROUTE_SEGMENT_DISTANCE = 4;
 
+const ROUTE_AUTO_REVEAL_RADIUS = 4;
+
 function normalizeJournalEntry(value: unknown): SessionJournalEntry | null {
   if (!value || typeof value !== "object" || Array.isArray(value)) {
     return null;
@@ -1031,6 +1033,20 @@ function App() {
     return Math.max(0, Math.min(100, value));
   }
 
+  function isRevealedAreaNearPoint(
+    areas: RevealedMapArea[],
+    x: number,
+    y: number,
+  ) {
+    return areas.some((area) => {
+      const deltaX = area.x - x;
+      const deltaY = area.y - y;
+      const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+
+      return distance <= ROUTE_AUTO_REVEAL_RADIUS * 0.75;
+    });
+  }
+
   function getRouteMovementStep({
     startX,
     startY,
@@ -1470,6 +1486,9 @@ function App() {
     let nextRouteStatus = current.routeStatus;
     let routeMovementDetails = "Движение по карте: точка маршрута не задана.";
 
+    let autoRevealPoint: { x: number; y: number } | null = null;
+    let autoRevealDetails = "Авто-разведка: не применялась.";
+
     if (
       playerGroup &&
       current.routePointX !== null &&
@@ -1490,6 +1509,11 @@ function App() {
           x: routeMovement.nextX,
           y: routeMovement.nextY,
         });
+
+        autoRevealPoint = {
+          x: routeMovement.nextX,
+          y: routeMovement.nextY,
+        };
       }
 
       nextRouteStatus = routeMovement.didReach ? "reached" : "moving";
@@ -1518,6 +1542,38 @@ function App() {
       routeMovementDetails = "Движение по карте: группа игроков не найдена.";
     }
 
+    if (autoRevealPoint) {
+      if (isRevealedAreaNearPoint(revealedAreas, autoRevealPoint.x, autoRevealPoint.y)) {
+        autoRevealDetails =
+          "Авто-разведка: рядом уже была открытая область, новая область не создана.";
+      } else {
+        const revealedArea: RevealedMapArea = {
+          id: `revealed-area-${Date.now()}-${Math.random()
+            .toString(36)
+            .slice(2)}`,
+          x: autoRevealPoint.x,
+          y: autoRevealPoint.y,
+          radius: ROUTE_AUTO_REVEAL_RADIUS,
+        };
+
+        setRevealedAreas((currentAreas) => {
+          if (
+            isRevealedAreaNearPoint(
+              currentAreas,
+              revealedArea.x,
+              revealedArea.y,
+            )
+          ) {
+            return currentAreas;
+          }
+
+          return [...currentAreas, revealedArea];
+        });
+
+        autoRevealDetails = `Авто-разведка: открыта область вокруг новой позиции отряда, радиус ${ROUTE_AUTO_REVEAL_RADIUS}%.`;
+      }
+    }
+
     addSystemJournalEntry({
       type: "expedition",
       title: "Отряд продвинулся",
@@ -1533,6 +1589,7 @@ function App() {
           : "Описание маршрута не задано.",
         `Статус маршрута: ${getExpeditionRouteStatusLabel(nextRouteStatus)}.`,
         routeMovementDetails,
+        autoRevealDetails,
         "",
         spentResources.length > 0
           ? `Расход: ${spentResources.join(", ")}.`
