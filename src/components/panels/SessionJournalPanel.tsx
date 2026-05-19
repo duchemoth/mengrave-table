@@ -134,7 +134,7 @@ export function SessionJournalPanel({
 
                     {canEdit && (
                         <button type="button" onClick={() => setIsDraftOpen((current) => !current)}>
-                            {isDraftOpen ? "Свернуть запись" : "Новая запись"}
+                            {isDraftOpen ? "Свернуть форму" : "Новая запись"}
                         </button>
                     )}
 
