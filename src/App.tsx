@@ -124,6 +124,9 @@ const DEFAULT_EXPEDITION_STATE: ExpeditionState = {
   routeDescription: "",
   routeStatus: "none",
 
+  routePointX: null,
+  routePointY: null,
+
   note: "",
 };
 
@@ -227,6 +230,18 @@ function normalizeExpeditionState(value: unknown): ExpeditionState {
         : "",
 
     routeStatus: normalizeExpeditionRouteStatus(expedition.routeStatus),
+
+    routePointX:
+      typeof expedition.routePointX === "number" &&
+        Number.isFinite(expedition.routePointX)
+        ? Math.max(0, Math.min(100, expedition.routePointX))
+        : null,
+
+    routePointY:
+      typeof expedition.routePointY === "number" &&
+        Number.isFinite(expedition.routePointY)
+        ? Math.max(0, Math.min(100, expedition.routePointY))
+        : null,
 
     note: typeof expedition.note === "string" ? expedition.note : "",
   };
@@ -567,6 +582,8 @@ function App() {
   const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
   const [isPlacingEvent, setIsPlacingEvent] = useState(false);
 
+  const [isPlanningRoute, setIsPlanningRoute] = useState(false);
+
   const [isRevealingFog, setIsRevealingFog] = useState(false);
   const [isHidingRevealedArea, setIsHidingRevealedArea] = useState(false);
 
@@ -662,6 +679,7 @@ function App() {
         setIsPlacingEvent(false);
         setIsRevealingFog(false);
         setIsHidingRevealedArea(false);
+        setIsPlanningRoute(false);
       }
     }
 
@@ -677,6 +695,7 @@ function App() {
       setIsPlacingEvent(false);
       setIsRevealingFog(false);
       setIsHidingRevealedArea(false);
+      setIsPlanningRoute(false);
     }
   }, [isPlayerMode]);
 
@@ -1429,6 +1448,62 @@ function App() {
     ]);
   }
 
+  function handleStartRoutePlanning() {
+    if (isPlayerMode) {
+      return;
+    }
+
+    setIsPlacingEvent(false);
+    setIsRevealingFog(false);
+    setIsHidingRevealedArea(false);
+    setIsPlanningRoute((currentValue) => !currentValue);
+  }
+
+  function handlePlanRouteAt(x: number, y: number) {
+    if (isPlayerMode) {
+      return;
+    }
+
+    setExpeditionState((current) => ({
+      ...current,
+      routePointX: x,
+      routePointY: y,
+      routeStatus: current.routeStatus === "none" ? "planned" : current.routeStatus,
+    }));
+
+    setIsPlanningRoute(false);
+
+    addSystemJournalEntry({
+      type: "map",
+      title: "Задана точка маршрута",
+      text: "Мастер отметил точку маршрута на глобальной карте.",
+      details: `Координаты точки: ${Math.round(x)}%, ${Math.round(y)}%.`,
+      isHiddenFromPlayers: false,
+    });
+  }
+
+  function handleClearRoutePoint() {
+    if (isPlayerMode) {
+      return;
+    }
+
+    setExpeditionState((current) => ({
+      ...current,
+      routePointX: null,
+      routePointY: null,
+    }));
+
+    setIsPlanningRoute(false);
+
+    addSystemJournalEntry({
+      type: "map",
+      title: "Точка маршрута сброшена",
+      text: "Мастер убрал точку маршрута с глобальной карты.",
+      details: "",
+      isHiddenFromPlayers: false,
+    });
+  }
+
   return (
     <main className="atlas-screen">
       <TopBar
@@ -1460,6 +1535,10 @@ function App() {
         onMoveGroup={handleMoveGroup}
         onMoveEvent={handleMoveEvent}
         isPlacingEvent={isPlacingEvent}
+        isPlanningRoute={isPlanningRoute}
+        routePointX={expeditionState.routePointX}
+        routePointY={expeditionState.routePointY}
+        onPlanRouteAt={handlePlanRouteAt}
         isRevealingFog={isRevealingFog}
         isHidingRevealedArea={isHidingRevealedArea}
         revealedAreas={revealedAreas}
@@ -1523,9 +1602,12 @@ function App() {
                 <ExpeditionTrackerPanel
                   expedition={expeditionState}
                   canEdit={!isPlayerMode}
+                  isPlanningRoute={isPlanningRoute}
                   onChangeExpedition={setExpeditionState}
                   onAdvanceSegment={handleAdvanceExpeditionSegment}
                   onResetExpedition={handleResetExpedition}
+                  onStartRoutePlanning={handleStartRoutePlanning}
+                  onClearRoutePoint={handleClearRoutePoint}
                 />
               )}
 

@@ -35,15 +35,21 @@ export type ExpeditionState = {
     routeDescription: string;
     routeStatus: ExpeditionRouteStatus;
 
+    routePointX: number | null;
+    routePointY: number | null;
+
     note: string;
 };
 
 type ExpeditionTrackerPanelProps = {
     expedition: ExpeditionState;
     canEdit: boolean;
+    isPlanningRoute: boolean;
     onChangeExpedition: (expedition: ExpeditionState) => void;
     onAdvanceSegment: () => void;
     onResetExpedition: () => void;
+    onStartRoutePlanning: () => void;
+    onClearRoutePoint: () => void;
 };
 
 const INFOPHONE_LABELS: Record<ExpeditionInfophoneLevel, string> = {
@@ -118,9 +124,12 @@ function getResourceDangerClass(value: number) {
 export function ExpeditionTrackerPanel({
     expedition,
     canEdit,
+    isPlanningRoute,
     onChangeExpedition,
     onAdvanceSegment,
     onResetExpedition,
+    onStartRoutePlanning,
+    onClearRoutePoint,
 }: ExpeditionTrackerPanelProps) {
     function updateExpedition(updatedFields: Partial<ExpeditionState>) {
         if (!canEdit) {
@@ -342,6 +351,30 @@ export function ExpeditionTrackerPanel({
                                 placeholder="Через старую дорогу, вдоль лесной кромки, обходя низину и участок тяжёлого инфофона..."
                             />
                         </label>
+                    </div>
+
+                    <div className="expedition-route-map-actions">
+                        <button
+                            type="button"
+                            disabled={!canEdit}
+                            onClick={onStartRoutePlanning}
+                        >
+                            {isPlanningRoute ? "Кликни по карте..." : "Задать точку на карте"}
+                        </button>
+
+                        <button
+                            type="button"
+                            disabled={!canEdit || expedition.routePointX === null || expedition.routePointY === null}
+                            onClick={onClearRoutePoint}
+                        >
+                            Сбросить точку
+                        </button>
+
+                        <span>
+                            {expedition.routePointX !== null && expedition.routePointY !== null
+                                ? `Точка: ${Math.round(expedition.routePointX)}%, ${Math.round(expedition.routePointY)}%`
+                                : "Точка маршрута не задана"}
+                        </span>
                     </div>
 
                     <div className="expedition-route-card">

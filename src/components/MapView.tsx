@@ -22,6 +22,9 @@ type MapViewProps = {
   isDeveloperMode: boolean;
   isCleanMapMode: boolean;
   isPlacingEvent: boolean;
+  isPlanningRoute: boolean;
+  routePointX: number | null;
+  routePointY: number | null;
   isRevealingFog: boolean;
   isHidingRevealedArea: boolean;
   revealedAreas: RevealedMapArea[];
@@ -36,6 +39,7 @@ type MapViewProps = {
   onToggleFogReveal: () => void;
   onToggleFogHide: () => void;
   onCreateMapEventAt: (x: number, y: number) => void;
+  onPlanRouteAt: (x: number, y: number) => void;
   onCreateRevealedAreaAt: (x: number, y: number) => void;
   onDeleteRevealedAreaAt: (x: number, y: number) => void;
   onClearRevealedAreas: () => void;
@@ -87,10 +91,16 @@ export function MapView({
   userMode,
   isDeveloperMode,
   isCleanMapMode,
-  isPlacingEvent,
   isRevealingFog,
   isHidingRevealedArea,
   revealedAreas,
+  isPlacingEvent,
+  isPlanningRoute,
+  routePointX,
+  routePointY,
+  onCreateMapEventAt,
+  onPlanRouteAt,
+  onOpenLocationEncounter,
   onSelectLocation,
   onSelectGroup,
   onSelectEvent,
@@ -101,11 +111,9 @@ export function MapView({
   onToggleEventPlacement,
   onToggleFogReveal,
   onToggleFogHide,
-  onCreateMapEventAt,
   onCreateRevealedAreaAt,
   onDeleteRevealedAreaAt,
   onClearRevealedAreas,
-  onOpenLocationEncounter,
   onOpenGroupEncounter,
   onOpenEventEncounter,
 }: MapViewProps) {
@@ -293,7 +301,12 @@ export function MapView({
       return;
     }
 
-    if (!isPlacingEvent && !isRevealingFog && !isHidingRevealedArea) {
+    if (
+      !isPlacingEvent &&
+      !isPlanningRoute &&
+      !isRevealingFog &&
+      !isHidingRevealedArea
+    ) {
       return;
     }
 
@@ -303,6 +316,11 @@ export function MapView({
     const y = clamp(((event.clientY - rect.top) / rect.height) * 100);
 
     event.stopPropagation();
+
+    if (isPlanningRoute) {
+      onPlanRouteAt(x, y);
+      return;
+    }
 
     if (isPlacingEvent) {
       onCreateMapEventAt(x, y);
@@ -369,13 +387,18 @@ export function MapView({
       >
         <div
           className={`map ${isDeveloperMode ? "map-editable" : ""} ${isPlacingEvent ? "map-placing-event" : ""
-            } ${isRevealingFog ? "map-revealing-fog" : ""} ${isHidingRevealedArea ? "map-hiding-fog" : ""}`}
+            } ${isPlanningRoute ? "map-planning-route" : ""} ${isRevealingFog ? "map-revealing-fog" : ""} ${isHidingRevealedArea ? "map-hiding-fog" : ""}`}
           style={{
             transform: `translate(${offsetX}px, ${offsetY}px) scale(${scale})`,
             backgroundImage: `url("${globalMapImageUrl.trim() || "/map.jpg"}")`,
           }}
           onMouseDown={(event) => {
-            if (isPlacingEvent || isRevealingFog || isHidingRevealedArea) {
+            if (
+              isPlacingEvent ||
+              isPlanningRoute ||
+              isRevealingFog ||
+              isHidingRevealedArea
+            ) {
               event.stopPropagation();
             }
           }}
@@ -390,6 +413,12 @@ export function MapView({
           {!isCleanMapMode && isPlacingEvent && (
             <div className="map-hint">
               Кликни по карте, чтобы разместить событие · Esc — отмена
+            </div>
+          )}
+
+          {!isCleanMapMode && isPlanningRoute && (
+            <div className="map-hint">
+              Кликни по карте, чтобы задать точку маршрута · Esc — отмена
             </div>
           )}
 
@@ -579,6 +608,37 @@ export function MapView({
                 </>
               )}
             </svg>
+          )}
+
+          {routePointX !== null && routePointY !== null && (
+            <>
+              {playerMapGroup && (
+                <svg
+                  className="map-route-layer"
+                  viewBox="0 0 100 100"
+                  preserveAspectRatio="none"
+                >
+                  <line
+                    className="map-route-line"
+                    x1={playerMapGroup.x}
+                    y1={playerMapGroup.y}
+                    x2={routePointX}
+                    y2={routePointY}
+                  />
+                </svg>
+              )}
+
+              <div
+                className="map-route-point"
+                style={{
+                  left: `${routePointX}%`,
+                  top: `${routePointY}%`,
+                }}
+                title="Точка маршрута"
+              >
+                ×
+              </div>
+            </>
           )}
 
           {locations.map((location) => {

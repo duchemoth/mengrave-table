@@ -682,3 +682,50 @@
   stroke-dasharray: 0.7 0.45;
   pointer-events: none;
 }
+
+/* Route waypoint layer */
+
+.map-planning-route {
+  cursor: crosshair;
+}
+
+.map-route-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 8;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.map-route-line {
+  fill: none;
+  stroke: rgba(124, 37, 34, 0.88);
+  stroke-width: 0.35;
+  stroke-linecap: round;
+  stroke-dasharray: 1.4 0.9;
+  vector-effect: non-scaling-stroke;
+  filter: drop-shadow(0 1px 2px rgba(18, 10, 8, 0.55));
+}
+
+.map-route-point {
+  position: absolute;
+  z-index: 13;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  transform: translate(-50%, -50%);
+  border: 1px solid rgba(234, 216, 173, 0.62);
+  border-radius: 999px;
+  color: #fff3cf;
+  background:
+    radial-gradient(circle at 50% 45%, #7c2522 0 38%, #321811 70%);
+  box-shadow:
+    0 0 0 2px rgba(18, 10, 8, 0.34),
+    0 8px 18px rgba(18, 10, 8, 0.32);
+  font-size: 18px;
+  font-weight: 950;
+  line-height: 1;
+  pointer-events: none;
+}
