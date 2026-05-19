@@ -3393,3 +3393,98 @@
 .expedition-note-field {
   margin-bottom: 24px;
 }
+
+/* Expedition route draft */
+
+.expedition-route-editor {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 170px;
+  gap: 10px;
+}
+
+.expedition-route-editor label {
+  display: grid;
+  gap: 6px;
+  border: 1px solid rgba(36, 26, 18, 0.16);
+  border-radius: 14px;
+  padding: 10px;
+  color: var(--ink-soft);
+  background: rgba(255, 244, 210, 0.28);
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.expedition-route-editor label.wide {
+  grid-column: 1 / -1;
+}
+
+.expedition-route-editor input,
+.expedition-route-editor select,
+.expedition-route-editor textarea {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  border: 1px solid rgba(36, 26, 18, 0.22);
+  border-radius: 10px;
+  padding: 8px 10px;
+  color: var(--ink);
+  background: rgba(255, 244, 210, 0.64);
+  outline: none;
+  font: 700 13px/1.35 Inter, system-ui, sans-serif;
+}
+
+.expedition-route-editor textarea {
+  min-height: 54px;
+  resize: vertical;
+}
+
+.expedition-route-public-card {
+  display: grid;
+  gap: 6px;
+  border: 1px solid rgba(234, 216, 173, 0.18);
+  border-radius: 18px;
+  padding: 14px;
+  background:
+    linear-gradient(180deg,
+      rgba(226, 206, 162, 0.84),
+      rgba(188, 158, 105, 0.76));
+}
+
+.expedition-route-public-card span {
+  color: #5f211d;
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 11px;
+  font-weight: 950;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.expedition-route-public-card strong {
+  color: #1f120d;
+  font-size: 22px;
+  font-weight: 950;
+  line-height: 1.05;
+}
+
+.expedition-route-public-card small {
+  color: #5f211d;
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 11px;
+  font-weight: 950;
+  text-transform: uppercase;
+}
+
+.expedition-route-public-card p {
+  margin: 0;
+  color: #241710;
+  font-size: 13px;
+  font-weight: 850;
+  line-height: 1.35;
+}
+
+@media (max-width: 1100px) {
+  .expedition-route-editor {
+    grid-template-columns: 1fr;
+  }
+}

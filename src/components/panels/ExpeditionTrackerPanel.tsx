@@ -10,6 +10,13 @@ export type ExpeditionResourceKey =
 
 export type ExpeditionSegmentCosts = Record<ExpeditionResourceKey, boolean>;
 
+export type ExpeditionRouteStatus =
+    | "none"
+    | "planned"
+    | "moving"
+    | "reached"
+    | "lost";
+
 export type ExpeditionState = {
     infophoneLevel: ExpeditionInfophoneLevel;
     obscuriaPressure: number;
@@ -23,6 +30,10 @@ export type ExpeditionState = {
     ammo: number;
 
     segmentCosts: ExpeditionSegmentCosts;
+
+    routeTarget: string;
+    routeDescription: string;
+    routeStatus: ExpeditionRouteStatus;
 
     note: string;
 };
@@ -47,6 +58,14 @@ const TIME_LABELS: Record<ExpeditionTimeOfDay, string> = {
     day: "День",
     evening: "Вечер",
     night: "Ночь",
+};
+
+const ROUTE_STATUS_LABELS: Record<ExpeditionRouteStatus, string> = {
+    none: "Не задан",
+    planned: "Намечен",
+    moving: "В пути",
+    reached: "Достигнут",
+    lost: "Потерян",
 };
 
 const EXPEDITION_RESOURCES: {
@@ -155,6 +174,20 @@ export function ExpeditionTrackerPanel({
                     </div>
                 </header>
 
+                <div className="expedition-route-public-card">
+                    <span>Маршрут</span>
+                    <strong>
+                        {expedition.routeTarget.trim().length > 0
+                            ? expedition.routeTarget
+                            : "Цель не задана"}
+                    </strong>
+                    <small>{ROUTE_STATUS_LABELS[expedition.routeStatus]}</small>
+
+                    {expedition.routeDescription.trim().length > 0 && (
+                        <p>{expedition.routeDescription}</p>
+                    )}
+                </div>
+
                 <div className="expedition-player-summary">
                     <article className={`infophone-${expedition.infophoneLevel}`}>
                         <span>Инфофон</span>
@@ -260,6 +293,55 @@ export function ExpeditionTrackerPanel({
                             <span>Время</span>
                             <strong>{TIME_LABELS[expedition.timeOfDay]}</strong>
                         </article>
+                    </div>
+
+                    <div className="expedition-route-editor">
+                        <label>
+                            Цель маршрута
+                            <input
+                                value={expedition.routeTarget}
+                                disabled={!canEdit}
+                                onChange={(event) =>
+                                    updateExpedition({
+                                        routeTarget: event.target.value,
+                                    })
+                                }
+                                placeholder="Например: Старый причал, Фор-Град, просека у логомиомы..."
+                            />
+                        </label>
+
+                        <label>
+                            Статус маршрута
+                            <select
+                                value={expedition.routeStatus}
+                                disabled={!canEdit}
+                                onChange={(event) =>
+                                    updateExpedition({
+                                        routeStatus: event.target.value as ExpeditionRouteStatus,
+                                    })
+                                }
+                            >
+                                <option value="none">Не задан</option>
+                                <option value="planned">Намечен</option>
+                                <option value="moving">В пути</option>
+                                <option value="reached">Достигнут</option>
+                                <option value="lost">Потерян</option>
+                            </select>
+                        </label>
+
+                        <label className="wide">
+                            Описание маршрута
+                            <textarea
+                                value={expedition.routeDescription}
+                                disabled={!canEdit}
+                                onChange={(event) =>
+                                    updateExpedition({
+                                        routeDescription: event.target.value,
+                                    })
+                                }
+                                placeholder="Через старую дорогу, вдоль лесной кромки, обходя низину и участок тяжёлого инфофона..."
+                            />
+                        </label>
                     </div>
 
                     <div className="expedition-route-card">

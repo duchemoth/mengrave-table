@@ -4,6 +4,7 @@ import { BottomDrawer } from "./components/BottomDrawer";
 import { PartyStatusPanel } from "./components/panels/PartyStatusPanel";
 import {
   ExpeditionTrackerPanel,
+  type ExpeditionRouteStatus,
   type ExpeditionState,
   type ExpeditionTimeOfDay,
 } from "./components/panels/ExpeditionTrackerPanel";
@@ -119,8 +120,26 @@ const DEFAULT_EXPEDITION_STATE: ExpeditionState = {
     ammo: false,
   },
 
+  routeTarget: "",
+  routeDescription: "",
+  routeStatus: "none",
+
   note: "",
 };
+
+function normalizeExpeditionRouteStatus(value: unknown): ExpeditionRouteStatus {
+  if (
+    value === "none" ||
+    value === "planned" ||
+    value === "moving" ||
+    value === "reached" ||
+    value === "lost"
+  ) {
+    return value;
+  }
+
+  return "none";
+}
 
 function normalizeExpeditionState(value: unknown): ExpeditionState {
   if (!value || typeof value !== "object" || Array.isArray(value)) {
@@ -198,6 +217,16 @@ function normalizeExpeditionState(value: unknown): ExpeditionState {
           ammo: Boolean(expedition.segmentCosts.ammo),
         }
         : DEFAULT_EXPEDITION_STATE.segmentCosts,
+
+    routeTarget:
+      typeof expedition.routeTarget === "string" ? expedition.routeTarget : "",
+
+    routeDescription:
+      typeof expedition.routeDescription === "string"
+        ? expedition.routeDescription
+        : "",
+
+    routeStatus: normalizeExpeditionRouteStatus(expedition.routeStatus),
 
     note: typeof expedition.note === "string" ? expedition.note : "",
   };
@@ -1301,6 +1330,14 @@ function App() {
           nextTimeOfDay,
         )}.`,
         details: [
+          current.routeTarget.trim().length > 0
+            ? `Маршрут: ${current.routeTarget}.`
+            : "Маршрут: цель не задана.",
+          current.routeDescription.trim().length > 0
+            ? `Описание маршрута: ${current.routeDescription}.`
+            : "Описание маршрута не задано.",
+          `Статус маршрута: ${current.routeStatus}.`,
+          "",
           spentResources.length > 0
             ? `Расход: ${spentResources.join(", ")}.`
             : "Расход ресурсов за этот отрезок не применялся.",
