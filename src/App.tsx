@@ -36,6 +36,8 @@ const EXPEDITION_STORAGE_KEY = "nri-table-expedition";
 
 const SESSION_JOURNAL_STORAGE_KEY = "nri-table-session-journal";
 
+const ROUTE_SEGMENT_DISTANCE = 4;
+
 function normalizeJournalEntry(value: unknown): SessionJournalEntry | null {
   if (!value || typeof value !== "object" || Array.isArray(value)) {
     return null;
@@ -309,6 +311,26 @@ function getExpeditionInfophoneLabel(level: ExpeditionState["infophoneLevel"]) {
   return "Критический";
 }
 
+function getExpeditionRouteStatusLabel(status: ExpeditionRouteStatus) {
+  if (status === "none") {
+    return "Не задан";
+  }
+
+  if (status === "planned") {
+    return "Намечен";
+  }
+
+  if (status === "moving") {
+    return "В пути";
+  }
+
+  if (status === "reached") {
+    return "Достигнут";
+  }
+
+  return "Потерян";
+}
+
 type EncounterDisplayMode = "overview" | "scene" | "localMap";
 
 type PlayerPresentation =
@@ -433,6 +455,7 @@ const PLAYER_SCREEN_SYNC_KEYS = [
   "nri-table-master-notes",
   "nri-table-revealed-areas",
   "nri-table-global-map",
+  "nri-table-expedition",
   "nri-table-player-presentation",
   "nri-table-session-journal",
 ];
@@ -955,6 +978,52 @@ function App() {
     return Math.max(0, Math.min(100, value));
   }
 
+  function getRouteMovementStep({
+    startX,
+    startY,
+    targetX,
+    targetY,
+  }: {
+    startX: number;
+    startY: number;
+    targetX: number;
+    targetY: number;
+  }) {
+    const deltaX = targetX - startX;
+    const deltaY = targetY - startY;
+    const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+
+    if (distance <= 0) {
+      return {
+        nextX: targetX,
+        nextY: targetY,
+        distance,
+        didMove: false,
+        didReach: true,
+      };
+    }
+
+    if (distance <= ROUTE_SEGMENT_DISTANCE) {
+      return {
+        nextX: targetX,
+        nextY: targetY,
+        distance,
+        didMove: true,
+        didReach: true,
+      };
+    }
+
+    const movementRatio = ROUTE_SEGMENT_DISTANCE / distance;
+
+    return {
+      nextX: clampMapCoordinate(startX + deltaX * movementRatio),
+      nextY: clampMapCoordinate(startY + deltaY * movementRatio),
+      distance,
+      didMove: true,
+      didReach: false,
+    };
+  }
+
   function handleMoveLocation(id: string, x: number, y: number) {
     const location = locations.find((currentLocation) => {
       return currentLocation.id === id;
@@ -1310,78 +1379,133 @@ function App() {
       return;
     }
 
-    setExpeditionState((current) => {
-      const nextTimeOfDay = getNextTimeOfDay(current.timeOfDay);
-      const nextRouteSegment = current.routeSegment + 1;
+    const current = expeditionState;
 
-      const nextSupplies = current.segmentCosts.supplies
-        ? Math.max(0, current.supplies - 1)
-        : current.supplies;
+    const nextTimeOfDay = getNextTimeOfDay(current.timeOfDay);
+    const nextRouteSegment = current.routeSegment + 1;
 
-      const nextWater = current.segmentCosts.water
-        ? Math.max(0, current.water - 1)
-        : current.water;
+    const nextSupplies = current.segmentCosts.supplies
+      ? Math.max(0, current.supplies - 1)
+      : current.supplies;
 
-      const nextFuel = current.segmentCosts.fuel
-        ? Math.max(0, current.fuel - 1)
-        : current.fuel;
+    const nextWater = current.segmentCosts.water
+      ? Math.max(0, current.water - 1)
+      : current.water;
 
-      const nextMedical = current.segmentCosts.medical
-        ? Math.max(0, current.medical - 1)
-        : current.medical;
+    const nextFuel = current.segmentCosts.fuel
+      ? Math.max(0, current.fuel - 1)
+      : current.fuel;
 
-      const nextAmmo = current.segmentCosts.ammo
-        ? Math.max(0, current.ammo - 1)
-        : current.ammo;
+    const nextMedical = current.segmentCosts.medical
+      ? Math.max(0, current.medical - 1)
+      : current.medical;
 
-      const spentResources = [
-        current.segmentCosts.supplies ? "Припасы −1" : null,
-        current.segmentCosts.water ? "Вода −1" : null,
-        current.segmentCosts.fuel ? "Топливо −1" : null,
-        current.segmentCosts.medical ? "Медрасход −1" : null,
-        current.segmentCosts.ammo ? "Боезапас −1" : null,
-      ].filter((item): item is string => item !== null);
+    const nextAmmo = current.segmentCosts.ammo
+      ? Math.max(0, current.ammo - 1)
+      : current.ammo;
 
-      addSystemJournalEntry({
-        type: "expedition",
-        title: "Отряд продвинулся",
-        text: `Отрезок ${nextRouteSegment}. Время: ${getExpeditionTimeLabel(
-          nextTimeOfDay,
-        )}.`,
-        details: [
-          current.routeTarget.trim().length > 0
-            ? `Маршрут: ${current.routeTarget}.`
-            : "Маршрут: цель не задана.",
-          current.routeDescription.trim().length > 0
-            ? `Описание маршрута: ${current.routeDescription}.`
-            : "Описание маршрута не задано.",
-          `Статус маршрута: ${current.routeStatus}.`,
-          "",
-          spentResources.length > 0
-            ? `Расход: ${spentResources.join(", ")}.`
-            : "Расход ресурсов за этот отрезок не применялся.",
-          "",
-          `Инфофон: ${getExpeditionInfophoneLabel(current.infophoneLevel)}.`,
-          `Натиск Обскурии: ${current.obscuriaPressure}/10.`,
-          `Припасы: ${nextSupplies}.`,
-          `Вода: ${nextWater}.`,
-          `Топливо: ${nextFuel}.`,
-          `Медрасход: ${nextMedical}.`,
-          `Боезапас: ${nextAmmo}.`,
-        ].join("\n"),
-        isHiddenFromPlayers: false,
+    const spentResources = [
+      current.segmentCosts.supplies ? "Припасы −1" : null,
+      current.segmentCosts.water ? "Вода −1" : null,
+      current.segmentCosts.fuel ? "Топливо −1" : null,
+      current.segmentCosts.medical ? "Медрасход −1" : null,
+      current.segmentCosts.ammo ? "Боезапас −1" : null,
+    ].filter((item): item is string => item !== null);
+
+    const playerGroup = groups.find((group) => group.faction === "players");
+
+    let nextRouteStatus = current.routeStatus;
+    let routeMovementDetails = "Движение по карте: точка маршрута не задана.";
+
+    if (
+      playerGroup &&
+      current.routePointX !== null &&
+      current.routePointY !== null &&
+      current.routeStatus !== "reached" &&
+      current.routeStatus !== "lost"
+    ) {
+      const routeMovement = getRouteMovementStep({
+        startX: playerGroup.x,
+        startY: playerGroup.y,
+        targetX: current.routePointX,
+        targetY: current.routePointY,
       });
 
-      return {
-        ...current,
-        routeSegment: nextRouteSegment,
-        timeOfDay: nextTimeOfDay,
-        supplies: nextSupplies,
-        water: nextWater,
-        fuel: nextFuel,
-        medical: nextMedical,
-        ammo: nextAmmo,
-      };
+      if (routeMovement.didMove) {
+        updateGroup({
+          ...playerGroup,
+          x: routeMovement.nextX,
+          y: routeMovement.nextY,
+        });
+      }
+
+      nextRouteStatus = routeMovement.didReach ? "reached" : "moving";
+
+      routeMovementDetails = routeMovement.didReach
+        ? "Движение по карте: отряд достиг точки маршрута."
+        : `Движение по карте: отряд продвинулся к точке маршрута на ${ROUTE_SEGMENT_DISTANCE}% карты. Осталось примерно ${Math.max(
+          0,
+          Math.round(routeMovement.distance - ROUTE_SEGMENT_DISTANCE),
+        )}%.`;
+    } else if (
+      playerGroup &&
+      current.routePointX !== null &&
+      current.routePointY !== null &&
+      current.routeStatus === "reached"
+    ) {
+      routeMovementDetails = "Движение по карте: точка маршрута уже достигнута.";
+    } else if (
+      playerGroup &&
+      current.routePointX !== null &&
+      current.routePointY !== null &&
+      current.routeStatus === "lost"
+    ) {
+      routeMovementDetails = "Движение по карте: маршрут потерян, отряд не продвигался.";
+    } else if (!playerGroup) {
+      routeMovementDetails = "Движение по карте: группа игроков не найдена.";
+    }
+
+    addSystemJournalEntry({
+      type: "expedition",
+      title: "Отряд продвинулся",
+      text: `Отрезок ${nextRouteSegment}. Время: ${getExpeditionTimeLabel(
+        nextTimeOfDay,
+      )}.`,
+      details: [
+        current.routeTarget.trim().length > 0
+          ? `Маршрут: ${current.routeTarget}.`
+          : "Маршрут: цель не задана.",
+        current.routeDescription.trim().length > 0
+          ? `Описание маршрута: ${current.routeDescription}.`
+          : "Описание маршрута не задано.",
+        `Статус маршрута: ${getExpeditionRouteStatusLabel(nextRouteStatus)}.`,
+        routeMovementDetails,
+        "",
+        spentResources.length > 0
+          ? `Расход: ${spentResources.join(", ")}.`
+          : "Расход ресурсов за этот отрезок не применялся.",
+        "",
+        `Инфофон: ${getExpeditionInfophoneLabel(current.infophoneLevel)}.`,
+        `Натиск Обскурии: ${current.obscuriaPressure}/10.`,
+        `Припасы: ${nextSupplies}.`,
+        `Вода: ${nextWater}.`,
+        `Топливо: ${nextFuel}.`,
+        `Медрасход: ${nextMedical}.`,
+        `Боезапас: ${nextAmmo}.`,
+      ].join("\n"),
+      isHiddenFromPlayers: false,
+    });
+
+    setExpeditionState({
+      ...current,
+      routeSegment: nextRouteSegment,
+      timeOfDay: nextTimeOfDay,
+      supplies: nextSupplies,
+      water: nextWater,
+      fuel: nextFuel,
+      medical: nextMedical,
+      ammo: nextAmmo,
+      routeStatus: nextRouteStatus,
     });
   }
 
@@ -1468,7 +1592,7 @@ function App() {
       ...current,
       routePointX: x,
       routePointY: y,
-      routeStatus: current.routeStatus === "none" ? "planned" : current.routeStatus,
+      routeStatus: "planned",
     }));
 
     setIsPlanningRoute(false);
