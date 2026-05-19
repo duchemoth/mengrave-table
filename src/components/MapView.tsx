@@ -631,6 +631,14 @@ export function MapView({
                   preserveAspectRatio="none"
                 >
                   <line
+                    className="map-route-line-shadow"
+                    x1={playerMapGroup.x}
+                    y1={playerMapGroup.y}
+                    x2={routePointX}
+                    y2={routePointY}
+                  />
+
+                  <line
                     className="map-route-line"
                     x1={playerMapGroup.x}
                     y1={playerMapGroup.y}
