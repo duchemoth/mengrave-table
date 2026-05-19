@@ -479,6 +479,18 @@ function shouldSyncPlayerScreen(storageKey: string | null) {
   );
 }
 
+function isKeyboardShortcutBlockedTarget(target: EventTarget | null) {
+  if (!(target instanceof HTMLElement)) {
+    return false;
+  }
+
+  return Boolean(
+    target.closest(
+      "input, textarea, select, button, a, [role='button'], [contenteditable='true']",
+    ),
+  );
+}
+
 type JsonStorageArchive = Record<string, unknown>;
 
 function collectJsonStorageByPrefix(prefix: string): JsonStorageArchive {
@@ -703,7 +715,44 @@ function App() {
         setIsRevealingFog(false);
         setIsHidingRevealedArea(false);
         setIsPlanningRoute(false);
+        return;
       }
+
+      if (event.code !== "Space") {
+        return;
+      }
+
+      if (event.repeat) {
+        return;
+      }
+
+      if (isKeyboardShortcutInputTarget(event.target)) {
+        return;
+      }
+
+      if (isPlayerMode) {
+        return;
+      }
+
+      if (!isBottomDrawerOpen || activeBottomPanelTab !== "expedition") {
+        return;
+      }
+
+      if (
+        isPlacingEvent ||
+        isPlanningRoute ||
+        isRevealingFog ||
+        isHidingRevealedArea
+      ) {
+        return;
+      }
+
+      if (encounterTarget || isNotesOpen || isCharactersOpen || isReferenceOpen) {
+        return;
+      }
+
+      event.preventDefault();
+      handleAdvanceExpeditionSegment();
     }
 
     window.addEventListener("keydown", handleKeyDown);
@@ -711,7 +760,19 @@ function App() {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, []);
+  }, [
+    activeBottomPanelTab,
+    encounterTarget,
+    isBottomDrawerOpen,
+    isCharactersOpen,
+    isHidingRevealedArea,
+    isNotesOpen,
+    isPlacingEvent,
+    isPlanningRoute,
+    isPlayerMode,
+    isReferenceOpen,
+    isRevealingFog,
+  ]);
 
   useEffect(() => {
     if (isPlayerMode) {
@@ -1628,6 +1689,47 @@ function App() {
     });
   }
 
+  const canAdvanceExpeditionFromMap =
+    !isPlayerMode &&
+    !isCleanMapMode &&
+    !isPlacingEvent &&
+    !isPlanningRoute &&
+    !isRevealingFog &&
+    !isHidingRevealedArea &&
+    !encounterTarget &&
+    !isNotesOpen &&
+    !isCharactersOpen &&
+    !isReferenceOpen;
+
+  useEffect(() => {
+    function handleSpaceAdvance(event: KeyboardEvent) {
+      if (event.code !== "Space") {
+        return;
+      }
+
+      if (event.repeat) {
+        return;
+      }
+
+      if (isKeyboardShortcutBlockedTarget(event.target)) {
+        return;
+      }
+
+      if (!canAdvanceExpeditionFromMap) {
+        return;
+      }
+
+      event.preventDefault();
+      handleAdvanceExpeditionSegment();
+    }
+
+    window.addEventListener("keydown", handleSpaceAdvance);
+
+    return () => {
+      window.removeEventListener("keydown", handleSpaceAdvance);
+    };
+  }, [canAdvanceExpeditionFromMap]);
+
   return (
     <main className="atlas-screen">
       <TopBar
@@ -1639,6 +1741,40 @@ function App() {
         onEnableCleanMapMode={enableCleanMapMode}
         onRestoreInterface={restoreInterface}
       />
+
+      {!isPlayerMode && !isCleanMapMode && (
+        <button
+          className="global-advance-turn-button"
+          type="button"
+          disabled={!canAdvanceExpeditionFromMap}
+          onClick={handleAdvanceExpeditionSegment}
+          title={
+            canAdvanceExpeditionFromMap
+              ? "Сделать ход: продвинуть время, маршрут и расход экспедиции"
+              : "Нельзя сделать ход во время активного режима или открытого окна"
+          }
+        >
+          <span>Сделать ход</span>
+          <small>Space</small>
+        </button>
+      )}
+
+      {!isPlayerMode && !isCleanMapMode && (
+        <button
+          className="global-advance-turn-button"
+          type="button"
+          disabled={!canAdvanceExpeditionFromMap}
+          onClick={handleAdvanceExpeditionSegment}
+          title={
+            canAdvanceExpeditionFromMap
+              ? "Сделать ход: продвинуть время, маршрут и расход экспедиции"
+              : "Нельзя сделать ход во время активного режима или открытого окна"
+          }
+        >
+          <span>Сделать ход</span>
+          <small>Space</small>
+        </button>
+      )}
 
       <MapView
         locations={visibleLocations}
