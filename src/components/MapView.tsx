@@ -169,6 +169,10 @@ export function MapView({
       return;
     }
 
+    if (isPlanningRoute) {
+      return;
+    }
+
     if (!isDeveloperMode) {
       return;
     }
@@ -187,6 +191,10 @@ export function MapView({
       return;
     }
 
+    if (isPlanningRoute) {
+      return;
+    }
+
     if (userMode === "player") {
       return;
     }
@@ -202,6 +210,10 @@ export function MapView({
     mapEventId: string,
   ) {
     if (event.button !== 0) {
+      return;
+    }
+
+    if (isPlanningRoute) {
       return;
     }
 
@@ -660,6 +672,10 @@ export function MapView({
                   onClick={(event) => {
                     if (isDraggingMarker || didJustDragMarker) return;
 
+                    if (isPlanningRoute) {
+                      return;
+                    }
+
                     event.stopPropagation();
                     onSelectLocation(location.id);
                     onOpenLocationEncounter(location);
@@ -676,6 +692,10 @@ export function MapView({
                   onMouseDown={(event) => startMarkerDrag(event, location.id)}
                   onClick={(event) => {
                     if (isDraggingMarker || didJustDragMarker) return;
+
+                    if (isPlanningRoute) {
+                      return;
+                    }
 
                     event.stopPropagation();
                     onSelectLocation(location.id);
@@ -708,6 +728,10 @@ export function MapView({
                   onClick={(event) => {
                     if (isDraggingMarker || didJustDragMarker) return;
 
+                    if (isPlanningRoute) {
+                      return;
+                    }
+
                     event.stopPropagation();
                     onSelectGroup(group.id);
                     onOpenGroupEncounter(group);
@@ -724,6 +748,10 @@ export function MapView({
                   onMouseDown={(event) => startGroupDrag(event, group.id)}
                   onClick={(event) => {
                     if (isDraggingMarker || didJustDragMarker) return;
+
+                    if (isPlanningRoute) {
+                      return;
+                    }
 
                     event.stopPropagation();
                     onSelectGroup(group.id);
@@ -757,6 +785,10 @@ export function MapView({
                   onClick={(event) => {
                     if (isDraggingMarker || didJustDragMarker) return;
 
+                    if (isPlanningRoute) {
+                      return;
+                    }
+
                     event.stopPropagation();
                     onSelectEvent(mapEvent.id);
                     onOpenEventEncounter(mapEvent);
@@ -773,6 +805,10 @@ export function MapView({
                   onMouseDown={(event) => startEventDrag(event, mapEvent.id)}
                   onClick={(event) => {
                     if (isDraggingMarker || didJustDragMarker) return;
+
+                    if (isPlanningRoute) {
+                      return;
+                    }
 
                     event.stopPropagation();
                     onSelectEvent(mapEvent.id);
