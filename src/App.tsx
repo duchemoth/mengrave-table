@@ -209,6 +209,38 @@ function getNextTimeOfDay(timeOfDay: ExpeditionTimeOfDay): ExpeditionTimeOfDay {
   return "morning";
 }
 
+function getExpeditionTimeLabel(timeOfDay: ExpeditionTimeOfDay) {
+  if (timeOfDay === "morning") {
+    return "Утро";
+  }
+
+  if (timeOfDay === "day") {
+    return "День";
+  }
+
+  if (timeOfDay === "evening") {
+    return "Вечер";
+  }
+
+  return "Ночь";
+}
+
+function getExpeditionInfophoneLabel(level: ExpeditionState["infophoneLevel"]) {
+  if (level === "clean") {
+    return "Чистый";
+  }
+
+  if (level === "dirty") {
+    return "Грязный";
+  }
+
+  if (level === "heavy") {
+    return "Тяжёлый";
+  }
+
+  return "Критический";
+}
+
 type EncounterDisplayMode = "overview" | "scene" | "localMap";
 
 type PlayerPresentation =
@@ -929,6 +961,47 @@ function App() {
       targetId,
       updatedAt: Date.now(),
     });
+
+    const locationTarget =
+      targetKind === "location"
+        ? locations.find((location) => location.id === targetId)
+        : null;
+
+    const groupTarget =
+      targetKind === "group"
+        ? groups.find((group) => group.id === targetId)
+        : null;
+
+    const eventTarget =
+      targetKind === "event"
+        ? events.find((mapEvent) => mapEvent.id === targetId)
+        : null;
+
+    const targetTitle =
+      locationTarget?.title ??
+      groupTarget?.name ??
+      eventTarget?.title ??
+      "Объект без названия";
+
+    const modeTitle =
+      mode === "overview"
+        ? "обзор"
+        : mode === "scene"
+          ? "сцена"
+          : "локальная карта";
+
+    addSystemJournalEntry({
+      type: mode === "scene" ? "scene" : "map",
+      title:
+        mode === "localMap"
+          ? "Игрокам показана локальная карта"
+          : mode === "scene"
+            ? "Игрокам показана сцена"
+            : "Игрокам показан обзор",
+      text: targetTitle,
+      details: `Экран игроков переключён на ${modeTitle}.`,
+      isHiddenFromPlayers: false,
+    });
   }
 
   function handleShowGlobalMapToPlayers() {
@@ -939,6 +1012,14 @@ function App() {
     savePlayerPresentation({
       mode: "globalMap",
       updatedAt: Date.now(),
+    });
+
+    addSystemJournalEntry({
+      type: "map",
+      title: "Экран игроков возвращён к карте",
+      text: "Игрокам снова показан обзор глобальной карты.",
+      details: "",
+      isHiddenFromPlayers: false,
     });
   }
 
@@ -1038,6 +1119,15 @@ function App() {
 
     setRevealedAreas((currentAreas) => [...currentAreas, newArea]);
     setIsRevealingFog(false);
+
+    addSystemJournalEntry({
+      type: "map",
+      title: "Мастер открыл область тумана",
+      text: "Открыт участок глобальной карты вручную.",
+      details:
+        "Ручное раскрытие области. Возможная причина: разведка, высота, нейрогравюра, сцена или решение Мастера.",
+      isHiddenFromPlayers: false,
+    });
   }
 
   function handleDeleteRevealedAreaAt(x: number, y: number) {
@@ -1148,11 +1238,34 @@ function App() {
       return;
     }
 
-    setExpeditionState((current) => ({
-      ...current,
-      routeSegment: current.routeSegment + 1,
-      timeOfDay: getNextTimeOfDay(current.timeOfDay),
-    }));
+    setExpeditionState((current) => {
+      const nextTimeOfDay = getNextTimeOfDay(current.timeOfDay);
+      const nextRouteSegment = current.routeSegment + 1;
+
+      addSystemJournalEntry({
+        type: "expedition",
+        title: "Отряд продвинулся",
+        text: `Отрезок ${nextRouteSegment}. Время: ${getExpeditionTimeLabel(
+          nextTimeOfDay,
+        )}.`,
+        details: [
+          `Инфофон: ${getExpeditionInfophoneLabel(current.infophoneLevel)}.`,
+          `Натиск Обскурии: ${current.obscuriaPressure}/10.`,
+          `Припасы: ${current.supplies}.`,
+          `Вода: ${current.water}.`,
+          `Топливо: ${current.fuel}.`,
+          `Медрасход: ${current.medical}.`,
+          `Боезапас: ${current.ammo}.`,
+        ].join("\n"),
+        isHiddenFromPlayers: false,
+      });
+
+      return {
+        ...current,
+        routeSegment: nextRouteSegment,
+        timeOfDay: nextTimeOfDay,
+      };
+    });
   }
 
   function handleResetExpedition() {
@@ -1187,6 +1300,35 @@ function App() {
     }
 
     setJournalEntries([]);
+  }
+
+  function addSystemJournalEntry({
+    type,
+    title,
+    text,
+    details = "",
+    isHiddenFromPlayers = false,
+  }: {
+    type: SessionJournalEntryType;
+    title: string;
+    text: string;
+    details?: string;
+    isHiddenFromPlayers?: boolean;
+  }) {
+    setJournalEntries((current) => [
+      {
+        id: `journal-entry-${Date.now()}-${Math.random()
+          .toString(36)
+          .slice(2)}`,
+        createdAt: Date.now(),
+        type,
+        title,
+        text,
+        details,
+        isHiddenFromPlayers,
+      },
+      ...current,
+    ]);
   }
 
   return (
