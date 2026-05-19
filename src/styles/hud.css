@@ -3545,3 +3545,46 @@
   opacity: 0.45;
   filter: grayscale(0.35);
 }
+
+/* Expedition route suggestion */
+
+.expedition-route-suggestion-actions,
+.expedition-player-route-actions {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  gap: 8px;
+  align-items: center;
+}
+
+.expedition-player-route-actions {
+  grid-template-columns: auto minmax(0, 1fr);
+}
+
+.expedition-route-suggestion-actions span,
+.expedition-player-route-actions span {
+  overflow: hidden;
+  color: var(--ink-soft);
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 900;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.expedition-route-suggestion-actions button,
+.expedition-player-route-actions button {
+  border: 1px solid rgba(36, 26, 18, 0.26);
+  border-radius: 999px;
+  padding: 8px 12px;
+  color: #fff3cf;
+  background: linear-gradient(180deg, #5a2d22, var(--leather));
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.expedition-route-suggestion-actions button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}

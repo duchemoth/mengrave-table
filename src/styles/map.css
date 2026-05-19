@@ -739,3 +739,55 @@
   line-height: 1;
   pointer-events: none;
 }
+
+/* Player route suggestion layer */
+
+.map-suggesting-route {
+  cursor: crosshair;
+}
+
+.map-route-layer-suggestion {
+  z-index: 9;
+}
+
+.map-route-suggestion-line-shadow {
+  fill: none;
+  stroke: rgba(215, 235, 255, 0.64);
+  stroke-width: 5;
+  stroke-linecap: round;
+  stroke-dasharray: 6 6;
+  vector-effect: non-scaling-stroke;
+  pointer-events: none;
+}
+
+.map-route-suggestion-line {
+  fill: none;
+  stroke: rgba(80, 150, 210, 0.96);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-dasharray: 6 6;
+  vector-effect: non-scaling-stroke;
+  filter: drop-shadow(0 1px 2px rgba(18, 10, 8, 0.7));
+}
+
+.map-route-suggestion-point {
+  position: absolute;
+  z-index: 14;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  transform: translate(-50%, -50%);
+  border: 1px solid rgba(215, 235, 255, 0.74);
+  border-radius: 999px;
+  color: #eff8ff;
+  background:
+    radial-gradient(circle at 50% 45%, #426f96 0 38%, #172635 70%);
+  box-shadow:
+    0 0 0 2px rgba(18, 10, 8, 0.34),
+    0 8px 18px rgba(18, 10, 8, 0.32);
+  font-size: 17px;
+  font-weight: 950;
+  line-height: 1;
+  pointer-events: none;
+}

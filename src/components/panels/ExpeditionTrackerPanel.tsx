@@ -38,6 +38,9 @@ export type ExpeditionState = {
     routePointX: number | null;
     routePointY: number | null;
 
+    suggestedRoutePointX: number | null;
+    suggestedRoutePointY: number | null;
+
     note: string;
 };
 
@@ -45,11 +48,15 @@ type ExpeditionTrackerPanelProps = {
     expedition: ExpeditionState;
     canEdit: boolean;
     isPlanningRoute: boolean;
+    isSuggestingRoute: boolean;
     onChangeExpedition: (expedition: ExpeditionState) => void;
     onAdvanceSegment: () => void;
     onResetExpedition: () => void;
     onStartRoutePlanning: () => void;
     onClearRoutePoint: () => void;
+    onStartRouteSuggestion: () => void;
+    onAcceptRouteSuggestion: () => void;
+    onClearRouteSuggestion: () => void;
 };
 
 const INFOPHONE_LABELS: Record<ExpeditionInfophoneLevel, string> = {
@@ -125,11 +132,15 @@ export function ExpeditionTrackerPanel({
     expedition,
     canEdit,
     isPlanningRoute,
+    isSuggestingRoute,
     onChangeExpedition,
     onAdvanceSegment,
     onResetExpedition,
     onStartRoutePlanning,
     onClearRoutePoint,
+    onStartRouteSuggestion,
+    onAcceptRouteSuggestion,
+    onClearRouteSuggestion,
 }: ExpeditionTrackerPanelProps) {
     function updateExpedition(updatedFields: Partial<ExpeditionState>) {
         if (!canEdit) {
@@ -195,6 +206,21 @@ export function ExpeditionTrackerPanel({
                     {expedition.routeDescription.trim().length > 0 && (
                         <p>{expedition.routeDescription}</p>
                     )}
+                </div>
+
+                <div className="expedition-player-route-actions">
+                    <button type="button" onClick={onStartRouteSuggestion}>
+                        {isSuggestingRoute ? "Кликни по карте..." : "Предложить направление"}
+                    </button>
+
+                    <span>
+                        {expedition.suggestedRoutePointX !== null &&
+                            expedition.suggestedRoutePointY !== null
+                            ? `Предложение: ${Math.round(expedition.suggestedRoutePointX)}%, ${Math.round(
+                                expedition.suggestedRoutePointY,
+                            )}%`
+                            : "Предложенная точка не задана"}
+                    </span>
                 </div>
 
                 <div className="expedition-player-summary">
@@ -375,6 +401,41 @@ export function ExpeditionTrackerPanel({
                                 ? `Точка: ${Math.round(expedition.routePointX)}%, ${Math.round(expedition.routePointY)}%`
                                 : "Точка маршрута не задана"}
                         </span>
+                    </div>
+
+                    <div className="expedition-route-suggestion-actions">
+                        <span>
+                            {expedition.suggestedRoutePointX !== null &&
+                                expedition.suggestedRoutePointY !== null
+                                ? `Предложение игроков: ${Math.round(expedition.suggestedRoutePointX)}%, ${Math.round(
+                                    expedition.suggestedRoutePointY,
+                                )}%`
+                                : "Предложений от игроков нет"}
+                        </span>
+
+                        <button
+                            type="button"
+                            disabled={
+                                !canEdit ||
+                                expedition.suggestedRoutePointX === null ||
+                                expedition.suggestedRoutePointY === null
+                            }
+                            onClick={onAcceptRouteSuggestion}
+                        >
+                            Принять
+                        </button>
+
+                        <button
+                            type="button"
+                            disabled={
+                                !canEdit ||
+                                expedition.suggestedRoutePointX === null ||
+                                expedition.suggestedRoutePointY === null
+                            }
+                            onClick={onClearRouteSuggestion}
+                        >
+                            Убрать
+                        </button>
                     </div>
 
                     <div className="expedition-route-card">
@@ -603,7 +664,8 @@ export function ExpeditionTrackerPanel({
                         </div>
 
                         <p className="expedition-help-text">
-                            “Следующий отрезок” двигает время и номер перехода. Натиск меняется вручную.
+                            “Следующий отрезок” или Space двигает время, маршрут и номер перехода.
+                            Натиск меняется вручную.
                         </p>
                     </div>
                 </section>

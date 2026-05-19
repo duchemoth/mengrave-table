@@ -129,6 +129,9 @@ const DEFAULT_EXPEDITION_STATE: ExpeditionState = {
   routePointX: null,
   routePointY: null,
 
+  suggestedRoutePointX: null,
+  suggestedRoutePointY: null,
+
   note: "",
 };
 
@@ -243,6 +246,18 @@ function normalizeExpeditionState(value: unknown): ExpeditionState {
       typeof expedition.routePointY === "number" &&
         Number.isFinite(expedition.routePointY)
         ? Math.max(0, Math.min(100, expedition.routePointY))
+        : null,
+
+    suggestedRoutePointX:
+      typeof expedition.suggestedRoutePointX === "number" &&
+        Number.isFinite(expedition.suggestedRoutePointX)
+        ? Math.max(0, Math.min(100, expedition.suggestedRoutePointX))
+        : null,
+
+    suggestedRoutePointY:
+      typeof expedition.suggestedRoutePointY === "number" &&
+        Number.isFinite(expedition.suggestedRoutePointY)
+        ? Math.max(0, Math.min(100, expedition.suggestedRoutePointY))
         : null,
 
     note: typeof expedition.note === "string" ? expedition.note : "",
@@ -619,6 +634,8 @@ function App() {
 
   const [isPlanningRoute, setIsPlanningRoute] = useState(false);
 
+  const [isSuggestingRoute, setIsSuggestingRoute] = useState(false);
+
   const [isRevealingFog, setIsRevealingFog] = useState(false);
   const [isHidingRevealedArea, setIsHidingRevealedArea] = useState(false);
 
@@ -715,44 +732,8 @@ function App() {
         setIsRevealingFog(false);
         setIsHidingRevealedArea(false);
         setIsPlanningRoute(false);
-        return;
+        setIsSuggestingRoute(false);
       }
-
-      if (event.code !== "Space") {
-        return;
-      }
-
-      if (event.repeat) {
-        return;
-      }
-
-      if (isKeyboardShortcutInputTarget(event.target)) {
-        return;
-      }
-
-      if (isPlayerMode) {
-        return;
-      }
-
-      if (!isBottomDrawerOpen || activeBottomPanelTab !== "expedition") {
-        return;
-      }
-
-      if (
-        isPlacingEvent ||
-        isPlanningRoute ||
-        isRevealingFog ||
-        isHidingRevealedArea
-      ) {
-        return;
-      }
-
-      if (encounterTarget || isNotesOpen || isCharactersOpen || isReferenceOpen) {
-        return;
-      }
-
-      event.preventDefault();
-      handleAdvanceExpeditionSegment();
     }
 
     window.addEventListener("keydown", handleKeyDown);
@@ -760,19 +741,7 @@ function App() {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [
-    activeBottomPanelTab,
-    encounterTarget,
-    isBottomDrawerOpen,
-    isCharactersOpen,
-    isHidingRevealedArea,
-    isNotesOpen,
-    isPlacingEvent,
-    isPlanningRoute,
-    isPlayerMode,
-    isReferenceOpen,
-    isRevealingFog,
-  ]);
+  }, []);
 
   useEffect(() => {
     if (isPlayerMode) {
@@ -780,7 +749,10 @@ function App() {
       setIsRevealingFog(false);
       setIsHidingRevealedArea(false);
       setIsPlanningRoute(false);
+      return;
     }
+
+    setIsSuggestingRoute(false);
   }, [isPlayerMode]);
 
   useEffect(() => {
@@ -816,6 +788,26 @@ function App() {
   useEffect(() => {
     localStorage.setItem(EXPEDITION_STORAGE_KEY, JSON.stringify(expeditionState));
   }, [expeditionState]);
+
+  useEffect(() => {
+    function handleExpeditionStorageChange(event: StorageEvent) {
+      if (event.key !== EXPEDITION_STORAGE_KEY || !event.newValue) {
+        return;
+      }
+
+      try {
+        setExpeditionState(normalizeExpeditionState(JSON.parse(event.newValue)));
+      } catch {
+        // Ignore broken external expedition payloads.
+      }
+    }
+
+    window.addEventListener("storage", handleExpeditionStorageChange);
+
+    return () => {
+      window.removeEventListener("storage", handleExpeditionStorageChange);
+    };
+  }, []);
 
   useEffect(() => {
     localStorage.setItem(
@@ -1694,6 +1686,7 @@ function App() {
     !isCleanMapMode &&
     !isPlacingEvent &&
     !isPlanningRoute &&
+    !isSuggestingRoute &&
     !isRevealingFog &&
     !isHidingRevealedArea &&
     !encounterTarget &&
@@ -1730,6 +1723,95 @@ function App() {
     };
   }, [canAdvanceExpeditionFromMap]);
 
+  function handleStartRouteSuggestion() {
+    if (!isPlayerMode) {
+      return;
+    }
+
+    setIsPlacingEvent(false);
+    setIsRevealingFog(false);
+    setIsHidingRevealedArea(false);
+    setIsPlanningRoute(false);
+    setIsSuggestingRoute((currentValue) => !currentValue);
+  }
+
+  function handleSuggestRouteAt(x: number, y: number) {
+    if (!isPlayerMode) {
+      return;
+    }
+
+    setExpeditionState((current) => ({
+      ...current,
+      suggestedRoutePointX: x,
+      suggestedRoutePointY: y,
+    }));
+
+    setIsSuggestingRoute(false);
+
+    addSystemJournalEntry({
+      type: "map",
+      title: "Игроки предложили направление",
+      text: "Игроки отметили предложенную точку маршрута на глобальной карте.",
+      details: `Координаты предложения: ${Math.round(x)}%, ${Math.round(y)}%.`,
+      isHiddenFromPlayers: false,
+    });
+  }
+
+  function handleAcceptRouteSuggestion() {
+    if (isPlayerMode) {
+      return;
+    }
+
+    if (
+      expeditionState.suggestedRoutePointX === null ||
+      expeditionState.suggestedRoutePointY === null
+    ) {
+      return;
+    }
+
+    const acceptedX = expeditionState.suggestedRoutePointX;
+    const acceptedY = expeditionState.suggestedRoutePointY;
+
+    setExpeditionState((current) => ({
+      ...current,
+      routePointX: acceptedX,
+      routePointY: acceptedY,
+      routeStatus: "planned",
+      suggestedRoutePointX: null,
+      suggestedRoutePointY: null,
+    }));
+
+    addSystemJournalEntry({
+      type: "map",
+      title: "Мастер принял направление",
+      text: "Предложенная игроками точка стала текущей точкой маршрута.",
+      details: `Координаты маршрута: ${Math.round(acceptedX)}%, ${Math.round(acceptedY)}%.`,
+      isHiddenFromPlayers: false,
+    });
+  }
+
+  function handleClearRouteSuggestion() {
+    if (isPlayerMode) {
+      return;
+    }
+
+    setExpeditionState((current) => ({
+      ...current,
+      suggestedRoutePointX: null,
+      suggestedRoutePointY: null,
+    }));
+
+    setIsSuggestingRoute(false);
+
+    addSystemJournalEntry({
+      type: "map",
+      title: "Мастер убрал предложение маршрута",
+      text: "Предложенная игроками точка маршрута удалена.",
+      details: "",
+      isHiddenFromPlayers: false,
+    });
+  }
+
   return (
     <main className="atlas-screen">
       <TopBar
@@ -1741,23 +1823,6 @@ function App() {
         onEnableCleanMapMode={enableCleanMapMode}
         onRestoreInterface={restoreInterface}
       />
-
-      {!isPlayerMode && !isCleanMapMode && (
-        <button
-          className="global-advance-turn-button"
-          type="button"
-          disabled={!canAdvanceExpeditionFromMap}
-          onClick={handleAdvanceExpeditionSegment}
-          title={
-            canAdvanceExpeditionFromMap
-              ? "Сделать ход: продвинуть время, маршрут и расход экспедиции"
-              : "Нельзя сделать ход во время активного режима или открытого окна"
-          }
-        >
-          <span>Сделать ход</span>
-          <small>Space</small>
-        </button>
-      )}
 
       {!isPlayerMode && !isCleanMapMode && (
         <button
@@ -1796,9 +1861,13 @@ function App() {
         onMoveEvent={handleMoveEvent}
         isPlacingEvent={isPlacingEvent}
         isPlanningRoute={isPlanningRoute}
+        isSuggestingRoute={isSuggestingRoute}
         routePointX={expeditionState.routePointX}
         routePointY={expeditionState.routePointY}
+        suggestedRoutePointX={expeditionState.suggestedRoutePointX}
+        suggestedRoutePointY={expeditionState.suggestedRoutePointY}
         onPlanRouteAt={handlePlanRouteAt}
+        onSuggestRouteAt={handleSuggestRouteAt}
         isRevealingFog={isRevealingFog}
         isHidingRevealedArea={isHidingRevealedArea}
         revealedAreas={revealedAreas}
@@ -1863,11 +1932,15 @@ function App() {
                   expedition={expeditionState}
                   canEdit={!isPlayerMode}
                   isPlanningRoute={isPlanningRoute}
+                  isSuggestingRoute={isSuggestingRoute}
                   onChangeExpedition={setExpeditionState}
                   onAdvanceSegment={handleAdvanceExpeditionSegment}
                   onResetExpedition={handleResetExpedition}
                   onStartRoutePlanning={handleStartRoutePlanning}
                   onClearRoutePoint={handleClearRoutePoint}
+                  onStartRouteSuggestion={handleStartRouteSuggestion}
+                  onAcceptRouteSuggestion={handleAcceptRouteSuggestion}
+                  onClearRouteSuggestion={handleClearRouteSuggestion}
                 />
               )}
 

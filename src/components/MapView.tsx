@@ -23,8 +23,11 @@ type MapViewProps = {
   isCleanMapMode: boolean;
   isPlacingEvent: boolean;
   isPlanningRoute: boolean;
+  isSuggestingRoute: boolean;
   routePointX: number | null;
   routePointY: number | null;
+  suggestedRoutePointX: number | null;
+  suggestedRoutePointY: number | null;
   isRevealingFog: boolean;
   isHidingRevealedArea: boolean;
   revealedAreas: RevealedMapArea[];
@@ -40,6 +43,7 @@ type MapViewProps = {
   onToggleFogHide: () => void;
   onCreateMapEventAt: (x: number, y: number) => void;
   onPlanRouteAt: (x: number, y: number) => void;
+  onSuggestRouteAt: (x: number, y: number) => void;
   onCreateRevealedAreaAt: (x: number, y: number) => void;
   onDeleteRevealedAreaAt: (x: number, y: number) => void;
   onClearRevealedAreas: () => void;
@@ -96,10 +100,14 @@ export function MapView({
   revealedAreas,
   isPlacingEvent,
   isPlanningRoute,
+  isSuggestingRoute,
   routePointX,
   routePointY,
+  suggestedRoutePointX,
+  suggestedRoutePointY,
   onCreateMapEventAt,
   onPlanRouteAt,
+  onSuggestRouteAt,
   onOpenLocationEncounter,
   onSelectLocation,
   onSelectGroup,
@@ -169,7 +177,7 @@ export function MapView({
       return;
     }
 
-    if (isPlanningRoute) {
+    if (isPlanningRoute || isSuggestingRoute) {
       return;
     }
 
@@ -191,7 +199,7 @@ export function MapView({
       return;
     }
 
-    if (isPlanningRoute) {
+    if (isPlanningRoute || isSuggestingRoute) {
       return;
     }
 
@@ -213,7 +221,7 @@ export function MapView({
       return;
     }
 
-    if (isPlanningRoute) {
+    if (isPlanningRoute || isSuggestingRoute) {
       return;
     }
 
@@ -309,13 +317,14 @@ export function MapView({
   }
 
   function handleMapClick(event: React.MouseEvent<HTMLDivElement>) {
-    if (userMode === "player") {
+    if (userMode === "player" && !isSuggestingRoute) {
       return;
     }
 
     if (
       !isPlacingEvent &&
       !isPlanningRoute &&
+      !isSuggestingRoute &&
       !isRevealingFog &&
       !isHidingRevealedArea
     ) {
@@ -328,6 +337,15 @@ export function MapView({
     const y = clamp(((event.clientY - rect.top) / rect.height) * 100);
 
     event.stopPropagation();
+
+    if (isSuggestingRoute) {
+      onSuggestRouteAt(x, y);
+      return;
+    }
+
+    if (userMode === "player") {
+      return;
+    }
 
     if (isPlanningRoute) {
       onPlanRouteAt(x, y);
@@ -399,7 +417,7 @@ export function MapView({
       >
         <div
           className={`map ${isDeveloperMode ? "map-editable" : ""} ${isPlacingEvent ? "map-placing-event" : ""
-            } ${isPlanningRoute ? "map-planning-route" : ""} ${isRevealingFog ? "map-revealing-fog" : ""} ${isHidingRevealedArea ? "map-hiding-fog" : ""}`}
+            } ${isPlanningRoute ? "map-planning-route" : ""} ${isSuggestingRoute ? "map-suggesting-route" : ""} ${isRevealingFog ? "map-revealing-fog" : ""} ${isHidingRevealedArea ? "map-hiding-fog" : ""}`}
           style={{
             transform: `translate(${offsetX}px, ${offsetY}px) scale(${scale})`,
             backgroundImage: `url("${globalMapImageUrl.trim() || "/map.jpg"}")`,
@@ -408,6 +426,7 @@ export function MapView({
             if (
               isPlacingEvent ||
               isPlanningRoute ||
+              isSuggestingRoute ||
               isRevealingFog ||
               isHidingRevealedArea
             ) {
@@ -431,6 +450,12 @@ export function MapView({
           {!isCleanMapMode && isPlanningRoute && (
             <div className="map-hint">
               Кликни по карте, чтобы задать точку маршрута · Esc — отмена
+            </div>
+          )}
+
+          {!isCleanMapMode && isSuggestingRoute && (
+            <div className="map-hint">
+              Кликни по карте, чтобы предложить направление · Esc — отмена
             </div>
           )}
 
@@ -661,6 +686,45 @@ export function MapView({
             </>
           )}
 
+          {suggestedRoutePointX !== null && suggestedRoutePointY !== null && (
+            <>
+              {playerMapGroup && (
+                <svg
+                  className="map-route-layer map-route-layer-suggestion"
+                  viewBox="0 0 100 100"
+                  preserveAspectRatio="none"
+                >
+                  <line
+                    className="map-route-suggestion-line-shadow"
+                    x1={playerMapGroup.x}
+                    y1={playerMapGroup.y}
+                    x2={suggestedRoutePointX}
+                    y2={suggestedRoutePointY}
+                  />
+
+                  <line
+                    className="map-route-suggestion-line"
+                    x1={playerMapGroup.x}
+                    y1={playerMapGroup.y}
+                    x2={suggestedRoutePointX}
+                    y2={suggestedRoutePointY}
+                  />
+                </svg>
+              )}
+
+              <div
+                className="map-route-suggestion-point"
+                style={{
+                  left: `${suggestedRoutePointX}%`,
+                  top: `${suggestedRoutePointY}%`,
+                }}
+                title="Предложенная точка маршрута"
+              >
+                ?
+              </div>
+            </>
+          )}
+
           {locations.map((location) => {
             const isSelected = selectedLocationId === location.id;
 
@@ -680,7 +744,7 @@ export function MapView({
                   onClick={(event) => {
                     if (isDraggingMarker || didJustDragMarker) return;
 
-                    if (isPlanningRoute) {
+                    if (isPlanningRoute || isSuggestingRoute) {
                       return;
                     }
 
@@ -701,7 +765,7 @@ export function MapView({
                   onClick={(event) => {
                     if (isDraggingMarker || didJustDragMarker) return;
 
-                    if (isPlanningRoute) {
+                    if (isPlanningRoute || isSuggestingRoute) {
                       return;
                     }
 
@@ -736,7 +800,7 @@ export function MapView({
                   onClick={(event) => {
                     if (isDraggingMarker || didJustDragMarker) return;
 
-                    if (isPlanningRoute) {
+                    if (isPlanningRoute || isSuggestingRoute) {
                       return;
                     }
 
@@ -757,7 +821,7 @@ export function MapView({
                   onClick={(event) => {
                     if (isDraggingMarker || didJustDragMarker) return;
 
-                    if (isPlanningRoute) {
+                    if (isPlanningRoute || isSuggestingRoute) {
                       return;
                     }
 
@@ -793,7 +857,7 @@ export function MapView({
                   onClick={(event) => {
                     if (isDraggingMarker || didJustDragMarker) return;
 
-                    if (isPlanningRoute) {
+                    if (isPlanningRoute || isSuggestingRoute) {
                       return;
                     }
 
@@ -814,7 +878,7 @@ export function MapView({
                   onClick={(event) => {
                     if (isDraggingMarker || didJustDragMarker) return;
 
-                    if (isPlanningRoute) {
+                    if (isPlanningRoute || isSuggestingRoute) {
                       return;
                     }
 
