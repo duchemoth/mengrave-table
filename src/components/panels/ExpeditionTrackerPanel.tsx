@@ -1,6 +1,15 @@
 export type ExpeditionInfophoneLevel = "clean" | "dirty" | "heavy" | "critical";
 export type ExpeditionTimeOfDay = "morning" | "day" | "evening" | "night";
 
+export type ExpeditionResourceKey =
+    | "supplies"
+    | "water"
+    | "fuel"
+    | "medical"
+    | "ammo";
+
+export type ExpeditionSegmentCosts = Record<ExpeditionResourceKey, boolean>;
+
 export type ExpeditionState = {
     infophoneLevel: ExpeditionInfophoneLevel;
     obscuriaPressure: number;
@@ -12,6 +21,8 @@ export type ExpeditionState = {
     fuel: number;
     medical: number;
     ammo: number;
+
+    segmentCosts: ExpeditionSegmentCosts;
 
     note: string;
 };
@@ -37,6 +48,17 @@ const TIME_LABELS: Record<ExpeditionTimeOfDay, string> = {
     evening: "Вечер",
     night: "Ночь",
 };
+
+const EXPEDITION_RESOURCES: {
+    key: ExpeditionResourceKey;
+    label: string;
+}[] = [
+        { key: "supplies", label: "Припасы" },
+        { key: "water", label: "Вода" },
+        { key: "fuel", label: "Топливо" },
+        { key: "medical", label: "Медрасход" },
+        { key: "ammo", label: "Боезапас" },
+    ];
 
 function clampResource(value: number) {
     return Math.max(0, Math.floor(Number.isFinite(value) ? value : 0));
@@ -111,6 +133,15 @@ export function ExpeditionTrackerPanel({
     function shiftPressure(delta: number) {
         updateExpedition({
             obscuriaPressure: clampPressure(expedition.obscuriaPressure + delta),
+        });
+    }
+
+    function toggleSegmentCost(resourceKey: ExpeditionResourceKey) {
+        updateExpedition({
+            segmentCosts: {
+                ...expedition.segmentCosts,
+                [resourceKey]: !expedition.segmentCosts[resourceKey],
+            },
         });
     }
 
@@ -323,6 +354,28 @@ export function ExpeditionTrackerPanel({
                             </div>
                         </div>
 
+                        <div className="expedition-cost-card">
+                            <div>
+                                <p className="eyebrow">Расход за отрезок</p>
+                                <h4>Списывать при переходе</h4>
+                            </div>
+
+                            <div className="expedition-cost-list">
+                                {EXPEDITION_RESOURCES.map((resource) => (
+                                    <label key={resource.key} className="expedition-cost-toggle">
+                                        <input
+                                            type="checkbox"
+                                            checked={expedition.segmentCosts[resource.key]}
+                                            disabled={!canEdit}
+                                            onChange={() => toggleSegmentCost(resource.key)}
+                                        />
+
+                                        <span>{resource.label} −1</span>
+                                    </label>
+                                ))}
+                            </div>
+                        </div>
+
                         <p className="expedition-help-text">
                             “Следующий отрезок” двигает время и номер перехода. Натиск меняется вручную.
                         </p>
@@ -337,14 +390,9 @@ export function ExpeditionTrackerPanel({
                         </div>
 
                         <div className="expedition-resources-grid">
-                            {[
-                                ["supplies", "Припасы"],
-                                ["water", "Вода"],
-                                ["fuel", "Топливо"],
-                                ["medical", "Медрасход"],
-                                ["ammo", "Боезапас"],
-                            ].map(([key, label]) => {
-                                const resourceKey = key as "supplies" | "water" | "fuel" | "medical" | "ammo";
+                            {EXPEDITION_RESOURCES.map((resource) => {
+                                const resourceKey = resource.key;
+                                const label = resource.label;
 
                                 return (
                                     <article

@@ -111,6 +111,14 @@ const DEFAULT_EXPEDITION_STATE: ExpeditionState = {
   medical: 0,
   ammo: 0,
 
+  segmentCosts: {
+    supplies: false,
+    water: true,
+    fuel: false,
+    medical: false,
+    ammo: false,
+  },
+
   note: "",
 };
 
@@ -174,6 +182,22 @@ function normalizeExpeditionState(value: unknown): ExpeditionState {
       typeof expedition.ammo === "number" && Number.isFinite(expedition.ammo)
         ? Math.max(0, Math.floor(expedition.ammo))
         : 0,
+
+    segmentCosts:
+      expedition.segmentCosts &&
+        typeof expedition.segmentCosts === "object" &&
+        !Array.isArray(expedition.segmentCosts)
+        ? {
+          supplies: Boolean(expedition.segmentCosts.supplies),
+          water:
+            typeof expedition.segmentCosts.water === "boolean"
+              ? expedition.segmentCosts.water
+              : true,
+          fuel: Boolean(expedition.segmentCosts.fuel),
+          medical: Boolean(expedition.segmentCosts.medical),
+          ammo: Boolean(expedition.segmentCosts.ammo),
+        }
+        : DEFAULT_EXPEDITION_STATE.segmentCosts,
 
     note: typeof expedition.note === "string" ? expedition.note : "",
   };
@@ -1242,6 +1266,34 @@ function App() {
       const nextTimeOfDay = getNextTimeOfDay(current.timeOfDay);
       const nextRouteSegment = current.routeSegment + 1;
 
+      const nextSupplies = current.segmentCosts.supplies
+        ? Math.max(0, current.supplies - 1)
+        : current.supplies;
+
+      const nextWater = current.segmentCosts.water
+        ? Math.max(0, current.water - 1)
+        : current.water;
+
+      const nextFuel = current.segmentCosts.fuel
+        ? Math.max(0, current.fuel - 1)
+        : current.fuel;
+
+      const nextMedical = current.segmentCosts.medical
+        ? Math.max(0, current.medical - 1)
+        : current.medical;
+
+      const nextAmmo = current.segmentCosts.ammo
+        ? Math.max(0, current.ammo - 1)
+        : current.ammo;
+
+      const spentResources = [
+        current.segmentCosts.supplies ? "Припасы −1" : null,
+        current.segmentCosts.water ? "Вода −1" : null,
+        current.segmentCosts.fuel ? "Топливо −1" : null,
+        current.segmentCosts.medical ? "Медрасход −1" : null,
+        current.segmentCosts.ammo ? "Боезапас −1" : null,
+      ].filter((item): item is string => item !== null);
+
       addSystemJournalEntry({
         type: "expedition",
         title: "Отряд продвинулся",
@@ -1249,13 +1301,17 @@ function App() {
           nextTimeOfDay,
         )}.`,
         details: [
+          spentResources.length > 0
+            ? `Расход: ${spentResources.join(", ")}.`
+            : "Расход ресурсов за этот отрезок не применялся.",
+          "",
           `Инфофон: ${getExpeditionInfophoneLabel(current.infophoneLevel)}.`,
           `Натиск Обскурии: ${current.obscuriaPressure}/10.`,
-          `Припасы: ${current.supplies}.`,
-          `Вода: ${current.water}.`,
-          `Топливо: ${current.fuel}.`,
-          `Медрасход: ${current.medical}.`,
-          `Боезапас: ${current.ammo}.`,
+          `Припасы: ${nextSupplies}.`,
+          `Вода: ${nextWater}.`,
+          `Топливо: ${nextFuel}.`,
+          `Медрасход: ${nextMedical}.`,
+          `Боезапас: ${nextAmmo}.`,
         ].join("\n"),
         isHiddenFromPlayers: false,
       });
@@ -1264,6 +1320,11 @@ function App() {
         ...current,
         routeSegment: nextRouteSegment,
         timeOfDay: nextTimeOfDay,
+        supplies: nextSupplies,
+        water: nextWater,
+        fuel: nextFuel,
+        medical: nextMedical,
+        ammo: nextAmmo,
       };
     });
   }
