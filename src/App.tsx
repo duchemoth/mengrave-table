@@ -18,6 +18,7 @@ import { HudTools } from "./components/HudTools";
 import { MapView } from "./components/MapView";
 import { MasterNotes } from "./components/MasterNotes";
 import { CharacterRoster } from "./components/CharacterRoster";
+import { CampaignStartMenu } from "./components/CampaignStartMenu";
 import { SideDrawer } from "./components/SideDrawer";
 import { TopBar } from "./components/TopBar";
 import { campaignData } from "./data/campaign";
@@ -691,6 +692,8 @@ function App() {
 
   const [isReferenceOpen, setIsReferenceOpen] = useState(false);
 
+  const [isStartMenuOpen, setIsStartMenuOpen] = useState(true);
+
   const [expeditionState, setExpeditionState] = useState<ExpeditionState>(
     loadSavedExpeditionState,
   );
@@ -1027,6 +1030,40 @@ function App() {
       sceneDrafts: collectJsonStorageByPrefix(SCENE_STORAGE_PREFIX),
       localMaps: collectJsonStorageByPrefix(LOCAL_MAP_STORAGE_PREFIX),
     });
+  }
+
+  async function handleLoadDemoCampaign() {
+    const shouldLoadDemo = window.confirm(
+      "Загрузить демо-кампанию? Текущие данные будут заменены. Перед этим можно экспортировать текущую кампанию.",
+    );
+
+    if (!shouldLoadDemo) {
+      return;
+    }
+
+    try {
+      const response = await fetch("/campaigns/demo-campaign.json", {
+        cache: "no-store",
+      });
+
+      if (!response.ok) {
+        window.alert(
+          "Демо-кампания пока не найдена. Нужно добавить файл public/campaigns/demo-campaign.json.",
+        );
+        return;
+      }
+
+      const demoBlob = await response.blob();
+
+      const demoFile = new File([demoBlob], "demo-campaign.json", {
+        type: "application/json",
+      });
+
+      handleImportCampaign(demoFile);
+      setIsStartMenuOpen(false);
+    } catch {
+      window.alert("Не удалось загрузить демо-кампанию.");
+    }
   }
 
   function clampMapCoordinate(value: number) {
@@ -1898,6 +1935,16 @@ function App() {
         </button>
       )}
 
+      {!isCleanMapMode && !isPlayerScreen && (
+        <button
+          className="campaign-menu-open-button"
+          type="button"
+          onClick={() => setIsStartMenuOpen(true)}
+        >
+          Меню
+        </button>
+      )}
+
       <MapView
         locations={visibleLocations}
         groups={visibleGroups}
@@ -2093,6 +2140,19 @@ function App() {
           onDeleteArticle={deleteReferenceArticle}
           onChangeArsenalItems={setArsenalItems}
           onClose={() => setIsReferenceOpen(false)}
+        />
+      )}
+
+      {!isCleanMapMode && !isPlayerScreen && (
+        <CampaignStartMenu
+          isOpen={isStartMenuOpen}
+          onContinue={() => setIsStartMenuOpen(false)}
+          onLoadDemoCampaign={handleLoadDemoCampaign}
+          onImportCampaign={(file) => {
+            handleImportCampaign(file);
+            setIsStartMenuOpen(false);
+          }}
+          onExportCampaign={handleExportCampaign}
         />
       )}
 
