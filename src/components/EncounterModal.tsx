@@ -397,7 +397,7 @@ export function EncounterModal({
   return (
     <div className="encounter-backdrop" onClick={closeModal}>
       <section
-        className="encounter-modal"
+        className={`encounter-modal ${mode === "localMap" ? "local-map-mode" : ""}`}
         onClick={(event) => event.stopPropagation()}
       >
         <button className="encounter-close-button" onClick={closeModal}>

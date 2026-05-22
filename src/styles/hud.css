@@ -3866,3 +3866,127 @@
   min-height: 82px;
   resize: vertical;
 }
+
+/* Local map frame containment fix */
+
+.local-map-main {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.local-map-frame {
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+  max-width: 100%;
+  isolation: isolate;
+}
+
+.local-map-image {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+.local-map-sidebar,
+.local-map-card {
+  position: relative;
+  z-index: 2;
+}
+
+/* Local map frame safe containment */
+
+.local-map-main {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.local-map-frame {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.local-map-image {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+/* Local map decorative frame cleanup */
+
+.local-map-layout,
+.local-map-main,
+.local-map-frame {
+  border: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+}
+
+.local-map-frame::before,
+.local-map-frame::after,
+.local-map-main::before,
+.local-map-main::after,
+.local-map-layout::before,
+.local-map-layout::after {
+  display: none !important;
+  content: none !important;
+}
+
+.local-map-frame {
+  background: transparent !important;
+}
+
+/* Encounter toolbar frame cleanup */
+
+.encounter-player-toolbar {
+  border: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+.encounter-player-toolbar::before,
+.encounter-player-toolbar::after {
+  display: none !important;
+  content: none !important;
+}
+
+/* Encounter toolbar frame cleanup */
+
+.encounter-player-toolbar {
+  border: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+.encounter-player-toolbar::before,
+.encounter-player-toolbar::after {
+  display: none !important;
+  content: none !important;
+}
+
+/* Local map modal frame cleanup */
+
+.encounter-modal.local-map-mode {
+  border: 0 !important;
+  outline: 0 !important;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.42) !important;
+}
+
+.encounter-modal.local-map-mode::before,
+.encounter-modal.local-map-mode::after {
+  display: none !important;
+  content: none !important;
+}
