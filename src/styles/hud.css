@@ -4067,3 +4067,137 @@
   text-transform: uppercase;
   white-space: nowrap;
 }
+
+/* Local map point action spacing */
+
+.local-map-card .secondary-button+.danger-button,
+.local-map-card .local-map-field+.secondary-button {
+  margin-top: 10px;
+}
+
+.local-map-card .secondary-button,
+.local-map-card .danger-button {
+  min-height: 34px;
+  padding: 8px 12px;
+  font-size: 12px;
+  line-height: 1.1;
+}
+
+.local-map-card .secondary-button {
+  margin-right: 6px;
+}
+
+/* Local map compact point list */
+
+.local-map-point-list {
+  max-height: 260px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.local-map-point-list-item {
+  min-height: 42px;
+  padding: 8px 10px;
+}
+
+.local-map-point-list-item span {
+  font-size: 12px;
+}
+
+.local-map-point-list-item small {
+  font-size: 9px;
+}
+
+.local-map-selected-point-card textarea {
+  min-height: 96px;
+}
+
+.local-map-selected-point-card .local-map-field {
+  gap: 5px;
+}
+
+.local-map-selected-point-card .secondary-button,
+.local-map-selected-point-card .danger-button {
+  min-height: 34px;
+  padding: 8px 12px;
+  font-size: 12px;
+}
+
+/* Local map selected point action row */
+
+.local-map-point-action-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.local-map-point-action-row .secondary-button,
+.local-map-point-action-row .danger-button {
+  min-height: 34px;
+  padding: 8px 12px;
+  font-size: 12px;
+  line-height: 1.1;
+}
+
+/* Local map image settings compact right card */
+
+.local-map-image-settings-card {
+  grid-column: 2;
+  order: 3;
+}
+
+.local-map-image-settings-card h3 {
+  font-size: 18px;
+}
+
+.local-map-image-settings-card .local-map-field {
+  gap: 4px;
+  font-size: 11px;
+}
+
+.local-map-image-settings-card input {
+  min-height: 30px;
+  padding: 7px 9px;
+  font-size: 11px;
+}
+
+.local-map-image-settings-card .local-map-help {
+  font-size: 10px;
+  line-height: 1.3;
+}
+
+.local-map-image-settings-card .danger-button {
+  min-height: 32px;
+  padding: 7px 11px;
+  font-size: 11px;
+}
+
+@media (max-width: 1100px) {
+  .local-map-image-settings-card {
+    grid-column: 1;
+  }
+}
+
+/* Local map sidebar final card order */
+
+.local-map-selected-point-card {
+  order: 1 !important;
+}
+
+.local-map-points-card {
+  order: 2 !important;
+}
+
+.local-map-sidebar .local-map-card:has(.local-map-notes) {
+  order: 3 !important;
+}
+
+.local-map-sidebar .local-map-card:has(.local-map-level-list) {
+  order: 4 !important;
+}
+
+.local-map-image-settings-card {
+  order: 5 !important;
+  grid-column: 2;
+}
