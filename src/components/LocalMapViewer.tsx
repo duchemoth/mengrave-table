@@ -159,7 +159,9 @@ function normalizeLocalMapLevels(value: unknown): LocalMapLevel[] {
         return [createRootLocalMapLevel()];
     }
 
-    const hasRootLevel = normalizedLevels.some((level) => level.id === ROOT_LOCAL_MAP_ID);
+    const hasRootLevel = normalizedLevels.some(
+        (level) => level.id === ROOT_LOCAL_MAP_ID,
+    );
 
     if (hasRootLevel) {
         return normalizedLevels;
@@ -285,8 +287,9 @@ export function LocalMapViewer({
         }
 
         return (
-            localMapLevels.find((level) => level.id === selectedPoint.targetLocalMapId) ??
-            null
+            localMapLevels.find(
+                (level) => level.id === selectedPoint.targetLocalMapId,
+            ) ?? null
         );
     }, [localMapLevels, selectedPoint]);
 
@@ -318,13 +321,17 @@ export function LocalMapViewer({
         setLevelHistory([]);
     }, [storageKey]);
 
-    function saveDraft(nextLevels: LocalMapLevel[], nextActiveLevelId = activeLevelId) {
+    function saveDraft(
+        nextLevels: LocalMapLevel[],
+        nextActiveLevelId = activeLevelId,
+    ) {
         if (!storageKey) {
             return;
         }
 
         const rootLevel =
-            nextLevels.find((level) => level.id === ROOT_LOCAL_MAP_ID) ?? nextLevels[0];
+            nextLevels.find((level) => level.id === ROOT_LOCAL_MAP_ID) ??
+            nextLevels[0];
 
         saveLocalMapDraft(storageKey, {
             imageUrl: rootLevel?.imageUrl ?? "",
@@ -465,7 +472,10 @@ export function LocalMapViewer({
     function createEmptySublevel() {
         const nextLevel = createLocalMapLevel();
 
-        updateLocalMapLevels((currentLevels) => [...currentLevels, nextLevel], nextLevel.id);
+        updateLocalMapLevels(
+            (currentLevels) => [...currentLevels, nextLevel],
+            nextLevel.id,
+        );
 
         setActiveLevelId(nextLevel.id);
         setSelectedPointId(null);
@@ -544,7 +554,11 @@ export function LocalMapViewer({
 
                 <div className="local-map-level-actions">
                     {levelHistory.length > 0 && (
-                        <button className="secondary-button" type="button" onClick={goBackLevel}>
+                        <button
+                            className="secondary-button"
+                            type="button"
+                            onClick={goBackLevel}
+                        >
                             Назад
                         </button>
                     )}
@@ -560,7 +574,11 @@ export function LocalMapViewer({
                     )}
 
                     {!isPlayerMode && activeLevel.id !== ROOT_LOCAL_MAP_ID && (
-                        <button className="danger-button" type="button" onClick={deleteActiveLevel}>
+                        <button
+                            className="danger-button"
+                            type="button"
+                            onClick={deleteActiveLevel}
+                        >
                             Удалить подуровень
                         </button>
                     )}
@@ -627,113 +645,8 @@ export function LocalMapViewer({
 
                 {!isPlayerMode && (
                     <aside className="local-map-sidebar">
-                        <section className="local-map-card">
-                            <p className="eyebrow">Карты объекта</p>
-                            <h3>Подлокации</h3>
-
-                            <div className="local-map-level-list">
-                                {localMapLevels.map((level) => (
-                                    <button
-                                        key={level.id}
-                                        className={`local-map-level-list-item ${activeLevel.id === level.id ? "active" : ""
-                                            }`}
-                                        type="button"
-                                        onClick={() => {
-                                            setActiveLevelId(level.id);
-                                            setSelectedPointId(null);
-                                            setIsPlacingPoint(false);
-                                            saveDraft(localMapLevels, level.id);
-                                        }}
-                                    >
-                                        <span>{level.title}</span>
-                                        <small>{level.id === ROOT_LOCAL_MAP_ID ? "основная" : level.id}</small>
-                                    </button>
-                                ))}
-                            </div>
-                        </section>
-
-                        <section className="local-map-card">
-                            <p className="eyebrow">Фон карты</p>
-                            <h3>Изображение</h3>
-
-                            <label className="local-map-field">
-                                Название карты
-                                <input
-                                    value={activeLevel.title}
-                                    onChange={(event) =>
-                                        updateActiveLevel({ title: event.target.value })
-                                    }
-                                    placeholder="Комендатура"
-                                />
-                            </label>
-
-                            <label className="local-map-field">
-                                Путь или ссылка на картинку
-                                <input
-                                    value={activeLevel.imageUrl}
-                                    onChange={(event) =>
-                                        updateLocalMapImageUrl(event.target.value)
-                                    }
-                                    placeholder="/local-maps/old-harbor.webp"
-                                />
-                            </label>
-
-                            <p className="local-map-help">
-                                Для локальных файлов положи изображение в папку public/local-maps и
-                                укажи путь от корня сайта, например /local-maps/1.png.
-                            </p>
-
-                            {activeLevel.imageUrl.trim().length > 0 && (
-                                <button
-                                    className="danger-button"
-                                    type="button"
-                                    onClick={removeLocalMapImage}
-                                >
-                                    Убрать карту
-                                </button>
-                            )}
-                        </section>
-
-                        <section className="local-map-card">
-                            <p className="eyebrow">Точки</p>
-                            <h3>Интересы и входы</h3>
-
-                            <button
-                                className="secondary-button"
-                                type="button"
-                                onClick={() => setIsPlacingPoint((current) => !current)}
-                            >
-                                {isPlacingPoint ? "Отменить точку" : "Добавить точку"}
-                            </button>
-
-                            {activeLevel.points.length > 0 ? (
-                                <div className="local-map-point-list">
-                                    {activeLevel.points.map((point) => (
-                                        <button
-                                            key={point.id}
-                                            className={`local-map-point-list-item ${selectedPointId === point.id ? "active" : ""
-                                                }`}
-                                            type="button"
-                                            onClick={() => setSelectedPointId(point.id)}
-                                        >
-                                            <span>{point.title}</span>
-                                            <small>
-                                                {LOCAL_MAP_POINT_KIND_LABELS[point.kind]}
-                                                {point.targetLocalMapId ? " · переход" : ""}
-                                                {point.isSecret ? " · скрыто" : ""}
-                                            </small>
-                                        </button>
-                                    ))}
-                                </div>
-                            ) : (
-                                <p className="local-map-help">
-                                    Точек пока нет. Нажми “Добавить точку”, затем кликни по карте.
-                                </p>
-                            )}
-                        </section>
-
                         {selectedPoint && (
-                            <section className="local-map-card">
+                            <section className="local-map-card local-map-selected-point-card">
                                 <p className="eyebrow">Выбранная точка</p>
                                 <h3>{selectedPoint.title}</h3>
 
@@ -805,7 +718,9 @@ export function LocalMapViewer({
                                         onChange={(event) =>
                                             updateSelectedPoint({
                                                 targetLocalMapId: event.target.value,
-                                                kind: event.target.value ? "entrance" : selectedPoint.kind,
+                                                kind: event.target.value
+                                                    ? "entrance"
+                                                    : selectedPoint.kind,
                                             })
                                         }
                                     >
@@ -820,33 +735,73 @@ export function LocalMapViewer({
                                     </select>
                                 </label>
 
-                                <button
-                                    className="secondary-button"
-                                    type="button"
-                                    onClick={createSublevelFromSelectedPoint}
-                                >
-                                    Создать подуровень из точки
-                                </button>
-
-                                {entranceTargetLevel && (
+                                <div className="local-map-point-action-row">
                                     <button
                                         className="secondary-button"
                                         type="button"
-                                        onClick={() => goToLevel(entranceTargetLevel.id)}
+                                        onClick={createSublevelFromSelectedPoint}
                                     >
-                                        Перейти: {entranceTargetLevel.title}
+                                        Создать подуровень из точки
                                     </button>
-                                )}
 
-                                <button
-                                    className="danger-button"
-                                    type="button"
-                                    onClick={deleteSelectedPoint}
-                                >
-                                    Удалить точку
-                                </button>
+                                    {entranceTargetLevel && (
+                                        <button
+                                            className="secondary-button"
+                                            type="button"
+                                            onClick={() => goToLevel(entranceTargetLevel.id)}
+                                        >
+                                            Перейти: {entranceTargetLevel.title}
+                                        </button>
+                                    )}
+
+                                    <button
+                                        className="danger-button"
+                                        type="button"
+                                        onClick={deleteSelectedPoint}
+                                    >
+                                        Удалить точку
+                                    </button>
+                                </div>
                             </section>
                         )}
+
+                        <section className="local-map-card local-map-points-card">
+                            <p className="eyebrow">Точки</p>
+                            <h3>Интересы и входы</h3>
+
+                            <button
+                                className="secondary-button"
+                                type="button"
+                                onClick={() => setIsPlacingPoint((current) => !current)}
+                            >
+                                {isPlacingPoint ? "Отменить точку" : "Добавить точку"}
+                            </button>
+
+                            {activeLevel.points.length > 0 ? (
+                                <div className="local-map-point-list">
+                                    {activeLevel.points.map((point) => (
+                                        <button
+                                            key={point.id}
+                                            className={`local-map-point-list-item ${selectedPointId === point.id ? "active" : ""
+                                                }`}
+                                            type="button"
+                                            onClick={() => setSelectedPointId(point.id)}
+                                        >
+                                            <span>{point.title}</span>
+                                            <small>
+                                                {LOCAL_MAP_POINT_KIND_LABELS[point.kind]}
+                                                {point.targetLocalMapId ? " · переход" : ""}
+                                                {point.isSecret ? " · скрыто" : ""}
+                                            </small>
+                                        </button>
+                                    ))}
+                                </div>
+                            ) : (
+                                <p className="local-map-help">
+                                    Точек пока нет. Нажми “Добавить точку”, затем кликни по карте.
+                                </p>
+                            )}
+                        </section>
 
                         <section className="local-map-card">
                             <p className="eyebrow">Для мастера</p>
@@ -858,6 +813,75 @@ export function LocalMapViewer({
                                 onChange={(event) => updateLocalMapNotes(event.target.value)}
                                 placeholder="Входы, укрытия, опасные зоны, засады, запертые двери, шумы, маршруты отхода."
                             />
+                        </section>
+
+                        <section className="local-map-card">
+                            <p className="eyebrow">Карты объекта</p>
+                            <h3>Подлокации</h3>
+
+                            <div className="local-map-level-list">
+                                {localMapLevels.map((level) => (
+                                    <button
+                                        key={level.id}
+                                        className={`local-map-level-list-item ${activeLevel.id === level.id ? "active" : ""
+                                            }`}
+                                        type="button"
+                                        onClick={() => {
+                                            setActiveLevelId(level.id);
+                                            setSelectedPointId(null);
+                                            setIsPlacingPoint(false);
+                                            saveDraft(localMapLevels, level.id);
+                                        }}
+                                    >
+                                        <span>{level.title}</span>
+                                        <small>
+                                            {level.id === ROOT_LOCAL_MAP_ID ? "основная" : level.id}
+                                        </small>
+                                    </button>
+                                ))}
+                            </div>
+                        </section>
+
+                        <section className="local-map-card local-map-image-settings-card">
+                            <p className="eyebrow">Фон карты</p>
+                            <h3>Изображение</h3>
+
+                            <label className="local-map-field">
+                                Название карты
+                                <input
+                                    value={activeLevel.title}
+                                    onChange={(event) =>
+                                        updateActiveLevel({ title: event.target.value })
+                                    }
+                                    placeholder="Комендатура"
+                                />
+                            </label>
+
+                            <label className="local-map-field">
+                                Путь или ссылка на картинку
+                                <input
+                                    value={activeLevel.imageUrl}
+                                    onChange={(event) =>
+                                        updateLocalMapImageUrl(event.target.value)
+                                    }
+                                    placeholder="/local-maps/old-harbor.webp"
+                                />
+                            </label>
+
+                            <p className="local-map-help">
+                                Для локальных файлов положи изображение в папку public/local-maps
+                                и укажи путь от корня сайта, например /local-maps/1.png.
+                            </p>
+
+                            {activeLevel.imageUrl.trim().length > 0 && (
+                                <button
+                                    className="danger-button"
+                                    type="button"
+                                    onClick={removeLocalMapImage}
+                                >
+                                    Убрать карту
+                                </button>
+                            )}
                         </section>
                     </aside>
                 )}
