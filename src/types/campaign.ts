@@ -27,6 +27,11 @@ export type Quest = {
   description: string;
   status: QuestStatus;
   isSecret?: boolean;
+
+  giver?: string;
+  reward?: string;
+  relatedLocationId?: string;
+  masterNotes?: string;
 };
 
 export type ArsenalItemCategory =

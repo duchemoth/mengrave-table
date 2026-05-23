@@ -157,11 +157,19 @@ export function SideDrawer({
           />
         )}
 
-        {isDeveloperMode && (
-          <QuestEditor quests={quests} onChangeQuests={onChangeQuests} />
+        {!isPlayerMode && (
+          <QuestEditor
+            quests={quests}
+            locations={locations}
+            onChangeQuests={onChangeQuests}
+          />
         )}
 
-        <QuestListPanel quests={quests} isPlayerMode={isPlayerMode} />
+        <QuestListPanel
+          quests={quests}
+          locations={locations}
+          isPlayerMode={isPlayerMode}
+        />
 
         {isDeveloperMode && (
           <TextListEditor
