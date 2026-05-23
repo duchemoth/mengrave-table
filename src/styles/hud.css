@@ -3990,3 +3990,80 @@
   display: none !important;
   content: none !important;
 }
+
+/* Local map sublevels */
+
+.local-map-level-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border: 1px solid rgba(36, 26, 18, 0.14);
+  border-radius: 16px;
+  padding: 10px 12px;
+  background: rgba(255, 244, 210, 0.24);
+}
+
+.local-map-level-bar p,
+.local-map-level-bar strong {
+  margin: 0;
+}
+
+.local-map-level-bar strong {
+  display: block;
+  margin-top: 4px;
+  color: var(--ink);
+  font-family: Georgia, serif;
+  font-size: 20px;
+  line-height: 1;
+}
+
+.local-map-level-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.local-map-level-list {
+  display: grid;
+  gap: 8px;
+}
+
+.local-map-level-list-item {
+  display: grid;
+  gap: 3px;
+  width: 100%;
+  border: 1px solid rgba(36, 26, 18, 0.18);
+  border-radius: 14px;
+  padding: 9px 10px;
+  color: var(--ink);
+  background: rgba(255, 244, 210, 0.32);
+  font-family: Inter, system-ui, sans-serif;
+  text-align: left;
+  cursor: pointer;
+}
+
+.local-map-level-list-item.active {
+  border-color: rgba(124, 37, 34, 0.46);
+  background: rgba(124, 37, 34, 0.1);
+}
+
+.local-map-level-list-item span {
+  overflow: hidden;
+  font-size: 12px;
+  font-weight: 950;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.local-map-level-list-item small {
+  overflow: hidden;
+  color: var(--ink-soft);
+  font-size: 10px;
+  font-weight: 850;
+  letter-spacing: 0.08em;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}

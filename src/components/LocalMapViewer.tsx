@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 export type LocalMapPointKind = "interest" | "entrance" | "danger" | "object";
 
@@ -14,10 +14,20 @@ export type LocalMapPoint = {
     targetLocalMapId: string;
 };
 
+export type LocalMapLevel = {
+    id: string;
+    title: string;
+    imageUrl: string;
+    notes: string;
+    points: LocalMapPoint[];
+};
+
 export type LocalMapDraft = {
     imageUrl: string;
     notes: string;
     points: LocalMapPoint[];
+    levels?: LocalMapLevel[];
+    activeLevelId?: string;
 };
 
 type LocalMapViewerProps = {
@@ -30,6 +40,8 @@ type LocalMapViewerProps = {
     onClose: () => void;
 };
 
+const ROOT_LOCAL_MAP_ID = "root";
+
 const LOCAL_MAP_POINT_KIND_LABELS: Record<LocalMapPointKind, string> = {
     interest: "Интерес",
     entrance: "Вход",
@@ -39,6 +51,26 @@ const LOCAL_MAP_POINT_KIND_LABELS: Record<LocalMapPointKind, string> = {
 
 function clampLocalMapCoordinate(value: number) {
     return Math.max(0, Math.min(100, value));
+}
+
+function createRootLocalMapLevel(): LocalMapLevel {
+    return {
+        id: ROOT_LOCAL_MAP_ID,
+        title: "Основная карта",
+        imageUrl: "",
+        notes: "",
+        points: [],
+    };
+}
+
+function createLocalMapLevel(title = "Новая подлокация"): LocalMapLevel {
+    return {
+        id: `local-map-${Date.now()}-${Math.random().toString(36).slice(2)}`,
+        title,
+        imageUrl: "",
+        notes: "",
+        points: [],
+    };
 }
 
 function normalizeLocalMapPoint(value: unknown): LocalMapPoint | null {
@@ -92,6 +124,56 @@ function normalizeLocalMapPoints(value: unknown): LocalMapPoint[] {
         .filter((point): point is LocalMapPoint => point !== null);
 }
 
+function normalizeLocalMapLevel(value: unknown): LocalMapLevel | null {
+    if (!value || typeof value !== "object" || Array.isArray(value)) {
+        return null;
+    }
+
+    const level = value as Partial<LocalMapLevel>;
+
+    return {
+        id:
+            typeof level.id === "string" && level.id.trim().length > 0
+                ? level.id
+                : `local-map-${Date.now()}-${Math.random().toString(36).slice(2)}`,
+        title:
+            typeof level.title === "string" && level.title.trim().length > 0
+                ? level.title
+                : "Локальная карта",
+        imageUrl: typeof level.imageUrl === "string" ? level.imageUrl : "",
+        notes: typeof level.notes === "string" ? level.notes : "",
+        points: normalizeLocalMapPoints(level.points),
+    };
+}
+
+function normalizeLocalMapLevels(value: unknown): LocalMapLevel[] {
+    if (!Array.isArray(value)) {
+        return [];
+    }
+
+    const normalizedLevels = value
+        .map(normalizeLocalMapLevel)
+        .filter((level): level is LocalMapLevel => level !== null);
+
+    if (normalizedLevels.length === 0) {
+        return [createRootLocalMapLevel()];
+    }
+
+    const hasRootLevel = normalizedLevels.some((level) => level.id === ROOT_LOCAL_MAP_ID);
+
+    if (hasRootLevel) {
+        return normalizedLevels;
+    }
+
+    return [
+        {
+            ...createRootLocalMapLevel(),
+            title: "Основная карта",
+        },
+        ...normalizedLevels,
+    ];
+}
+
 function loadLocalMapDraft(storageKey: string): LocalMapDraft {
     try {
         const savedLocalMap = localStorage.getItem(storageKey);
@@ -101,21 +183,52 @@ function loadLocalMapDraft(storageKey: string): LocalMapDraft {
                 imageUrl: "",
                 notes: "",
                 points: [],
+                levels: [createRootLocalMapLevel()],
+                activeLevelId: ROOT_LOCAL_MAP_ID,
             };
         }
 
         const parsedLocalMap = JSON.parse(savedLocalMap) as Partial<LocalMapDraft>;
 
-        return {
+        if (Array.isArray(parsedLocalMap.levels)) {
+            const levels = normalizeLocalMapLevels(parsedLocalMap.levels);
+            const activeLevelId =
+                typeof parsedLocalMap.activeLevelId === "string" &&
+                    levels.some((level) => level.id === parsedLocalMap.activeLevelId)
+                    ? parsedLocalMap.activeLevelId
+                    : levels[0]?.id ?? ROOT_LOCAL_MAP_ID;
+
+            return {
+                imageUrl: "",
+                notes: "",
+                points: [],
+                levels,
+                activeLevelId,
+            };
+        }
+
+        const migratedRootLevel: LocalMapLevel = {
+            id: ROOT_LOCAL_MAP_ID,
+            title: "Основная карта",
             imageUrl: parsedLocalMap.imageUrl ?? "",
             notes: parsedLocalMap.notes ?? "",
             points: normalizeLocalMapPoints(parsedLocalMap.points),
+        };
+
+        return {
+            imageUrl: migratedRootLevel.imageUrl,
+            notes: migratedRootLevel.notes,
+            points: migratedRootLevel.points,
+            levels: [migratedRootLevel],
+            activeLevelId: ROOT_LOCAL_MAP_ID,
         };
     } catch {
         return {
             imageUrl: "",
             notes: "",
             points: [],
+            levels: [createRootLocalMapLevel()],
+            activeLevelId: ROOT_LOCAL_MAP_ID,
         };
     }
 }
@@ -139,7 +252,6 @@ function createLocalMapPoint(x: number, y: number): LocalMapPoint {
 }
 
 export function LocalMapViewer({
-    title,
     storageKey,
     isPlayerMode,
     canShowToPlayers,
@@ -147,73 +259,116 @@ export function LocalMapViewer({
     onBackToOverview,
     onClose,
 }: LocalMapViewerProps) {
-    const [localMapImageUrl, setLocalMapImageUrl] = useState("");
-    const [localMapNotes, setLocalMapNotes] = useState("");
-    const [localMapPoints, setLocalMapPoints] = useState<LocalMapPoint[]>([]);
+    const [localMapLevels, setLocalMapLevels] = useState<LocalMapLevel[]>([
+        createRootLocalMapLevel(),
+    ]);
+    const [activeLevelId, setActiveLevelId] = useState(ROOT_LOCAL_MAP_ID);
     const [selectedPointId, setSelectedPointId] = useState<string | null>(null);
     const [isPlacingPoint, setIsPlacingPoint] = useState(false);
+    const [levelHistory, setLevelHistory] = useState<string[]>([]);
+
+    const activeLevel =
+        localMapLevels.find((level) => level.id === activeLevelId) ??
+        localMapLevels[0] ??
+        createRootLocalMapLevel();
 
     const visiblePoints = isPlayerMode
-        ? localMapPoints.filter((point) => !point.isSecret)
-        : localMapPoints;
+        ? activeLevel.points.filter((point) => !point.isSecret)
+        : activeLevel.points;
 
     const selectedPoint =
-        localMapPoints.find((point) => point.id === selectedPointId) ?? null;
+        activeLevel.points.find((point) => point.id === selectedPointId) ?? null;
+
+    const entranceTargetLevel = useMemo(() => {
+        if (!selectedPoint?.targetLocalMapId) {
+            return null;
+        }
+
+        return (
+            localMapLevels.find((level) => level.id === selectedPoint.targetLocalMapId) ??
+            null
+        );
+    }, [localMapLevels, selectedPoint]);
 
     useEffect(() => {
         if (!storageKey) {
-            setLocalMapImageUrl("");
-            setLocalMapNotes("");
-            setLocalMapPoints([]);
+            setLocalMapLevels([createRootLocalMapLevel()]);
+            setActiveLevelId(ROOT_LOCAL_MAP_ID);
             setSelectedPointId(null);
             setIsPlacingPoint(false);
+            setLevelHistory([]);
             return;
         }
 
         const savedLocalMap = loadLocalMapDraft(storageKey);
+        const nextLevels = savedLocalMap.levels?.length
+            ? savedLocalMap.levels
+            : [createRootLocalMapLevel()];
 
-        setLocalMapImageUrl(savedLocalMap.imageUrl);
-        setLocalMapNotes(savedLocalMap.notes);
-        setLocalMapPoints(savedLocalMap.points);
+        const nextActiveLevelId =
+            savedLocalMap.activeLevelId &&
+                nextLevels.some((level) => level.id === savedLocalMap.activeLevelId)
+                ? savedLocalMap.activeLevelId
+                : nextLevels[0]?.id ?? ROOT_LOCAL_MAP_ID;
+
+        setLocalMapLevels(nextLevels);
+        setActiveLevelId(nextActiveLevelId);
         setSelectedPointId(null);
         setIsPlacingPoint(false);
+        setLevelHistory([]);
     }, [storageKey]);
 
-    function saveDraft(nextDraft: LocalMapDraft) {
+    function saveDraft(nextLevels: LocalMapLevel[], nextActiveLevelId = activeLevelId) {
         if (!storageKey) {
             return;
         }
 
-        saveLocalMapDraft(storageKey, nextDraft);
+        const rootLevel =
+            nextLevels.find((level) => level.id === ROOT_LOCAL_MAP_ID) ?? nextLevels[0];
+
+        saveLocalMapDraft(storageKey, {
+            imageUrl: rootLevel?.imageUrl ?? "",
+            notes: rootLevel?.notes ?? "",
+            points: rootLevel?.points ?? [],
+            levels: nextLevels,
+            activeLevelId: nextActiveLevelId,
+        });
+    }
+
+    function updateLocalMapLevels(
+        updater: (currentLevels: LocalMapLevel[]) => LocalMapLevel[],
+        nextActiveLevelId = activeLevelId,
+    ) {
+        setLocalMapLevels((currentLevels) => {
+            const nextLevels = updater(currentLevels);
+            saveDraft(nextLevels, nextActiveLevelId);
+            return nextLevels;
+        });
+    }
+
+    function updateActiveLevel(updatedFields: Partial<LocalMapLevel>) {
+        updateLocalMapLevels((currentLevels) =>
+            currentLevels.map((level) =>
+                level.id === activeLevel.id ? { ...level, ...updatedFields } : level,
+            ),
+        );
+    }
+
+    function updateActiveLevelPoints(nextPoints: LocalMapPoint[]) {
+        updateActiveLevel({
+            points: nextPoints,
+        });
     }
 
     function updateLocalMapImageUrl(nextImageUrl: string) {
-        setLocalMapImageUrl(nextImageUrl);
-
-        saveDraft({
+        updateActiveLevel({
             imageUrl: nextImageUrl,
-            notes: localMapNotes,
-            points: localMapPoints,
         });
     }
 
     function updateLocalMapNotes(nextNotes: string) {
-        setLocalMapNotes(nextNotes);
-
-        saveDraft({
-            imageUrl: localMapImageUrl,
+        updateActiveLevel({
             notes: nextNotes,
-            points: localMapPoints,
-        });
-    }
-
-    function updateLocalMapPoints(nextPoints: LocalMapPoint[]) {
-        setLocalMapPoints(nextPoints);
-
-        saveDraft({
-            imageUrl: localMapImageUrl,
-            notes: localMapNotes,
-            points: nextPoints,
         });
     }
 
@@ -238,7 +393,7 @@ export function LocalMapViewer({
 
         const newPoint = createLocalMapPoint(x, y);
 
-        updateLocalMapPoints([...localMapPoints, newPoint]);
+        updateActiveLevelPoints([...activeLevel.points, newPoint]);
         setSelectedPointId(newPoint.id);
         setIsPlacingPoint(false);
     }
@@ -248,11 +403,11 @@ export function LocalMapViewer({
             return;
         }
 
-        const nextPoints = localMapPoints.map((point) =>
+        const nextPoints = activeLevel.points.map((point) =>
             point.id === selectedPoint.id ? { ...point, ...updatedFields } : point,
         );
 
-        updateLocalMapPoints(nextPoints);
+        updateActiveLevelPoints(nextPoints);
     }
 
     function deleteSelectedPoint() {
@@ -268,15 +423,150 @@ export function LocalMapViewer({
             return;
         }
 
-        updateLocalMapPoints(
-            localMapPoints.filter((point) => point.id !== selectedPoint.id),
+        updateActiveLevelPoints(
+            activeLevel.points.filter((point) => point.id !== selectedPoint.id),
         );
 
         setSelectedPointId(null);
     }
 
+    function createSublevelFromSelectedPoint() {
+        if (!selectedPoint) {
+            return;
+        }
+
+        const nextLevel = createLocalMapLevel(selectedPoint.title || "Подлокация");
+
+        updateLocalMapLevels((currentLevels) => {
+            return [
+                ...currentLevels.map((level) =>
+                    level.id === activeLevel.id
+                        ? {
+                            ...level,
+                            points: level.points.map((point): LocalMapPoint =>
+                                point.id === selectedPoint.id
+                                    ? {
+                                        ...point,
+                                        kind: "entrance" as LocalMapPointKind,
+                                        targetLocalMapId: nextLevel.id,
+                                    }
+                                    : point,
+                            ),
+                        }
+                        : level,
+                ),
+                nextLevel,
+            ];
+        });
+
+        setSelectedPointId(selectedPoint.id);
+    }
+
+    function createEmptySublevel() {
+        const nextLevel = createLocalMapLevel();
+
+        updateLocalMapLevels((currentLevels) => [...currentLevels, nextLevel], nextLevel.id);
+
+        setActiveLevelId(nextLevel.id);
+        setSelectedPointId(null);
+        setIsPlacingPoint(false);
+        setLevelHistory((currentHistory) => [...currentHistory, activeLevel.id]);
+    }
+
+    function goToLevel(nextLevelId: string) {
+        if (!localMapLevels.some((level) => level.id === nextLevelId)) {
+            return;
+        }
+
+        setLevelHistory((currentHistory) => [...currentHistory, activeLevel.id]);
+        setActiveLevelId(nextLevelId);
+        setSelectedPointId(null);
+        setIsPlacingPoint(false);
+        saveDraft(localMapLevels, nextLevelId);
+    }
+
+    function goBackLevel() {
+        const previousLevelId = levelHistory[levelHistory.length - 1];
+
+        if (!previousLevelId) {
+            return;
+        }
+
+        setLevelHistory((currentHistory) => currentHistory.slice(0, -1));
+        setActiveLevelId(previousLevelId);
+        setSelectedPointId(null);
+        setIsPlacingPoint(false);
+        saveDraft(localMapLevels, previousLevelId);
+    }
+
+    function deleteActiveLevel() {
+        if (activeLevel.id === ROOT_LOCAL_MAP_ID) {
+            window.alert("Основную локальную карту удалить нельзя.");
+            return;
+        }
+
+        const shouldDelete = window.confirm(
+            `Удалить локальную карту «${activeLevel.title}»? Входы на неё будут отвязаны.`,
+        );
+
+        if (!shouldDelete) {
+            return;
+        }
+
+        const nextLevels = localMapLevels
+            .filter((level) => level.id !== activeLevel.id)
+            .map((level) => ({
+                ...level,
+                points: level.points.map((point) =>
+                    point.targetLocalMapId === activeLevel.id
+                        ? { ...point, targetLocalMapId: "" }
+                        : point,
+                ),
+            }));
+
+        const nextActiveLevelId = ROOT_LOCAL_MAP_ID;
+
+        setLocalMapLevels(nextLevels);
+        setActiveLevelId(nextActiveLevelId);
+        setSelectedPointId(null);
+        setIsPlacingPoint(false);
+        setLevelHistory([]);
+        saveDraft(nextLevels, nextActiveLevelId);
+    }
+
     return (
         <>
+            <div className="local-map-level-bar">
+                <div>
+                    <p className="eyebrow">Уровень локальной карты</p>
+                    <strong>{activeLevel.title}</strong>
+                </div>
+
+                <div className="local-map-level-actions">
+                    {levelHistory.length > 0 && (
+                        <button className="secondary-button" type="button" onClick={goBackLevel}>
+                            Назад
+                        </button>
+                    )}
+
+                    {!isPlayerMode && (
+                        <button
+                            className="secondary-button"
+                            type="button"
+                            onClick={createEmptySublevel}
+                        >
+                            Новая подкарта
+                        </button>
+                    )}
+
+                    {!isPlayerMode && activeLevel.id !== ROOT_LOCAL_MAP_ID && (
+                        <button className="danger-button" type="button" onClick={deleteActiveLevel}>
+                            Удалить подуровень
+                        </button>
+                    )}
+                </div>
+            </div>
+
             <div className="local-map-layout">
                 <section className="local-map-main">
                     <div
@@ -284,11 +574,11 @@ export function LocalMapViewer({
                             }`}
                         onClick={handleLocalMapClick}
                     >
-                        {localMapImageUrl.trim().length > 0 ? (
+                        {activeLevel.imageUrl.trim().length > 0 ? (
                             <img
                                 className="local-map-image"
-                                src={localMapImageUrl.trim()}
-                                alt={`Локальная карта: ${title}`}
+                                src={activeLevel.imageUrl.trim()}
+                                alt={`Локальная карта: ${activeLevel.title}`}
                             />
                         ) : (
                             <div className="local-map-empty">
@@ -338,13 +628,49 @@ export function LocalMapViewer({
                 {!isPlayerMode && (
                     <aside className="local-map-sidebar">
                         <section className="local-map-card">
+                            <p className="eyebrow">Карты объекта</p>
+                            <h3>Подлокации</h3>
+
+                            <div className="local-map-level-list">
+                                {localMapLevels.map((level) => (
+                                    <button
+                                        key={level.id}
+                                        className={`local-map-level-list-item ${activeLevel.id === level.id ? "active" : ""
+                                            }`}
+                                        type="button"
+                                        onClick={() => {
+                                            setActiveLevelId(level.id);
+                                            setSelectedPointId(null);
+                                            setIsPlacingPoint(false);
+                                            saveDraft(localMapLevels, level.id);
+                                        }}
+                                    >
+                                        <span>{level.title}</span>
+                                        <small>{level.id === ROOT_LOCAL_MAP_ID ? "основная" : level.id}</small>
+                                    </button>
+                                ))}
+                            </div>
+                        </section>
+
+                        <section className="local-map-card">
                             <p className="eyebrow">Фон карты</p>
                             <h3>Изображение</h3>
 
                             <label className="local-map-field">
+                                Название карты
+                                <input
+                                    value={activeLevel.title}
+                                    onChange={(event) =>
+                                        updateActiveLevel({ title: event.target.value })
+                                    }
+                                    placeholder="Комендатура"
+                                />
+                            </label>
+
+                            <label className="local-map-field">
                                 Путь или ссылка на картинку
                                 <input
-                                    value={localMapImageUrl}
+                                    value={activeLevel.imageUrl}
                                     onChange={(event) =>
                                         updateLocalMapImageUrl(event.target.value)
                                     }
@@ -353,12 +679,11 @@ export function LocalMapViewer({
                             </label>
 
                             <p className="local-map-help">
-                                Рекомендуемый стандарт: 1920×1080, WebP или JPEG. Для локальных
-                                файлов положи изображение в папку public/local-maps и укажи путь
-                                от корня сайта.
+                                Для локальных файлов положи изображение в папку public/local-maps и
+                                укажи путь от корня сайта, например /local-maps/1.png.
                             </p>
 
-                            {localMapImageUrl.trim().length > 0 && (
+                            {activeLevel.imageUrl.trim().length > 0 && (
                                 <button
                                     className="danger-button"
                                     type="button"
@@ -381,9 +706,9 @@ export function LocalMapViewer({
                                 {isPlacingPoint ? "Отменить точку" : "Добавить точку"}
                             </button>
 
-                            {localMapPoints.length > 0 ? (
+                            {activeLevel.points.length > 0 ? (
                                 <div className="local-map-point-list">
-                                    {localMapPoints.map((point) => (
+                                    {activeLevel.points.map((point) => (
                                         <button
                                             key={point.id}
                                             className={`local-map-point-list-item ${selectedPointId === point.id ? "active" : ""
@@ -394,6 +719,7 @@ export function LocalMapViewer({
                                             <span>{point.title}</span>
                                             <small>
                                                 {LOCAL_MAP_POINT_KIND_LABELS[point.kind]}
+                                                {point.targetLocalMapId ? " · переход" : ""}
                                                 {point.isSecret ? " · скрыто" : ""}
                                             </small>
                                         </button>
@@ -473,22 +799,44 @@ export function LocalMapViewer({
                                 </label>
 
                                 <label className="local-map-field">
-                                    ID целевой локальной карты
-                                    <input
+                                    Целевая подкарта
+                                    <select
                                         value={selectedPoint.targetLocalMapId}
                                         onChange={(event) =>
                                             updateSelectedPoint({
                                                 targetLocalMapId: event.target.value,
+                                                kind: event.target.value ? "entrance" : selectedPoint.kind,
                                             })
                                         }
-                                        placeholder="Например: barracks-interior"
-                                    />
+                                    >
+                                        <option value="">Нет перехода</option>
+                                        {localMapLevels
+                                            .filter((level) => level.id !== activeLevel.id)
+                                            .map((level) => (
+                                                <option key={level.id} value={level.id}>
+                                                    {level.title}
+                                                </option>
+                                            ))}
+                                    </select>
                                 </label>
 
-                                <p className="local-map-help">
-                                    Поле ID пока только задел под подуровни. Следующим коммитом
-                                    сделаем переходы между локальными картами.
-                                </p>
+                                <button
+                                    className="secondary-button"
+                                    type="button"
+                                    onClick={createSublevelFromSelectedPoint}
+                                >
+                                    Создать подуровень из точки
+                                </button>
+
+                                {entranceTargetLevel && (
+                                    <button
+                                        className="secondary-button"
+                                        type="button"
+                                        onClick={() => goToLevel(entranceTargetLevel.id)}
+                                    >
+                                        Перейти: {entranceTargetLevel.title}
+                                    </button>
+                                )}
 
                                 <button
                                     className="danger-button"
@@ -506,7 +854,7 @@ export function LocalMapViewer({
 
                             <textarea
                                 className="local-map-notes"
-                                value={localMapNotes}
+                                value={activeLevel.notes}
                                 onChange={(event) => updateLocalMapNotes(event.target.value)}
                                 placeholder="Входы, укрытия, опасные зоны, засады, запертые двери, шумы, маршруты отхода."
                             />
@@ -527,6 +875,16 @@ export function LocalMapViewer({
                                     ? selectedPoint.description
                                     : "Описание точки пока не добавлено."}
                             </p>
+
+                            {entranceTargetLevel && (
+                                <button
+                                    className="secondary-button"
+                                    type="button"
+                                    onClick={() => goToLevel(entranceTargetLevel.id)}
+                                >
+                                    Войти: {entranceTargetLevel.title}
+                                </button>
+                            )}
                         </section>
                     </aside>
                 )}
