@@ -13,6 +13,7 @@ export type Location = {
   type: string;
   category: LocationCategory;
   description: string;
+  imageUrl: string;
   x: number;
   y: number;
   isSecret?: boolean;
@@ -155,6 +156,7 @@ export type MapGroup = {
   name: string;
   faction: MapGroupFaction;
   description: string;
+  imageUrl: string;
   x: number;
   y: number;
   isSecret: boolean;
@@ -178,6 +180,7 @@ export type MapEvent = {
   status: MapEventStatus;
   description: string;
   masterNotes: string;
+  imageUrl: string;
   x: number;
   y: number;
   isSecret: boolean;

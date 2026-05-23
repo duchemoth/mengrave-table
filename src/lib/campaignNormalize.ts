@@ -4,6 +4,7 @@ export function normalizeLocation(location: Location): Location {
   return {
     ...location,
     category: location.category ?? (location.isSecret ? "secret" : "settlement"),
+    imageUrl: String(location.imageUrl ?? ""),
     isSecret: Boolean(location.isSecret),
   };
 }

@@ -114,6 +114,20 @@ export function LocationEditor({
           />
         </label>
 
+        <label>
+          Путь к иллюстрации
+          <input
+            value={selectedLocation.imageUrl}
+            onChange={(event) =>
+              onUpdateLocation({
+                ...selectedLocation,
+                imageUrl: event.target.value,
+              })
+            }
+            placeholder="/images/locations/fort-gorsta.jpg"
+          />
+        </label>
+
         <div className="editor-grid">
           <label>
             X
@@ -166,9 +180,8 @@ export function LocationEditor({
       <div className="dev-table">
         {locations.map((location) => (
           <button
-            className={`dev-row dev-row-button ${
-              location.id === selectedLocation.id ? "active" : ""
-            }`}
+            className={`dev-row dev-row-button ${location.id === selectedLocation.id ? "active" : ""
+              }`}
             key={location.id}
             onClick={() => onSelectLocation(location.id)}
           >

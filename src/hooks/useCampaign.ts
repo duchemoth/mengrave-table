@@ -104,6 +104,7 @@ export function useCampaign() {
       type: "Локация",
       category: "settlement",
       description: "Описание новой локации.",
+      imageUrl: "",
       x: 50,
       y: 50,
       isSecret: false,
@@ -270,6 +271,7 @@ export function useCampaign() {
           setGroups(
             parsedData.campaign.groups.map((group) => ({
               ...group,
+              imageUrl: String(group.imageUrl ?? ""),
               isSecret: Boolean(group.isSecret),
               members: Array.isArray(group.members) ? group.members : [],
             })),
@@ -280,6 +282,7 @@ export function useCampaign() {
           setEvents(
             parsedData.campaign.events.map((event) => ({
               ...event,
+              imageUrl: String(event.imageUrl ?? ""),
               status: event.status ?? "hidden",
               isSecret: Boolean(event.isSecret),
             })),

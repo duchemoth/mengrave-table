@@ -65,6 +65,7 @@ export function EventManager({
             status: "hidden",
             description: "Краткое описание события пока не добавлено.",
             masterNotes: "",
+            imageUrl: "",
             x: 50,
             y: 50,
             isSecret: true,

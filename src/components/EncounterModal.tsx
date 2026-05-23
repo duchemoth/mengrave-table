@@ -60,6 +60,7 @@ type EventDraft = {
   status: MapEvent["status"];
   description: string;
   masterNotes: string;
+  imageUrl: string;
   isSecret: boolean;
 };
 
@@ -122,6 +123,7 @@ export function EncounterModal({
     status: "hidden",
     description: "",
     masterNotes: "",
+    imageUrl: "",
     isSecret: true,
   });
 
@@ -189,6 +191,7 @@ export function EncounterModal({
       status: target.data.status,
       description: target.data.description,
       masterNotes: target.data.masterNotes,
+      imageUrl: target.data.imageUrl,
       isSecret: target.data.isSecret,
     });
 
@@ -263,6 +266,8 @@ export function EncounterModal({
 
   const description = target.data.description || "Описание пока не добавлено.";
 
+  const imageUrl = target.data.imageUrl?.trim() ?? "";
+
   function updatePlayerDescription(nextPlayerDescription: string) {
     setPlayerDescription(nextPlayerDescription);
 
@@ -311,6 +316,7 @@ export function EncounterModal({
       status: newEvent.status,
       description: newEvent.description,
       masterNotes: newEvent.masterNotes,
+      imageUrl: newEvent.imageUrl,
       isSecret: newEvent.isSecret,
     });
 
@@ -351,6 +357,7 @@ export function EncounterModal({
         eventDraft.description.trim() ||
         "Краткое описание события пока не добавлено.",
       masterNotes: eventDraft.masterNotes,
+      imageUrl: eventDraft.imageUrl.trim(),
       isSecret: eventDraft.isSecret,
     };
 
@@ -451,9 +458,15 @@ export function EncounterModal({
         {mode === "overview" ? (
           <>
             <div className="encounter-body">
-              <div className="encounter-art-placeholder">
-                <span>Арт сцены</span>
-              </div>
+              {imageUrl ? (
+                <div className="encounter-art">
+                  <img src={imageUrl} alt={title} className="encounter-art-image" />
+                </div>
+              ) : (
+                <div className="encounter-art-placeholder">
+                  <span>Иллюстрация не задана</span>
+                </div>
+              )}
 
               <div className="encounter-content">
                 <h3>Описание</h3>
@@ -704,6 +717,17 @@ export function EncounterModal({
                         <option value="active">Активно</option>
                         <option value="completed">Завершено</option>
                       </select>
+                    </label>
+
+                    <label className="event-field">
+                      Путь к иллюстрации
+                      <input
+                        value={eventDraft.imageUrl}
+                        onChange={(event) =>
+                          updateEventDraft({ imageUrl: event.target.value })
+                        }
+                        placeholder="/images/events/ambush-road.jpg"
+                      />
                     </label>
 
                     <label className="event-checkbox">

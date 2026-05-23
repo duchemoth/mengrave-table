@@ -42,6 +42,7 @@ export function GroupManager({
       name: draftName.trim() || "Новая группа",
       faction: draftFaction,
       description: "",
+      imageUrl: "",
       x: 50,
       y: 50,
       isSecret: true,
@@ -140,6 +141,20 @@ export function GroupManager({
                     description: event.target.value,
                   })
                 }
+              />
+            </label>
+
+            <label>
+              Путь к иллюстрации
+              <input
+                value={selectedGroup.imageUrl}
+                onChange={(event) =>
+                  onUpdateGroup({
+                    ...selectedGroup,
+                    imageUrl: event.target.value,
+                  })
+                }
+                placeholder="/images/groups/brigands-camp.jpg"
               />
             </label>
 
