@@ -614,3 +614,21 @@
   opacity: 1;
   transform: translateX(-50%) translateY(0);
 }
+
+/* Local map enemy points */
+
+.local-map-point-enemy {
+  border-color: rgba(255, 215, 190, 0.82);
+  color: #ffe8d8;
+  background:
+    radial-gradient(circle at 50% 42%, rgba(155, 38, 30, 0.98), rgba(38, 12, 10, 0.98));
+  box-shadow:
+    0 0 0 2px rgba(18, 10, 8, 0.34),
+    0 10px 20px rgba(18, 10, 8, 0.38),
+    0 0 18px rgba(155, 38, 30, 0.26);
+}
+
+.local-map-point-enemy:hover,
+.local-map-point-enemy.selected {
+  filter: brightness(1.18);
+}

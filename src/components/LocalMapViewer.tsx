@@ -6,7 +6,8 @@ export type LocalMapPointKind =
     | "entrance"
     | "danger"
     | "object"
-    | "npc";
+    | "npc"
+    | "enemy";
 
 export type LocalMapPoint = {
     id: string;
@@ -57,6 +58,7 @@ const LOCAL_MAP_POINT_KIND_LABELS: Record<LocalMapPointKind, string> = {
     danger: "Опасность",
     object: "Объект",
     npc: "Персонаж",
+    enemy: "Противник",
 };
 
 function clampLocalMapCoordinate(value: number) {
@@ -95,6 +97,7 @@ function normalizeLocalMapPoint(value: unknown): LocalMapPoint | null {
             point.kind === "danger" ||
             point.kind === "object" ||
             point.kind === "npc" ||
+            point.kind === "enemy" ||
             point.kind === "interest"
             ? point.kind
             : "interest";
@@ -661,7 +664,9 @@ export function LocalMapViewer({
                                                 ? "◆"
                                                 : point.kind === "npc"
                                                     ? "♟"
-                                                    : "?"}
+                                                    : point.kind === "enemy"
+                                                        ? "⚔"
+                                                        : "?"}
                                 </span>
 
                                 <span className="local-map-point-label">
@@ -715,6 +720,7 @@ export function LocalMapViewer({
                                         <option value="danger">Опасность</option>
                                         <option value="object">Объект</option>
                                         <option value="npc">Персонаж / NPC</option>
+                                        <option value="enemy">Противник</option>
                                     </select>
                                 </label>
 
