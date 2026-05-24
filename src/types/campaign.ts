@@ -21,6 +21,17 @@ export type Location = {
 
 export type QuestStatus = "active" | "completed" | "failed" | "hidden";
 
+export type CampaignStart =
+  | {
+    kind: "globalMap";
+  }
+  | {
+    kind: "encounter";
+    targetKind: "location" | "group" | "event";
+    targetId: string;
+    mode: "overview" | "scene" | "localMap";
+  };
+
 export type Quest = {
   id: string;
   title: string;
@@ -126,6 +137,7 @@ export type CharacterInventory = {
 };
 
 export type CampaignData = {
+  start?: CampaignStart;
   locations: Location[];
   groups: MapGroup[];
   events: MapEvent[];
