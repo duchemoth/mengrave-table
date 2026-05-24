@@ -13,6 +13,7 @@ const SECTION_LABELS: Record<ReferenceSection, string> = {
     bestiary: "Бестиарий",
     equipment: "Снаряжение",
     factions: "Фракции",
+    dossier: "Досье",
     glossary: "Глоссарий",
     other: "Другое",
 };
@@ -23,6 +24,7 @@ const SECTIONS: ReferenceSection[] = [
     "bestiary",
     "equipment",
     "factions",
+    "dossier",
     "glossary",
     "other",
 ];
@@ -188,10 +190,37 @@ export function ReferenceLibrary({
 
         const article = onCreateArticle();
 
-        onUpdateArticle({
-            ...article,
-            section: activeSection,
-        });
+        if (activeSection === "dossier") {
+            onUpdateArticle({
+                ...article,
+                section: "dossier",
+                title: "Новое досье",
+                subsection: "NPC",
+                visibility: "master",
+                tags: "npc",
+                content: [
+                    "Роль:",
+                    "",
+                    "Фракция / принадлежность:",
+                    "",
+                    "Статус:",
+                    "",
+                    "Что известно игрокам:",
+                    "",
+                    "Манера поведения:",
+                    "",
+                    "Секреты мастера:",
+                    "",
+                    "Связанные места / поручения:",
+                    "",
+                ].join("\n"),
+            });
+        } else {
+            onUpdateArticle({
+                ...article,
+                section: activeSection,
+            });
+        }
 
         setSelectedArticleId(article.id);
         setIsEditing(true);
@@ -319,7 +348,7 @@ export function ReferenceLibrary({
                                 type="button"
                                 onClick={createArticle}
                             >
-                                Добавить статью
+                                {activeSection === "dossier" ? "Добавить досье" : "Добавить статью"}
                             </button>
                         )}
 
@@ -459,7 +488,11 @@ export function ReferenceLibrary({
                                         onChange={(event) =>
                                             updateSelectedArticle({ subsection: event.target.value })
                                         }
-                                        placeholder="Например: Базовая механика, Бой, Обскурия..."
+                                        placeholder={
+                                            selectedArticle.section === "dossier"
+                                                ? "Например: Апис, Форпост Горста, Вояж, Бриганты..."
+                                                : "Например: Базовая механика, Бой, Обскурия..."
+                                        }
                                     />
                                 </label>
 
@@ -481,7 +514,11 @@ export function ReferenceLibrary({
                                         onChange={(event) =>
                                             updateSelectedArticle({ content: event.target.value })
                                         }
-                                        placeholder="Текст правила, лора, описания или заметки..."
+                                        placeholder={
+                                            selectedArticle.section === "dossier"
+                                                ? "Описание NPC, роль, поведение, сведения для игроков и скрытые заметки мастера..."
+                                                : "Текст правила, лора, описания или заметки..."
+                                        }
                                     />
                                 </label>
 

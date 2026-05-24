@@ -305,6 +305,7 @@ export type ReferenceSection =
   | "bestiary"
   | "equipment"
   | "factions"
+  | "dossier"
   | "glossary"
   | "other";
 
