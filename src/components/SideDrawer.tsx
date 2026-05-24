@@ -3,7 +3,6 @@ import { GroupManager } from "./editors/GroupManager";
 import { EventManager } from "./editors/EventManager";
 import { LocationEditor } from "./editors/LocationEditor";
 import { QuestEditor } from "./editors/QuestEditor";
-import { TextListEditor } from "./editors/TextListEditor";
 import { LocationInfoPanel } from "./panels/LocationInfoPanel";
 import { QuestListPanel } from "./panels/QuestListPanel";
 import type {
@@ -29,7 +28,6 @@ type SideDrawerProps = {
   selectedEventId: string | null;
 
   quests: Quest[];
-  npcs: string[];
 
   onToggleOpen: () => void;
 
@@ -60,7 +58,6 @@ type SideDrawerProps = {
   onTestCampaignStart: (start: CampaignStart) => void;
 
   onChangeQuests: (quests: Quest[]) => void;
-  onChangeNpcs: (items: string[]) => void;
 };
 
 export function SideDrawer({
@@ -78,7 +75,6 @@ export function SideDrawer({
   selectedEventId,
 
   quests,
-  npcs,
 
   onToggleOpen,
 
@@ -109,7 +105,6 @@ export function SideDrawer({
   onTestCampaignStart,
 
   onChangeQuests,
-  onChangeNpcs,
 }: SideDrawerProps) {
   return (
     <aside className={`side-drawer ${isOpen ? "open" : "closed"}`}>
@@ -185,15 +180,6 @@ export function SideDrawer({
           locations={locations}
           isPlayerMode={isPlayerMode}
         />
-
-        {isDeveloperMode && (
-          <TextListEditor
-            title="Редактор досье"
-            items={npcs}
-            placeholder="Новое досье"
-            onChangeItems={onChangeNpcs}
-          />
-        )}
 
       </div>
     </aside>
