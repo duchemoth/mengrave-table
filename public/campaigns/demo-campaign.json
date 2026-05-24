@@ -1,0 +1,2311 @@
+{
+  "version": 2,
+  "exportedAt": "2026-05-23T14:10:31.365Z",
+  "type": "mogila-chelovechestva-campaign",
+  "campaign": {
+    "locations": [
+      {
+        "id": "hidden-shrine",
+        "title": "Одинокий Форпост",
+        "type": "Форпост",
+        "category": "settlement",
+        "description": "Форпост Горста — маленький приграничный хаб, который сам едва держится: частокол, ворота, склад, санитарный угол, мастерская, общий зал, кабинет кастеляна и Штиль-маяк. После крушения Аписа сюда стекаются выжившие, слухи, подозрения и нужда. Путь к форт-граду закрыт Приливом, а координаты стабильной тропы кастелян даст только тем, кто докажет, что они не груз, не зараза и не новая проблема.",
+        "x": 42,
+        "y": 66.37554585152839,
+        "isSecret": false,
+        "imageUrl": "public/location-icons/Gorst-forpost 1.png"
+      },
+      {
+        "id": "location-1779352839535",
+        "title": "Умолкший малый пост",
+        "type": "Локация",
+        "category": "ruins",
+        "description": "Умолкший малый пост — внешний наблюдательный пункт Форпоста Горста, переставший отвечать после начала Предвестников. Дверь закрыта изнутри, вокруг видны следы борьбы, интерком выдаёт только шум и обрывки голоса, на стенах — царапины, внутри стоит тяжёлый запах запертой крови и сырости. По официальной версии нужно проверить пост, вернуть криптожeтон старшего и, если возможно, вывести выживших. По настоящей — один из служащих вернулся с внешнего маршрута с симптомами Отражения, и остальные попытались изолировать его слишком поздно.",
+        "x": 23.75,
+        "y": 21.033478893740902,
+        "isSecret": false,
+        "imageUrl": "public/location-icons/broken-forpost2.png"
+      },
+      {
+        "id": "location-1779353045758",
+        "title": "Внешний сигнальный узел",
+        "type": "Локация",
+        "category": "camp",
+        "description": "Внешний сигнальный узел — вынесенная за пределы Форпоста Горста техническая точка связи: низкая мачта на растяжках, старый аппаратный шкаф, кабели, ржавые хомуты и следы свежего вскрытия. Узел должен открыть канал к форт-граду, но сигнал идёт с помехами, ловит чужой голос, а вокруг видны следы людей, похожих на тех, кто напал на Апис.",
+        "x": 57.49999999999999,
+        "y": 13.209606986899564,
+        "isSecret": false,
+        "imageUrl": "public/location-icons/signal-beacon3.png"
+      },
+      {
+        "id": "location-1779353089078",
+        "title": "Водная Линия",
+        "type": "Локация",
+        "category": "camp",
+        "description": "Водная линия — внешний водный узел Форпоста Горста: старая труба, насосный короб, влажная канава и мутные лужи у низины. Вода идёт с перебоями, пахнет тёплой ржавчиной и сырой органикой, а рядом появляются мелкие формы и следы логомиомного очага. Отряд должен проверить источник, понять масштаб заражения и решить: сжечь, изолировать, взять образец или звать Эвергалей.",
+        "x": 94.18103448275862,
+        "y": 63.42669791286275,
+        "isSecret": false,
+        "imageUrl": "public/location-icons/water-line4.png"
+      },
+      {
+        "id": "location-1779366102088",
+        "title": "Место крушения",
+        "type": "Локация",
+        "category": "settlement",
+        "description": "Место крушения Аписа — дымящееся обломочное поле в сумеречной зоне: огромный корпус макротранспортника лежит на боку среди камней, трещин и разорванного груза. Гусеницы сорваны, пассажирские отсеки перевёрнуты, связь мертва, топливо течёт по земле, из-под металла слышны крики. Это ещё не глубокая Обскурия, но уже не защищённый маршрут: темнеет, огонь расползается, а вокруг обломков появляются первые неправильные следы.",
+        "x": 4.861111111111112,
+        "y": 86.27982197475404,
+        "isSecret": true,
+        "imageUrl": "public/location-icons/crushed-apis4.png"
+      }
+    ],
+    "groups": [
+      {
+        "id": "group-players",
+        "name": "Вольный Клинок",
+        "faction": "players",
+        "description": "Отряд игроков, действующий на границе известных земель.",
+        "x": 5.25,
+        "y": 82.31441048034934,
+        "isSecret": false,
+        "members": [
+          {
+            "id": "member-1",
+            "name": "Каин",
+            "role": "Следопыт",
+            "description": "Ведёт отряд через опасные земли."
+          }
+        ],
+        "imageUrl": ""
+      }
+    ],
+    "events": [
+      {
+        "title": "Поле Обломков",
+        "category": "object",
+        "status": "active",
+        "description": "Краткое описание события пока не добавлено.",
+        "masterNotes": "",
+        "x": 6.944444444444445,
+        "y": 84.36843024346838,
+        "isSecret": false,
+        "id": "event-1779376433337",
+        "imageUrl": ""
+      },
+      {
+        "title": "Сухой Овраг",
+        "category": "incident",
+        "status": "hidden",
+        "description": "Краткое описание события пока не добавлено.",
+        "masterNotes": "",
+        "x": 17.51126126126126,
+        "y": 93.47141859974273,
+        "isSecret": true,
+        "id": "event-1779376524217",
+        "imageUrl": ""
+      },
+      {
+        "title": "Следы Нападающих",
+        "category": "mystery",
+        "status": "hidden",
+        "description": "Отряд находит следы небольшой группы.",
+        "masterNotes": "",
+        "x": 14.444444444444443,
+        "y": 84.53016403284941,
+        "isSecret": true,
+        "id": "event-1779376611801",
+        "imageUrl": ""
+      },
+      {
+        "title": "Тёплая Вода",
+        "category": "mystery",
+        "status": "hidden",
+        "description": "Персонажи находят воду.",
+        "masterNotes": "Она выглядит спасением, но вода тёплая и пахнет неправильно.\nВарианты:\n•\tпить сразу;\n•\tпроверять;\n•\tкипятить;\n•\tидти дальше без воды;\n•\tдать раненому;\n•\tискать источник.\n\nПроверки:\n•\tВыживание;\n•\tЭхо и инфофон;\n•\tМедицина;\n•\tНаблюдательность.\n\nПоследствия:\n•\tпри осторожности — избегают риска;\n•\tпри спешке — болезнь, Психика, эхоцитозный риск или плохие сны;\n•\tисточник воды может быть связан с ранней логомиомой, но не обязательно раскрывать полностью.\n",
+        "x": 10.648148148148149,
+        "y": 76.52434145848855,
+        "isSecret": true,
+        "id": "event-1779376696161",
+        "imageUrl": ""
+      },
+      {
+        "title": "Заброшенный Технический Навес",
+        "category": "object",
+        "status": "hidden",
+        "description": "Малое укрытие у старой дороги.",
+        "masterNotes": "Внутри:\n•\tржавые крепления;\n•\tстарый щиток;\n•\tмусор;\n•\tследы недавнего пребывания;\n•\tвозможно, сухое место для привала.\nВозможности:\n•\tпривал;\n•\tремонт;\n•\tпоиск деталей;\n•\tпервая помощь;\n•\tсоциальная сцена между выжившими.\nОсложнение:\n•\tследы показывают, что кто-то был здесь вчера;\n•\tщиток иногда щёлкает без питания;\n•\tодин выживший начинает говорить во сне;\n•\tнаёмники тоже могут прийти сюда;\n•\tНатиск растёт, если шуметь.\n",
+        "x": 4.583333333333333,
+        "y": 74.26006840715415,
+        "isSecret": true,
+        "id": "event-1779376773497",
+        "imageUrl": "/public/location-icons/abandoned-technical2.png"
+      },
+      {
+        "title": "Ночной Привал",
+        "category": "other",
+        "status": "hidden",
+        "description": "Группе нужен привал для отдыха",
+        "masterNotes": "Вопросы:\n•\tгде остановились;\n•\tкто держит дозор;\n•\tесть ли свет;\n•\tчто с раненым;\n•\tчто с водой;\n•\tкто спит;\n•\tчто делают с найденным грузом;\n•\tвключают ли Венцы;\n•\tчто делают с трупами, если несут кого-то погибшего.\nСобытия привала:\n•\tразговор персонажей;\n•\tпервый человеческий момент;\n•\tкошмар;\n•\tшум в темноте;\n•\tисчезновение мелкого предмета;\n•\tраненый просит амнезиин;\n•\tNPC признаётся, что видел нападающего до атаки.\nПривал должен быть не только угрозой, но и возможностью стать отрядом.\n",
+        "x": 16,
+        "y": 79.40320232896651,
+        "isSecret": true,
+        "id": "event-1779376957609",
+        "imageUrl": ""
+      },
+      {
+        "title": "Первая Угроза",
+        "category": "conflict",
+        "status": "hidden",
+        "description": "Краткое описание события пока не добавлено.",
+        "masterNotes": "",
+        "x": 29.083333333333332,
+        "y": 70.96069868995633,
+        "isSecret": true,
+        "id": "event-1779377116568",
+        "imageUrl": ""
+      }
+    ],
+    "characters": [
+      {
+        "id": "character-1778677608654",
+        "ownerPlayerName": "",
+        "status": "approved",
+        "isVisibleToPlayers": false,
+        "playerName": "Вася",
+        "characterName": "Чел 1",
+        "nickname": "Усатый",
+        "oldName": "",
+        "oldNameKnownBy": "",
+        "age": "",
+        "origin": "",
+        "formerActivity": "",
+        "reasonToBecomeFreeblade": "",
+        "personalGoal": "",
+        "squadConnection": "",
+        "mass": "normal",
+        "empathy": "normal",
+        "physicalReserve": 4,
+        "psyche": 4,
+        "spirit": 3,
+        "fate": 1,
+        "maxPhysicalReserve": 4,
+        "maxPsyche": 4,
+        "maxSpirit": 3,
+        "maxFate": 3,
+        "skills": {
+          "melee": 0,
+          "shooting": 0,
+          "specialWeapons": 0,
+          "athletics": 0,
+          "endurance": 0,
+          "stealth": 0,
+          "observation": 0,
+          "tracking": 0,
+          "navigation": 0,
+          "survival": 0,
+          "firstAid": 0,
+          "medicine": 0,
+          "repair": 0,
+          "devices": 0,
+          "crowns": 0,
+          "driving": 0,
+          "tactics": 0,
+          "intimidation": 0,
+          "negotiation": 0,
+          "insight": 0,
+          "criminal": 0,
+          "factions": 0,
+          "neurography": 0,
+          "echoInfophone": 0
+        },
+        "specializations": "",
+        "traits": "",
+        "woundsAndConditions": "",
+        "reflectionNotes": "",
+        "quickAccess": "",
+        "backpackAndLoad": "",
+        "weapons": "",
+        "armor": "",
+        "cryptotoken": "",
+        "contacts": "",
+        "debts": "",
+        "enemies": "",
+        "patrons": "",
+        "progressionNotes": "",
+        "secretHooks": "",
+        "masterNotes": "",
+        "inventory": {
+          "weaponSlots": {
+            "shoulder1": {
+              "itemId": "arsenal-item-1778755545686",
+              "note": ""
+            },
+            "shoulder2": {
+              "itemId": null,
+              "note": ""
+            },
+            "small": {
+              "itemId": "arsenal-item-1778755412078",
+              "note": ""
+            }
+          },
+          "armorSlots": {
+            "head": {
+              "itemId": "arsenal-item-1778758549674",
+              "note": ""
+            },
+            "torso": {
+              "itemId": "arsenal-item-1778758525457",
+              "note": ""
+            },
+            "arms": {
+              "itemId": null,
+              "note": ""
+            },
+            "legs": {
+              "itemId": null,
+              "note": ""
+            }
+          },
+          "protectionSlot": {
+            "itemId": "arsenal-item-1778758585258",
+            "note": ""
+          },
+          "loadBearing": {
+            "itemId": "arsenal-item-1778758606338",
+            "note": "",
+            "quickSlots": [
+              {
+                "id": "quick-1",
+                "itemId": "arsenal-item-1778758634946",
+                "quantity": 1,
+                "note": ""
+              },
+              {
+                "id": "quick-2",
+                "itemId": null,
+                "quantity": 1,
+                "note": ""
+              },
+              {
+                "id": "quick-3",
+                "itemId": null,
+                "quantity": 1,
+                "note": ""
+              },
+              {
+                "id": "quick-4",
+                "itemId": null,
+                "quantity": 1,
+                "note": ""
+              }
+            ]
+          },
+          "backpack": [
+            {
+              "id": "backpack-1778758814130",
+              "itemId": "arsenal-item-1778758525457",
+              "quantity": 1,
+              "note": ""
+            },
+            {
+              "id": "backpack-1778758818202",
+              "itemId": "arsenal-item-1778755412078",
+              "quantity": 1,
+              "note": ""
+            },
+            {
+              "id": "backpack-1778758822674",
+              "itemId": "arsenal-item-1778758634946",
+              "quantity": 1,
+              "note": ""
+            }
+          ]
+        },
+        "wallet": {
+          "amperies": 0,
+          "miliamperies": 0,
+          "note": ""
+        }
+      },
+      {
+        "id": "character-1778753212020",
+        "ownerPlayerName": "",
+        "status": "approved",
+        "isVisibleToPlayers": false,
+        "playerName": "Сёма",
+        "characterName": "Чел 2",
+        "nickname": "",
+        "oldName": "",
+        "oldNameKnownBy": "",
+        "age": "",
+        "origin": "",
+        "formerActivity": "",
+        "reasonToBecomeFreeblade": "",
+        "personalGoal": "",
+        "squadConnection": "",
+        "mass": "normal",
+        "empathy": "normal",
+        "physicalReserve": 3,
+        "psyche": 2,
+        "spirit": 2,
+        "fate": 1,
+        "maxPhysicalReserve": 4,
+        "maxPsyche": 4,
+        "maxSpirit": 3,
+        "maxFate": 3,
+        "skills": {
+          "melee": 2,
+          "shooting": 0,
+          "specialWeapons": 0,
+          "athletics": 0,
+          "endurance": 1,
+          "stealth": 0,
+          "observation": 0,
+          "tracking": 0,
+          "navigation": 3,
+          "survival": 0,
+          "firstAid": 0,
+          "medicine": 0,
+          "repair": 0,
+          "devices": 0,
+          "crowns": 0,
+          "driving": 0,
+          "tactics": 0,
+          "intimidation": 0,
+          "negotiation": 0,
+          "insight": 0,
+          "criminal": 0,
+          "factions": 0,
+          "neurography": 0,
+          "echoInfophone": 0
+        },
+        "specializations": "",
+        "traits": "",
+        "woundsAndConditions": "",
+        "reflectionNotes": "",
+        "quickAccess": "",
+        "backpackAndLoad": "",
+        "weapons": "",
+        "armor": "",
+        "cryptotoken": "",
+        "inventory": {
+          "weaponSlots": {
+            "shoulder1": {
+              "itemId": "arsenal-item-1779098155488",
+              "note": ""
+            },
+            "shoulder2": {
+              "itemId": "arsenal-item-1779098207368",
+              "note": ""
+            },
+            "small": {
+              "itemId": "arsenal-item-1779097620888",
+              "note": ""
+            }
+          },
+          "armorSlots": {
+            "head": {
+              "itemId": "arsenal-item-1778758549674",
+              "note": ""
+            },
+            "torso": {
+              "itemId": null,
+              "note": ""
+            },
+            "arms": {
+              "itemId": null,
+              "note": ""
+            },
+            "legs": {
+              "itemId": null,
+              "note": ""
+            }
+          },
+          "protectionSlot": {
+            "itemId": "arsenal-item-1778758585258",
+            "note": ""
+          },
+          "loadBearing": {
+            "itemId": null,
+            "note": "",
+            "quickSlots": [
+              {
+                "id": "quick-1",
+                "itemId": null,
+                "quantity": 1,
+                "note": ""
+              },
+              {
+                "id": "quick-2",
+                "itemId": null,
+                "quantity": 1,
+                "note": ""
+              }
+            ]
+          },
+          "backpack": []
+        },
+        "contacts": "",
+        "debts": "",
+        "enemies": "",
+        "patrons": "",
+        "progressionNotes": "",
+        "secretHooks": "",
+        "masterNotes": "",
+        "wallet": {
+          "amperies": 10,
+          "miliamperies": 500,
+          "note": ""
+        }
+      },
+      {
+        "id": "character-1779098067976",
+        "ownerPlayerName": "",
+        "status": "approved",
+        "isVisibleToPlayers": false,
+        "playerName": "Лёха-лепёха",
+        "characterName": "Тупо Чел",
+        "nickname": "Лысый",
+        "oldName": "",
+        "oldNameKnownBy": "",
+        "age": "39",
+        "origin": "",
+        "formerActivity": "",
+        "reasonToBecomeFreeblade": "",
+        "personalGoal": "",
+        "squadConnection": "",
+        "mass": "normal",
+        "empathy": "normal",
+        "physicalReserve": 4,
+        "psyche": 4,
+        "spirit": 3,
+        "fate": 1,
+        "maxPhysicalReserve": 4,
+        "maxPsyche": 4,
+        "maxSpirit": 3,
+        "maxFate": 3,
+        "skills": {
+          "melee": 0,
+          "shooting": 0,
+          "specialWeapons": 0,
+          "athletics": 0,
+          "endurance": 0,
+          "stealth": 0,
+          "observation": 0,
+          "tracking": 0,
+          "navigation": 0,
+          "survival": 0,
+          "firstAid": 0,
+          "medicine": 0,
+          "repair": 0,
+          "devices": 0,
+          "crowns": 0,
+          "driving": 0,
+          "tactics": 0,
+          "intimidation": 0,
+          "negotiation": 0,
+          "insight": 0,
+          "criminal": 0,
+          "factions": 0,
+          "neurography": 0,
+          "echoInfophone": 0
+        },
+        "specializations": "",
+        "traits": "",
+        "woundsAndConditions": "",
+        "reflectionNotes": "",
+        "quickAccess": "",
+        "backpackAndLoad": "",
+        "weapons": "",
+        "armor": "",
+        "cryptotoken": "",
+        "wallet": {
+          "amperies": 20,
+          "miliamperies": 50,
+          "note": ""
+        },
+        "inventory": {
+          "weaponSlots": {
+            "shoulder1": {
+              "itemId": "arsenal-item-1779098207368",
+              "note": ""
+            },
+            "shoulder2": {
+              "itemId": "arsenal-item-1779098207368",
+              "note": ""
+            },
+            "small": {
+              "itemId": "arsenal-item-1778755412078",
+              "note": ""
+            }
+          },
+          "armorSlots": {
+            "head": {
+              "itemId": "arsenal-item-1778758549674",
+              "note": ""
+            },
+            "torso": {
+              "itemId": "arsenal-item-1779097683816",
+              "note": ""
+            },
+            "arms": {
+              "itemId": "arsenal-item-1779097740520",
+              "note": ""
+            },
+            "legs": {
+              "itemId": "arsenal-item-1779097776936",
+              "note": ""
+            }
+          },
+          "protectionSlot": {
+            "itemId": "arsenal-item-1779097810544",
+            "note": ""
+          },
+          "loadBearing": {
+            "itemId": "arsenal-item-1779097842936",
+            "note": "",
+            "quickSlots": [
+              {
+                "id": "quick-1",
+                "itemId": "arsenal-item-1779097917024",
+                "quantity": 1,
+                "note": ""
+              },
+              {
+                "id": "quick-2",
+                "itemId": "arsenal-item-1779097959945",
+                "quantity": 1,
+                "note": ""
+              },
+              {
+                "id": "quick-3",
+                "itemId": "arsenal-item-1779097996025",
+                "quantity": 1,
+                "note": ""
+              },
+              {
+                "id": "quick-4",
+                "itemId": "arsenal-item-1779098019513",
+                "quantity": 1,
+                "note": ""
+              }
+            ]
+          },
+          "backpack": [
+            {
+              "id": "backpack-1779098306080",
+              "itemId": "arsenal-item-1779097887697",
+              "quantity": 1,
+              "note": ""
+            },
+            {
+              "id": "backpack-1779098318512",
+              "itemId": "arsenal-item-1778758585258",
+              "quantity": 1,
+              "note": ""
+            }
+          ]
+        },
+        "contacts": "",
+        "debts": "",
+        "enemies": "",
+        "patrons": "",
+        "progressionNotes": "",
+        "secretHooks": "",
+        "masterNotes": ""
+      },
+      {
+        "id": "character-1779100092816",
+        "ownerPlayerName": "",
+        "status": "approved",
+        "isVisibleToPlayers": false,
+        "playerName": "Димка",
+        "characterName": "Чел Ещё Один",
+        "nickname": "",
+        "oldName": "",
+        "oldNameKnownBy": "",
+        "age": "",
+        "origin": "",
+        "formerActivity": "",
+        "reasonToBecomeFreeblade": "",
+        "personalGoal": "",
+        "squadConnection": "",
+        "mass": "normal",
+        "empathy": "normal",
+        "physicalReserve": 4,
+        "psyche": 4,
+        "spirit": 3,
+        "fate": 1,
+        "maxPhysicalReserve": 4,
+        "maxPsyche": 4,
+        "maxSpirit": 3,
+        "maxFate": 3,
+        "skills": {
+          "melee": 0,
+          "shooting": 0,
+          "specialWeapons": 0,
+          "athletics": 0,
+          "endurance": 0,
+          "stealth": 0,
+          "observation": 0,
+          "tracking": 0,
+          "navigation": 0,
+          "survival": 0,
+          "firstAid": 0,
+          "medicine": 0,
+          "repair": 0,
+          "devices": 0,
+          "crowns": 0,
+          "driving": 0,
+          "tactics": 0,
+          "intimidation": 0,
+          "negotiation": 0,
+          "insight": 0,
+          "criminal": 0,
+          "factions": 0,
+          "neurography": 0,
+          "echoInfophone": 0
+        },
+        "specializations": "",
+        "traits": "",
+        "woundsAndConditions": "",
+        "reflectionNotes": "",
+        "quickAccess": "",
+        "backpackAndLoad": "",
+        "weapons": "",
+        "armor": "",
+        "cryptotoken": "",
+        "wallet": {
+          "amperies": 0,
+          "miliamperies": 0,
+          "note": ""
+        },
+        "inventory": {
+          "weaponSlots": {
+            "shoulder1": {
+              "itemId": null,
+              "note": ""
+            },
+            "shoulder2": {
+              "itemId": null,
+              "note": ""
+            },
+            "small": {
+              "itemId": null,
+              "note": ""
+            }
+          },
+          "armorSlots": {
+            "head": {
+              "itemId": null,
+              "note": ""
+            },
+            "torso": {
+              "itemId": null,
+              "note": ""
+            },
+            "arms": {
+              "itemId": null,
+              "note": ""
+            },
+            "legs": {
+              "itemId": null,
+              "note": ""
+            }
+          },
+          "protectionSlot": {
+            "itemId": null,
+            "note": ""
+          },
+          "loadBearing": {
+            "itemId": null,
+            "note": "",
+            "quickSlots": [
+              {
+                "id": "quick-1",
+                "itemId": null,
+                "quantity": 1,
+                "note": ""
+              },
+              {
+                "id": "quick-2",
+                "itemId": null,
+                "quantity": 1,
+                "note": ""
+              }
+            ]
+          },
+          "backpack": []
+        },
+        "contacts": "",
+        "debts": "",
+        "enemies": "",
+        "patrons": "",
+        "progressionNotes": "",
+        "secretHooks": "",
+        "masterNotes": ""
+      }
+    ],
+    "referenceArticles": [],
+    "quests": [
+      {
+        "id": "quest-1779510846814-betjbeho53g",
+        "title": "Выбраться с места крушения и выжить",
+        "description": "Позади катастрофическое крушение, а впереди неизвестность. Способны ли вольники выбраться из передряги живыми?",
+        "status": "active",
+        "isSecret": false,
+        "giver": "",
+        "reward": "",
+        "relatedLocationId": "",
+        "masterNotes": ""
+      }
+    ],
+    "npcs": [
+      ""
+    ],
+    "items": [
+      "Ржавый ключ",
+      "Карта приливов",
+      "Письмо с восковой печатью"
+    ],
+    "arsenalItems": [
+      {
+        "id": "arsenal-item-1778755412078",
+        "name": "Ржавый нож ловчего",
+        "category": "weapon",
+        "slot": "smallWeapon",
+        "description": "Старенький",
+        "rules": "",
+        "tags": "тихое",
+        "rarity": "обычное",
+        "weight": "200 гр",
+        "price": "",
+        "isVisibleToPlayers": true
+      },
+      {
+        "id": "arsenal-item-1778755545686",
+        "name": "Винтовка Цольнера",
+        "category": "weapon",
+        "slot": "shoulderWeapon",
+        "description": "",
+        "rules": "",
+        "tags": "",
+        "rarity": "",
+        "weight": "",
+        "price": "",
+        "isVisibleToPlayers": true
+      },
+      {
+        "id": "arsenal-item-1778758525457",
+        "name": "Стёганка",
+        "category": "armor",
+        "slot": "torsoArmor",
+        "description": "",
+        "rules": "",
+        "tags": "",
+        "rarity": "",
+        "weight": "",
+        "price": "",
+        "isVisibleToPlayers": true
+      },
+      {
+        "id": "arsenal-item-1778758549674",
+        "name": "Стёганный подшлемник",
+        "category": "armor",
+        "slot": "headArmor",
+        "description": "",
+        "rules": "",
+        "tags": "",
+        "rarity": "",
+        "weight": "",
+        "price": "",
+        "isVisibleToPlayers": true
+      },
+      {
+        "id": "arsenal-item-1778758585258",
+        "name": "Венец Кислова",
+        "category": "protection",
+        "slot": "protection",
+        "description": "",
+        "rules": "",
+        "tags": "",
+        "rarity": "",
+        "weight": "",
+        "price": "",
+        "isVisibleToPlayers": true
+      },
+      {
+        "id": "arsenal-item-1778758606338",
+        "name": "Разгрузка старая",
+        "category": "loadBearing",
+        "slot": "loadBearing",
+        "description": "",
+        "rules": "",
+        "tags": "",
+        "rarity": "",
+        "weight": "",
+        "price": "",
+        "quickSlotCount": 4,
+        "isVisibleToPlayers": true
+      },
+      {
+        "id": "arsenal-item-1778758634946",
+        "name": "Жгут Эсмерака",
+        "category": "medicine",
+        "slot": "quick",
+        "description": "",
+        "rules": "",
+        "tags": "",
+        "rarity": "",
+        "weight": "",
+        "price": "",
+        "isVisibleToPlayers": true
+      },
+      {
+        "id": "arsenal-item-1778759149907",
+        "name": "Новый предмет",
+        "category": "misc",
+        "slot": "backpack",
+        "description": "",
+        "rules": "",
+        "tags": "",
+        "rarity": "",
+        "weight": "",
+        "price": "",
+        "isVisibleToPlayers": true
+      },
+      {
+        "id": "arsenal-item-1778759150562",
+        "name": "Новый предмет",
+        "category": "misc",
+        "slot": "backpack",
+        "description": "",
+        "rules": "",
+        "tags": "",
+        "rarity": "",
+        "weight": "",
+        "price": "",
+        "isVisibleToPlayers": true
+      },
+      {
+        "id": "arsenal-item-1778759151114",
+        "name": "Новый предмет",
+        "category": "misc",
+        "slot": "backpack",
+        "description": "",
+        "rules": "",
+        "tags": "",
+        "rarity": "",
+        "weight": "",
+        "price": "",
+        "isVisibleToPlayers": true
+      },
+      {
+        "id": "arsenal-item-1778759151410",
+        "name": "Новый предмет",
+        "category": "misc",
+        "slot": "backpack",
+        "description": "",
+        "rules": "",
+        "tags": "",
+        "rarity": "",
+        "weight": "",
+        "price": "",
+        "isVisibleToPlayers": true
+      },
+      {
+        "id": "arsenal-item-1778759152058",
+        "name": "Новый предмет",
+        "category": "misc",
+        "slot": "backpack",
+        "description": "",
+        "rules": "",
+        "tags": "",
+        "rarity": "",
+        "weight": "",
+        "price": "",
+        "isVisibleToPlayers": true
+      },
+      {
+        "id": "arsenal-item-1779097620888",
+        "name": "Старый Пистольвер",
+        "category": "weapon",
+        "slot": "smallWeapon",
+        "description": "Старый, но пока ещё не бесполезный",
+        "rules": "",
+        "tags": "",
+        "rarity": "",
+        "weight": "",
+        "price": "",
+        "isVisibleToPlayers": true
+      },
+      {
+        "id": "arsenal-item-1779097683816",
+        "name": "Лёгкий Противопульный Жилет",
+        "category": "armor",
+        "slot": "torsoArmor",
+        "description": "",
+        "rules": "",
+        "tags": "",
+        "rarity": "",
+        "weight": "",
+        "price": "",
+        "isVisibleToPlayers": true
+      },
+      {
+        "id": "arsenal-item-1779097740520",
+        "name": "Кожанные Налокотники с Наручами",
+        "category": "armor",
+        "slot": "armsArmor",
+        "description": "",
+        "rules": "",
+        "tags": "",
+        "rarity": "",
+        "weight": "",
+        "price": "",
+        "isVisibleToPlayers": true
+      },
+      {
+        "id": "arsenal-item-1779097776936",
+        "name": "Кожанная Защита Ног",
+        "category": "armor",
+        "slot": "legsArmor",
+        "description": "",
+        "rules": "",
+        "tags": "",
+        "rarity": "",
+        "weight": "",
+        "price": "",
+        "isVisibleToPlayers": true
+      },
+      {
+        "id": "arsenal-item-1779097810544",
+        "name": "Маска Химзащиты",
+        "category": "protection",
+        "slot": "protection",
+        "description": "",
+        "rules": "",
+        "tags": "",
+        "rarity": "",
+        "weight": "",
+        "price": "",
+        "isVisibleToPlayers": true
+      },
+      {
+        "id": "arsenal-item-1779097842936",
+        "name": "Армейская Разгрузочная Система",
+        "category": "loadBearing",
+        "slot": "loadBearing",
+        "description": "",
+        "rules": "",
+        "tags": "",
+        "rarity": "",
+        "weight": "",
+        "price": "",
+        "quickSlotCount": 4,
+        "isVisibleToPlayers": true
+      },
+      {
+        "id": "arsenal-item-1779097887697",
+        "name": "Точильный Камень",
+        "category": "tool",
+        "slot": "backpack",
+        "description": "",
+        "rules": "",
+        "tags": "",
+        "rarity": "",
+        "weight": "",
+        "price": "",
+        "isVisibleToPlayers": true
+      },
+      {
+        "id": "arsenal-item-1779097917024",
+        "name": "Экстренный стимдоз",
+        "category": "medicine",
+        "slot": "none",
+        "description": "",
+        "rules": "",
+        "tags": "",
+        "rarity": "",
+        "weight": "",
+        "price": "",
+        "isVisibleToPlayers": true
+      },
+      {
+        "id": "arsenal-item-1779097959945",
+        "name": "Злаковый Батончик",
+        "category": "resource",
+        "slot": "backpack",
+        "description": "",
+        "rules": "",
+        "tags": "",
+        "rarity": "",
+        "weight": "",
+        "price": "",
+        "isVisibleToPlayers": true
+      },
+      {
+        "id": "arsenal-item-1779097996025",
+        "name": "Бурдюк Воды",
+        "category": "resource",
+        "slot": "backpack",
+        "description": "",
+        "rules": "",
+        "tags": "",
+        "rarity": "",
+        "weight": "",
+        "price": "",
+        "isVisibleToPlayers": true
+      },
+      {
+        "id": "arsenal-item-1779098019513",
+        "name": "Карта Предместий с меткой",
+        "category": "quest",
+        "slot": "none",
+        "description": "",
+        "rules": "",
+        "tags": "",
+        "rarity": "",
+        "weight": "",
+        "price": "",
+        "isVisibleToPlayers": true
+      },
+      {
+        "id": "arsenal-item-1779098129033",
+        "name": "Короткое копьё",
+        "category": "weapon",
+        "slot": "shoulderWeapon",
+        "description": "",
+        "rules": "",
+        "tags": "",
+        "rarity": "",
+        "weight": "",
+        "price": "",
+        "isVisibleToPlayers": true
+      },
+      {
+        "id": "arsenal-item-1779098155488",
+        "name": "Дубинка Часового",
+        "category": "weapon",
+        "slot": "shoulderWeapon",
+        "description": "",
+        "rules": "",
+        "tags": "",
+        "rarity": "",
+        "weight": "",
+        "price": "",
+        "isVisibleToPlayers": true
+      },
+      {
+        "id": "arsenal-item-1779098207368",
+        "name": "Щит Баклер",
+        "category": "protection",
+        "slot": "shoulderWeapon",
+        "description": "",
+        "rules": "",
+        "tags": "",
+        "rarity": "",
+        "weight": "",
+        "price": "",
+        "isVisibleToPlayers": true
+      }
+    ],
+    "revealedAreas": [],
+    "masterNotes": "",
+    "globalMap": {
+      "imageUrl": "/maps/demo-global-map.png"
+    },
+    "expedition": {
+      "infophoneLevel": "clean",
+      "obscuriaPressure": 0,
+      "routeSegment": 7,
+      "timeOfDay": "night",
+      "supplies": 0,
+      "water": 0,
+      "fuel": 0,
+      "medical": 0,
+      "ammo": 0,
+      "segmentCosts": {
+        "supplies": false,
+        "water": true,
+        "fuel": false,
+        "medical": false,
+        "ammo": false
+      },
+      "routeTarget": "",
+      "routeDescription": "",
+      "routeStatus": "moving",
+      "routePointX": null,
+      "routePointY": null,
+      "suggestedRoutePointX": null,
+      "suggestedRoutePointY": null,
+      "note": ""
+    },
+    "journalEntries": [
+      {
+        "id": "journal-entry-1779506806701-jnh5ld2n28h",
+        "createdAt": 1779506806701,
+        "type": "map",
+        "title": "Игрокам показана локальная карта",
+        "text": "Одинокий Форпост",
+        "details": "Экран игроков переключён на локальная карта.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779454117253-vz6690fw4h",
+        "createdAt": 1779454117253,
+        "type": "map",
+        "title": "Игрокам показана локальная карта",
+        "text": "Одинокий Форпост",
+        "details": "Экран игроков переключён на локальная карта.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779454112669-wg77wqp49tn",
+        "createdAt": 1779454112669,
+        "type": "map",
+        "title": "Игрокам показан обзор",
+        "text": "Одинокий Форпост",
+        "details": "Экран игроков переключён на обзор.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779454101830-euv3vgod7n",
+        "createdAt": 1779454101830,
+        "type": "map",
+        "title": "Игрокам показана локальная карта",
+        "text": "Одинокий Форпост",
+        "details": "Экран игроков переключён на локальная карта.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779377340968-fhhes1es45a",
+        "createdAt": 1779377340968,
+        "type": "map",
+        "title": "Точка маршрута сброшена",
+        "text": "Мастер убрал точку маршрута с глобальной карты.",
+        "details": "",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779377263424-1tsyhkjhlys",
+        "createdAt": 1779377263424,
+        "type": "expedition",
+        "title": "Отряд продвинулся",
+        "text": "Отрезок 7. Время: Ночь.",
+        "details": "Маршрут: цель не задана.\nОписание маршрута не задано.\nСтатус маршрута: В пути.\nДвижение по карте: отряд продвинулся к точке маршрута на 4% карты. Осталось примерно 11%.\nАвто-разведка: открыта область вокруг новой позиции отряда, радиус 4%.\n\nРасход: Вода −1.\n\nИнфофон: Чистый.\nНатиск Обскурии: 0/10.\nПрипасы: 0.\nВода: 0.\nТопливо: 0.\nМедрасход: 0.\nБоезапас: 0.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779377263000-ewnsr4axxp",
+        "createdAt": 1779377263000,
+        "type": "expedition",
+        "title": "Отряд продвинулся",
+        "text": "Отрезок 6. Время: Вечер.",
+        "details": "Маршрут: цель не задана.\nОписание маршрута не задано.\nСтатус маршрута: В пути.\nДвижение по карте: отряд продвинулся к точке маршрута на 4% карты. Осталось примерно 15%.\nАвто-разведка: открыта область вокруг новой позиции отряда, радиус 4%.\n\nРасход: Вода −1.\n\nИнфофон: Чистый.\nНатиск Обскурии: 0/10.\nПрипасы: 0.\nВода: 0.\nТопливо: 0.\nМедрасход: 0.\nБоезапас: 0.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779377262464-e9m4gnnwtji",
+        "createdAt": 1779377262464,
+        "type": "expedition",
+        "title": "Отряд продвинулся",
+        "text": "Отрезок 5. Время: День.",
+        "details": "Маршрут: цель не задана.\nОписание маршрута не задано.\nСтатус маршрута: В пути.\nДвижение по карте: отряд продвинулся к точке маршрута на 4% карты. Осталось примерно 19%.\nАвто-разведка: открыта область вокруг новой позиции отряда, радиус 4%.\n\nРасход: Вода −1.\n\nИнфофон: Чистый.\nНатиск Обскурии: 0/10.\nПрипасы: 0.\nВода: 0.\nТопливо: 0.\nМедрасход: 0.\nБоезапас: 0.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779377248656-w4rbd3dr4m",
+        "createdAt": 1779377248656,
+        "type": "expedition",
+        "title": "Отряд продвинулся",
+        "text": "Отрезок 4. Время: Утро.",
+        "details": "Маршрут: цель не задана.\nОписание маршрута не задано.\nСтатус маршрута: В пути.\nДвижение по карте: отряд продвинулся к точке маршрута на 4% карты. Осталось примерно 23%.\nАвто-разведка: открыта область вокруг новой позиции отряда, радиус 4%.\n\nРасход: Вода −1.\n\nИнфофон: Чистый.\nНатиск Обскурии: 0/10.\nПрипасы: 0.\nВода: 0.\nТопливо: 0.\nМедрасход: 0.\nБоезапас: 0.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779377247808-22rmcm4pmbv",
+        "createdAt": 1779377247808,
+        "type": "expedition",
+        "title": "Отряд продвинулся",
+        "text": "Отрезок 3. Время: Ночь.",
+        "details": "Маршрут: цель не задана.\nОписание маршрута не задано.\nСтатус маршрута: В пути.\nДвижение по карте: отряд продвинулся к точке маршрута на 4% карты. Осталось примерно 27%.\nАвто-разведка: рядом уже была открытая область, новая область не создана.\n\nРасход: Вода −1.\n\nИнфофон: Чистый.\nНатиск Обскурии: 0/10.\nПрипасы: 0.\nВода: 0.\nТопливо: 0.\nМедрасход: 0.\nБоезапас: 0.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779377245352-uwyb8si66m",
+        "createdAt": 1779377245352,
+        "type": "expedition",
+        "title": "Отряд продвинулся",
+        "text": "Отрезок 2. Время: Вечер.",
+        "details": "Маршрут: цель не задана.\nОписание маршрута не задано.\nСтатус маршрута: В пути.\nДвижение по карте: отряд продвинулся к точке маршрута на 4% карты. Осталось примерно 31%.\nАвто-разведка: рядом уже была открытая область, новая область не создана.\n\nРасход: Вода −1.\n\nИнфофон: Чистый.\nНатиск Обскурии: 0/10.\nПрипасы: 0.\nВода: 0.\nТопливо: 0.\nМедрасход: 0.\nБоезапас: 0.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779377241777-ifou8oyppbi",
+        "createdAt": 1779377241777,
+        "type": "expedition",
+        "title": "Отряд продвинулся",
+        "text": "Отрезок 1. Время: День.",
+        "details": "Маршрут: цель не задана.\nОписание маршрута не задано.\nСтатус маршрута: В пути.\nДвижение по карте: отряд продвинулся к точке маршрута на 4% карты. Осталось примерно 35%.\nАвто-разведка: рядом уже была открытая область, новая область не создана.\n\nРасход: Вода −1.\n\nИнфофон: Чистый.\nНатиск Обскурии: 0/10.\nПрипасы: 0.\nВода: 0.\nТопливо: 0.\nМедрасход: 0.\nБоезапас: 0.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779377237936-65gq1zb4ac",
+        "createdAt": 1779377237936,
+        "type": "map",
+        "title": "Задана точка маршрута",
+        "text": "Мастер отметил точку маршрута на глобальной карте.",
+        "details": "Координаты точки: 40%, 67%.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779377081888-8voii4v8ye",
+        "createdAt": 1779377081888,
+        "type": "expedition",
+        "title": "Отряд продвинулся",
+        "text": "Отрезок 3. Время: Ночь.",
+        "details": "Маршрут: цель не задана.\nОписание маршрута не задано.\nСтатус маршрута: В пути.\nДвижение по карте: отряд продвинулся к точке маршрута на 4% карты. Осталось примерно 26%.\nАвто-разведка: открыта область вокруг новой позиции отряда, радиус 4%.\n\nРасход: Вода −1.\n\nИнфофон: Чистый.\nНатиск Обскурии: 0/10.\nПрипасы: 0.\nВода: 0.\nТопливо: 0.\nМедрасход: 0.\nБоезапас: 0.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779377074048-2nv8ozs6pl2",
+        "createdAt": 1779377074048,
+        "type": "expedition",
+        "title": "Отряд продвинулся",
+        "text": "Отрезок 2. Время: Вечер.",
+        "details": "Маршрут: цель не задана.\nОписание маршрута не задано.\nСтатус маршрута: В пути.\nДвижение по карте: отряд продвинулся к точке маршрута на 4% карты. Осталось примерно 30%.\nАвто-разведка: открыта область вокруг новой позиции отряда, радиус 4%.\n\nРасход: Вода −1.\n\nИнфофон: Чистый.\nНатиск Обскурии: 0/10.\nПрипасы: 0.\nВода: 0.\nТопливо: 0.\nМедрасход: 0.\nБоезапас: 0.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779377072945-9rxkxn47dpv",
+        "createdAt": 1779377072945,
+        "type": "expedition",
+        "title": "Отряд продвинулся",
+        "text": "Отрезок 1. Время: День.",
+        "details": "Маршрут: цель не задана.\nОписание маршрута не задано.\nСтатус маршрута: В пути.\nДвижение по карте: отряд продвинулся к точке маршрута на 4% карты. Осталось примерно 34%.\nАвто-разведка: рядом уже была открытая область, новая область не создана.\n\nРасход: Вода −1.\n\nИнфофон: Чистый.\nНатиск Обскурии: 0/10.\nПрипасы: 0.\nВода: 0.\nТопливо: 0.\nМедрасход: 0.\nБоезапас: 0.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779377067928-cxd617tnxva",
+        "createdAt": 1779377067929,
+        "type": "map",
+        "title": "Задана точка маршрута",
+        "text": "Мастер отметил точку маршрута на глобальной карте.",
+        "details": "Координаты точки: 39%, 67%.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779377051457-w4p04yf0jb",
+        "createdAt": 1779377051457,
+        "type": "expedition",
+        "title": "Отряд продвинулся",
+        "text": "Отрезок 2. Время: Вечер.",
+        "details": "Маршрут: цель не задана.\nОписание маршрута не задано.\nСтатус маршрута: В пути.\nДвижение по карте: отряд продвинулся к точке маршрута на 4% карты. Осталось примерно 33%.\nАвто-разведка: открыта область вокруг новой позиции отряда, радиус 4%.\n\nРасход: Вода −1.\n\nИнфофон: Чистый.\nНатиск Обскурии: 0/10.\nПрипасы: 0.\nВода: 0.\nТопливо: 0.\nМедрасход: 0.\nБоезапас: 0.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779376906417-jfb5pv9vhr",
+        "createdAt": 1779376906417,
+        "type": "expedition",
+        "title": "Отряд продвинулся",
+        "text": "Отрезок 1. Время: День.",
+        "details": "Маршрут: цель не задана.\nОписание маршрута не задано.\nСтатус маршрута: В пути.\nДвижение по карте: отряд продвинулся к точке маршрута на 4% карты. Осталось примерно 32%.\nАвто-разведка: рядом уже была открытая область, новая область не создана.\n\nРасход: Вода −1.\n\nИнфофон: Чистый.\nНатиск Обскурии: 0/10.\nПрипасы: 0.\nВода: 0.\nТопливо: 0.\nМедрасход: 0.\nБоезапас: 0.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779376903209-thqvr2fu1ci",
+        "createdAt": 1779376903209,
+        "type": "map",
+        "title": "Задана точка маршрута",
+        "text": "Мастер отметил точку маршрута на глобальной карте.",
+        "details": "Координаты точки: 39%, 69%.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779376875961-t2u8gfpzuja",
+        "createdAt": 1779376875961,
+        "type": "expedition",
+        "title": "Отряд продвинулся",
+        "text": "Отрезок 82. Время: День.",
+        "details": "Маршрут: Ищем спирт.\nОписание маршрута не задано.\nСтатус маршрута: Достигнут.\nДвижение по карте: отряд достиг точки маршрута.\nАвто-разведка: открыта область вокруг новой позиции отряда, радиус 4%.\n\nРасход: Вода −1.\n\nИнфофон: Чистый.\nНатиск Обскурии: 1/10.\nПрипасы: 3.\nВода: 0.\nТопливо: 3.\nМедрасход: 2.\nБоезапас: 1.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779376874153-50bckxeudyi",
+        "createdAt": 1779376874153,
+        "type": "expedition",
+        "title": "Отряд продвинулся",
+        "text": "Отрезок 81. Время: Утро.",
+        "details": "Маршрут: Ищем спирт.\nОписание маршрута не задано.\nСтатус маршрута: В пути.\nДвижение по карте: отряд продвинулся к точке маршрута на 4% карты. Осталось примерно 4%.\nАвто-разведка: открыта область вокруг новой позиции отряда, радиус 4%.\n\nРасход: Вода −1.\n\nИнфофон: Чистый.\nНатиск Обскурии: 1/10.\nПрипасы: 3.\nВода: 0.\nТопливо: 3.\nМедрасход: 2.\nБоезапас: 1.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779376872401-dyuyhm6bfre",
+        "createdAt": 1779376872401,
+        "type": "expedition",
+        "title": "Отряд продвинулся",
+        "text": "Отрезок 80. Время: Ночь.",
+        "details": "Маршрут: Ищем спирт.\nОписание маршрута не задано.\nСтатус маршрута: В пути.\nДвижение по карте: отряд продвинулся к точке маршрута на 4% карты. Осталось примерно 8%.\nАвто-разведка: открыта область вокруг новой позиции отряда, радиус 4%.\n\nРасход: Вода −1.\n\nИнфофон: Чистый.\nНатиск Обскурии: 1/10.\nПрипасы: 3.\nВода: 0.\nТопливо: 3.\nМедрасход: 2.\nБоезапас: 1.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779376870057-x0maax2ka5",
+        "createdAt": 1779376870057,
+        "type": "map",
+        "title": "Задана точка маршрута",
+        "text": "Мастер отметил точку маршрута на глобальной карте.",
+        "details": "Координаты точки: 18%, 82%.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779373059603-hunf1njkpow",
+        "createdAt": 1779373059603,
+        "type": "map",
+        "title": "Экран игроков возвращён к карте",
+        "text": "Игрокам снова показан обзор глобальной карты.",
+        "details": "",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779358007939-9m17d3ws42g",
+        "createdAt": 1779358007939,
+        "type": "scene",
+        "title": "Игрокам показана сцена",
+        "text": "Одинокий Форпост",
+        "details": "Экран игроков переключён на сцена.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779357979204-gvwuzqm5iae",
+        "createdAt": 1779357979204,
+        "type": "map",
+        "title": "Игрокам показана локальная карта",
+        "text": "Одинокий Форпост",
+        "details": "Экран игроков переключён на локальная карта.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779356643575-mo99xfnaoiq",
+        "createdAt": 1779356643575,
+        "type": "map",
+        "title": "Экран игроков возвращён к карте",
+        "text": "Игрокам снова показан обзор глобальной карты.",
+        "details": "",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779353504301-f8mre8u2cr7",
+        "createdAt": 1779353504302,
+        "type": "map",
+        "title": "Игрокам показан обзор",
+        "text": "Внешний сигнальный узел",
+        "details": "Экран игроков переключён на обзор.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779353176022-aisekkwejyq",
+        "createdAt": 1779353176022,
+        "type": "map",
+        "title": "Игрокам показан обзор",
+        "text": "Умолкший малый пост",
+        "details": "Экран игроков переключён на обзор.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779353171934-dk0gtsh5mj4",
+        "createdAt": 1779353171934,
+        "type": "map",
+        "title": "Экран игроков возвращён к карте",
+        "text": "Игрокам снова показан обзор глобальной карты.",
+        "details": "",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779353165927-a1harj0bl2c",
+        "createdAt": 1779353165927,
+        "type": "scene",
+        "title": "Игрокам показана сцена",
+        "text": "Умолкший малый пост",
+        "details": "Экран игроков переключён на сцена.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779352747591-4tgp1zfxatu",
+        "createdAt": 1779352747591,
+        "type": "map",
+        "title": "Точка маршрута сброшена",
+        "text": "Мастер убрал точку маршрута с глобальной карты.",
+        "details": "",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779352746535-dwcmteupw1l",
+        "createdAt": 1779352746535,
+        "type": "map",
+        "title": "Мастер убрал предложение маршрута",
+        "text": "Предложенная игроками точка маршрута удалена.",
+        "details": "",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779338398936-xsk1wap6zbs",
+        "createdAt": 1779338398936,
+        "type": "map",
+        "title": "Игроки предложили направление",
+        "text": "Игроки отметили предложенную точку маршрута на глобальной карте.",
+        "details": "Координаты предложения: 48%, 61%.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779336659596-snyxpo8sl7l",
+        "createdAt": 1779336659596,
+        "type": "expedition",
+        "title": "Отряд продвинулся",
+        "text": "Отрезок 79. Время: Вечер.",
+        "details": "Маршрут: Ищем спирт.\nОписание маршрута не задано.\nСтатус маршрута: В пути.\nДвижение по карте: отряд продвинулся к точке маршрута на 4% карты. Осталось примерно 12%.\nАвто-разведка: рядом уже была открытая область, новая область не создана.\n\nРасход: Вода −1.\n\nИнфофон: Чистый.\nНатиск Обскурии: 1/10.\nПрипасы: 3.\nВода: 0.\nТопливо: 3.\nМедрасход: 2.\nБоезапас: 1.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779336644427-kih216dne9m",
+        "createdAt": 1779336644427,
+        "type": "map",
+        "title": "Мастер принял направление",
+        "text": "Предложенная игроками точка стала текущей точкой маршрута.",
+        "details": "Координаты маршрута: 36%, 81%.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779336633747-halghi41qwm",
+        "createdAt": 1779336633747,
+        "type": "map",
+        "title": "Игроки предложили направление",
+        "text": "Игроки отметили предложенную точку маршрута на глобальной карте.",
+        "details": "Координаты предложения: 36%, 81%.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779208434205-4c9i2866oa7",
+        "createdAt": 1779208434205,
+        "type": "expedition",
+        "title": "Отряд продвинулся",
+        "text": "Отрезок 78. Время: День.",
+        "details": "Маршрут: Ищем спирт.\nОписание маршрута не задано.\nСтатус маршрута: В пути.\nДвижение по карте: отряд продвинулся к точке маршрута на 4% карты. Осталось примерно 0%.\nАвто-разведка: открыта область вокруг новой позиции отряда, радиус 4%.\n\nРасход: Припасы −1, Вода −1.\n\nИнфофон: Чистый.\nНатиск Обскурии: 1/10.\nПрипасы: 3.\nВода: 1.\nТопливо: 3.\nМедрасход: 2.\nБоезапас: 1.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779208423405-4kwjoyg0eao",
+        "createdAt": 1779208423405,
+        "type": "map",
+        "title": "Мастер принял направление",
+        "text": "Предложенная игроками точка стала текущей точкой маршрута.",
+        "details": "Координаты маршрута: 20%, 81%.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779208417109-nuizbj8jxr",
+        "createdAt": 1779208417109,
+        "type": "map",
+        "title": "Игроки предложили направление",
+        "text": "Игроки отметили предложенную точку маршрута на глобальной карте.",
+        "details": "Координаты предложения: 20%, 81%.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779208399997-txj143wqs3i",
+        "createdAt": 1779208399997,
+        "type": "expedition",
+        "title": "Отряд продвинулся",
+        "text": "Отрезок 77. Время: Утро.",
+        "details": "Маршрут: Ищем спирт.\nОписание маршрута не задано.\nСтатус маршрута: Достигнут.\nДвижение по карте: отряд достиг точки маршрута.\nАвто-разведка: открыта область вокруг новой позиции отряда, радиус 4%.\n\nРасход: Припасы −1, Вода −1.\n\nИнфофон: Чистый.\nНатиск Обскурии: 1/10.\nПрипасы: 4.\nВода: 2.\nТопливо: 3.\nМедрасход: 2.\nБоезапас: 1.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779208379373-1pt9hr1w7e6",
+        "createdAt": 1779208379373,
+        "type": "expedition",
+        "title": "Отряд продвинулся",
+        "text": "Отрезок 76. Время: Ночь.",
+        "details": "Маршрут: Ищем спирт.\nОписание маршрута не задано.\nСтатус маршрута: В пути.\nДвижение по карте: отряд продвинулся к точке маршрута на 4% карты. Осталось примерно 3%.\nАвто-разведка: открыта область вокруг новой позиции отряда, радиус 4%.\n\nРасход: Вода −1.\n\nИнфофон: Чистый.\nНатиск Обскурии: 1/10.\nПрипасы: 5.\nВода: 3.\nТопливо: 3.\nМедрасход: 2.\nБоезапас: 1.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779208371133-41u31mv7zsy",
+        "createdAt": 1779208371133,
+        "type": "expedition",
+        "title": "Отряд продвинулся",
+        "text": "Отрезок 75. Время: Вечер.",
+        "details": "Маршрут: Ищем спирт.\nОписание маршрута не задано.\nСтатус маршрута: В пути.\nДвижение по карте: отряд продвинулся к точке маршрута на 4% карты. Осталось примерно 7%.\nАвто-разведка: открыта область вокруг новой позиции отряда, радиус 4%.\n\nРасход: Вода −1.\n\nИнфофон: Чистый.\nНатиск Обскурии: 1/10.\nПрипасы: 5.\nВода: 4.\nТопливо: 3.\nМедрасход: 2.\nБоезапас: 1.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779208345717-rb9sxfdzs0r",
+        "createdAt": 1779208345717,
+        "type": "map",
+        "title": "Мастер принял направление",
+        "text": "Предложенная игроками точка стала текущей точкой маршрута.",
+        "details": "Координаты маршрута: 24%, 84%.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779208342045-xahrbgagq6k",
+        "createdAt": 1779208342045,
+        "type": "map",
+        "title": "Задана точка маршрута",
+        "text": "Мастер отметил точку маршрута на глобальной карте.",
+        "details": "Координаты точки: 25%, 84%.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779208327413-kchzp2k2vir",
+        "createdAt": 1779208327413,
+        "type": "map",
+        "title": "Игроки предложили направление",
+        "text": "Игроки отметили предложенную точку маршрута на глобальной карте.",
+        "details": "Координаты предложения: 24%, 84%.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779208308837-osqxezoby7",
+        "createdAt": 1779208308837,
+        "type": "map",
+        "title": "Точка маршрута сброшена",
+        "text": "Мастер убрал точку маршрута с глобальной карты.",
+        "details": "",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779194011748-xhcm64t2ek",
+        "createdAt": 1779194011748,
+        "type": "expedition",
+        "title": "Отряд продвинулся",
+        "text": "Отрезок 74. Время: День.",
+        "details": "Маршрут: Ищем спирт.\nОписание маршрута не задано.\nСтатус маршрута: Достигнут.\nДвижение по карте: отряд достиг точки маршрута.\nАвто-разведка: рядом уже была открытая область, новая область не создана.\n\nРасход: Вода −1.\n\nИнфофон: Чистый.\nНатиск Обскурии: 1/10.\nПрипасы: 4.\nВода: 0.\nТопливо: 3.\nМедрасход: 2.\nБоезапас: 1.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779194011420-kq4qv8yspb",
+        "createdAt": 1779194011420,
+        "type": "expedition",
+        "title": "Отряд продвинулся",
+        "text": "Отрезок 73. Время: Утро.",
+        "details": "Маршрут: Ищем спирт.\nОписание маршрута не задано.\nСтатус маршрута: В пути.\nДвижение по карте: отряд продвинулся к точке маршрута на 4% карты. Осталось примерно 2%.\nАвто-разведка: открыта область вокруг новой позиции отряда, радиус 4%.\n\nРасход: Вода −1.\n\nИнфофон: Чистый.\nНатиск Обскурии: 1/10.\nПрипасы: 4.\nВода: 0.\nТопливо: 3.\nМедрасход: 2.\nБоезапас: 1.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779194011027-7q8wkh5d2oh",
+        "createdAt": 1779194011027,
+        "type": "expedition",
+        "title": "Отряд продвинулся",
+        "text": "Отрезок 72. Время: Ночь.",
+        "details": "Маршрут: Ищем спирт.\nОписание маршрута не задано.\nСтатус маршрута: В пути.\nДвижение по карте: отряд продвинулся к точке маршрута на 4% карты. Осталось примерно 6%.\nАвто-разведка: открыта область вокруг новой позиции отряда, радиус 4%.\n\nРасход: Вода −1.\n\nИнфофон: Чистый.\nНатиск Обскурии: 1/10.\nПрипасы: 4.\nВода: 0.\nТопливо: 3.\nМедрасход: 2.\nБоезапас: 1.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779194010684-8d2wk7pfvqf",
+        "createdAt": 1779194010684,
+        "type": "expedition",
+        "title": "Отряд продвинулся",
+        "text": "Отрезок 71. Время: Вечер.",
+        "details": "Маршрут: Ищем спирт.\nОписание маршрута не задано.\nСтатус маршрута: В пути.\nДвижение по карте: отряд продвинулся к точке маршрута на 4% карты. Осталось примерно 10%.\nАвто-разведка: открыта область вокруг новой позиции отряда, радиус 4%.\n\nРасход: Вода −1.\n\nИнфофон: Чистый.\nНатиск Обскурии: 1/10.\nПрипасы: 4.\nВода: 0.\nТопливо: 3.\nМедрасход: 2.\nБоезапас: 1.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779194005468-99ddm1vzuk5",
+        "createdAt": 1779194005468,
+        "type": "expedition",
+        "title": "Отряд продвинулся",
+        "text": "Отрезок 70. Время: День.",
+        "details": "Маршрут: Ищем спирт.\nОписание маршрута не задано.\nСтатус маршрута: В пути.\nДвижение по карте: отряд продвинулся к точке маршрута на 4% карты. Осталось примерно 14%.\nАвто-разведка: открыта область вокруг новой позиции отряда, радиус 4%.\n\nРасход: Вода −1.\n\nИнфофон: Чистый.\nНатиск Обскурии: 1/10.\nПрипасы: 4.\nВода: 0.\nТопливо: 3.\nМедрасход: 2.\nБоезапас: 1.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779193994780-jecy23lweb",
+        "createdAt": 1779193994780,
+        "type": "expedition",
+        "title": "Отряд продвинулся",
+        "text": "Отрезок 69. Время: Утро.",
+        "details": "Маршрут: Ищем спирт.\nОписание маршрута не задано.\nСтатус маршрута: В пути.\nДвижение по карте: отряд продвинулся к точке маршрута на 4% карты. Осталось примерно 18%.\nАвто-разведка: открыта область вокруг новой позиции отряда, радиус 4%.\n\nРасход: Вода −1.\n\nИнфофон: Чистый.\nНатиск Обскурии: 1/10.\nПрипасы: 4.\nВода: 0.\nТопливо: 3.\nМедрасход: 2.\nБоезапас: 1.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779193966036-zrp3bzybnwp",
+        "createdAt": 1779193966036,
+        "type": "map",
+        "title": "Задана точка маршрута",
+        "text": "Мастер отметил точку маршрута на глобальной карте.",
+        "details": "Координаты точки: 45%, 98%.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779193962372-th2c1b5r09o",
+        "createdAt": 1779193962372,
+        "type": "map",
+        "title": "Точка маршрута сброшена",
+        "text": "Мастер убрал точку маршрута с глобальной карты.",
+        "details": "",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779193960292-3j6gjksef0a",
+        "createdAt": 1779193960292,
+        "type": "map",
+        "title": "Мастер убрал предложение маршрута",
+        "text": "Предложенная игроками точка маршрута удалена.",
+        "details": "",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779193542500-6uuv5zaisgy",
+        "createdAt": 1779193542500,
+        "type": "map",
+        "title": "Игроки предложили направление",
+        "text": "Игроки отметили предложенную точку маршрута на глобальной карте.",
+        "details": "Координаты предложения: 36%, 66%.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779193516004-xpfzwgpekqm",
+        "createdAt": 1779193516004,
+        "type": "expedition",
+        "title": "Отряд продвинулся",
+        "text": "Отрезок 68. Время: Ночь.",
+        "details": "Маршрут: Ищем спирт.\nОписание маршрута не задано.\nСтатус маршрута: В пути.\nДвижение по карте: отряд продвинулся к точке маршрута на 4% карты. Осталось примерно 8%.\n\nРасход: Вода −1.\n\nИнфофон: Чистый.\nНатиск Обскурии: 1/10.\nПрипасы: 4.\nВода: 0.\nТопливо: 3.\nМедрасход: 2.\nБоезапас: 1.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779193495500-yqztu30j87n",
+        "createdAt": 1779193495500,
+        "type": "map",
+        "title": "Задана точка маршрута",
+        "text": "Мастер отметил точку маршрута на глобальной карте.",
+        "details": "Координаты точки: 44%, 69%.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779193469084-1irqjqmfu9q",
+        "createdAt": 1779193469084,
+        "type": "expedition",
+        "title": "Отряд продвинулся",
+        "text": "Отрезок 67. Время: Вечер.",
+        "details": "Маршрут: Ищем спирт.\nОписание маршрута не задано.\nСтатус маршрута: В пути.\nДвижение по карте: отряд продвинулся к точке маршрута на 4% карты. Осталось примерно 1%.\n\nРасход: Вода −1.\n\nИнфофон: Чистый.\nНатиск Обскурии: 1/10.\nПрипасы: 4.\nВода: 0.\nТопливо: 3.\nМедрасход: 2.\nБоезапас: 1.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779193468188-x6jl1rgi3c",
+        "createdAt": 1779193468188,
+        "type": "expedition",
+        "title": "Отряд продвинулся",
+        "text": "Отрезок 66. Время: День.",
+        "details": "Маршрут: Ищем спирт.\nОписание маршрута не задано.\nСтатус маршрута: В пути.\nДвижение по карте: отряд продвинулся к точке маршрута на 4% карты. Осталось примерно 5%.\n\nРасход: Вода −1.\n\nИнфофон: Чистый.\nНатиск Обскурии: 1/10.\nПрипасы: 4.\nВода: 0.\nТопливо: 3.\nМедрасход: 2.\nБоезапас: 1.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779193467284-6v6c5oilx6n",
+        "createdAt": 1779193467284,
+        "type": "expedition",
+        "title": "Отряд продвинулся",
+        "text": "Отрезок 65. Время: Утро.",
+        "details": "Маршрут: Ищем спирт.\nОписание маршрута не задано.\nСтатус маршрута: В пути.\nДвижение по карте: отряд продвинулся к точке маршрута на 4% карты. Осталось примерно 9%.\n\nРасход: Вода −1.\n\nИнфофон: Чистый.\nНатиск Обскурии: 1/10.\nПрипасы: 4.\nВода: 0.\nТопливо: 3.\nМедрасход: 2.\nБоезапас: 1.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779193459492-4strjpskpl7",
+        "createdAt": 1779193459492,
+        "type": "map",
+        "title": "Мастер принял направление",
+        "text": "Предложенная игроками точка стала текущей точкой маршрута.",
+        "details": "Координаты маршрута: 46%, 81%.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779193442276-p5lof951u98",
+        "createdAt": 1779193442276,
+        "type": "map",
+        "title": "Игроки предложили направление",
+        "text": "Игроки отметили предложенную точку маршрута на глобальной карте.",
+        "details": "Координаты предложения: 46%, 81%.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779193437644-depv86ajzvk",
+        "createdAt": 1779193437644,
+        "type": "map",
+        "title": "Игроки предложили направление",
+        "text": "Игроки отметили предложенную точку маршрута на глобальной карте.",
+        "details": "Координаты предложения: 7%, 49%.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779193419316-5jcxn8t5yoe",
+        "createdAt": 1779193419316,
+        "type": "map",
+        "title": "Игроки предложили направление",
+        "text": "Игроки отметили предложенную точку маршрута на глобальной карте.",
+        "details": "Координаты предложения: 50%, 80%.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779193406788-5ug2bqp3u6a",
+        "createdAt": 1779193406788,
+        "type": "map",
+        "title": "Игроки предложили направление",
+        "text": "Игроки отметили предложенную точку маршрута на глобальной карте.",
+        "details": "Координаты предложения: 49%, 79%.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779190958173-vvwp3pqp06",
+        "createdAt": 1779190958173,
+        "type": "map",
+        "title": "Задана точка маршрута",
+        "text": "Мастер отметил точку маршрута на глобальной карте.",
+        "details": "Координаты точки: 20%, 81%.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779190922437-tucy72m7aaj",
+        "createdAt": 1779190922437,
+        "type": "expedition",
+        "title": "Отряд продвинулся",
+        "text": "Отрезок 64. Время: Ночь.",
+        "details": "Маршрут: Ищем спирт.\nОписание маршрута не задано.\nСтатус маршрута: Достигнут.\nДвижение по карте: отряд достиг точки маршрута.\n\nРасход: Вода −1.\n\nИнфофон: Чистый.\nНатиск Обскурии: 1/10.\nПрипасы: 4.\nВода: 0.\nТопливо: 3.\nМедрасход: 2.\nБоезапас: 1.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779190921493-hv0anqoz5x7",
+        "createdAt": 1779190921493,
+        "type": "expedition",
+        "title": "Отряд продвинулся",
+        "text": "Отрезок 63. Время: Вечер.",
+        "details": "Маршрут: Ищем спирт.\nОписание маршрута не задано.\nСтатус маршрута: В пути.\nДвижение по карте: отряд продвинулся к точке маршрута на 4% карты. Осталось примерно 2%.\n\nРасход: Вода −1.\n\nИнфофон: Чистый.\nНатиск Обскурии: 1/10.\nПрипасы: 4.\nВода: 0.\nТопливо: 3.\nМедрасход: 2.\nБоезапас: 1.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779190920573-fqsueeez7vq",
+        "createdAt": 1779190920573,
+        "type": "expedition",
+        "title": "Отряд продвинулся",
+        "text": "Отрезок 62. Время: День.",
+        "details": "Маршрут: Ищем спирт.\nОписание маршрута не задано.\nСтатус маршрута: В пути.\nДвижение по карте: отряд продвинулся к точке маршрута на 4% карты. Осталось примерно 6%.\n\nРасход: Вода −1.\n\nИнфофон: Чистый.\nНатиск Обскурии: 1/10.\nПрипасы: 4.\nВода: 0.\nТопливо: 3.\nМедрасход: 2.\nБоезапас: 1.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779190919205-iyo57gq6tp",
+        "createdAt": 1779190919205,
+        "type": "expedition",
+        "title": "Отряд продвинулся",
+        "text": "Отрезок 61. Время: Утро.",
+        "details": "Маршрут: Ищем спирт.\nОписание маршрута не задано.\nСтатус маршрута: В пути.\nДвижение по карте: отряд продвинулся к точке маршрута на 4% карты. Осталось примерно 10%.\n\nРасход: Вода −1.\n\nИнфофон: Чистый.\nНатиск Обскурии: 1/10.\nПрипасы: 4.\nВода: 0.\nТопливо: 3.\nМедрасход: 2.\nБоезапас: 1.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779190917182-26cpclvy556",
+        "createdAt": 1779190917182,
+        "type": "expedition",
+        "title": "Отряд продвинулся",
+        "text": "Отрезок 60. Время: Ночь.",
+        "details": "Маршрут: Ищем спирт.\nОписание маршрута не задано.\nСтатус маршрута: В пути.\nДвижение по карте: отряд продвинулся к точке маршрута на 4% карты. Осталось примерно 14%.\n\nРасход: Вода −1.\n\nИнфофон: Чистый.\nНатиск Обскурии: 1/10.\nПрипасы: 4.\nВода: 0.\nТопливо: 3.\nМедрасход: 2.\nБоезапас: 1.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779189729629-e9263volrqa",
+        "createdAt": 1779189729629,
+        "type": "expedition",
+        "title": "Отряд продвинулся",
+        "text": "Отрезок 59. Время: Вечер.",
+        "details": "Маршрут: Ищем спирт.\nОписание маршрута не задано.\nСтатус маршрута: В пути.\nДвижение по карте: отряд продвинулся к точке маршрута на 4% карты. Осталось примерно 18%.\n\nРасход: Вода −1.\n\nИнфофон: Чистый.\nНатиск Обскурии: 1/10.\nПрипасы: 4.\nВода: 0.\nТопливо: 3.\nМедрасход: 2.\nБоезапас: 1.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779189727237-j8oao77pj8i",
+        "createdAt": 1779189727237,
+        "type": "expedition",
+        "title": "Отряд продвинулся",
+        "text": "Отрезок 58. Время: День.",
+        "details": "Маршрут: Ищем спирт.\nОписание маршрута не задано.\nСтатус маршрута: В пути.\nДвижение по карте: отряд продвинулся к точке маршрута на 4% карты. Осталось примерно 22%.\n\nРасход: Вода −1.\n\nИнфофон: Чистый.\nНатиск Обскурии: 1/10.\nПрипасы: 4.\nВода: 0.\nТопливо: 3.\nМедрасход: 2.\nБоезапас: 1.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779189725550-z1svykck1pp",
+        "createdAt": 1779189725550,
+        "type": "expedition",
+        "title": "Отряд продвинулся",
+        "text": "Отрезок 57. Время: Утро.",
+        "details": "Маршрут: Ищем спирт.\nОписание маршрута не задано.\nСтатус маршрута: В пути.\nДвижение по карте: отряд продвинулся к точке маршрута на 4% карты. Осталось примерно 26%.\n\nРасход: Вода −1.\n\nИнфофон: Чистый.\nНатиск Обскурии: 1/10.\nПрипасы: 4.\nВода: 0.\nТопливо: 3.\nМедрасход: 2.\nБоезапас: 1.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779189722469-4slsfak8q3g",
+        "createdAt": 1779189722469,
+        "type": "expedition",
+        "title": "Отряд продвинулся",
+        "text": "Отрезок 57. Время: Утро.",
+        "details": "Маршрут: Ищем спирт.\nОписание маршрута не задано.\nСтатус маршрута: В пути.\nДвижение по карте: отряд продвинулся к точке маршрута на 4% карты. Осталось примерно 26%.\n\nРасход: Вода −1.\n\nИнфофон: Чистый.\nНатиск Обскурии: 1/10.\nПрипасы: 4.\nВода: 0.\nТопливо: 3.\nМедрасход: 2.\nБоезапас: 1.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779189719885-kvjr9tc73e",
+        "createdAt": 1779189719885,
+        "type": "expedition",
+        "title": "Отряд продвинулся",
+        "text": "Отрезок 57. Время: Утро.",
+        "details": "Маршрут: Ищем спирт.\nОписание маршрута не задано.\nСтатус маршрута: В пути.\nДвижение по карте: отряд продвинулся к точке маршрута на 4% карты. Осталось примерно 26%.\n\nРасход: Вода −1.\n\nИнфофон: Чистый.\nНатиск Обскурии: 1/10.\nПрипасы: 4.\nВода: 0.\nТопливо: 3.\nМедрасход: 2.\nБоезапас: 1.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779189718590-6f85hh3sa0i",
+        "createdAt": 1779189718590,
+        "type": "expedition",
+        "title": "Отряд продвинулся",
+        "text": "Отрезок 57. Время: Утро.",
+        "details": "Маршрут: Ищем спирт.\nОписание маршрута не задано.\nСтатус маршрута: В пути.\nДвижение по карте: отряд продвинулся к точке маршрута на 4% карты. Осталось примерно 26%.\n\nРасход: Вода −1.\n\nИнфофон: Чистый.\nНатиск Обскурии: 1/10.\nПрипасы: 4.\nВода: 0.\nТопливо: 3.\nМедрасход: 2.\nБоезапас: 1.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779189716805-y5pavdn8gy",
+        "createdAt": 1779189716805,
+        "type": "expedition",
+        "title": "Отряд продвинулся",
+        "text": "Отрезок 57. Время: Утро.",
+        "details": "Маршрут: Ищем спирт.\nОписание маршрута не задано.\nСтатус маршрута: В пути.\nДвижение по карте: отряд продвинулся к точке маршрута на 4% карты. Осталось примерно 26%.\n\nРасход: Вода −1.\n\nИнфофон: Чистый.\nНатиск Обскурии: 1/10.\nПрипасы: 4.\nВода: 0.\nТопливо: 3.\nМедрасход: 2.\nБоезапас: 1.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779189716469-k80k7e7h43h",
+        "createdAt": 1779189716469,
+        "type": "expedition",
+        "title": "Отряд продвинулся",
+        "text": "Отрезок 57. Время: Утро.",
+        "details": "Маршрут: Ищем спирт.\nОписание маршрута не задано.\nСтатус маршрута: В пути.\nДвижение по карте: отряд продвинулся к точке маршрута на 4% карты. Осталось примерно 26%.\n\nРасход: Вода −1.\n\nИнфофон: Чистый.\nНатиск Обскурии: 1/10.\nПрипасы: 4.\nВода: 0.\nТопливо: 3.\nМедрасход: 2.\nБоезапас: 1.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779189716069-okqyo9pa7g",
+        "createdAt": 1779189716069,
+        "type": "expedition",
+        "title": "Отряд продвинулся",
+        "text": "Отрезок 57. Время: Утро.",
+        "details": "Маршрут: Ищем спирт.\nОписание маршрута не задано.\nСтатус маршрута: В пути.\nДвижение по карте: отряд продвинулся к точке маршрута на 4% карты. Осталось примерно 26%.\n\nРасход: Вода −1.\n\nИнфофон: Чистый.\nНатиск Обскурии: 1/10.\nПрипасы: 4.\nВода: 0.\nТопливо: 3.\nМедрасход: 2.\nБоезапас: 1.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779189715653-00oflc7o40i9",
+        "createdAt": 1779189715653,
+        "type": "expedition",
+        "title": "Отряд продвинулся",
+        "text": "Отрезок 57. Время: Утро.",
+        "details": "Маршрут: Ищем спирт.\nОписание маршрута не задано.\nСтатус маршрута: В пути.\nДвижение по карте: отряд продвинулся к точке маршрута на 4% карты. Осталось примерно 26%.\n\nРасход: Вода −1.\n\nИнфофон: Чистый.\nНатиск Обскурии: 1/10.\nПрипасы: 4.\nВода: 0.\nТопливо: 3.\nМедрасход: 2.\nБоезапас: 1.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779189715062-y0kn5y36rs",
+        "createdAt": 1779189715062,
+        "type": "expedition",
+        "title": "Отряд продвинулся",
+        "text": "Отрезок 57. Время: Утро.",
+        "details": "Маршрут: Ищем спирт.\nОписание маршрута не задано.\nСтатус маршрута: В пути.\nДвижение по карте: отряд продвинулся к точке маршрута на 4% карты. Осталось примерно 26%.\n\nРасход: Вода −1.\n\nИнфофон: Чистый.\nНатиск Обскурии: 1/10.\nПрипасы: 4.\nВода: 0.\nТопливо: 3.\nМедрасход: 2.\nБоезапас: 1.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779189714845-lvls8pu2jq",
+        "createdAt": 1779189714845,
+        "type": "expedition",
+        "title": "Отряд продвинулся",
+        "text": "Отрезок 57. Время: Утро.",
+        "details": "Маршрут: Ищем спирт.\nОписание маршрута не задано.\nСтатус маршрута: В пути.\nДвижение по карте: отряд продвинулся к точке маршрута на 4% карты. Осталось примерно 26%.\n\nРасход: Вода −1.\n\nИнфофон: Чистый.\nНатиск Обскурии: 1/10.\nПрипасы: 4.\nВода: 0.\nТопливо: 3.\nМедрасход: 2.\nБоезапас: 1.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779189714541-bkijjjaq6o5",
+        "createdAt": 1779189714541,
+        "type": "expedition",
+        "title": "Отряд продвинулся",
+        "text": "Отрезок 57. Время: Утро.",
+        "details": "Маршрут: Ищем спирт.\nОписание маршрута не задано.\nСтатус маршрута: В пути.\nДвижение по карте: отряд продвинулся к точке маршрута на 4% карты. Осталось примерно 26%.\n\nРасход: Вода −1.\n\nИнфофон: Чистый.\nНатиск Обскурии: 1/10.\nПрипасы: 4.\nВода: 0.\nТопливо: 3.\nМедрасход: 2.\nБоезапас: 1.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779189713878-16af4pfcklu",
+        "createdAt": 1779189713878,
+        "type": "expedition",
+        "title": "Отряд продвинулся",
+        "text": "Отрезок 57. Время: Утро.",
+        "details": "Маршрут: Ищем спирт.\nОписание маршрута не задано.\nСтатус маршрута: В пути.\nДвижение по карте: отряд продвинулся к точке маршрута на 4% карты. Осталось примерно 26%.\n\nРасход: Вода −1.\n\nИнфофон: Чистый.\nНатиск Обскурии: 1/10.\nПрипасы: 4.\nВода: 0.\nТопливо: 3.\nМедрасход: 2.\nБоезапас: 1.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779189713622-nvpdhfaady",
+        "createdAt": 1779189713622,
+        "type": "expedition",
+        "title": "Отряд продвинулся",
+        "text": "Отрезок 57. Время: Утро.",
+        "details": "Маршрут: Ищем спирт.\nОписание маршрута не задано.\nСтатус маршрута: В пути.\nДвижение по карте: отряд продвинулся к точке маршрута на 4% карты. Осталось примерно 26%.\n\nРасход: Вода −1.\n\nИнфофон: Чистый.\nНатиск Обскурии: 1/10.\nПрипасы: 4.\nВода: 0.\nТопливо: 3.\nМедрасход: 2.\nБоезапас: 1.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779189713037-0iqj33q19djd",
+        "createdAt": 1779189713037,
+        "type": "expedition",
+        "title": "Отряд продвинулся",
+        "text": "Отрезок 57. Время: Утро.",
+        "details": "Маршрут: Ищем спирт.\nОписание маршрута не задано.\nСтатус маршрута: В пути.\nДвижение по карте: отряд продвинулся к точке маршрута на 4% карты. Осталось примерно 26%.\n\nРасход: Вода −1.\n\nИнфофон: Чистый.\nНатиск Обскурии: 1/10.\nПрипасы: 4.\nВода: 0.\nТопливо: 3.\nМедрасход: 2.\nБоезапас: 1.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779189712629-071ig61gvqr",
+        "createdAt": 1779189712629,
+        "type": "expedition",
+        "title": "Отряд продвинулся",
+        "text": "Отрезок 57. Время: Утро.",
+        "details": "Маршрут: Ищем спирт.\nОписание маршрута не задано.\nСтатус маршрута: В пути.\nДвижение по карте: отряд продвинулся к точке маршрута на 4% карты. Осталось примерно 26%.\n\nРасход: Вода −1.\n\nИнфофон: Чистый.\nНатиск Обскурии: 1/10.\nПрипасы: 4.\nВода: 0.\nТопливо: 3.\nМедрасход: 2.\nБоезапас: 1.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779189712389-ihva8j99zr",
+        "createdAt": 1779189712389,
+        "type": "expedition",
+        "title": "Отряд продвинулся",
+        "text": "Отрезок 57. Время: Утро.",
+        "details": "Маршрут: Ищем спирт.\nОписание маршрута не задано.\nСтатус маршрута: В пути.\nДвижение по карте: отряд продвинулся к точке маршрута на 4% карты. Осталось примерно 26%.\n\nРасход: Вода −1.\n\nИнфофон: Чистый.\nНатиск Обскурии: 1/10.\nПрипасы: 4.\nВода: 0.\nТопливо: 3.\nМедрасход: 2.\nБоезапас: 1.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779189712085-9ebavemub2d",
+        "createdAt": 1779189712085,
+        "type": "expedition",
+        "title": "Отряд продвинулся",
+        "text": "Отрезок 57. Время: Утро.",
+        "details": "Маршрут: Ищем спирт.\nОписание маршрута не задано.\nСтатус маршрута: В пути.\nДвижение по карте: отряд продвинулся к точке маршрута на 4% карты. Осталось примерно 26%.\n\nРасход: Вода −1.\n\nИнфофон: Чистый.\nНатиск Обскурии: 1/10.\nПрипасы: 4.\nВода: 0.\nТопливо: 3.\nМедрасход: 2.\nБоезапас: 1.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779189711693-oqv70ycktx",
+        "createdAt": 1779189711693,
+        "type": "expedition",
+        "title": "Отряд продвинулся",
+        "text": "Отрезок 57. Время: Утро.",
+        "details": "Маршрут: Ищем спирт.\nОписание маршрута не задано.\nСтатус маршрута: В пути.\nДвижение по карте: отряд продвинулся к точке маршрута на 4% карты. Осталось примерно 26%.\n\nРасход: Вода −1.\n\nИнфофон: Чистый.\nНатиск Обскурии: 1/10.\nПрипасы: 4.\nВода: 0.\nТопливо: 3.\nМедрасход: 2.\nБоезапас: 1.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779189711189-9mp5jg03zm4",
+        "createdAt": 1779189711189,
+        "type": "expedition",
+        "title": "Отряд продвинулся",
+        "text": "Отрезок 57. Время: Утро.",
+        "details": "Маршрут: Ищем спирт.\nОписание маршрута не задано.\nСтатус маршрута: В пути.\nДвижение по карте: отряд продвинулся к точке маршрута на 4% карты. Осталось примерно 26%.\n\nРасход: Вода −1.\n\nИнфофон: Чистый.\nНатиск Обскурии: 1/10.\nПрипасы: 4.\nВода: 0.\nТопливо: 3.\nМедрасход: 2.\nБоезапас: 1.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779189709693-cfyg8cs3n8i",
+        "createdAt": 1779189709693,
+        "type": "expedition",
+        "title": "Отряд продвинулся",
+        "text": "Отрезок 57. Время: Утро.",
+        "details": "Маршрут: Ищем спирт.\nОписание маршрута не задано.\nСтатус маршрута: В пути.\nДвижение по карте: отряд продвинулся к точке маршрута на 4% карты. Осталось примерно 26%.\n\nРасход: Вода −1.\n\nИнфофон: Чистый.\nНатиск Обскурии: 1/10.\nПрипасы: 4.\nВода: 0.\nТопливо: 3.\nМедрасход: 2.\nБоезапас: 1.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779189709077-l0hzjd03q1",
+        "createdAt": 1779189709077,
+        "type": "expedition",
+        "title": "Отряд продвинулся",
+        "text": "Отрезок 57. Время: Утро.",
+        "details": "Маршрут: Ищем спирт.\nОписание маршрута не задано.\nСтатус маршрута: В пути.\nДвижение по карте: отряд продвинулся к точке маршрута на 4% карты. Осталось примерно 26%.\n\nРасход: Вода −1.\n\nИнфофон: Чистый.\nНатиск Обскурии: 1/10.\nПрипасы: 4.\nВода: 0.\nТопливо: 3.\nМедрасход: 2.\nБоезапас: 1.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779189708246-er2q4m8b59i",
+        "createdAt": 1779189708246,
+        "type": "map",
+        "title": "Задана точка маршрута",
+        "text": "Мастер отметил точку маршрута на глобальной карте.",
+        "details": "Координаты точки: 47%, 68%.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779189704966-wf5s0guuci",
+        "createdAt": 1779189704966,
+        "type": "expedition",
+        "title": "Отряд продвинулся",
+        "text": "Отрезок 56. Время: Ночь.",
+        "details": "Маршрут: Ищем спирт.\nОписание маршрута не задано.\nСтатус маршрута: Достигнут.\nДвижение по карте: отряд достиг точки маршрута.\n\nРасход: Вода −1.\n\nИнфофон: Чистый.\nНатиск Обскурии: 1/10.\nПрипасы: 4.\nВода: 1.\nТопливо: 3.\nМедрасход: 2.\nБоезапас: 1.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779189700989-ct87o8p8dq",
+        "createdAt": 1779189700989,
+        "type": "expedition",
+        "title": "Отряд продвинулся",
+        "text": "Отрезок 55. Время: Вечер.",
+        "details": "Маршрут: Ищем спирт.\nОписание маршрута не задано.\nСтатус маршрута: В пути.\nДвижение по карте: отряд продвинулся к точке маршрута на 4% карты. Осталось примерно 0%.\n\nРасход: Вода −1.\n\nИнфофон: Чистый.\nНатиск Обскурии: 1/10.\nПрипасы: 4.\nВода: 2.\nТопливо: 3.\nМедрасход: 2.\nБоезапас: 1.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779189698621-4hpc37uxkix",
+        "createdAt": 1779189698621,
+        "type": "expedition",
+        "title": "Отряд продвинулся",
+        "text": "Отрезок 54. Время: День.",
+        "details": "Маршрут: Ищем спирт.\nОписание маршрута не задано.\nСтатус маршрута: В пути.\nДвижение по карте: отряд продвинулся к точке маршрута на 4% карты. Осталось примерно 4%.\n\nРасход: Вода −1.\n\nИнфофон: Чистый.\nНатиск Обскурии: 1/10.\nПрипасы: 4.\nВода: 3.\nТопливо: 3.\nМедрасход: 2.\nБоезапас: 1.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779189697285-tyhkrxt3qah",
+        "createdAt": 1779189697285,
+        "type": "expedition",
+        "title": "Отряд продвинулся",
+        "text": "Отрезок 54. Время: День.",
+        "details": "Маршрут: Ищем спирт.\nОписание маршрута не задано.\nСтатус маршрута: В пути.\nДвижение по карте: отряд продвинулся к точке маршрута на 4% карты. Осталось примерно 4%.\n\nРасход: Вода −1.\n\nИнфофон: Чистый.\nНатиск Обскурии: 1/10.\nПрипасы: 4.\nВода: 3.\nТопливо: 3.\nМедрасход: 2.\nБоезапас: 1.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779189694742-6fj64etw4i6",
+        "createdAt": 1779189694742,
+        "type": "expedition",
+        "title": "Отряд продвинулся",
+        "text": "Отрезок 54. Время: День.",
+        "details": "Маршрут: Ищем спирт.\nОписание маршрута не задано.\nСтатус маршрута: В пути.\nДвижение по карте: отряд продвинулся к точке маршрута на 4% карты. Осталось примерно 4%.\n\nРасход: Вода −1.\n\nИнфофон: Чистый.\nНатиск Обскурии: 1/10.\nПрипасы: 4.\nВода: 3.\nТопливо: 3.\nМедрасход: 2.\nБоезапас: 1.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779188628974-g7drdnxb5st",
+        "createdAt": 1779188628974,
+        "type": "expedition",
+        "title": "Отряд продвинулся",
+        "text": "Отрезок 53. Время: Утро.",
+        "details": "Маршрут: Ищем спирт.\nОписание маршрута не задано.\nСтатус маршрута: В пути.\nДвижение по карте: отряд продвинулся к точке маршрута на 4% карты. Осталось примерно 8%.\n\nРасход: Вода −1.\n\nИнфофон: Чистый.\nНатиск Обскурии: 1/10.\nПрипасы: 4.\nВода: 4.\nТопливо: 3.\nМедрасход: 2.\nБоезапас: 1.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779188581982-b30wotcloun",
+        "createdAt": 1779188581982,
+        "type": "map",
+        "title": "Задана точка маршрута",
+        "text": "Мастер отметил точку маршрута на глобальной карте.",
+        "details": "Координаты точки: 20%, 81%.",
+        "isHiddenFromPlayers": false
+      },
+      {
+        "id": "journal-entry-1779188515134-72ldt9nya46",
+        "createdAt": 1779188515134,
+        "type": "map",
+        "title": "Точка маршрута сброшена",
+        "text": "Мастер убрал точку маршрута с глобальной карты.",
+        "details": "",
+        "isHiddenFromPlayers": false
+      }
+    ],
+    "sceneDrafts": {
+      "nri-table-scene-location-location-1779353089078": {
+        "playerDescription": "Водная линия лежит ниже форпоста, в сырой складке местности, куда не любят спускаться без нужды. Сверху её почти не видно: несколько покосившихся вешек, серый технический короб, короткая крыша-навес над клапанным узлом и труба, уходящая в мокрую землю. В нормальное время сюда приходят быстро — проверить давление, подтянуть хомут, снять грязь с решётки водозабора, выругаться на старую арматуру и вернуться за стены.\n\nТеперь здесь задерживаются только по приказу.\n\nЗемля вокруг мягкая и тёмная. Под сапогом она не просто чавкает, а будто чуть пружинит. Вода стоит в лужах неправильного цвета: не зелёная и не чёрная, а мутная, тёплая, с радужной плёнкой и рваными пятнами ржавчины. От трубы тянет железом, сырой древесиной, старым маслом и чем-то органическим — не гнилью даже, а живой тканью, которой не положено быть в водном узле.\n\nСам узел выглядит бедно и утилитарно: короткий участок трубопровода на грубых подпорках, ручной вентиль, два закисших клапана, насосный короб с замком, низкий резервуар и старая решётка водозабора. На металле видны свежие следы работы: кто-то уже пытался чистить фильтр, но бросил. Один хомут сорван, крышка технического люка приоткрыта, возле неё лежит грязная тряпка и обломок щупа. Внутри слышно редкое постукивание — будто вода бьёт по трубе, хотя давления почти нет.",
+        "masterNotes": "Чем ближе персонажи подходят к водосборной канаве, тем заметнее становится главное: проблема не только в механике. У кромки воды появились мелкие наросты. Сначала они похожи на корни, потом — на слепленные камни, потом — на вздувшиеся костяные пузыри, обвитые бледной древесной жилой. Из грязи торчат тонкие сухие шипы. Некоторые шевелятся от ветра, некоторые — не от ветра. Это ещё не огромная логомиома, но уже очаг: маленький, ранний, зато слишком близко к воде. Документ модуля прямо предполагает здесь проверку воды, спуск к трубе, встречу с мелкими формами и выбор, что делать с очагом: сжечь, изолировать, взять образец или вызвать Эвергалей.\n\nСцена должна давить не боем, а последствиями. Если отряд шумит и рубит всё подряд, можно повредить трубу или загнать заражённую воду глубже в систему. Если медлит — форпост продолжает пить из сомнительного контура. Если берёт образец — появляется вопрос, кто его понесёт, как его изолировать и что скажут Эвергали. Если жжёт очаг — дым может пойти в сторону форпоста, а вода на время станет непригодной. Если пытается чинить — кто-то должен стоять по колено в мутной тёплой жиже и держать клапан, пока другой вскрывает насосный короб.\n\nПри полном успехе очаг находят рано, воду удаётся спасти, и форпост понимает, что персонажи принесли не шум, а пользу. При частичном успехе очаг повреждён, но не уничтожен, воду приходится закрывать, и появляется новый контракт. При провале заражение попадает в водную систему, пайки режут, а напряжение внутри Форпоста Горста растёт."
+      },
+      "nri-table-scene-location-location-1777612020335": {
+        "playerDescription": "Ля ля",
+        "masterNotes": "Бу бу"
+      },
+      "nri-table-scene-location-location-1779352839535": {
+        "playerDescription": "Небольшой наблюдательный пост на внешнем контуре форпостовой зоны. Когда-то он был обычной точкой контроля: низкий укреплённый блок, несколько деревянно-металлических секций, узкий вход, смотровая щель, короткая мачта связи и сигнальный короб, через который караульные докладывали в Форпост Горста о движении на старой дороге.\n\nТеперь пост молчит.\n\nСнаружи он выглядит почти целым, но неправильным образом заброшенным. Дверь закрыта изнутри. У порога видны следы борьбы: взрытая земля, соскобы на дереве, тёмные пятна в щелях между досками, сломанный ремень или обронённая деталь снаряжения. Интерком не отвечает нормально — только шипит, потрескивает и иногда выдаёт обрывки голоса, слишком глухие, чтобы понять слова. На стене рядом с входом заметны длинные царапины, будто кто-то водил по ней железом, ногтями или чем-то уже не совсем человеческим.\n\nВнутри стоит тяжёлый запах запертого помещения: пот, сырость, старый металл, кровь, испорченная еда и что-то ещё, от чего хочется говорить тише. Света мало. Часть ставней закрыта, сигнальное оборудование работает рывками, на полу валяются опрокинутые табуреты, патронная коробка, сломанный фонарь и следы спешной попытки забаррикадировать внутреннюю дверь.\n\nПост не был взят обычной атакой. Кто-то из своих принёс угрозу внутрь. Один из служащих вернулся с внешнего маршрута или от места крушения уже с признаками Отражения; остальные попытались изолировать его, но поняли слишком поздно. Что именно осталось внутри — ранняя стадия заражения, обезумевший выживший, трупы, запертая жертва или уже почти Падаль — решает Мастер по нужной жёсткости сцены. По контракту отряд должен проверить пост, вернуть криптожeтон старшего, по возможности вывести выживших и не ломать сигнальное оборудование без крайней нужды.",
+        "masterNotes": ""
+      },
+      "nri-table-scene-location-location-1779366102088": {
+        "playerDescription": "Здесь ещё не наступила тишина. Она только пытается.\n\nГде-то внутри стонет металл. Из машинного сектора валит дым, иногда оттуда сыплются искры. Под накренившимся грузовым блоком хлопает огонь. В стороне лежат рассыпанные контейнеры: часть вскрыта ударом, часть заперта, часть так помята, что непонятно, груз там ещё или уже могила. В нескольких местах земля тёмная от топлива и масла. Запах стоит густой: горелая смазка, раскалённый металл, кровь, мокрая одежда, грязь, дешёвая еда из раздавленных пайков и тот кислый человеческий страх, который остаётся после крика.\n\nПассажирский сектор разорван и перевёрнут. Лежаки сдвинуты в одну сторону, сетки с вещами провисли как кишки, аварийный шкаф выбит из креплений. Кто-то уже ползёт к свету, кто-то зовёт по имени, кто-то бьёт кулаком изнутри по зажатой панели. У одного прохода слышны стоны: человек придавлен балкой или рамой лежака, и огонь ещё не близко, но уже понятно, что времени мало. В другом месте из-под груза торчит рука с криптожeтоном на цепочке. ",
+        "masterNotes": "Первые минуты здесь должны давить выбором. Персонажи приходят в себя не как победители, а как люди, которых только что вырвало из чужого железного мира. Нужно найти друг друга. Понять, кто ранен. Вытащить тех, кого ещё можно вытащить. Решить, тушить ли пожар, вскрывать ли грузовой отсек, искать ли капитана, брать ли оружие, связывать ли раненого наёмника, тащить ли тяжёлый контейнер, который явно искали нападающие. В модуле прямо предполагается, что после падения игроки выбирают между спасением, лутом, поиском карты, воды, капитана, оружия и быстрым уходом, пока огонь, темнота, нестабильные обломки и Натиск не сделали место хуже.\n\nАпис даёт много соблазнов. В обломках можно найти фляги, сухпай, фонарь, верёвку, простой медпакет, ремни, подсумки, боезапас, плохой пистольвер, ручницу, шлем, ремонтные детали. В более опасных местах — карту маршрута, криптожeтон капитана, ключ от грузового отсека, фрагмент нейрогравюрного носителя, повреждённый комгенный модуль, контейнер Эвергалей или запечатанный груз Вояжа. Но каждая ценная находка должна задавать вопрос: кто за ней придёт, почему она была здесь, что будет, если её вскрыть, и сколько людей погибнет, пока персонажи возятся с чужим добром.\n\nОтдельная зона — грузовое поле. Контейнеры разбросаны по камням и сухой земле. Один вскрылся сам, из него высыпались ящики, тканевые мешки и поломанные крепления. Другой заперт, но изнутри может доноситься стук: это может быть выживший, раненый наёмник, опасный груз или то, что лучше было бы не выпускать. Рядом валяется сорванный крюк, оборванная цепь и чья-то маска без лица внутри. Если персонажи идут туда, они получают шанс найти ресурсы, но теряют время и шумят.\n\nМашинный участок должен быть опаснее всех. Там жарко даже снаружи. Металл щёлкает, как зубы. Топливо течёт тонкими ручьями к низине, где уже стоит мутная тёплая лужа. Сначала она кажется просто водой, нагретой пожаром. Потом можно заметить радужную плёнку, серую слизь на камне или сухие корешки в трещине. Это ещё не полноценная угроза, но знак, что место падения быстро перестаёт быть человеческим.\n\nСумеречная зона вокруг Аписа должна чувствоваться границей. За спиной ещё лежит понятная катастрофа: железо, груз, раненые, огонь. Впереди уже начинается другое: темнеющее небо, далёкий странный звук, неработающая связь, потерянный маршрут и следы вокруг обломков, которые не совсем похожи на человеческие. Документ подчёркивает: это не глубокая Обскурия, но уже не защищённый маршрут; “ещё не ад, но уже не человеческое место”.\n\nЧем дольше отряд остаётся, тем больше место крушения становится ловушкой. Огонь распространяется. Раненые слабеют. Топливо течёт. Обломки оседают. В темноте появляются звуки, которых не было минуту назад. Натиск растёт от долгого лута, стрельбы, пожара, крови, криков, ночёвки у обломков, вскрытия опасного груза и контакта с биомассой. Его можно ослабить только действиями, которые возвращают месту хоть какой-то порядок: потушить пожар, изолировать тела, замаскировать след, уйти к стабильной тропе или просто вовремя покинуть обломки.\n\nЭта сцена не про то, чтобы “обыскать карту до конца”. Она про цену первых решений. Кто-то будет спасён, кто-то останется под металлом. Что-то удастся вынести, что-то сгорит. Одни NPC потом назовут персонажей спасителями, другие — мародёрами. И когда отряд наконец отходит от Аписа, за спиной остаётся не просто разбитая машина, а целый маленький мир Вояжа, который умер на гусеницах и оставил после себя дым, долги, чужое имущество и первые слухи о тех, кто вышел из пепла."
+      },
+      "nri-table-scene-location-hidden-shrine": {
+        "playerDescription": "Форпост Горста не выглядит спасением. Скорее — местом, которое ещё не успело умереть.\n\nОн стоит на неровной земле среди леса, камня и сырой пограничной мглы: частокол из потемневших брёвен, низкие ворота с металлическими накладками, караульная площадка, несколько бараков, складские клети, санитарный угол, мастерская под навесом, общий зал и комендатура, где решают, кого впустить, кого запереть, кого лечить, а кого лучше сразу держать под стражей. Над всем этим торчит Штиль-маяк — не красивый символ власти, а рабочая техническая мачта, которая гудит, дрожит и держит вокруг форпоста ту тонкую границу, за которой люди ещё могут думать человеческими мыслями.\n\nПосле пути от Аписа форпост кажется почти городом, но это обман. Здесь мало места, мало сна, мало доверия и слишком много людей, которые знают цену ошибке. У ворот персонажей встречают не как героев, а как выживших с места катастрофы: грязных, раненых, потенциально заражённых, потенциально полезных и потенциально опасных. Их осматривают, спрашивают, кто они, что видели, кого привели за собой, что несут в сумках и почему вообще ещё живы.\n\nВнутри форпост живёт на сжатых зубах. У склада спорят из-за пайков и топлива. В санитарном углу пахнет спиртом, кровью, мокрой тканью и дешёвыми обеззараживающими растворами. В мастерской чинят оружие, фонари и простые устройства, но на сложную технику здесь только матерятся и обещают “посмотреть, если будет время”. В общем зале едят молча, слушают слухи громче, чем разговоры, и быстро замолкают, когда входит человек кастеляна. Каждый понимает: Прилив рядом, старая дорога нестабильна, патрули не возвращаются, а крушение Аписа могло принести не только выживших.",
+        "masterNotes": "Кастелян Рем Горст держит это место не добротой и не жестокостью, а сухой практикой. Он отвечает за людей, стены, воду, склад и дорогу. Он может дать койки, плохую еду, воду, первую помощь, ограниченный ремонт, обмен и работу. Но он не даст сразу свободу, склад, доверие и путь к форт-граду. Для него персонажи пока не отряд и не спасители. Они — неизвестная переменная, пришедшая из дыма, крови и обломков.\n\nГлавная правда форпоста проста: дальше сейчас не идут. Не потому что Горст вредный и не потому что хочет держать людей в клетке. Над регионом начинается или уже идёт Прилив. Инфофон растёт, Штили работают на форсаже, старая дорога “жуёт людей”, а стабильная тропа существует только как координаты, которые нельзя раздавать каждому встречному. Чтобы получить этот путь, персонажам придётся стать полезными: проверить умолкший малый пост, разобраться с водной линией, сопроводить связиста к внешнему сигнальному узлу, пережить кризис, не развалить порядок и доказать, что они способны не только выживать, но и держать рядом других.\n\nФорпост — это первая настоящая пауза после катастрофы. Здесь можно выдохнуть, но нельзя расслабиться. Здесь персонажи впервые перестают быть просто пассажирами Аписа и начинают превращаться в людей, от которых зависит чужая стена, чужая вода и чужая дорога дальше."
+      },
+      "nri-table-scene-location-location-1778730102315": {
+        "playerDescription": "Вы стоите и смотрите в туннель",
+        "masterNotes": "Дебилы блять"
+      },
+      "nri-table-scene-location-location-1779353045758": {
+        "playerDescription": "Внешний сигнальный узел стоит в стороне от главного форпостового периметра — слишком далеко, чтобы чувствовать себя в безопасности, и слишком близко, чтобы считать это настоящей Обскурией. От Форпоста Горста сюда ведёт не дорога, а нервный служебный ход через редколесье, камни и мокрую низину. Чем ближе отряд подходит к узлу, тем хуже звучат голоса: сначала собственное дыхание в воротнике, потом шорох кабелей на ветру, потом далёкий треск помех, будто кто-то уже говорит в мёртвую линию.\n\nСам узел невелик: деревянно-металлическая мачта на растяжках, аппаратный шкаф на каменном основании, несколько кабельных коробов, низкие защитные колья и старая заземляющая рама, наполовину ушедшая в грязь. Конструкция грубая, полевая, собранная без красоты, но с пониманием дела: заклёпки, хомуты, металлические полосы, промасленные изоляторы, натянутые провода, грубый кожух над ручным коммутатором. Это не башня и не станция, а маленький внешний орган форпоста, через который тот пытается дотянуться до форт-града.\n\n",
+        "masterNotes": "Проблема в том, что узел не просто сломался. Его вскрывали.\n\nКрышка аппаратного шкафа висит криво. Один замок выбит, второй аккуратно срезан. Внутри — не хаос старой поломки, а след чужой руки: вынутые панели, перерезанная оплётка, переставленные клеммы, свежие царапины на винтах. Под мачтой можно заметить следы сапог, вдавленные в мокрую землю, и обрывок ремня или тканевой ленты, похожей на снаряжение наёмников с Аписа. Рин Оск, связист или ремонтник, быстро понимает: сюда пришли не звери и не случайные мародёры. Кто-то хотел, чтобы форпост остался глухим именно сейчас.\n\nВо время ремонта узел ведёт себя плохо. Сначала он молчит, потом щёлкает, потом выдаёт сухой, рваный треск. Рин просит тишины, лезет в шкаф, ругается сквозь зубы, пытается поймать рабочий канал и явно боится больше, чем показывает. На короткий миг в динамике может прорезаться не форт-град, а чужой голос — слишком близкий, слишком спокойный, будто кто-то стоит не за много километров, а за спиной у мачты. Слова можно не разобрать. Достаточно, чтобы все поняли: линия ловит не только человеческую связь.\n\nПока специалист чинит узел, Натиск растёт. Лес вокруг становится внимательнее. Ветер дёргает растяжки. Где-то в стороне хрустит ветка, хотя никто не должен быть так близко. Персонажи должны не просто “постоять рядом”, а удержать сцену: проверить следы, прикрыть Рина, не дать ему сорваться в панику, решить — чинить аккуратно и дольше или рискнуть быстрым запуском, который может спалить узел. Успех даёт форпосту связь и предупреждение; частичный успех может пропустить сигнал, но сжечь оборудование или оставить в записи чужой голос; провал превращает место в ещё один немой кусок внешнего периметра, а Приливовая изоляция становится тяжелее."
+      }
+    },
+    "localMaps": {
+      "nri-table-local-map-location-hidden-shrine": {
+        "imageUrl": "/local-maps/1.png",
+        "notes": "Хыхы",
+        "points": [
+          {
+            "id": "local-point-1779454595845-2o1aulmvxmf",
+            "title": "Комендатура",
+            "kind": "entrance",
+            "x": 45.91346153846153,
+            "y": 29.505876068376068,
+            "description": "",
+            "masterNotes": "",
+            "isSecret": false,
+            "targetLocalMapId": "local-map-1779505164971-05ga14iv3puh"
+          },
+          {
+            "id": "local-point-1779454643253-6btwk8jd34j",
+            "title": "Интендант",
+            "kind": "entrance",
+            "x": 39.85576923076923,
+            "y": 51.72809829059829,
+            "description": "",
+            "masterNotes": "",
+            "isSecret": false,
+            "targetLocalMapId": ""
+          },
+          {
+            "id": "local-point-1779454670269-lf3mn1e73o",
+            "title": "Корчма",
+            "kind": "entrance",
+            "x": 54.08653846153846,
+            "y": 54.6340811965812,
+            "description": "",
+            "masterNotes": "",
+            "isSecret": false,
+            "targetLocalMapId": ""
+          },
+          {
+            "id": "local-point-1779454698085-gl34xbp0xg9",
+            "title": "Эйлерская станция",
+            "kind": "interest",
+            "x": 21.682692307692307,
+            "y": 61.471688034188034,
+            "description": "",
+            "masterNotes": "",
+            "isSecret": false,
+            "targetLocalMapId": ""
+          },
+          {
+            "id": "local-point-1779454722741-9ulp3flvkgd",
+            "title": "Гарнизон",
+            "kind": "interest",
+            "x": 71.6826923076923,
+            "y": 30.531517094017097,
+            "description": "",
+            "masterNotes": "",
+            "isSecret": false,
+            "targetLocalMapId": ""
+          },
+          {
+            "id": "local-point-1779456053764-uwfljgzhh4",
+            "title": "Новая точка",
+            "kind": "interest",
+            "x": 67.74038461538461,
+            "y": 70.36057692307692,
+            "description": "",
+            "masterNotes": "",
+            "isSecret": false,
+            "targetLocalMapId": ""
+          }
+        ],
+        "levels": [
+          {
+            "id": "root",
+            "title": "Основная карта",
+            "imageUrl": "/local-maps/1.png",
+            "notes": "Хыхы",
+            "points": [
+              {
+                "id": "local-point-1779454595845-2o1aulmvxmf",
+                "title": "Комендатура",
+                "kind": "entrance",
+                "x": 45.91346153846153,
+                "y": 29.505876068376068,
+                "description": "",
+                "masterNotes": "",
+                "isSecret": false,
+                "targetLocalMapId": "local-map-1779505164971-05ga14iv3puh"
+              },
+              {
+                "id": "local-point-1779454643253-6btwk8jd34j",
+                "title": "Интендант",
+                "kind": "entrance",
+                "x": 39.85576923076923,
+                "y": 51.72809829059829,
+                "description": "",
+                "masterNotes": "",
+                "isSecret": false,
+                "targetLocalMapId": ""
+              },
+              {
+                "id": "local-point-1779454670269-lf3mn1e73o",
+                "title": "Корчма",
+                "kind": "entrance",
+                "x": 54.08653846153846,
+                "y": 54.6340811965812,
+                "description": "",
+                "masterNotes": "",
+                "isSecret": false,
+                "targetLocalMapId": ""
+              },
+              {
+                "id": "local-point-1779454698085-gl34xbp0xg9",
+                "title": "Эйлерская станция",
+                "kind": "interest",
+                "x": 21.682692307692307,
+                "y": 61.471688034188034,
+                "description": "",
+                "masterNotes": "",
+                "isSecret": false,
+                "targetLocalMapId": ""
+              },
+              {
+                "id": "local-point-1779454722741-9ulp3flvkgd",
+                "title": "Гарнизон",
+                "kind": "interest",
+                "x": 71.6826923076923,
+                "y": 30.531517094017097,
+                "description": "",
+                "masterNotes": "",
+                "isSecret": false,
+                "targetLocalMapId": ""
+              },
+              {
+                "id": "local-point-1779456053764-uwfljgzhh4",
+                "title": "Новая точка",
+                "kind": "interest",
+                "x": 67.74038461538461,
+                "y": 70.36057692307692,
+                "description": "",
+                "masterNotes": "",
+                "isSecret": false,
+                "targetLocalMapId": ""
+              }
+            ]
+          },
+          {
+            "id": "local-map-1779505164971-05ga14iv3puh",
+            "title": "Комендатура",
+            "imageUrl": "",
+            "notes": "",
+            "points": []
+          }
+        ],
+        "activeLevelId": "root"
+      },
+      "nri-table-local-map-event-event-1778729997675": {
+        "imageUrl": "",
+        "notes": "Берег реки"
+      },
+      "nri-table-local-map-location-location-1777612020335": {
+        "imageUrl": "local-maps\\Карта пт.jpg",
+        "notes": "Ля ля бу бу"
+      },
+      "nri-table-local-map-location-location-1779366102088": {
+        "imageUrl": "/local-maps/8. Место крушения.png",
+        "notes": ""
+      },
+      "nri-table-local-map-location-location-1779352839535": {
+        "imageUrl": "/local-maps/1. Умолкший Форпост.png",
+        "notes": ""
+      },
+      "nri-table-local-map-location-location-1778730102315": {
+        "imageUrl": "",
+        "notes": "Хуй"
+      }
+    }
+  }
+}
