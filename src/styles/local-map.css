@@ -568,3 +568,49 @@
   padding: 7px 11px;
   font-size: 12px;
 }
+
+/* Local map point hover labels */
+
+.local-map-point {
+  overflow: visible;
+}
+
+.local-map-point-icon {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  line-height: 1;
+}
+
+.local-map-point-label {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 8px);
+  z-index: 20;
+  transform: translateX(-50%) translateY(4px);
+  max-width: 220px;
+  border: 1px solid rgba(255, 243, 207, 0.48);
+  border-radius: 999px;
+  padding: 6px 10px;
+  color: #fff3cf;
+  background: rgba(30, 18, 13, 0.92);
+  box-shadow: 0 10px 22px rgba(18, 10, 8, 0.34);
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 900;
+  line-height: 1.15;
+  text-align: center;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 140ms ease,
+    transform 140ms ease;
+}
+
+.local-map-point:hover .local-map-point-label,
+.local-map-point.selected .local-map-point-label {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}

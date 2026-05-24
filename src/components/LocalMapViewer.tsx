@@ -652,15 +652,21 @@ export function LocalMapViewer({
                                     setSelectedPointId(point.id);
                                 }}
                             >
-                                {point.kind === "entrance"
-                                    ? "⇣"
-                                    : point.kind === "danger"
-                                        ? "!"
-                                        : point.kind === "object"
-                                            ? "◆"
-                                            : point.kind === "npc"
-                                                ? "♟"
-                                                : "?"}
+                                <span className="local-map-point-icon">
+                                    {point.kind === "entrance"
+                                        ? "⇣"
+                                        : point.kind === "danger"
+                                            ? "!"
+                                            : point.kind === "object"
+                                                ? "◆"
+                                                : point.kind === "npc"
+                                                    ? "♟"
+                                                    : "?"}
+                                </span>
+
+                                <span className="local-map-point-label">
+                                    {point.title || "Без названия"}
+                                </span>
                             </button>
                         ))}
 
