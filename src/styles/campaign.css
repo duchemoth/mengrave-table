@@ -1,0 +1,50 @@
+/* Campaign archive and start settings */
+
+.campaign-start-card {
+    display: grid;
+    gap: 12px;
+    margin-top: 14px;
+    border: 1px solid rgba(36, 26, 18, 0.16);
+    border-radius: 18px;
+    padding: 12px;
+    background: rgba(255, 244, 210, 0.24);
+}
+
+.campaign-start-card h3 {
+    margin: 0;
+    color: var(--ink);
+    font-family: Georgia, serif;
+    font-size: 22px;
+    line-height: 1.05;
+}
+
+.campaign-start-grid {
+    display: grid;
+    gap: 10px;
+}
+
+.campaign-start-status {
+    margin: 0;
+    border: 1px solid rgba(36, 26, 18, 0.14);
+    border-radius: 14px;
+    padding: 9px 10px;
+    color: var(--ink-soft);
+    background: rgba(255, 244, 210, 0.32);
+    font-family: Inter, system-ui, sans-serif;
+    font-size: 12px;
+    font-weight: 850;
+    line-height: 1.4;
+}
+
+.campaign-start-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.campaign-start-actions .secondary-button,
+.campaign-start-actions .danger-button {
+    min-height: 34px;
+    padding: 8px 12px;
+    font-size: 12px;
+}

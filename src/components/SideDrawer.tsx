@@ -7,6 +7,7 @@ import { TextListEditor } from "./editors/TextListEditor";
 import { LocationInfoPanel } from "./panels/LocationInfoPanel";
 import { QuestListPanel } from "./panels/QuestListPanel";
 import type {
+  CampaignStart,
   Location,
   MapEvent,
   MapGroup,
@@ -54,6 +55,10 @@ type SideDrawerProps = {
   globalMapImageUrl: string;
   onChangeGlobalMapImageUrl: (imageUrl: string) => void;
 
+  campaignStart: CampaignStart;
+  onChangeCampaignStart: (start: CampaignStart) => void;
+  onTestCampaignStart: (start: CampaignStart) => void;
+
   onChangeQuests: (quests: Quest[]) => void;
   onChangeNpcs: (items: string[]) => void;
 };
@@ -98,6 +103,10 @@ export function SideDrawer({
 
   globalMapImageUrl,
   onChangeGlobalMapImageUrl,
+
+  campaignStart,
+  onChangeCampaignStart,
+  onTestCampaignStart,
 
   onChangeQuests,
   onChangeNpcs,
@@ -152,6 +161,12 @@ export function SideDrawer({
           <CampaignArchive
             globalMapImageUrl={globalMapImageUrl}
             onChangeGlobalMapImageUrl={onChangeGlobalMapImageUrl}
+            campaignStart={campaignStart}
+            locations={locations}
+            groups={groups}
+            events={events}
+            onChangeCampaignStart={onChangeCampaignStart}
+            onTestCampaignStart={onTestCampaignStart}
             onExportCampaign={onExportCampaign}
             onImportCampaign={onImportCampaign}
           />
