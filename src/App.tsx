@@ -4,6 +4,7 @@ import "./styles/character.css";
 import "./styles/expedition.css";
 import "./styles/party.css";
 import "./styles/reference.css";
+import "./styles/quest.css";
 import "./styles/local-map.css";
 import { BottomDrawer } from "./components/BottomDrawer";
 import { PartyStatusPanel } from "./components/panels/PartyStatusPanel";
