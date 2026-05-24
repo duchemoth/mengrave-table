@@ -1,6 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { LocalMapViewer } from "./LocalMapViewer";
-import type { Location, MapEvent, MapGroup } from "../types/campaign";
+import type {
+  Location,
+  MapEvent,
+  MapGroup,
+  ReferenceArticle,
+} from "../types/campaign";
 
 const FACTION_LABELS: Record<string, string> = {
   players: "Игроки",
@@ -43,6 +48,7 @@ type EncounterModalProps = {
   isPlayerMode: boolean;
   initialMode: EncounterDisplayMode;
   canShowToPlayers: boolean;
+  dossierArticles: ReferenceArticle[];
   onShowToPlayers: (
     targetKind: EncounterTarget["kind"],
     targetId: string,
@@ -110,6 +116,7 @@ export function EncounterModal({
   isPlayerMode,
   initialMode,
   canShowToPlayers,
+  dossierArticles,
   onShowToPlayers,
   onShowGlobalMapToPlayers,
   onClose,
@@ -707,6 +714,7 @@ export function EncounterModal({
             storageKey={localMapStorageKey}
             isPlayerMode={isPlayerMode}
             canShowToPlayers={canShowToPlayers}
+            dossierArticles={dossierArticles}
             onShowToPlayers={() => showCurrentToPlayers("localMap")}
             onBackToOverview={() => setMode("overview")}
             onClose={closeModal}

@@ -647,10 +647,8 @@ function App() {
     characters,
     referenceArticles,
     quests,
-    npcs,
     arsenalItems,
     setQuests,
-    setNpcs,
     setArsenalItems,
     resetLocations: resetCampaignLocations,
     createLocation: createCampaignLocation,
@@ -913,6 +911,10 @@ function App() {
 
     return !event.isSecret && event.status !== "hidden";
   });
+
+  const dossierArticles = referenceArticles.filter(
+    (article) => article.section === "dossier",
+  );
 
   const visibleCharacters = characters;
 
@@ -2210,9 +2212,7 @@ function App() {
         onChangeCampaignStart={setCampaignStart}
         onTestCampaignStart={applyCampaignStart}
         quests={quests}
-        npcs={npcs}
         onChangeQuests={setQuests}
-        onChangeNpcs={setNpcs}
         onToggleOpen={toggleSidebar}
         onUpdateLocation={updateSelectedLocation}
         onCreateLocation={createLocation}
@@ -2296,6 +2296,7 @@ function App() {
         isPlayerMode={isPlayerMode}
         initialMode={encounterInitialMode}
         canShowToPlayers={!isPlayerMode && !isPlayerScreen}
+        dossierArticles={dossierArticles}
         onShowGlobalMapToPlayers={handleShowGlobalMapToPlayers}
         onShowToPlayers={handleShowToPlayers}
         onClose={() => setEncounterTarget(null)}

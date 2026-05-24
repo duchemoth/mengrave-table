@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import type { ReferenceArticle } from "../types/campaign";
 
 export type LocalMapPointKind =
     | "interest"
@@ -17,6 +18,7 @@ export type LocalMapPoint = {
     masterNotes: string;
     isSecret: boolean;
     targetLocalMapId: string;
+    linkedDossierId: string;
 };
 
 export type LocalMapLevel = {
@@ -40,6 +42,7 @@ type LocalMapViewerProps = {
     storageKey: string | null;
     isPlayerMode: boolean;
     canShowToPlayers: boolean;
+    dossierArticles: ReferenceArticle[];
     onShowToPlayers: () => void;
     onBackToOverview: () => void;
     onClose: () => void;
@@ -118,6 +121,8 @@ function normalizeLocalMapPoint(value: unknown): LocalMapPoint | null {
         isSecret: Boolean(point.isSecret),
         targetLocalMapId:
             typeof point.targetLocalMapId === "string" ? point.targetLocalMapId : "",
+        linkedDossierId:
+            typeof point.linkedDossierId === "string" ? point.linkedDossierId : "",
     };
 }
 
@@ -257,6 +262,7 @@ function createLocalMapPoint(x: number, y: number): LocalMapPoint {
         masterNotes: "",
         isSecret: false,
         targetLocalMapId: "",
+        linkedDossierId: "",
     };
 }
 
@@ -264,6 +270,7 @@ export function LocalMapViewer({
     storageKey,
     isPlayerMode,
     canShowToPlayers,
+    dossierArticles,
     onShowToPlayers,
     onBackToOverview,
     onClose,
@@ -299,6 +306,17 @@ export function LocalMapViewer({
             ) ?? null
         );
     }, [localMapLevels, selectedPoint]);
+
+    const linkedDossier = useMemo(() => {
+        if (!selectedPoint?.linkedDossierId) {
+            return null;
+        }
+
+        return (
+            dossierArticles.find((article) => article.id === selectedPoint.linkedDossierId) ??
+            null
+        );
+    }, [dossierArticles, selectedPoint]);
 
     useEffect(() => {
         if (!storageKey) {
@@ -674,11 +692,15 @@ export function LocalMapViewer({
                                     Тип
                                     <select
                                         value={selectedPoint.kind}
-                                        onChange={(event) =>
+                                        onChange={(event) => {
+                                            const nextKind = event.target.value as LocalMapPointKind;
+
                                             updateSelectedPoint({
-                                                kind: event.target.value as LocalMapPointKind,
-                                            })
-                                        }
+                                                kind: nextKind,
+                                                linkedDossierId:
+                                                    nextKind === "npc" ? selectedPoint.linkedDossierId : "",
+                                            });
+                                        }}
                                     >
                                         <option value="interest">Интерес</option>
                                         <option value="entrance">Вход / переход</option>
@@ -698,6 +720,41 @@ export function LocalMapViewer({
                                     />
                                     Скрыто от игроков
                                 </label>
+
+                                {selectedPoint.kind === "npc" && (
+                                    <label className="local-map-field">
+                                        Связанное досье
+                                        <select
+                                            value={selectedPoint.linkedDossierId}
+                                            onChange={(event) =>
+                                                updateSelectedPoint({
+                                                    linkedDossierId: event.target.value,
+                                                })
+                                            }
+                                        >
+                                            <option value="">Не привязано</option>
+                                            {dossierArticles.map((article) => (
+                                                <option key={article.id} value={article.id}>
+                                                    {article.title || "Без названия"}
+                                                    {article.subsection.trim()
+                                                        ? ` · ${article.subsection.trim()}`
+                                                        : ""}
+                                                </option>
+                                            ))}
+                                        </select>
+
+                                        {linkedDossier && (
+                                            <p className="local-map-help">
+                                                Досье: {linkedDossier.title || "Без названия"}
+                                                {linkedDossier.visibility === "players"
+                                                    ? " · видно игрокам"
+                                                    : linkedDossier.visibility === "master"
+                                                        ? " · мастер"
+                                                        : " · эхо"}
+                                            </p>
+                                        )}
+                                    </label>
+                                )}
 
                                 <label className="local-map-field">
                                     Описание для игроков
@@ -800,6 +857,9 @@ export function LocalMapViewer({
                                             <span>{point.title}</span>
                                             <small>
                                                 {LOCAL_MAP_POINT_KIND_LABELS[point.kind]}
+                                                {point.kind === "npc" && point.linkedDossierId
+                                                    ? ` · ${dossierArticles.find((article) => article.id === point.linkedDossierId)?.title ?? "досье"}`
+                                                    : ""}
                                                 {point.targetLocalMapId ? " · переход" : ""}
                                                 {point.isSecret ? " · скрыто" : ""}
                                             </small>
@@ -909,6 +969,18 @@ export function LocalMapViewer({
                                     ? selectedPoint.description
                                     : "Описание точки пока не добавлено."}
                             </p>
+
+                            {selectedPoint.kind === "npc" &&
+                                linkedDossier &&
+                                linkedDossier.visibility === "players" && (
+                                    <div className="local-map-linked-dossier">
+                                        <strong>Досье</strong>
+                                        <span>{linkedDossier.title || "Без названия"}</span>
+                                        {linkedDossier.content.trim().length > 0 && (
+                                            <p>{linkedDossier.content.split("\n").find(Boolean)}</p>
+                                        )}
+                                    </div>
+                                )}
 
                             {entranceTargetLevel && (
                                 <button
