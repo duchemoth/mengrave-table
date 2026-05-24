@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import "./App.css";
 import "./styles/character.css";
+import "./styles/party.css";
 import "./styles/local-map.css";
 import { BottomDrawer } from "./components/BottomDrawer";
 import { PartyStatusPanel } from "./components/panels/PartyStatusPanel";
