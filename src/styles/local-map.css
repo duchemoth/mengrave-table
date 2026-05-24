@@ -503,3 +503,17 @@
   font-size: 13px;
   font-weight: 900;
 }
+
+/* Local map NPC points */
+
+.local-map-point-npc {
+  border-color: rgba(225, 225, 245, 0.82);
+  color: #f4f0ff;
+  background:
+    radial-gradient(circle at 50% 42%, rgba(73, 62, 92, 0.98), rgba(22, 18, 30, 0.98));
+}
+
+.local-map-point-npc:hover,
+.local-map-point-npc.selected {
+  filter: brightness(1.18);
+}

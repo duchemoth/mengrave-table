@@ -1,6 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 
-export type LocalMapPointKind = "interest" | "entrance" | "danger" | "object";
+export type LocalMapPointKind =
+    | "interest"
+    | "entrance"
+    | "danger"
+    | "object"
+    | "npc";
 
 export type LocalMapPoint = {
     id: string;
@@ -47,6 +52,7 @@ const LOCAL_MAP_POINT_KIND_LABELS: Record<LocalMapPointKind, string> = {
     entrance: "Вход",
     danger: "Опасность",
     object: "Объект",
+    npc: "Персонаж",
 };
 
 function clampLocalMapCoordinate(value: number) {
@@ -84,6 +90,7 @@ function normalizeLocalMapPoint(value: unknown): LocalMapPoint | null {
         point.kind === "entrance" ||
             point.kind === "danger" ||
             point.kind === "object" ||
+            point.kind === "npc" ||
             point.kind === "interest"
             ? point.kind
             : "interest";
@@ -631,7 +638,9 @@ export function LocalMapViewer({
                                         ? "!"
                                         : point.kind === "object"
                                             ? "◆"
-                                            : "?"}
+                                            : point.kind === "npc"
+                                                ? "♟"
+                                                : "?"}
                             </button>
                         ))}
 
@@ -675,6 +684,7 @@ export function LocalMapViewer({
                                         <option value="entrance">Вход / переход</option>
                                         <option value="danger">Опасность</option>
                                         <option value="object">Объект</option>
+                                        <option value="npc">Персонаж / NPC</option>
                                     </select>
                                 </label>
 
@@ -767,7 +777,7 @@ export function LocalMapViewer({
 
                         <section className="local-map-card local-map-points-card">
                             <p className="eyebrow">Точки</p>
-                            <h3>Интересы и входы</h3>
+                            <h3>Точки и персонажи</h3>
 
                             <button
                                 className="secondary-button"
