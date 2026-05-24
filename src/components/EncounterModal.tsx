@@ -32,6 +32,7 @@ type EncounterTarget =
 type SceneDraft = {
   playerDescription: string;
   masterNotes: string;
+  imageUrl: string;
 };
 
 type EncounterDisplayMode = "overview" | "scene" | "localMap";
@@ -80,6 +81,7 @@ function loadSceneDraft(storageKey: string): SceneDraft {
       return {
         playerDescription: "",
         masterNotes: "",
+        imageUrl: "",
       };
     }
 
@@ -88,11 +90,13 @@ function loadSceneDraft(storageKey: string): SceneDraft {
     return {
       playerDescription: parsedScene.playerDescription ?? "",
       masterNotes: parsedScene.masterNotes ?? "",
+      imageUrl: parsedScene.imageUrl ?? "",
     };
   } catch {
     return {
       playerDescription: "",
       masterNotes: "",
+      imageUrl: "",
     };
   }
 }
@@ -116,6 +120,7 @@ export function EncounterModal({
   const [mode, setMode] = useState<EncounterMode>(initialMode);
   const [playerDescription, setPlayerDescription] = useState("");
   const [masterNotes, setMasterNotes] = useState("");
+  const [sceneImageUrl, setSceneImageUrl] = useState("");
   const [isSceneNoteCreated, setIsSceneNoteCreated] = useState(false);
   const [eventDraft, setEventDraft] = useState<EventDraft>({
     title: "",
@@ -171,6 +176,7 @@ export function EncounterModal({
     if (!sceneStorageKey) {
       setPlayerDescription("");
       setMasterNotes("");
+      setSceneImageUrl("");
       return;
     }
 
@@ -178,6 +184,7 @@ export function EncounterModal({
 
     setPlayerDescription(savedDraft.playerDescription);
     setMasterNotes(savedDraft.masterNotes);
+    setSceneImageUrl(savedDraft.imageUrl);
   }, [sceneStorageKey]);
 
   useEffect(() => {
@@ -278,6 +285,7 @@ export function EncounterModal({
     saveSceneDraft(sceneStorageKey, {
       playerDescription: nextPlayerDescription,
       masterNotes,
+      imageUrl: sceneImageUrl,
     });
   }
 
@@ -291,6 +299,21 @@ export function EncounterModal({
     saveSceneDraft(sceneStorageKey, {
       playerDescription,
       masterNotes: nextMasterNotes,
+      imageUrl: sceneImageUrl,
+    });
+  }
+
+  function updateSceneImageUrl(nextSceneImageUrl: string) {
+    setSceneImageUrl(nextSceneImageUrl);
+
+    if (!sceneStorageKey) {
+      return;
+    }
+
+    saveSceneDraft(sceneStorageKey, {
+      playerDescription,
+      masterNotes,
+      imageUrl: nextSceneImageUrl,
     });
   }
 
@@ -565,6 +588,40 @@ export function EncounterModal({
         ) : mode === "scene" ? (
           <>
             <div className={`scene-layout ${isPlayerMode ? "player-only" : ""}`}>
+              <section className="scene-card scene-illustration-card">
+                <p className="eyebrow">Иллюстрация</p>
+                <h3>Кадр сцены</h3>
+
+                {sceneImageUrl.trim().length > 0 ? (
+                  <div className="scene-image-frame">
+                    <img
+                      className="scene-image"
+                      src={sceneImageUrl.trim()}
+                      alt={title}
+                    />
+                  </div>
+                ) : (
+                  <div className="scene-image-placeholder">
+                    <span>Иллюстрация сцены пока не задана.</span>
+                  </div>
+                )}
+
+                {!isPlayerMode && (
+                  <label className="scene-image-input-row">
+                    <span>Путь к изображению</span>
+                    <input
+                      type="text"
+                      value={sceneImageUrl}
+                      onChange={(event) => updateSceneImageUrl(event.target.value)}
+                      placeholder="/scene-images/apis-interior.webp"
+                    />
+                    <p className="scene-image-hint">
+                      Для сцен лучше класть изображения в public/scene-images/ и указывать путь от корня сайта.
+                    </p>
+                  </label>
+                )}
+              </section>
+
               <section className="scene-card">
                 <p className="eyebrow">Для игроков</p>
                 <h3>Описание сцены</h3>
@@ -588,8 +645,7 @@ export function EncounterModal({
               </section>
 
               {!isPlayerMode && (
-
-                <section className="scene-card">
+                <section className="scene-card scene-master-card">
                   <p className="eyebrow">Для мастера</p>
                   <h3>Скрытые заметки</h3>
 
