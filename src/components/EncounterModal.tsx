@@ -49,6 +49,7 @@ type EncounterModalProps = {
   initialMode: EncounterDisplayMode;
   canShowToPlayers: boolean;
   dossierArticles: ReferenceArticle[];
+  onOpenDossier: (articleId: string) => void;
   onShowToPlayers: (
     targetKind: EncounterTarget["kind"],
     targetId: string,
@@ -117,6 +118,7 @@ export function EncounterModal({
   initialMode,
   canShowToPlayers,
   dossierArticles,
+  onOpenDossier,
   onShowToPlayers,
   onShowGlobalMapToPlayers,
   onClose,
@@ -715,6 +717,7 @@ export function EncounterModal({
             isPlayerMode={isPlayerMode}
             canShowToPlayers={canShowToPlayers}
             dossierArticles={dossierArticles}
+            onOpenDossier={onOpenDossier}
             onShowToPlayers={() => showCurrentToPlayers("localMap")}
             onBackToOverview={() => setMode("overview")}
             onClose={closeModal}

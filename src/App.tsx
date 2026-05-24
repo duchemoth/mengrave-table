@@ -758,6 +758,12 @@ function App() {
 
   const [isReferenceOpen, setIsReferenceOpen] = useState(false);
 
+  const [referenceInitialArticleId, setReferenceInitialArticleId] =
+    useState<string | null>(null);
+
+  const [referenceInitialSection, setReferenceInitialSection] =
+    useState<"dossier" | null>(null);
+
   const [isStartMenuOpen, setIsStartMenuOpen] = useState(true);
 
   const [expeditionState, setExpeditionState] = useState<ExpeditionState>(
@@ -1308,6 +1314,12 @@ function App() {
     setSelectedEventId(event.id);
     setEncounterInitialMode(start.mode);
     setEncounterTarget({ kind: "event", data: event });
+  }
+
+  function handleOpenDossier(articleId: string) {
+    setReferenceInitialArticleId(articleId);
+    setReferenceInitialSection("dossier");
+    setIsReferenceOpen(true);
   }
 
   function handleOpenLocationEncounter(location: Location) {
@@ -2270,11 +2282,17 @@ function App() {
           arsenalItems={arsenalItems}
           isPlayerMode={isPlayerMode}
           isDeveloperMode={isDeveloperMode}
+          initialArticleId={referenceInitialArticleId}
+          initialSection={referenceInitialSection}
           onCreateArticle={createReferenceArticle}
           onUpdateArticle={updateReferenceArticle}
           onDeleteArticle={deleteReferenceArticle}
           onChangeArsenalItems={setArsenalItems}
-          onClose={() => setIsReferenceOpen(false)}
+          onClose={() => {
+            setIsReferenceOpen(false);
+            setReferenceInitialArticleId(null);
+            setReferenceInitialSection(null);
+          }}
         />
       )}
 
@@ -2297,6 +2315,7 @@ function App() {
         initialMode={encounterInitialMode}
         canShowToPlayers={!isPlayerMode && !isPlayerScreen}
         dossierArticles={dossierArticles}
+        onOpenDossier={handleOpenDossier}
         onShowGlobalMapToPlayers={handleShowGlobalMapToPlayers}
         onShowToPlayers={handleShowToPlayers}
         onClose={() => setEncounterTarget(null)}

@@ -43,6 +43,7 @@ type LocalMapViewerProps = {
     isPlayerMode: boolean;
     canShowToPlayers: boolean;
     dossierArticles: ReferenceArticle[];
+    onOpenDossier: (articleId: string) => void;
     onShowToPlayers: () => void;
     onBackToOverview: () => void;
     onClose: () => void;
@@ -271,6 +272,7 @@ export function LocalMapViewer({
     isPlayerMode,
     canShowToPlayers,
     dossierArticles,
+    onOpenDossier,
     onShowToPlayers,
     onBackToOverview,
     onClose,
@@ -744,14 +746,24 @@ export function LocalMapViewer({
                                         </select>
 
                                         {linkedDossier && (
-                                            <p className="local-map-help">
-                                                Досье: {linkedDossier.title || "Без названия"}
-                                                {linkedDossier.visibility === "players"
-                                                    ? " · видно игрокам"
-                                                    : linkedDossier.visibility === "master"
-                                                        ? " · мастер"
-                                                        : " · эхо"}
-                                            </p>
+                                            <div className="local-map-dossier-actions">
+                                                <p className="local-map-help">
+                                                    Досье: {linkedDossier.title || "Без названия"}
+                                                    {linkedDossier.visibility === "players"
+                                                        ? " · видно игрокам"
+                                                        : linkedDossier.visibility === "master"
+                                                            ? " · мастер"
+                                                            : " · эхо"}
+                                                </p>
+
+                                                <button
+                                                    className="secondary-button"
+                                                    type="button"
+                                                    onClick={() => onOpenDossier(linkedDossier.id)}
+                                                >
+                                                    Открыть досье
+                                                </button>
+                                            </div>
                                         )}
                                     </label>
                                 )}
@@ -979,6 +991,14 @@ export function LocalMapViewer({
                                         {linkedDossier.content.trim().length > 0 && (
                                             <p>{linkedDossier.content.split("\n").find(Boolean)}</p>
                                         )}
+
+                                        <button
+                                            className="secondary-button"
+                                            type="button"
+                                            onClick={() => onOpenDossier(linkedDossier.id)}
+                                        >
+                                            Открыть досье
+                                        </button>
                                     </div>
                                 )}
 

@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ArsenalEditor } from "./editors/ArsenalEditor";
 import type {
     ArsenalItem,
@@ -97,6 +97,8 @@ type ReferenceLibraryProps = {
     arsenalItems: ArsenalItem[];
     isPlayerMode: boolean;
     isDeveloperMode: boolean;
+    initialArticleId?: string | null;
+    initialSection?: ReferenceSection | null;
     onCreateArticle: () => ReferenceArticle;
     onUpdateArticle: (article: ReferenceArticle) => void;
     onDeleteArticle: (articleId: string) => void;
@@ -109,6 +111,8 @@ export function ReferenceLibrary({
     arsenalItems,
     isPlayerMode,
     isDeveloperMode,
+    initialArticleId = null,
+    initialSection = null,
     onCreateArticle,
     onUpdateArticle,
     onDeleteArticle,
@@ -121,6 +125,24 @@ export function ReferenceLibrary({
     );
     const [isEditing, setIsEditing] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
+
+    useEffect(() => {
+        if (!initialArticleId) {
+            return;
+        }
+
+        const article = articles.find((item) => item.id === initialArticleId);
+
+        if (!article) {
+            return;
+        }
+
+        setActiveSection(initialSection ?? article.section);
+        setSelectedArticleId(article.id);
+        setIsEditing(false);
+        setSearchQuery("");
+    }, [articles, initialArticleId, initialSection]);
+
     const [openSubsections, setOpenSubsections] = useState<Record<string, boolean>>(
         {},
     );

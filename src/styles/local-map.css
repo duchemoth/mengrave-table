@@ -553,3 +553,18 @@
   font-size: 13px;
   line-height: 1.45;
 }
+
+/* Local map dossier actions */
+
+.local-map-dossier-actions {
+  display: grid;
+  gap: 8px;
+}
+
+.local-map-dossier-actions .secondary-button,
+.local-map-linked-dossier .secondary-button {
+  justify-self: start;
+  min-height: 32px;
+  padding: 7px 11px;
+  font-size: 12px;
+}
