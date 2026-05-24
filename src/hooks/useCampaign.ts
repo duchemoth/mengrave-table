@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { campaignData } from "../data/campaign";
 import type {
   ArsenalItem,
+  CampaignStart,
   Location,
   MapEvent,
   MapGroup,
@@ -215,6 +216,10 @@ export function useCampaign() {
     onSuccess?: (
       firstLocationId: string,
       importedCampaign?: {
+        start?: unknown;
+        locations?: Location[];
+        groups?: MapGroup[];
+        events?: MapEvent[];
         revealedAreas?: unknown[];
         masterNotes?: unknown;
         globalMap?: unknown;
@@ -232,6 +237,7 @@ export function useCampaign() {
         const text = String(reader.result);
         const parsedData = JSON.parse(text) as {
           campaign?: {
+            start?: CampaignStart;
             locations?: Location[];
             groups?: MapGroup[];
             events?: MapEvent[];

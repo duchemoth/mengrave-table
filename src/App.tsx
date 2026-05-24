@@ -31,7 +31,12 @@ import { campaignData } from "./data/campaign";
 import { useCampaign } from "./hooks/useCampaign";
 import { useInterfaceMode } from "./hooks/useInterfaceMode";
 import { ReferenceLibrary } from "./components/ReferenceLibrary";
-import type { Location, MapEvent, MapGroup, } from "./types/campaign";
+import type {
+  CampaignStart,
+  Location,
+  MapEvent,
+  MapGroup,
+} from "./types/campaign";
 
 const MASTER_NOTES_STORAGE_KEY = "nri-table-master-notes";
 const GLOBAL_MAP_STORAGE_KEY = "nri-table-global-map";
@@ -356,6 +361,55 @@ function getExpeditionRouteStatusLabel(status: ExpeditionRouteStatus) {
 }
 
 type EncounterDisplayMode = "overview" | "scene" | "localMap";
+
+function normalizeCampaignStart(value: unknown): CampaignStart {
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    return {
+      kind: "globalMap",
+    };
+  }
+
+  const start = value as Partial<CampaignStart>;
+
+  if (start.kind === "globalMap") {
+    return {
+      kind: "globalMap",
+    };
+  }
+
+  if (start.kind !== "encounter") {
+    return {
+      kind: "globalMap",
+    };
+  }
+
+  const targetKind =
+    start.targetKind === "location" ||
+      start.targetKind === "group" ||
+      start.targetKind === "event"
+      ? start.targetKind
+      : null;
+
+  const mode =
+    start.mode === "overview" ||
+      start.mode === "scene" ||
+      start.mode === "localMap"
+      ? start.mode
+      : "overview";
+
+  if (!targetKind || typeof start.targetId !== "string") {
+    return {
+      kind: "globalMap",
+    };
+  }
+
+  return {
+    kind: "encounter",
+    targetKind,
+    targetId: start.targetId,
+    mode,
+  };
+}
 
 type PlayerPresentation =
   | {
@@ -685,6 +739,13 @@ function App() {
   const [encounterInitialMode, setEncounterInitialMode] =
     useState<EncounterDisplayMode>("overview");
 
+  const [campaignStart, setCampaignStart] = useState<CampaignStart>({
+    kind: "globalMap",
+  });
+
+  const [pendingCampaignStart, setPendingCampaignStart] =
+    useState<CampaignStart | null>(null);
+
   const [isNotesOpen, setIsNotesOpen] = useState(false);
 
   const [isCharactersOpen, setIsCharactersOpen] = useState(false);
@@ -765,6 +826,15 @@ function App() {
 
     setIsSuggestingRoute(false);
   }, [isPlayerMode]);
+
+  useEffect(() => {
+    if (!pendingCampaignStart) {
+      return;
+    }
+
+    applyCampaignStart(pendingCampaignStart);
+    setPendingCampaignStart(null);
+  }, [pendingCampaignStart, locations, groups, events]);
 
   useEffect(() => {
     if (!isPlayerScreen) {
@@ -994,6 +1064,11 @@ function App() {
     importCampaign(file, (firstLocationId, importedCampaign) => {
       setSelectedLocationId(firstLocationId);
 
+      const importedStart = normalizeCampaignStart(importedCampaign?.start);
+
+      setCampaignStart(importedStart);
+      setPendingCampaignStart(importedStart);
+
       setRevealedAreas(
         normalizeRevealedAreas(importedCampaign?.revealedAreas),
       );
@@ -1026,6 +1101,7 @@ function App() {
 
   function handleExportCampaign() {
     exportCampaign({
+      start: campaignStart,
       revealedAreas,
       masterNotes,
       globalMap: {
@@ -1182,6 +1258,53 @@ function App() {
       x,
       y,
     });
+  }
+
+  function applyCampaignStart(start: CampaignStart) {
+    if (start.kind === "globalMap") {
+      setEncounterTarget(null);
+      setEncounterInitialMode("overview");
+      return;
+    }
+
+    if (start.targetKind === "location") {
+      const location = locations.find((item) => item.id === start.targetId);
+
+      if (!location) {
+        window.alert(`Стартовая локация не найдена: ${start.targetId}`);
+        return;
+      }
+
+      setSelectedLocationId(location.id);
+      setEncounterInitialMode(start.mode);
+      setEncounterTarget({ kind: "location", data: location });
+      return;
+    }
+
+    if (start.targetKind === "group") {
+      const group = groups.find((item) => item.id === start.targetId);
+
+      if (!group) {
+        window.alert(`Стартовая группа не найдена: ${start.targetId}`);
+        return;
+      }
+
+      setSelectedGroupId(group.id);
+      setEncounterInitialMode(start.mode);
+      setEncounterTarget({ kind: "group", data: group });
+      return;
+    }
+
+    const event = events.find((item) => item.id === start.targetId);
+
+    if (!event) {
+      window.alert(`Стартовое событие не найдено: ${start.targetId}`);
+      return;
+    }
+
+    setSelectedEventId(event.id);
+    setEncounterInitialMode(start.mode);
+    setEncounterTarget({ kind: "event", data: event });
   }
 
   function handleOpenLocationEncounter(location: Location) {
