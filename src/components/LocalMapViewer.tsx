@@ -649,10 +649,23 @@ export function LocalMapViewer({
                                     left: `${point.x}%`,
                                     top: `${point.y}%`,
                                 }}
-                                title={point.title}
+                                title={
+                                    point.targetLocalMapId
+                                        ? `${point.title} — двойной клик для перехода`
+                                        : point.title
+                                }
                                 onClick={(event) => {
                                     event.stopPropagation();
                                     setSelectedPointId(point.id);
+                                }}
+                                onDoubleClick={(event) => {
+                                    event.stopPropagation();
+
+                                    if (!point.targetLocalMapId) {
+                                        return;
+                                    }
+
+                                    goToLevel(point.targetLocalMapId);
                                 }}
                             >
                                 <span className="local-map-point-icon">
