@@ -350,6 +350,52 @@ export function CharacterRoster({
         });
     }
 
+    function getBackpackSlotCount(itemId: string | null) {
+        const backpackItem = getArsenalItem(itemId);
+
+        if (
+            backpackItem?.slot === "backpack" &&
+            typeof backpackItem.backpackSlotCount === "number" &&
+            Number.isFinite(backpackItem.backpackSlotCount)
+        ) {
+            return Math.max(0, Math.floor(backpackItem.backpackSlotCount));
+        }
+
+        return 0;
+    }
+
+    function getBackpackUsedSlots() {
+        if (!selectedCharacter) {
+            return 0;
+        }
+
+        return selectedCharacter.inventory.backpack.length;
+    }
+
+    function getEquippedBackpackSlot() {
+        if (!selectedCharacter) {
+            return {
+                itemId: null,
+                note: "",
+            };
+        }
+
+        return (
+            selectedCharacter.inventory.backpackSlot ?? {
+                itemId: null,
+                note: "",
+            }
+        );
+    }
+
+    function getBackpackCapacity() {
+        if (!selectedCharacter) {
+            return 0;
+        }
+
+        return getBackpackSlotCount(getEquippedBackpackSlot().itemId);
+    }
+
     function getQuickSlotCountForLoadBearing(itemId: string | null) {
         const loadBearingItem = getArsenalItem(itemId);
 
@@ -382,6 +428,34 @@ export function CharacterRoster({
                 quantity: existingSlot?.quantity ?? 1,
                 note: existingSlot?.note ?? "",
             };
+        });
+    }
+
+    function updateBackpackSlotItem(itemId: string | null) {
+        if (!selectedCharacter) {
+            return;
+        }
+
+        updateInventory({
+            ...selectedCharacter.inventory,
+            backpackSlot: {
+                ...getEquippedBackpackSlot(),
+                itemId,
+            },
+        });
+    }
+
+    function updateBackpackSlotNote(note: string) {
+        if (!selectedCharacter) {
+            return;
+        }
+
+        updateInventory({
+            ...selectedCharacter.inventory,
+            backpackSlot: {
+                ...getEquippedBackpackSlot(),
+                note,
+            },
         });
     }
 
@@ -469,6 +543,19 @@ export function CharacterRoster({
 
     function addBackpackEntry() {
         if (!selectedCharacter) {
+            return;
+        }
+
+        const backpackCapacity = getBackpackCapacity();
+        const usedSlots = getBackpackUsedSlots();
+
+        if (backpackCapacity <= 0) {
+            window.alert("Сначала экипируй рюкзак в слот “Рюкзак / спина”.");
+            return;
+        }
+
+        if (usedSlots >= backpackCapacity) {
+            window.alert("В рюкзаке нет свободных слотов.");
             return;
         }
 
@@ -1605,7 +1692,7 @@ export function CharacterRoster({
 
                                                                 {renderInventorySelect(
                                                                     slot.itemId,
-                                                                    ["quick", "backpack", "none"],
+                                                                    ["quick", "none"],
                                                                     (itemId) => updateQuickSlot(index, { itemId }),
                                                                 )}
 
@@ -1652,17 +1739,39 @@ export function CharacterRoster({
 
                                             {openEquipmentSections.backpack && (
                                                 <div className="character-accordion-body">
+                                                    <div className="character-inventory-slot-card wide">
+                                                        <p className="eyebrow">Рюкзак / спина</p>
+                                                        <h4>{getInventoryItemName(getEquippedBackpackSlot().itemId)}</h4>
+
+                                                        {renderInventorySelect(
+                                                            getEquippedBackpackSlot().itemId,
+                                                            ["backpack"],
+                                                            updateBackpackSlotItem,
+                                                        )}
+
+                                                        <input
+                                                            value={getEquippedBackpackSlot().note}
+                                                            onChange={(event) => updateBackpackSlotNote(event.target.value)}
+                                                            placeholder="Состояние, крепления, повреждения, особые карманы..."
+                                                        />
+
+                                                        <p className="character-help-text">
+                                                            Вместимость: {getBackpackUsedSlots()}/{getBackpackCapacity()} слотов.
+                                                        </p>
+                                                    </div>
+
                                                     <button
                                                         className="character-secondary-button"
                                                         type="button"
                                                         onClick={addBackpackEntry}
+                                                        disabled={getBackpackCapacity() <= 0 || getBackpackUsedSlots() >= getBackpackCapacity()}
                                                     >
                                                         Добавить предмет в рюкзак
                                                     </button>
 
                                                     {selectedCharacter.inventory.backpack.length === 0 ? (
                                                         <p className="character-help-text">
-                                                            Рюкзак пуст. Добавь предмет из Арсенала.
+                                                            Рюкзак пуст. Экипируй рюкзак и добавь предмет из Арсенала.
                                                         </p>
                                                     ) : (
                                                         <div className="character-backpack-list">
