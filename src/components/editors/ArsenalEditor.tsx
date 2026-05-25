@@ -1,8 +1,10 @@
 import { useMemo, useState } from "react";
 import type {
+    ArsenalArmorSubtype,
     ArsenalItem,
     ArsenalItemCategory,
     ArsenalItemSlot,
+    ArsenalWeaponSubtype,
 } from "../../types/campaign";
 
 const CATEGORY_OPTIONS: {
@@ -13,11 +15,12 @@ const CATEGORY_OPTIONS: {
         { value: "armor", label: "Броня" },
         { value: "protection", label: "Защита" },
         { value: "loadBearing", label: "Разгрузка" },
+        { value: "storage", label: "Поклажа" },
         { value: "tool", label: "Инструменты" },
         { value: "medicine", label: "Медицина" },
         { value: "resource", label: "Ресурсы" },
         { value: "quest", label: "Квестовое" },
-        { value: "misc", label: "Прочее" },
+        { value: "misc", label: "Прочее / хлам" },
     ];
 
 const SLOT_OPTIONS: {
@@ -33,16 +36,79 @@ const SLOT_OPTIONS: {
         { value: "protection", label: "Защитное снаряжение" },
         { value: "loadBearing", label: "Разгрузка" },
         { value: "quick", label: "Быстрый слот" },
-        { value: "backpack", label: "Рюкзак" },
-        { value: "none", label: "Без слота" },
+        { value: "backpack", label: "Рюкзак / спина" },
+        { value: "none", label: "Обычный предмет / без слота" },
     ];
+
+const WEAPON_SUBTYPE_OPTIONS: {
+    value: ArsenalWeaponSubtype;
+    label: string;
+}[] = [
+        { value: "melee", label: "Холодное" },
+        { value: "firearm", label: "Огнестрельное" },
+        { value: "throwing", label: "Метательное" },
+        { value: "special", label: "Особое" },
+        { value: "explosive", label: "Взрывчатое" },
+        { value: "combined", label: "Комбинированное" },
+        { value: "other", label: "Другое" },
+    ];
+
+const ARMOR_SUBTYPE_OPTIONS: {
+    value: ArsenalArmorSubtype;
+    label: string;
+}[] = [
+        { value: "head", label: "Голова" },
+        { value: "torso", label: "Торс" },
+        { value: "arms", label: "Руки" },
+        { value: "legs", label: "Ноги" },
+        { value: "shield", label: "Щит / ручная защита" },
+        { value: "fullBody", label: "Комплект / полный доспех" },
+        { value: "other", label: "Другое" },
+    ];
+
+function getWeaponSubtypeLabel(value: ArsenalWeaponSubtype | undefined) {
+    return (
+        WEAPON_SUBTYPE_OPTIONS.find((option) => option.value === value)?.label ??
+        "Другое"
+    );
+}
+
+function getArmorSubtypeLabel(value: ArsenalArmorSubtype | undefined) {
+    return (
+        ARMOR_SUBTYPE_OPTIONS.find((option) => option.value === value)?.label ??
+        "Другое"
+    );
+}
+
+function getArmorSubtypeFromSlot(slot: ArsenalItemSlot): ArsenalArmorSubtype | undefined {
+    if (slot === "headArmor") {
+        return "head";
+    }
+
+    if (slot === "torsoArmor") {
+        return "torso";
+    }
+
+    if (slot === "armsArmor") {
+        return "arms";
+    }
+
+    if (slot === "legsArmor") {
+        return "legs";
+    }
+
+    return undefined;
+}
 
 function createArsenalItem(): ArsenalItem {
     return {
         id: `arsenal-item-${Date.now()}`,
         name: "Новый предмет",
         category: "misc",
-        slot: "backpack",
+        slot: "none",
+
+        weaponSubtype: undefined,
+        armorSubtype: undefined,
 
         description: "",
         rules: "",
@@ -51,6 +117,8 @@ function createArsenalItem(): ArsenalItem {
         weight: "",
         price: "",
 
+        quickSlotCount: undefined,
+        backpackSlotCount: undefined,
         isVisibleToPlayers: true,
     };
 }
@@ -71,10 +139,12 @@ const ARSENAL_CATEGORY_GROUPS: ArsenalCategoryGroup[] = [
     { key: "armor", label: "Броня" },
     { key: "protection", label: "Защита" },
     { key: "loadBearing", label: "Разгрузка" },
+    { key: "storage", label: "Поклажа" },
     { key: "medicine", label: "Медицина" },
     { key: "resource", label: "Ресурсы" },
     { key: "tool", label: "Инструменты" },
-    { key: "other", label: "Прочее" },
+    { key: "quest", label: "Квестовое" },
+    { key: "misc", label: "Прочее / хлам" },
 ];
 
 function getArsenalCategoryLabel(category: string) {
@@ -96,15 +166,19 @@ export function ArsenalEditor({
     );
 
     const [openCategoryGroups, setOpenCategoryGroups] = useState<Record<string, boolean>>({
-        weapon: true,
-        armor: true,
-        protection: true,
-        loadBearing: true,
-        medicine: true,
-        resource: true,
-        tool: true,
-        other: true,
+        weapon: false,
+        armor: false,
+        protection: false,
+        loadBearing: false,
+        storage: false,
+        medicine: false,
+        resource: false,
+        tool: false,
+        quest: false,
+        misc: false,
     });
+
+    const [openSubtypeGroups, setOpenSubtypeGroups] = useState<Record<string, boolean>>({});
 
     const filteredItems = useMemo(() => {
         const normalizedSearch = searchQuery.trim().toLowerCase();
@@ -136,6 +210,135 @@ export function ArsenalEditor({
             ...current,
             [categoryKey]: !current[categoryKey],
         }));
+    }
+
+    function toggleSubtypeGroup(groupKey: string) {
+        setOpenSubtypeGroups((current) => ({
+            ...current,
+            [groupKey]: !current[groupKey],
+        }));
+    }
+
+    function getItemSubtypeLabel(item: ArsenalItem) {
+        if (item.category === "weapon") {
+            return getWeaponSubtypeLabel(item.weaponSubtype);
+        }
+
+        if (item.category === "armor") {
+            return getArmorSubtypeLabel(
+                item.armorSubtype ?? getArmorSubtypeFromSlot(item.slot),
+            );
+        }
+
+        return getArsenalCategoryLabel(item.category);
+    }
+
+    function updateItemCategory(category: ArsenalItemCategory) {
+        if (category === "weapon") {
+            updateItem({
+                category,
+                slot: selectedItem?.slot === "smallWeapon" ? "smallWeapon" : "shoulderWeapon",
+                weaponSubtype: selectedItem?.weaponSubtype ?? "other",
+                armorSubtype: undefined,
+                backpackSlotCount: undefined,
+            });
+            return;
+        }
+
+        if (category === "armor") {
+            updateItem({
+                category,
+                slot: "torsoArmor",
+                weaponSubtype: undefined,
+                armorSubtype: selectedItem?.armorSubtype ?? "torso",
+                backpackSlotCount: undefined,
+            });
+            return;
+        }
+
+        if (category === "loadBearing") {
+            updateItem({
+                category,
+                slot: "loadBearing",
+                weaponSubtype: undefined,
+                armorSubtype: undefined,
+                quickSlotCount: selectedItem?.quickSlotCount ?? 2,
+                backpackSlotCount: undefined,
+            });
+            return;
+        }
+
+        if (category === "storage") {
+            updateItem({
+                category,
+                slot: "backpack",
+                weaponSubtype: undefined,
+                armorSubtype: undefined,
+                quickSlotCount: undefined,
+                backpackSlotCount: selectedItem?.backpackSlotCount ?? 6,
+            });
+            return;
+        }
+
+        updateItem({
+            category,
+            slot: category === "protection" ? "protection" : "none",
+            weaponSubtype: undefined,
+            armorSubtype: undefined,
+            quickSlotCount: undefined,
+            backpackSlotCount: undefined,
+        });
+    }
+
+    function updateItemSlot(slot: ArsenalItemSlot) {
+        if (slot === "backpack") {
+            updateItem({
+                slot,
+                category: "storage",
+                backpackSlotCount: selectedItem?.backpackSlotCount ?? 6,
+                quickSlotCount: undefined,
+            });
+            return;
+        }
+
+        if (slot === "loadBearing") {
+            updateItem({
+                slot,
+                category: "loadBearing",
+                quickSlotCount: selectedItem?.quickSlotCount ?? 2,
+                backpackSlotCount: undefined,
+            });
+            return;
+        }
+
+        const armorSubtype = getArmorSubtypeFromSlot(slot);
+
+        if (armorSubtype) {
+            updateItem({
+                slot,
+                category: "armor",
+                armorSubtype,
+                weaponSubtype: undefined,
+                backpackSlotCount: undefined,
+            });
+            return;
+        }
+
+        if (slot === "shoulderWeapon" || slot === "smallWeapon") {
+            updateItem({
+                slot,
+                category: "weapon",
+                weaponSubtype: selectedItem?.weaponSubtype ?? "other",
+                armorSubtype: undefined,
+                backpackSlotCount: undefined,
+            });
+            return;
+        }
+
+        updateItem({
+            slot,
+            backpackSlotCount: undefined,
+        });
     }
 
     const selectedItem =
@@ -250,17 +453,115 @@ export function ArsenalEditor({
 
                                 {isOpen && (
                                     <div className="arsenal-group-items">
-                                        {group.items.map((item) => (
-                                            <button
-                                                key={item.id}
-                                                className={`arsenal-list-item ${selectedItem?.id === item.id ? "active" : ""}`}
-                                                type="button"
-                                                onClick={() => setSelectedItemId(item.id)}
-                                            >
-                                                <strong>{item.name}</strong>
-                                                <span>{getArsenalCategoryLabel(item.category)}</span>
-                                            </button>
-                                        ))}
+                                        {group.key === "weapon" ? (
+                                            WEAPON_SUBTYPE_OPTIONS.map((subtype) => {
+                                                const subtypeItems = group.items.filter(
+                                                    (item) =>
+                                                        (item.weaponSubtype ?? "other") === subtype.value,
+                                                );
+
+                                                if (subtypeItems.length === 0) {
+                                                    return null;
+                                                }
+
+                                                const subtypeGroupKey = `${group.key}-${subtype.value}`;
+                                                const isSubtypeOpen =
+                                                    openSubtypeGroups[subtypeGroupKey] ?? false;
+
+                                                return (
+                                                    <div key={subtypeGroupKey} className="arsenal-subgroup">
+                                                        <button
+                                                            className="arsenal-subgroup-header"
+                                                            type="button"
+                                                            onClick={() => toggleSubtypeGroup(subtypeGroupKey)}
+                                                        >
+                                                            <span>
+                                                                {isSubtypeOpen ? "▼" : "▶"} {subtype.label}
+                                                            </span>
+
+                                                            <strong>{subtypeItems.length}</strong>
+                                                        </button>
+
+                                                        {isSubtypeOpen && (
+                                                            <div className="arsenal-group-items">
+                                                                {subtypeItems.map((item) => (
+                                                                    <button
+                                                                        key={item.id}
+                                                                        className={`arsenal-list-item ${selectedItem?.id === item.id ? "active" : ""}`}
+                                                                        type="button"
+                                                                        onClick={() => setSelectedItemId(item.id)}
+                                                                    >
+                                                                        <strong>{item.name}</strong>
+                                                                        <span>{getItemSubtypeLabel(item)}</span>
+                                                                    </button>
+                                                                ))}
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                );
+                                            })
+                                        ) : group.key === "armor" ? (
+                                            ARMOR_SUBTYPE_OPTIONS.map((subtype) => {
+                                                const subtypeItems = group.items.filter(
+                                                    (item) =>
+                                                        (item.armorSubtype ??
+                                                            getArmorSubtypeFromSlot(item.slot) ??
+                                                            "other") === subtype.value,
+                                                );
+
+                                                if (subtypeItems.length === 0) {
+                                                    return null;
+                                                }
+
+                                                const subtypeGroupKey = `${group.key}-${subtype.value}`;
+                                                const isSubtypeOpen =
+                                                    openSubtypeGroups[subtypeGroupKey] ?? false;
+
+                                                return (
+                                                    <div key={subtypeGroupKey} className="arsenal-subgroup">
+                                                        <button
+                                                            className="arsenal-subgroup-header"
+                                                            type="button"
+                                                            onClick={() => toggleSubtypeGroup(subtypeGroupKey)}
+                                                        >
+                                                            <span>
+                                                                {isSubtypeOpen ? "▼" : "▶"} {subtype.label}
+                                                            </span>
+
+                                                            <strong>{subtypeItems.length}</strong>
+                                                        </button>
+
+                                                        {isSubtypeOpen && (
+                                                            <div className="arsenal-group-items">
+                                                                {subtypeItems.map((item) => (
+                                                                    <button
+                                                                        key={item.id}
+                                                                        className={`arsenal-list-item ${selectedItem?.id === item.id ? "active" : ""}`}
+                                                                        type="button"
+                                                                        onClick={() => setSelectedItemId(item.id)}
+                                                                    >
+                                                                        <strong>{item.name}</strong>
+                                                                        <span>{getItemSubtypeLabel(item)}</span>
+                                                                    </button>
+                                                                ))}
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                );
+                                            })
+                                        ) : (
+                                            group.items.map((item) => (
+                                                <button
+                                                    key={item.id}
+                                                    className={`arsenal-list-item ${selectedItem?.id === item.id ? "active" : ""}`}
+                                                    type="button"
+                                                    onClick={() => setSelectedItemId(item.id)}
+                                                >
+                                                    <strong>{item.name}</strong>
+                                                    <span>{getArsenalCategoryLabel(item.category)}</span>
+                                                </button>
+                                            ))
+                                        )}
                                     </div>
                                 )}
                             </div>
@@ -288,9 +589,7 @@ export function ArsenalEditor({
                                     <select
                                         value={selectedItem.category}
                                         onChange={(event) =>
-                                            updateItem({
-                                                category: event.target.value as ArsenalItemCategory,
-                                            })
+                                            updateItemCategory(event.target.value as ArsenalItemCategory)
                                         }
                                     >
                                         {CATEGORY_OPTIONS.map((option) => (
@@ -306,9 +605,7 @@ export function ArsenalEditor({
                                     <select
                                         value={selectedItem.slot}
                                         onChange={(event) =>
-                                            updateItem({
-                                                slot: event.target.value as ArsenalItemSlot,
-                                            })
+                                            updateItemSlot(event.target.value as ArsenalItemSlot)
                                         }
                                     >
                                         {SLOT_OPTIONS.map((option) => (
@@ -335,6 +632,26 @@ export function ArsenalEditor({
                                         <option value={4}>4 слота</option>
                                         <option value={6}>6 слотов</option>
                                     </select>
+                                </label>
+                            )}
+
+                            {selectedItem.slot === "backpack" && (
+                                <label>
+                                    Слоты рюкзака
+                                    <input
+                                        type="number"
+                                        min={0}
+                                        value={selectedItem.backpackSlotCount ?? 6}
+                                        onChange={(event) =>
+                                            updateItem({
+                                                backpackSlotCount: Math.max(
+                                                    0,
+                                                    Math.floor(Number(event.target.value) || 0),
+                                                ),
+                                            })
+                                        }
+                                        placeholder="Например: 4, 6, 8, 12"
+                                    />
                                 </label>
                             )}
 
@@ -395,6 +712,50 @@ export function ArsenalEditor({
                                     />
                                 </label>
                             </div>
+
+                            {selectedItem.category === "weapon" && (
+                                <label>
+                                    Подтип оружия
+                                    <select
+                                        value={selectedItem.weaponSubtype ?? "other"}
+                                        onChange={(event) =>
+                                            updateItem({
+                                                weaponSubtype: event.target.value as ArsenalWeaponSubtype,
+                                            })
+                                        }
+                                    >
+                                        {WEAPON_SUBTYPE_OPTIONS.map((option) => (
+                                            <option key={option.value} value={option.value}>
+                                                {option.label}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </label>
+                            )}
+
+                            {selectedItem.category === "armor" && (
+                                <label>
+                                    Подтип брони
+                                    <select
+                                        value={
+                                            selectedItem.armorSubtype ??
+                                            getArmorSubtypeFromSlot(selectedItem.slot) ??
+                                            "other"
+                                        }
+                                        onChange={(event) =>
+                                            updateItem({
+                                                armorSubtype: event.target.value as ArsenalArmorSubtype,
+                                            })
+                                        }
+                                    >
+                                        {ARMOR_SUBTYPE_OPTIONS.map((option) => (
+                                            <option key={option.value} value={option.value}>
+                                                {option.label}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </label>
+                            )}
 
                             <label className="editor-checkbox">
                                 <input

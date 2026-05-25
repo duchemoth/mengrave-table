@@ -1,6 +1,10 @@
 import { campaignData } from "../data/campaign";
 import type {
+  ArsenalArmorSubtype,
   ArsenalItem,
+  ArsenalItemCategory,
+  ArsenalItemSlot,
+  ArsenalWeaponSubtype,
   CharacterInventory,
   CharacterWallet,
   Location,
@@ -145,6 +149,11 @@ export function createEmptyInventory(): CharacterInventory {
       ],
     },
 
+    backpackSlot: {
+      itemId: null,
+      note: "",
+    },
+
     backpack: [],
   };
 }
@@ -256,6 +265,11 @@ function normalizeInventory(value: unknown): CharacterInventory {
         : emptyInventory.loadBearing.quickSlots,
     },
 
+    backpackSlot: {
+      ...emptyInventory.backpackSlot,
+      ...(inventory.backpackSlot ?? {}),
+    },
+
     backpack: Array.isArray(inventory.backpack)
       ? inventory.backpack
         .filter((entry) => {
@@ -283,7 +297,132 @@ function normalizeInventory(value: unknown): CharacterInventory {
   };
 }
 
+const ARSENAL_ITEM_CATEGORIES: ArsenalItemCategory[] = [
+  "weapon",
+  "armor",
+  "protection",
+  "loadBearing",
+  "storage",
+  "tool",
+  "medicine",
+  "resource",
+  "quest",
+  "misc",
+];
+
+const ARSENAL_ITEM_SLOTS: ArsenalItemSlot[] = [
+  "shoulderWeapon",
+  "smallWeapon",
+  "headArmor",
+  "torsoArmor",
+  "armsArmor",
+  "legsArmor",
+  "protection",
+  "loadBearing",
+  "quick",
+  "backpack",
+  "none",
+];
+
+const ARSENAL_WEAPON_SUBTYPES: ArsenalWeaponSubtype[] = [
+  "melee",
+  "firearm",
+  "throwing",
+  "special",
+  "explosive",
+  "combined",
+  "other",
+];
+
+const ARSENAL_ARMOR_SUBTYPES: ArsenalArmorSubtype[] = [
+  "head",
+  "torso",
+  "arms",
+  "legs",
+  "shield",
+  "fullBody",
+  "other",
+];
+
+function normalizeArsenalSlot(slot: ArsenalItem["slot"] | undefined): ArsenalItemSlot {
+  return slot && ARSENAL_ITEM_SLOTS.includes(slot) ? slot : "none";
+}
+
+function normalizeArsenalCategory(
+  category: ArsenalItem["category"] | undefined,
+  slot: ArsenalItemSlot,
+): ArsenalItemCategory {
+  if (slot === "backpack") {
+    return "storage";
+  }
+
+  if (slot === "loadBearing") {
+    return "loadBearing";
+  }
+
+  if (
+    slot === "headArmor" ||
+    slot === "torsoArmor" ||
+    slot === "armsArmor" ||
+    slot === "legsArmor"
+  ) {
+    return "armor";
+  }
+
+  if (slot === "shoulderWeapon" || slot === "smallWeapon") {
+    return "weapon";
+  }
+
+  return category && ARSENAL_ITEM_CATEGORIES.includes(category)
+    ? category
+    : "misc";
+}
+
+function normalizeWeaponSubtype(
+  value: ArsenalItem["weaponSubtype"] | undefined,
+): ArsenalWeaponSubtype | undefined {
+  return value && ARSENAL_WEAPON_SUBTYPES.includes(value) ? value : undefined;
+}
+
+function normalizeArmorSubtype(
+  value: ArsenalItem["armorSubtype"] | undefined,
+  slot: ArsenalItemSlot,
+): ArsenalArmorSubtype | undefined {
+  if (value && ARSENAL_ARMOR_SUBTYPES.includes(value)) {
+    return value;
+  }
+
+  if (slot === "headArmor") {
+    return "head";
+  }
+
+  if (slot === "torsoArmor") {
+    return "torso";
+  }
+
+  if (slot === "armsArmor") {
+    return "arms";
+  }
+
+  if (slot === "legsArmor") {
+    return "legs";
+  }
+
+  return undefined;
+}
+
+function normalizeQuickSlotCount(value: ArsenalItem["quickSlotCount"]) {
+  if (value === 2 || value === 4 || value === 6) {
+    return value;
+  }
+
+  return undefined;
+}
+
 function normalizeArsenalItem(item: Partial<ArsenalItem>): ArsenalItem {
+  const slot = normalizeArsenalSlot(item.slot);
+  const category = normalizeArsenalCategory(item.category, slot);
+
   return {
     id:
       typeof item.id === "string" && item.id.trim().length > 0
@@ -294,18 +433,35 @@ function normalizeArsenalItem(item: Partial<ArsenalItem>): ArsenalItem {
         ? item.name
         : "Новый предмет",
 
-    category: item.category ?? "misc",
-    slot: item.slot ?? "backpack",
+    category,
+    slot,
 
-    description: item.description ?? "",
-    rules: item.rules ?? "",
-    tags: item.tags ?? "",
-    rarity: item.rarity ?? "",
-    weight: item.weight ?? "",
-    price: item.price ?? "",
+    weaponSubtype:
+      category === "weapon" ? normalizeWeaponSubtype(item.weaponSubtype) : undefined,
+    armorSubtype:
+      category === "armor" ? normalizeArmorSubtype(item.armorSubtype, slot) : undefined,
 
-    quickSlotCount: item.quickSlotCount,
-    isVisibleToPlayers: Boolean(item.isVisibleToPlayers),
+    description: typeof item.description === "string" ? item.description : "",
+    rules: typeof item.rules === "string" ? item.rules : "",
+    tags: typeof item.tags === "string" ? item.tags : "",
+    rarity: typeof item.rarity === "string" ? item.rarity : "",
+    weight: typeof item.weight === "string" ? item.weight : "",
+    price: typeof item.price === "string" ? item.price : "",
+
+    quickSlotCount:
+      slot === "loadBearing" ? normalizeQuickSlotCount(item.quickSlotCount) : undefined,
+
+    backpackSlotCount:
+      slot === "backpack" &&
+        typeof item.backpackSlotCount === "number" &&
+        Number.isFinite(item.backpackSlotCount)
+        ? Math.max(0, Math.floor(item.backpackSlotCount))
+        : undefined,
+
+    isVisibleToPlayers:
+      typeof item.isVisibleToPlayers === "boolean"
+        ? item.isVisibleToPlayers
+        : true,
   };
 }
 
@@ -460,8 +616,8 @@ function normalizeCharacter(character: PlayerCharacter): PlayerCharacter {
     weapons: character.weapons ?? "",
     armor: character.armor ?? "",
     cryptotoken: character.cryptotoken ?? "",
-    wallet: normalizeWallet(character.wallet),
 
+    wallet: normalizeWallet(character.wallet),
     inventory: normalizeInventory(character.inventory),
 
     contacts: character.contacts ?? "",
@@ -497,9 +653,7 @@ export function loadSavedCharacters() {
   }
 }
 
-function normalizeReferenceArticle(
-  article: ReferenceArticle,
-): ReferenceArticle {
+function normalizeReferenceArticle(article: ReferenceArticle): ReferenceArticle {
   return {
     ...article,
 

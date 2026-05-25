@@ -50,6 +50,7 @@ export type ArsenalItemCategory =
   | "armor"
   | "protection"
   | "loadBearing"
+  | "storage"
   | "tool"
   | "medicine"
   | "resource"
@@ -69,11 +70,32 @@ export type ArsenalItemSlot =
   | "backpack"
   | "none";
 
+export type ArsenalWeaponSubtype =
+  | "melee"
+  | "firearm"
+  | "throwing"
+  | "special"
+  | "explosive"
+  | "combined"
+  | "other";
+
+export type ArsenalArmorSubtype =
+  | "head"
+  | "torso"
+  | "arms"
+  | "legs"
+  | "shield"
+  | "fullBody"
+  | "other";
+
 export type ArsenalItem = {
   id: string;
   name: string;
   category: ArsenalItemCategory;
   slot: ArsenalItemSlot;
+
+  weaponSubtype?: ArsenalWeaponSubtype;
+  armorSubtype?: ArsenalArmorSubtype;
 
   description: string;
   rules: string;
@@ -83,6 +105,7 @@ export type ArsenalItem = {
   price: string;
 
   quickSlotCount?: 2 | 4 | 6;
+  backpackSlotCount?: number;
   isVisibleToPlayers: boolean;
 };
 
@@ -132,6 +155,8 @@ export type CharacterInventory = {
     note: string;
     quickSlots: CharacterInventoryQuickSlot[];
   };
+
+  backpackSlot: CharacterInventorySlot;
 
   backpack: CharacterBackpackEntry[];
 };

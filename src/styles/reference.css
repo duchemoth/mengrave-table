@@ -351,3 +351,40 @@
 .reference-subsection .reference-article-buttons {
   padding: 8px;
 }
+
+.arsenal-subgroup {
+  display: grid;
+  gap: 6px;
+  margin-left: 10px;
+  border-left: 2px solid rgba(36, 26, 18, 0.14);
+  padding-left: 8px;
+}
+
+.arsenal-subgroup-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  border: 1px solid rgba(36, 26, 18, 0.16);
+  border-radius: 12px;
+  padding: 8px 10px;
+  color: var(--ink-soft);
+  background: rgba(255, 244, 210, 0.28);
+  cursor: pointer;
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 900;
+  text-align: left;
+}
+
+.arsenal-subgroup-header:hover {
+  border-color: rgba(124, 37, 34, 0.38);
+  color: var(--ink);
+  background: rgba(255, 244, 210, 0.5);
+}
+
+.arsenal-subgroup-header strong {
+  color: var(--blood-seal);
+  font-size: 11px;
+}

@@ -9,6 +9,7 @@ export const campaignData: CampaignData = {
       category: "settlement",
       description:
         "Туманный портовый район, где по ночам слышны цепи и скрип пустых лодок.",
+      imageUrl: "",
       x: 22,
       y: 58,
     },
@@ -19,6 +20,7 @@ export const campaignData: CampaignData = {
       category: "danger",
       description:
         "Заброшенная башня на скале. Местные обходят её стороной после заката.",
+      imageUrl: "",
       x: 64,
       y: 28,
     },
@@ -29,6 +31,7 @@ export const campaignData: CampaignData = {
       category: "secret",
       description:
         "Древнее место силы, отмеченное символом, который видит только мастер.",
+      imageUrl: "",
       x: 78,
       y: 72,
       isSecret: true,
@@ -72,8 +75,9 @@ export const campaignData: CampaignData = {
       name: "Вольный Клинок",
       faction: "players",
       description: "Отряд игроков, действующий на границе известных земель.",
-      x: 42,
-      y: 58,
+      imageUrl: "",
+      x: 18,
+      y: 62,
       isSecret: false,
       members: [
         {
@@ -86,11 +90,13 @@ export const campaignData: CampaignData = {
     },
     {
       id: "group-echomorph-1",
-      name: "Стая эхоморфов",
+      name: "Стая у чёрной насыпи",
       faction: "echomorph",
-      description: "Нестабильная группа тварей у старого тракта.",
-      x: 68,
-      y: 44,
+      description:
+        "Нечто движется между камнями. Издали похоже на людей, если смотреть недолго.",
+      imageUrl: "",
+      x: 70,
+      y: 36,
       isSecret: true,
       members: [
         {
