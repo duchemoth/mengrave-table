@@ -25,6 +25,9 @@ function createEmptyQuest(index: number): Quest {
     reward: "",
     relatedLocationId: "",
     masterNotes: "",
+    contractStage: "preparation",
+    publicProgressNote: "",
+    masterProgressNote: "",
   };
 }
 

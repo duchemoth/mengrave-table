@@ -21,6 +21,16 @@ export type Location = {
 
 export type QuestStatus = "active" | "completed" | "failed" | "hidden";
 
+export type ContractStage =
+  | "preparation"
+  | "exit"
+  | "route"
+  | "complication"
+  | "objective"
+  | "return"
+  | "handoff"
+  | "consequences";
+
 export type CampaignStart =
   | {
     kind: "globalMap";
@@ -43,6 +53,10 @@ export type Quest = {
   reward?: string;
   relatedLocationId?: string;
   masterNotes?: string;
+
+  contractStage?: ContractStage;
+  publicProgressNote?: string;
+  masterProgressNote?: string;
 };
 
 export type ArsenalItemCategory =

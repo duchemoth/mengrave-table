@@ -20,6 +20,7 @@ import {
   type SessionJournalEntry,
   type SessionJournalEntryType,
 } from "./components/panels/SessionJournalPanel";
+import { ContractTrackerPanel } from "./components/panels/ContractTrackerPanel";
 import { EncounterModal } from "./components/EncounterModal";
 import { HudTools } from "./components/HudTools";
 import { MapView } from "./components/MapView";
@@ -637,7 +638,7 @@ type RevealedMapArea = {
   radius: number;
 };
 
-type BottomPanelTab = "party" | "expedition" | "journal";
+type BottomPanelTab = "party" | "contracts" | "expedition" | "journal";
 
 function App() {
   const {
@@ -2150,6 +2151,15 @@ function App() {
               </button>
 
               <button
+                className={`bottom-panel-tab ${activeBottomPanelTab === "contracts" ? "active" : ""
+                  }`}
+                type="button"
+                onClick={() => setActiveBottomPanelTab("contracts")}
+              >
+                Контракты
+              </button>
+
+              <button
                 className={`bottom-panel-tab ${activeBottomPanelTab === "expedition" ? "active" : ""
                   }`}
                 type="button"
@@ -2174,6 +2184,15 @@ function App() {
                   characters={visibleCharacters}
                   arsenalItems={visibleArsenalItems}
                   onOpenCharacter={handleOpenCharacterSheet}
+                />
+              )}
+
+              {activeBottomPanelTab === "contracts" && (
+                <ContractTrackerPanel
+                  quests={quests}
+                  locations={locations}
+                  isPlayerMode={isPlayerMode}
+                  onChangeQuests={setQuests}
                 />
               )}
 

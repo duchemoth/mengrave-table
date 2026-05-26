@@ -1,4 +1,4 @@
-import type { Location, Quest } from "../types/campaign";
+import type { ContractStage, Location, Quest } from "../types/campaign";
 
 export function normalizeLocation(location: Location): Location {
   return {
@@ -7,6 +7,23 @@ export function normalizeLocation(location: Location): Location {
     imageUrl: String(location.imageUrl ?? ""),
     isSecret: Boolean(location.isSecret),
   };
+}
+
+function normalizeContractStage(value: unknown): ContractStage {
+  if (
+    value === "preparation" ||
+    value === "exit" ||
+    value === "route" ||
+    value === "complication" ||
+    value === "objective" ||
+    value === "return" ||
+    value === "handoff" ||
+    value === "consequences"
+  ) {
+    return value;
+  }
+
+  return "preparation";
 }
 
 export function normalizeQuest(rawQuest: unknown, index: number): Quest {
@@ -21,6 +38,9 @@ export function normalizeQuest(rawQuest: unknown, index: number): Quest {
       reward: "",
       relatedLocationId: "",
       masterNotes: "",
+      contractStage: "preparation",
+      publicProgressNote: "",
+      masterProgressNote: "",
     };
   }
 
@@ -47,5 +67,8 @@ export function normalizeQuest(rawQuest: unknown, index: number): Quest {
     reward: String(quest.reward ?? ""),
     relatedLocationId: String(quest.relatedLocationId ?? ""),
     masterNotes: String(quest.masterNotes ?? ""),
+    contractStage: normalizeContractStage(quest.contractStage),
+    publicProgressNote: String(quest.publicProgressNote ?? ""),
+    masterProgressNote: String(quest.masterProgressNote ?? ""),
   };
 }
