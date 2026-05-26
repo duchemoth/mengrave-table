@@ -1,4 +1,12 @@
-import type { CharacterSkillKey, PlayerCharacter } from "../types/campaign";
+import type {
+  CharacterBodyZone,
+  CharacterConditionKey,
+  CharacterSkillKey,
+  CharacterWoundSeverity,
+  CharacterWoundStatus,
+  CharacterWoundType,
+  PlayerCharacter,
+} from "../types/campaign";
 
 const SKILL_LABELS: Record<CharacterSkillKey, string> = {
   melee: "Ближний бой",
@@ -39,6 +47,53 @@ const EMPATHY_LABELS = {
   high: "Высокая",
 };
 
+const CONDITION_LABELS: Record<CharacterConditionKey, string> = {
+  bleeding: "Кровотечение",
+  stunned: "Оглушён",
+  panic: "Паника",
+  exhausted: "Истощён",
+  limping: "Хромота",
+  infection: "Заражение",
+  unconscious: "Без сознания",
+  pain: "Боль",
+  burning: "Горит",
+  echoPressure: "Эхо-давление",
+};
+
+const BODY_ZONE_LABELS: Record<CharacterBodyZone, string> = {
+  head: "Голова",
+  torso: "Торс",
+  leftArm: "Левая рука",
+  rightArm: "Правая рука",
+  leftLeg: "Левая нога",
+  rightLeg: "Правая нога",
+  wholeBody: "Всё тело",
+};
+
+const WOUND_SEVERITY_LABELS: Record<CharacterWoundSeverity, string> = {
+  light: "Лёгкая",
+  medium: "Средняя",
+  heavy: "Тяжёлая",
+  critical: "Критическая",
+};
+
+const WOUND_TYPE_LABELS: Record<CharacterWoundType, string> = {
+  cut: "резаная",
+  piercing: "колотая",
+  gunshot: "огнестрельная",
+  blunt: "дробящая",
+  burn: "ожоговая",
+  shrapnel: "осколочная",
+  bite: "укус",
+  echo: "эхо-поражение",
+};
+
+const WOUND_STATUS_LABELS: Record<CharacterWoundStatus, string> = {
+  fresh: "свежая",
+  stabilized: "стабилизирована",
+  worsened: "ухудшена",
+};
+
 type CharacterPreviewProps = {
   character: PlayerCharacter;
   onClose: () => void;
@@ -51,6 +106,28 @@ export function CharacterPreview({ character, onClose }: CharacterPreviewProps) 
   ][];
 
   const filledSkills = skillEntries.filter(([, value]) => value > 0);
+
+  const conditionSummary =
+    character.conditions && character.conditions.length > 0
+      ? character.conditions
+        .map((condition) => {
+          const note = condition.note.trim();
+
+          return `${CONDITION_LABELS[condition.key]}${note ? ` — ${note}` : ""}`;
+        })
+        .join("\n")
+      : "";
+
+  const woundSummary =
+    character.wounds && character.wounds.length > 0
+      ? character.wounds
+        .map((wound) => {
+          const note = wound.note.trim();
+
+          return `${WOUND_SEVERITY_LABELS[wound.severity]} ${WOUND_TYPE_LABELS[wound.woundType]} рана — ${BODY_ZONE_LABELS[wound.zone]} (${WOUND_STATUS_LABELS[wound.status]})${note ? ` — ${note}` : ""}`;
+        })
+        .join("\n")
+      : "";
 
   function printCharacter() {
     window.print();
@@ -153,7 +230,17 @@ export function CharacterPreview({ character, onClose }: CharacterPreviewProps) 
             </div>
 
             <PrintTextBlock
-              label="Раны и состояния"
+              label="Состояния"
+              value={conditionSummary}
+            />
+
+            <PrintTextBlock
+              label="Раны"
+              value={woundSummary}
+            />
+
+            <PrintTextBlock
+              label="Свободная заметка по ранам"
               value={character.woundsAndConditions}
             />
 

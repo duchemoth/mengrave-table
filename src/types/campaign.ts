@@ -285,6 +285,63 @@ export type CharacterSkillKey =
 
 export type CharacterSkills = Record<CharacterSkillKey, number>;
 
+export type CharacterConditionKey =
+  | "bleeding"
+  | "stunned"
+  | "panic"
+  | "exhausted"
+  | "limping"
+  | "infection"
+  | "unconscious"
+  | "pain"
+  | "burning"
+  | "echoPressure";
+
+export type CharacterConditionEntry = {
+  id: string;
+  key: CharacterConditionKey;
+  note: string;
+};
+
+export type CharacterBodyZone =
+  | "head"
+  | "torso"
+  | "leftArm"
+  | "rightArm"
+  | "leftLeg"
+  | "rightLeg"
+  | "wholeBody";
+
+export type CharacterWoundSeverity =
+  | "light"
+  | "medium"
+  | "heavy"
+  | "critical";
+
+export type CharacterWoundType =
+  | "cut"
+  | "piercing"
+  | "gunshot"
+  | "blunt"
+  | "burn"
+  | "shrapnel"
+  | "bite"
+  | "echo";
+
+export type CharacterWoundStatus =
+  | "fresh"
+  | "stabilized"
+  | "worsened";
+
+export type CharacterWoundEntry = {
+  id: string;
+  zone: CharacterBodyZone;
+  severity: CharacterWoundSeverity;
+  woundType: CharacterWoundType;
+  status: CharacterWoundStatus;
+  note: string;
+};
+
 export type PlayerCharacter = {
   id: string;
 
@@ -325,6 +382,9 @@ export type PlayerCharacter = {
 
   woundsAndConditions: string;
   reflectionNotes: string;
+
+  conditions?: CharacterConditionEntry[];
+  wounds?: CharacterWoundEntry[];
 
   quickAccess: string;
   backpackAndLoad: string;

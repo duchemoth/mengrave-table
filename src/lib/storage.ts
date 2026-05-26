@@ -6,8 +6,15 @@ import type {
   ArsenalItemSlot,
   ArsenalResourceSubtype,
   ArsenalWeaponSubtype,
+  CharacterBodyZone,
+  CharacterConditionEntry,
+  CharacterConditionKey,
   CharacterInventory,
   CharacterWallet,
+  CharacterWoundEntry,
+  CharacterWoundSeverity,
+  CharacterWoundStatus,
+  CharacterWoundType,
   Location,
   MapEvent,
   MapGroup,
@@ -586,6 +593,129 @@ function createEmptyCharacterSkills() {
   };
 }
 
+const CHARACTER_CONDITION_KEYS: CharacterConditionKey[] = [
+  "bleeding",
+  "stunned",
+  "panic",
+  "exhausted",
+  "limping",
+  "infection",
+  "unconscious",
+  "pain",
+  "burning",
+  "echoPressure",
+];
+
+const CHARACTER_BODY_ZONES: CharacterBodyZone[] = [
+  "head",
+  "torso",
+  "leftArm",
+  "rightArm",
+  "leftLeg",
+  "rightLeg",
+  "wholeBody",
+];
+
+const CHARACTER_WOUND_SEVERITIES: CharacterWoundSeverity[] = [
+  "light",
+  "medium",
+  "heavy",
+  "critical",
+];
+
+const CHARACTER_WOUND_TYPES: CharacterWoundType[] = [
+  "cut",
+  "piercing",
+  "gunshot",
+  "blunt",
+  "burn",
+  "shrapnel",
+  "bite",
+  "echo",
+];
+
+const CHARACTER_WOUND_STATUSES: CharacterWoundStatus[] = [
+  "fresh",
+  "stabilized",
+  "worsened",
+];
+
+function normalizeCharacterConditions(value: unknown): CharacterConditionEntry[] {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+
+  return value
+    .filter((entry) => {
+      return entry && typeof entry === "object";
+    })
+    .map((entry, index) => {
+      const condition = entry as Partial<CharacterConditionEntry>;
+      const key = CHARACTER_CONDITION_KEYS.includes(
+        condition.key as CharacterConditionKey,
+      )
+        ? (condition.key as CharacterConditionKey)
+        : "pain";
+
+      return {
+        id:
+          typeof condition.id === "string" && condition.id.trim().length > 0
+            ? condition.id
+            : `condition-${Date.now()}-${index}`,
+        key,
+        note: typeof condition.note === "string" ? condition.note : "",
+      };
+    });
+}
+
+function normalizeCharacterWounds(value: unknown): CharacterWoundEntry[] {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+
+  return value
+    .filter((entry) => {
+      return entry && typeof entry === "object";
+    })
+    .map((entry, index) => {
+      const wound = entry as Partial<CharacterWoundEntry>;
+
+      const zone = CHARACTER_BODY_ZONES.includes(wound.zone as CharacterBodyZone)
+        ? (wound.zone as CharacterBodyZone)
+        : "torso";
+
+      const severity = CHARACTER_WOUND_SEVERITIES.includes(
+        wound.severity as CharacterWoundSeverity,
+      )
+        ? (wound.severity as CharacterWoundSeverity)
+        : "light";
+
+      const woundType = CHARACTER_WOUND_TYPES.includes(
+        wound.woundType as CharacterWoundType,
+      )
+        ? (wound.woundType as CharacterWoundType)
+        : "cut";
+
+      const status = CHARACTER_WOUND_STATUSES.includes(
+        wound.status as CharacterWoundStatus,
+      )
+        ? (wound.status as CharacterWoundStatus)
+        : "fresh";
+
+      return {
+        id:
+          typeof wound.id === "string" && wound.id.trim().length > 0
+            ? wound.id
+            : `wound-${Date.now()}-${index}`,
+        zone,
+        severity,
+        woundType,
+        status,
+        note: typeof wound.note === "string" ? wound.note : "",
+      };
+    });
+}
+
 function normalizeCharacter(character: PlayerCharacter): PlayerCharacter {
   const emptySkills = createEmptyCharacterSkills();
 
@@ -632,6 +762,9 @@ function normalizeCharacter(character: PlayerCharacter): PlayerCharacter {
 
     woundsAndConditions: character.woundsAndConditions ?? "",
     reflectionNotes: character.reflectionNotes ?? "",
+
+    conditions: normalizeCharacterConditions(character.conditions),
+    wounds: normalizeCharacterWounds(character.wounds),
 
     quickAccess: character.quickAccess ?? "",
     backpackAndLoad: character.backpackAndLoad ?? "",

@@ -3,10 +3,17 @@ import { CharacterPreview } from "./CharacterPreview";
 import type {
     ArsenalItem,
     ArsenalItemSlot,
+    CharacterBodyZone,
+    CharacterConditionEntry,
+    CharacterConditionKey,
     CharacterEmpathy,
     CharacterInventory,
     CharacterMass,
     CharacterSkillKey,
+    CharacterWoundEntry,
+    CharacterWoundSeverity,
+    CharacterWoundStatus,
+    CharacterWoundType,
     PlayerCharacter,
 } from "../types/campaign";
 
@@ -21,6 +28,84 @@ const EMPATHY_LABELS: Record<CharacterEmpathy, string> = {
     normal: "Норма",
     high: "Высокая",
 };
+
+const CONDITION_OPTIONS: {
+    key: CharacterConditionKey;
+    label: string;
+}[] = [
+        { key: "bleeding", label: "Кровотечение" },
+        { key: "stunned", label: "Оглушён" },
+        { key: "panic", label: "Паника" },
+        { key: "exhausted", label: "Истощён" },
+        { key: "limping", label: "Хромота" },
+        { key: "infection", label: "Заражение" },
+        { key: "unconscious", label: "Без сознания" },
+        { key: "pain", label: "Боль" },
+        { key: "burning", label: "Горит" },
+        { key: "echoPressure", label: "Эхо-давление" },
+    ];
+
+const BODY_ZONE_OPTIONS: {
+    value: CharacterBodyZone;
+    label: string;
+}[] = [
+        { value: "head", label: "Голова" },
+        { value: "torso", label: "Торс" },
+        { value: "leftArm", label: "Левая рука" },
+        { value: "rightArm", label: "Правая рука" },
+        { value: "leftLeg", label: "Левая нога" },
+        { value: "rightLeg", label: "Правая нога" },
+        { value: "wholeBody", label: "Всё тело" },
+    ];
+
+const WOUND_SEVERITY_OPTIONS: {
+    value: CharacterWoundSeverity;
+    label: string;
+}[] = [
+        { value: "light", label: "Лёгкая" },
+        { value: "medium", label: "Средняя" },
+        { value: "heavy", label: "Тяжёлая" },
+        { value: "critical", label: "Критическая" },
+    ];
+
+const WOUND_TYPE_OPTIONS: {
+    value: CharacterWoundType;
+    label: string;
+}[] = [
+        { value: "cut", label: "Резаная" },
+        { value: "piercing", label: "Колотая" },
+        { value: "gunshot", label: "Огнестрельная" },
+        { value: "blunt", label: "Дробящая" },
+        { value: "burn", label: "Ожог" },
+        { value: "shrapnel", label: "Осколочная" },
+        { value: "bite", label: "Укус" },
+        { value: "echo", label: "Эхо-поражение" },
+    ];
+
+const WOUND_STATUS_LABELS: Record<CharacterWoundStatus, string> = {
+    fresh: "Свежая",
+    stabilized: "Стабилизирована",
+    worsened: "Ухудшена",
+};
+
+function getConditionLabel(key: CharacterConditionKey) {
+    return CONDITION_OPTIONS.find((option) => option.key === key)?.label ?? key;
+}
+
+function getBodyZoneLabel(value: CharacterBodyZone) {
+    return BODY_ZONE_OPTIONS.find((option) => option.value === value)?.label ?? value;
+}
+
+function getWoundSeverityLabel(value: CharacterWoundSeverity) {
+    return (
+        WOUND_SEVERITY_OPTIONS.find((option) => option.value === value)?.label ??
+        value
+    );
+}
+
+function getWoundTypeLabel(value: CharacterWoundType) {
+    return WOUND_TYPE_OPTIONS.find((option) => option.value === value)?.label ?? value;
+}
 
 const CHARACTER_SKILL_LABELS: {
     key: CharacterSkillKey;
@@ -163,6 +248,11 @@ export function CharacterRoster({
     >("all");
     const [backpackSelectedItemId, setBackpackSelectedItemId] = useState("");
     const [backpackQuantity, setBackpackQuantity] = useState(1);
+
+    const [woundZone, setWoundZone] = useState<CharacterBodyZone>("torso");
+    const [woundSeverity, setWoundSeverity] =
+        useState<CharacterWoundSeverity>("light");
+    const [woundType, setWoundType] = useState<CharacterWoundType>("cut");
 
     const [openEquipmentSections, setOpenEquipmentSections] = useState<
         Record<EquipmentSection, boolean>
@@ -585,6 +675,122 @@ export function CharacterRoster({
                 ...selectedCharacter.wallet,
                 ...updatedFields,
             },
+        });
+    }
+
+    function getCharacterConditions(character: PlayerCharacter) {
+        return character.conditions ?? [];
+    }
+
+    function getCharacterWounds(character: PlayerCharacter) {
+        return character.wounds ?? [];
+    }
+
+    function addCondition(conditionKey: CharacterConditionKey) {
+        if (!selectedCharacter || !canEditCharacters) {
+            return;
+        }
+
+        const currentConditions = getCharacterConditions(selectedCharacter);
+        const alreadyHasCondition = currentConditions.some(
+            (condition) => condition.key === conditionKey,
+        );
+
+        if (alreadyHasCondition) {
+            return;
+        }
+
+        const nextCondition: CharacterConditionEntry = {
+            id: `condition-${Date.now()}-${conditionKey}`,
+            key: conditionKey,
+            note: "",
+        };
+
+        updateSelectedCharacter({
+            conditions: [...currentConditions, nextCondition],
+        });
+    }
+
+    function deleteCondition(conditionId: string) {
+        if (!selectedCharacter || !canEditCharacters) {
+            return;
+        }
+
+        updateSelectedCharacter({
+            conditions: getCharacterConditions(selectedCharacter).filter(
+                (condition) => condition.id !== conditionId,
+            ),
+        });
+    }
+
+    function updateCondition(
+        conditionId: string,
+        updatedFields: Partial<CharacterConditionEntry>,
+    ) {
+        if (!selectedCharacter || !canEditCharacters) {
+            return;
+        }
+
+        updateSelectedCharacter({
+            conditions: getCharacterConditions(selectedCharacter).map((condition) =>
+                condition.id === conditionId
+                    ? {
+                        ...condition,
+                        ...updatedFields,
+                    }
+                    : condition,
+            ),
+        });
+    }
+
+    function addWound() {
+        if (!selectedCharacter || !canEditCharacters) {
+            return;
+        }
+
+        const nextWound: CharacterWoundEntry = {
+            id: `wound-${Date.now()}`,
+            zone: woundZone,
+            severity: woundSeverity,
+            woundType,
+            status: "fresh",
+            note: "",
+        };
+
+        updateSelectedCharacter({
+            wounds: [...getCharacterWounds(selectedCharacter), nextWound],
+        });
+    }
+
+    function updateWound(
+        woundId: string,
+        updatedFields: Partial<CharacterWoundEntry>,
+    ) {
+        if (!selectedCharacter || !canEditCharacters) {
+            return;
+        }
+
+        updateSelectedCharacter({
+            wounds: getCharacterWounds(selectedCharacter).map((wound) =>
+                wound.id === woundId
+                    ? {
+                        ...wound,
+                        ...updatedFields,
+                    }
+                    : wound,
+            ),
+        });
+    }
+
+    function deleteWound(woundId: string) {
+        if (!selectedCharacter || !canEditCharacters) {
+            return;
+        }
+
+        updateSelectedCharacter({
+            wounds: getCharacterWounds(selectedCharacter).filter(
+                (wound) => wound.id !== woundId,
+            ),
         });
     }
 
@@ -1014,7 +1220,9 @@ export function CharacterRoster({
                                 const isSelected = character.id === selectedCharacterId;
 
                                 const hasWounds =
-                                    character.woundsAndConditions.trim().length > 0;
+                                    character.woundsAndConditions.trim().length > 0 ||
+                                    (character.wounds ?? []).length > 0 ||
+                                    (character.conditions ?? []).length > 0;
                                 const hasReflection = character.reflectionNotes.trim().length > 0;
                                 const isExhausted = character.physicalReserve <= 0;
                                 const isBroken = character.psyche <= 0;
@@ -1363,18 +1571,212 @@ export function CharacterRoster({
                                         />
                                     </div>
 
-                                    <label className="character-field wide">
-                                        Раны и состояния
-                                        <textarea
-                                            value={selectedCharacter.woundsAndConditions}
-                                            onChange={(event) =>
-                                                updateSelectedCharacter({
-                                                    woundsAndConditions: event.target.value,
-                                                })
-                                            }
-                                            placeholder="Кровотечение, перелом, дрожь, тревога, хромота..."
-                                        />
-                                    </label>
+                                    <div className="character-condition-manager">
+                                        <div className="character-condition-block">
+                                            <div className="character-condition-header">
+                                                <div>
+                                                    <p className="eyebrow">Состояния</p>
+                                                    <h4>Быстрые метки</h4>
+                                                </div>
+
+                                                <span>
+                                                    {getCharacterConditions(selectedCharacter).length} активно
+                                                </span>
+                                            </div>
+
+                                            <div className="character-condition-buttons">
+                                                {CONDITION_OPTIONS.map((condition) => {
+                                                    const isActive = getCharacterConditions(
+                                                        selectedCharacter,
+                                                    ).some((entry) => entry.key === condition.key);
+
+                                                    return (
+                                                        <button
+                                                            key={condition.key}
+                                                            className={`character-condition-button ${isActive ? "active" : ""}`}
+                                                            type="button"
+                                                            onClick={() => addCondition(condition.key)}
+                                                            disabled={isActive}
+                                                        >
+                                                            {condition.label}
+                                                        </button>
+                                                    );
+                                                })}
+                                            </div>
+
+                                            {getCharacterConditions(selectedCharacter).length > 0 && (
+                                                <div className="character-condition-list">
+                                                    {getCharacterConditions(selectedCharacter).map((condition) => (
+                                                        <div
+                                                            key={condition.id}
+                                                            className="character-condition-chip"
+                                                        >
+                                                            <strong>{getConditionLabel(condition.key)}</strong>
+
+                                                            <input
+                                                                value={condition.note}
+                                                                onChange={(event) =>
+                                                                    updateCondition(condition.id, {
+                                                                        note: event.target.value,
+                                                                    })
+                                                                }
+                                                                placeholder="Краткая заметка..."
+                                                            />
+
+                                                            <button
+                                                                className="danger-button"
+                                                                type="button"
+                                                                onClick={() => deleteCondition(condition.id)}
+                                                            >
+                                                                ×
+                                                            </button>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        <div className="character-condition-block">
+                                            <div className="character-condition-header">
+                                                <div>
+                                                    <p className="eyebrow">Раны</p>
+                                                    <h4>Добавить рану</h4>
+                                                </div>
+
+                                                <span>{getCharacterWounds(selectedCharacter).length} записано</span>
+                                            </div>
+
+                                            <div className="character-wound-add-grid">
+                                                <label className="character-field">
+                                                    Зона
+                                                    <select
+                                                        value={woundZone}
+                                                        onChange={(event) =>
+                                                            setWoundZone(event.target.value as CharacterBodyZone)
+                                                        }
+                                                    >
+                                                        {BODY_ZONE_OPTIONS.map((option) => (
+                                                            <option key={option.value} value={option.value}>
+                                                                {option.label}
+                                                            </option>
+                                                        ))}
+                                                    </select>
+                                                </label>
+
+                                                <label className="character-field">
+                                                    Тяжесть
+                                                    <select
+                                                        value={woundSeverity}
+                                                        onChange={(event) =>
+                                                            setWoundSeverity(
+                                                                event.target.value as CharacterWoundSeverity,
+                                                            )
+                                                        }
+                                                    >
+                                                        {WOUND_SEVERITY_OPTIONS.map((option) => (
+                                                            <option key={option.value} value={option.value}>
+                                                                {option.label}
+                                                            </option>
+                                                        ))}
+                                                    </select>
+                                                </label>
+
+                                                <label className="character-field">
+                                                    Тип
+                                                    <select
+                                                        value={woundType}
+                                                        onChange={(event) =>
+                                                            setWoundType(event.target.value as CharacterWoundType)
+                                                        }
+                                                    >
+                                                        {WOUND_TYPE_OPTIONS.map((option) => (
+                                                            <option key={option.value} value={option.value}>
+                                                                {option.label}
+                                                            </option>
+                                                        ))}
+                                                    </select>
+                                                </label>
+
+                                                <button
+                                                    className="character-secondary-button"
+                                                    type="button"
+                                                    onClick={addWound}
+                                                >
+                                                    Добавить рану
+                                                </button>
+                                            </div>
+
+                                            {getCharacterWounds(selectedCharacter).length > 0 && (
+                                                <div className="character-wound-list">
+                                                    {getCharacterWounds(selectedCharacter).map((wound) => (
+                                                        <div
+                                                            key={wound.id}
+                                                            className={`character-wound-card wound-${wound.severity} wound-status-${wound.status}`}
+                                                        >
+                                                            <div className="character-wound-main">
+                                                                <strong>
+                                                                    {getWoundSeverityLabel(wound.severity)}{" "}
+                                                                    {getWoundTypeLabel(wound.woundType).toLowerCase()} рана
+                                                                </strong>
+
+                                                                <span>
+                                                                    {getBodyZoneLabel(wound.zone)} ·{" "}
+                                                                    {WOUND_STATUS_LABELS[wound.status]}
+                                                                </span>
+                                                            </div>
+
+                                                            <div className="character-wound-controls">
+                                                                <select
+                                                                    value={wound.status}
+                                                                    onChange={(event) =>
+                                                                        updateWound(wound.id, {
+                                                                            status:
+                                                                                event.target.value as CharacterWoundStatus,
+                                                                        })
+                                                                    }
+                                                                >
+                                                                    <option value="fresh">Свежая</option>
+                                                                    <option value="stabilized">Стабилизирована</option>
+                                                                    <option value="worsened">Ухудшена</option>
+                                                                </select>
+
+                                                                <input
+                                                                    value={wound.note}
+                                                                    onChange={(event) =>
+                                                                        updateWound(wound.id, {
+                                                                            note: event.target.value,
+                                                                        })
+                                                                    }
+                                                                    placeholder="Заметка: жгут, осколок, перевязка..."
+                                                                />
+
+                                                                <button
+                                                                    className="danger-button"
+                                                                    type="button"
+                                                                    onClick={() => deleteWound(wound.id)}
+                                                                >
+                                                                    Удалить
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        <label className="character-field wide">
+                                            Свободная заметка по ранам
+                                            <textarea
+                                                value={selectedCharacter.woundsAndConditions}
+                                                onChange={(event) =>
+                                                    updateSelectedCharacter({
+                                                        woundsAndConditions: event.target.value,
+                                                    })
+                                                }
+                                                placeholder="Редкие эффекты, особые травмы, договорённости мастера..."
+                                            />
+                                        </label>
+                                    </div>
 
                                     <label className="character-field wide">
                                         Отражение / инфофонные последствия
