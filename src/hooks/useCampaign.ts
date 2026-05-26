@@ -225,6 +225,7 @@ export function useCampaign() {
         globalMap?: unknown;
         expedition?: unknown;
         journalEntries?: unknown;
+        relations?: unknown;
         sceneDrafts?: unknown;
         localMaps?: unknown;
       },
@@ -250,6 +251,9 @@ export function useCampaign() {
             revealedAreas?: unknown[];
             masterNotes?: unknown;
             globalMap?: unknown;
+            expedition?: unknown;
+            journalEntries?: unknown;
+            relations?: unknown;
             sceneDrafts?: unknown;
             localMaps?: unknown;
           };

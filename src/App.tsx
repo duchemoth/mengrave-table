@@ -21,6 +21,7 @@ import {
   type SessionJournalEntryType,
 } from "./components/panels/SessionJournalPanel";
 import { ContractTrackerPanel } from "./components/panels/ContractTrackerPanel";
+import { RelationshipTrackerPanel } from "./components/panels/RelationshipTrackerPanel";
 import { EncounterModal } from "./components/EncounterModal";
 import { HudTools } from "./components/HudTools";
 import { MapView } from "./components/MapView";
@@ -34,6 +35,9 @@ import { useCampaign } from "./hooks/useCampaign";
 import { useInterfaceMode } from "./hooks/useInterfaceMode";
 import { ReferenceLibrary } from "./components/ReferenceLibrary";
 import type {
+  CampaignRelationEntry,
+  CampaignRelationLevel,
+  CampaignRelationsState,
   CampaignStart,
   Location,
   MapEvent,
@@ -49,6 +53,8 @@ const PLAYER_PRESENTATION_STORAGE_KEY = "nri-table-player-presentation";
 const EXPEDITION_STORAGE_KEY = "nri-table-expedition";
 
 const SESSION_JOURNAL_STORAGE_KEY = "nri-table-session-journal";
+
+const RELATIONS_STORAGE_KEY = "nri-table-relations";
 
 const ROUTE_SEGMENT_DISTANCE = 4;
 
@@ -115,6 +121,143 @@ function loadSavedJournalEntries() {
     return normalizeJournalEntries(JSON.parse(savedJournal));
   } catch {
     return [];
+  }
+}
+
+const DEFAULT_RELATION_ENTRIES: CampaignRelationEntry[] = [
+  {
+    id: "voyage",
+    title: "Вояж",
+    level: "distrust",
+    note: "После крушения Аписа Вояж будет искать виновных, спасённый груз и свидетелей.",
+    isVisibleToPlayers: true,
+  },
+  {
+    id: "horst-outpost",
+    title: "Форпост Горста",
+    level: "tolerated",
+    note: "Пока отряд неизвестен. Отношение будет зависеть от того, как они доберутся и что принесут.",
+    isVisibleToPlayers: true,
+  },
+  {
+    id: "temerat",
+    title: "Темерат",
+    level: "distrust",
+    note: "Закон смотрит на вольников как на полезный риск.",
+    isVisibleToPlayers: false,
+  },
+  {
+    id: "eulers",
+    title: "Эйлеры",
+    level: "tolerated",
+    note: "",
+    isVisibleToPlayers: false,
+  },
+  {
+    id: "evergals",
+    title: "Эвергали",
+    level: "tolerated",
+    note: "",
+    isVisibleToPlayers: false,
+  },
+  {
+    id: "valour",
+    title: "Валор",
+    level: "distrust",
+    note: "",
+    isVisibleToPlayers: false,
+  },
+  {
+    id: "brigands",
+    title: "Бриганты",
+    level: "hostile",
+    note: "",
+    isVisibleToPlayers: false,
+  },
+];
+
+const DEFAULT_RELATIONS_STATE: CampaignRelationsState = {
+  entries: DEFAULT_RELATION_ENTRIES,
+  lawAttention: 0,
+  lawNote: "",
+  lawVisibleToPlayers: false,
+};
+
+function normalizeRelationLevel(value: unknown): CampaignRelationLevel {
+  if (
+    value === "hostile" ||
+    value === "distrust" ||
+    value === "tolerated" ||
+    value === "favorable" ||
+    value === "patronage"
+  ) {
+    return value;
+  }
+
+  return "tolerated";
+}
+
+function normalizeRelationEntry(
+  value: unknown,
+  index: number,
+): CampaignRelationEntry | null {
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    return null;
+  }
+
+  const entry = value as Partial<CampaignRelationEntry>;
+
+  return {
+    id:
+      typeof entry.id === "string" && entry.id.trim().length > 0
+        ? entry.id
+        : `relation-${Date.now()}-${index}`,
+    title:
+      typeof entry.title === "string" && entry.title.trim().length > 0
+        ? entry.title
+        : `Связь ${index + 1}`,
+    level: normalizeRelationLevel(entry.level),
+    note: typeof entry.note === "string" ? entry.note : "",
+    isVisibleToPlayers: Boolean(entry.isVisibleToPlayers),
+  };
+}
+
+function normalizeCampaignRelations(value: unknown): CampaignRelationsState {
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    return DEFAULT_RELATIONS_STATE;
+  }
+
+  const rawRelations = value as Partial<CampaignRelationsState>;
+
+  const entries = Array.isArray(rawRelations.entries)
+    ? rawRelations.entries
+      .map(normalizeRelationEntry)
+      .filter((entry): entry is CampaignRelationEntry => entry !== null)
+    : DEFAULT_RELATION_ENTRIES;
+
+  return {
+    entries,
+    lawAttention:
+      typeof rawRelations.lawAttention === "number" &&
+        Number.isFinite(rawRelations.lawAttention)
+        ? Math.max(0, Math.min(5, Math.floor(rawRelations.lawAttention)))
+        : 0,
+    lawNote: typeof rawRelations.lawNote === "string" ? rawRelations.lawNote : "",
+    lawVisibleToPlayers: Boolean(rawRelations.lawVisibleToPlayers),
+  };
+}
+
+function loadSavedRelationsState() {
+  const savedRelations = localStorage.getItem(RELATIONS_STORAGE_KEY);
+
+  if (!savedRelations) {
+    return DEFAULT_RELATIONS_STATE;
+  }
+
+  try {
+    return normalizeCampaignRelations(JSON.parse(savedRelations));
+  } catch {
+    return DEFAULT_RELATIONS_STATE;
   }
 }
 
@@ -538,6 +681,7 @@ const PLAYER_SCREEN_SYNC_KEYS = [
   "nri-table-expedition",
   "nri-table-player-presentation",
   "nri-table-session-journal",
+  "nri-table-relations",
 ];
 
 const PLAYER_SCREEN_SYNC_PREFIXES = [
@@ -638,7 +782,12 @@ type RevealedMapArea = {
   radius: number;
 };
 
-type BottomPanelTab = "party" | "contracts" | "expedition" | "journal";
+type BottomPanelTab =
+  | "party"
+  | "contracts"
+  | "relations"
+  | "expedition"
+  | "journal";
 
 function App() {
   const {
@@ -775,6 +924,10 @@ function App() {
     loadSavedJournalEntries,
   );
 
+  const [relationsState, setRelationsState] = useState<CampaignRelationsState>(
+    loadSavedRelationsState,
+  );
+
   const [masterNotes, setMasterNotes] = useState(() => {
     return localStorage.getItem(MASTER_NOTES_STORAGE_KEY) ?? "";
   });
@@ -902,6 +1055,10 @@ function App() {
       JSON.stringify(journalEntries),
     );
   }, [journalEntries]);
+
+  useEffect(() => {
+    localStorage.setItem(RELATIONS_STORAGE_KEY, JSON.stringify(relationsState));
+  }, [relationsState]);
 
   const visibleLocations = locations.filter((location) => {
     return !isPlayerMode || !location.isSecret;
@@ -1104,6 +1261,7 @@ function App() {
       setGlobalMapImageUrl(importedGlobalMap.imageUrl);
       setExpeditionState(normalizeExpeditionState(importedCampaign?.expedition));
       setJournalEntries(normalizeJournalEntries(importedCampaign?.journalEntries));
+      setRelationsState(normalizeCampaignRelations(importedCampaign?.relations));
 
       openSidebar();
     });
@@ -1119,6 +1277,7 @@ function App() {
       },
       expedition: expeditionState,
       journalEntries,
+      relations: relationsState,
       sceneDrafts: collectJsonStorageByPrefix(SCENE_STORAGE_PREFIX),
       localMaps: collectJsonStorageByPrefix(LOCAL_MAP_STORAGE_PREFIX),
     });
@@ -2160,6 +2319,15 @@ function App() {
               </button>
 
               <button
+                className={`bottom-panel-tab ${activeBottomPanelTab === "relations" ? "active" : ""
+                  }`}
+                type="button"
+                onClick={() => setActiveBottomPanelTab("relations")}
+              >
+                Отношения
+              </button>
+
+              <button
                 className={`bottom-panel-tab ${activeBottomPanelTab === "expedition" ? "active" : ""
                   }`}
                 type="button"
@@ -2193,6 +2361,15 @@ function App() {
                   locations={locations}
                   isPlayerMode={isPlayerMode}
                   onChangeQuests={setQuests}
+                />
+              )}
+
+              {activeBottomPanelTab === "relations" && (
+                <RelationshipTrackerPanel
+                  relations={relationsState}
+                  canEdit={!isPlayerMode}
+                  isPlayerMode={isPlayerMode}
+                  onChangeRelations={setRelationsState}
                 />
               )}
 

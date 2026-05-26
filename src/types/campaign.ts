@@ -59,6 +59,28 @@ export type Quest = {
   masterProgressNote?: string;
 };
 
+export type CampaignRelationLevel =
+  | "hostile"
+  | "distrust"
+  | "tolerated"
+  | "favorable"
+  | "patronage";
+
+export type CampaignRelationEntry = {
+  id: string;
+  title: string;
+  level: CampaignRelationLevel;
+  note: string;
+  isVisibleToPlayers: boolean;
+};
+
+export type CampaignRelationsState = {
+  entries: CampaignRelationEntry[];
+  lawAttention: number;
+  lawNote: string;
+  lawVisibleToPlayers: boolean;
+};
+
 export type ArsenalItemCategory =
   | "weapon"
   | "armor"
@@ -195,6 +217,7 @@ export type CampaignData = {
   npcs: string[];
   items: string[];
   arsenalItems: ArsenalItem[];
+  relations?: CampaignRelationsState;
 };
 
 export type MapGroupFaction =

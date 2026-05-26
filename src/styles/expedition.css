@@ -1743,3 +1743,256 @@
   line-height: 1.45;
   text-align: center;
 }
+
+/* Relationship tracker */
+
+.relationship-panel {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 12px;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  border-radius: 22px;
+  padding: 14px;
+  background:
+    linear-gradient(135deg, rgba(234, 216, 173, 0.92), rgba(216, 195, 154, 0.9));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 244, 210, 0.28),
+    0 14px 32px rgba(18, 10, 8, 0.22);
+}
+
+.relationship-header {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.relationship-header h3 {
+  margin: 0;
+  color: var(--ink);
+  font-size: 24px;
+  line-height: 1;
+}
+
+.relationship-add-button,
+.relationship-stepper button,
+.relationship-card-actions button,
+.relationship-delete-button {
+  border: 1px solid rgba(36, 26, 18, 0.24);
+  border-radius: 999px;
+  padding: 7px 10px;
+  color: #fff3cf;
+  background: linear-gradient(180deg, #5a2d22, var(--leather));
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.relationship-layout {
+  display: grid;
+  grid-template-columns: 300px minmax(0, 1fr);
+  gap: 12px;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.law-attention-card,
+.relationship-card,
+.relationship-empty {
+  border: 1px solid rgba(36, 26, 18, 0.18);
+  border-radius: 18px;
+  padding: 12px;
+  background: rgba(255, 244, 210, 0.74);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 244, 210, 0.24),
+    0 6px 14px rgba(18, 10, 8, 0.08);
+}
+
+.law-attention-card {
+  display: grid;
+  align-content: start;
+  gap: 12px;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.law-attention-card h4,
+.relationship-card-main h4 {
+  margin: 0;
+  color: var(--ink);
+  font-size: 20px;
+  line-height: 1.05;
+}
+
+.law-attention-value {
+  display: grid;
+  gap: 4px;
+  border: 1px solid rgba(36, 26, 18, 0.16);
+  border-radius: 14px;
+  padding: 10px;
+  background: rgba(255, 244, 210, 0.58);
+}
+
+.law-attention-value strong {
+  color: var(--ink);
+  font-size: 24px;
+  line-height: 1;
+}
+
+.law-attention-value span {
+  color: var(--ink-soft);
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.law-attention-value.law-3,
+.law-attention-value.law-4,
+.law-attention-value.law-5 {
+  border-color: rgba(124, 37, 34, 0.48);
+  background: rgba(124, 37, 34, 0.08);
+}
+
+.relationship-stepper {
+  display: flex;
+  gap: 8px;
+}
+
+.relationship-list {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+  min-height: 0;
+  overflow-y: auto;
+  padding-right: 6px;
+}
+
+.relationship-card {
+  display: grid;
+  gap: 10px;
+}
+
+.relationship-card.relation-danger {
+  border-color: rgba(124, 37, 34, 0.48);
+  background: rgba(124, 37, 34, 0.08);
+}
+
+.relationship-card.relation-warning {
+  border-color: rgba(181, 125, 42, 0.46);
+}
+
+.relationship-card.relation-good {
+  border-color: rgba(75, 107, 69, 0.42);
+}
+
+.relationship-card-main {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 10px;
+}
+
+.relationship-card-main input {
+  width: 100%;
+  border: 1px solid rgba(36, 26, 18, 0.22);
+  border-radius: 10px;
+  padding: 8px 10px;
+  color: var(--ink);
+  background: rgba(255, 244, 210, 0.72);
+  outline: none;
+  font: 900 14px/1.2 Inter, system-ui, sans-serif;
+}
+
+.relationship-card-main span {
+  border: 1px solid rgba(36, 26, 18, 0.16);
+  border-radius: 999px;
+  padding: 6px 10px;
+  color: var(--ink-soft);
+  background: rgba(255, 244, 210, 0.58);
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 11px;
+  font-weight: 950;
+  white-space: nowrap;
+}
+
+.relationship-card-actions {
+  display: grid;
+  grid-template-columns: 34px minmax(180px, 260px) 34px;
+  gap: 8px;
+  align-items: center;
+}
+
+.relationship-card-actions select,
+.relationship-note-field textarea {
+  width: 100%;
+  border: 1px solid rgba(36, 26, 18, 0.22);
+  border-radius: 10px;
+  padding: 8px 10px;
+  color: var(--ink);
+  background: rgba(255, 244, 210, 0.72);
+  outline: none;
+  font: 700 12px/1.35 Inter, system-ui, sans-serif;
+}
+
+.relationship-note-field {
+  display: grid;
+  gap: 7px;
+  color: var(--ink-soft);
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.relationship-note-field textarea {
+  min-height: 70px;
+  resize: vertical;
+}
+
+.relationship-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.relationship-checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--ink-soft);
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.relationship-public-note,
+.relationship-empty {
+  margin: 0;
+  color: var(--ink-soft);
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.45;
+}
+
+.relationship-delete-button {
+  border-color: rgba(124, 37, 34, 0.42);
+  background: linear-gradient(180deg, #7c2522, #4a1715);
+}
+
+.relationship-panel.read-only textarea,
+.relationship-panel.read-only input,
+.relationship-panel.read-only select {
+  pointer-events: none;
+}
+
+@media (max-width: 900px) {
+
+  .relationship-layout,
+  .relationship-card-main,
+  .relationship-card-actions {
+    grid-template-columns: 1fr;
+  }
+}
