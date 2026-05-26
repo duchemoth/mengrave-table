@@ -1,6 +1,14 @@
 import { useEffect, useMemo, useState } from "react";
 import type { ReferenceArticle } from "../types/campaign";
 
+type JournalEntryDraft = {
+    type: "expedition" | "map" | "scene" | "inventory" | "master" | "other";
+    title: string;
+    text: string;
+    details?: string;
+    isHiddenFromPlayers?: boolean;
+};
+
 export type LocalMapPointKind =
     | "interest"
     | "entrance"
@@ -55,6 +63,7 @@ type LocalMapViewerProps = {
     onShowToPlayers: () => void;
     onBackToOverview: () => void;
     onClose: () => void;
+    onCreateJournalEntry: (entry: JournalEntryDraft) => void;
 };
 
 const ROOT_LOCAL_MAP_ID = "root";
@@ -297,6 +306,7 @@ function hasText(value: string) {
 }
 
 export function LocalMapViewer({
+    title,
     storageKey,
     isPlayerMode,
     canShowToPlayers,
@@ -305,6 +315,7 @@ export function LocalMapViewer({
     onShowToPlayers,
     onBackToOverview,
     onClose,
+    onCreateJournalEntry,
 }: LocalMapViewerProps) {
     const [localMapLevels, setLocalMapLevels] = useState<LocalMapLevel[]>([
         createRootLocalMapLevel(),
@@ -491,6 +502,64 @@ export function LocalMapViewer({
         );
 
         setSelectedPointId(null);
+    }
+
+    function createSelectedPointJournalEntry() {
+        if (!selectedPoint || isPlayerMode) {
+            return;
+        }
+
+        const pointKindLabel =
+            LOCAL_MAP_POINT_KIND_LABELS[selectedPoint.kind] ?? selectedPoint.kind;
+
+        const text = [
+            `Локальная карта: ${title}.`,
+            `Уровень: ${activeLevel.title}.`,
+            `Точка: ${selectedPoint.title}.`,
+            `Тип: ${pointKindLabel}.`,
+            selectedPoint.description.trim()
+                ? `Описание: ${selectedPoint.description.trim()}`
+                : "",
+            selectedPoint.stakes.trim()
+                ? `Ставка: ${selectedPoint.stakes.trim()}`
+                : "",
+        ]
+            .filter(Boolean)
+            .join("\n");
+
+        const details = [
+            selectedPoint.choices.trim()
+                ? `Варианты действий:\n${selectedPoint.choices.trim()}`
+                : "",
+            selectedPoint.findings.trim()
+                ? `Находки / улики:\n${selectedPoint.findings.trim()}`
+                : "",
+            selectedPoint.threat.trim()
+                ? `Угроза / давление:\n${selectedPoint.threat.trim()}`
+                : "",
+            selectedPoint.consequences.trim()
+                ? `Последствия:\n${selectedPoint.consequences.trim()}`
+                : "",
+            selectedPoint.masterNotes.trim()
+                ? `Заметки мастера:\n${selectedPoint.masterNotes.trim()}`
+                : "",
+            linkedDossier
+                ? `Связанное досье: ${linkedDossier.title || "Без названия"}`
+                : "",
+            entranceTargetLevel
+                ? `Переход: ${entranceTargetLevel.title}`
+                : "",
+        ]
+            .filter(Boolean)
+            .join("\n\n");
+
+        onCreateJournalEntry({
+            type: "scene",
+            title: `${title} — ${selectedPoint.title}`,
+            text: text || "Локальная точка зафиксирована в журнале.",
+            details,
+            isHiddenFromPlayers: selectedPoint.isSecret,
+        });
     }
 
     function createSublevelFromSelectedPoint() {
@@ -955,6 +1024,14 @@ export function LocalMapViewer({
                                         onClick={createSublevelFromSelectedPoint}
                                     >
                                         Создать подуровень из точки
+                                    </button>
+
+                                    <button
+                                        className="secondary-button"
+                                        type="button"
+                                        onClick={createSelectedPointJournalEntry}
+                                    >
+                                        + В журнал
                                     </button>
 
                                     {entranceTargetLevel && (

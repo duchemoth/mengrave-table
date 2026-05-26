@@ -6,11 +6,20 @@ import type {
   QuestStatus,
 } from "../../types/campaign";
 
+type JournalEntryDraft = {
+  type: "expedition" | "map" | "scene" | "inventory" | "master" | "other";
+  title: string;
+  text: string;
+  details?: string;
+  isHiddenFromPlayers?: boolean;
+};
+
 type ContractTrackerPanelProps = {
   quests: Quest[];
   locations: Location[];
   isPlayerMode: boolean;
   onChangeQuests: (quests: Quest[]) => void;
+  onCreateJournalEntry: (entry: JournalEntryDraft) => void;
 };
 
 const QUEST_STATUS_LABELS: Record<QuestStatus, string> = {
@@ -62,6 +71,7 @@ export function ContractTrackerPanel({
   locations,
   isPlayerMode,
   onChangeQuests,
+  onCreateJournalEntry,
 }: ContractTrackerPanelProps) {
   const visibleQuests = useMemo(() => {
     return quests.filter((quest) => {
@@ -105,9 +115,9 @@ export function ContractTrackerPanel({
       quests.map((quest) =>
         quest.id === selectedQuest.id
           ? {
-              ...quest,
-              ...updatedFields,
-            }
+            ...quest,
+            ...updatedFields,
+          }
           : quest,
       ),
     );
@@ -128,6 +138,55 @@ export function ContractTrackerPanel({
 
     updateQuest({
       contractStage: CONTRACT_STAGES[nextIndex],
+    });
+  }
+
+  function createContractJournalEntry() {
+    if (!selectedQuest || isPlayerMode) {
+      return;
+    }
+
+    const stage = getNormalizedContractStage(selectedQuest);
+    const locationTitle = getQuestLocationTitle(selectedQuest, locations);
+
+    const text = [
+      `Этап: ${CONTRACT_STAGE_LABELS[stage]}.`,
+      `Статус: ${QUEST_STATUS_LABELS[selectedQuest.status]}.`,
+      selectedQuest.publicProgressNote?.trim()
+        ? `Заметка игрокам: ${selectedQuest.publicProgressNote.trim()}`
+        : "",
+    ]
+      .filter(Boolean)
+      .join("\n");
+
+    const details = [
+      selectedQuest.description.trim()
+        ? `Описание поручения:\n${selectedQuest.description.trim()}`
+        : "",
+      selectedQuest.giver?.trim()
+        ? `Источник: ${selectedQuest.giver.trim()}`
+        : "",
+      locationTitle ? `Локация: ${locationTitle}` : "",
+      selectedQuest.reward?.trim()
+        ? `Награда: ${selectedQuest.reward.trim()}`
+        : "",
+      selectedQuest.masterProgressNote?.trim()
+        ? `Скрытая заметка мастера:\n${selectedQuest.masterProgressNote.trim()}`
+        : "",
+      selectedQuest.masterNotes?.trim()
+        ? `Заметки из редактора:\n${selectedQuest.masterNotes.trim()}`
+        : "",
+    ]
+      .filter(Boolean)
+      .join("\n\n");
+
+    onCreateJournalEntry({
+      type: "scene",
+      title: `Контракт — ${selectedQuest.title}`,
+      text: text || "Состояние контракта зафиксировано.",
+      details,
+      isHiddenFromPlayers:
+        Boolean(selectedQuest.isSecret) || selectedQuest.status === "hidden",
     });
   }
 
@@ -264,6 +323,10 @@ export function ContractTrackerPanel({
 
             {!isPlayerMode && (
               <div className="contract-status-actions">
+                <button type="button" onClick={createContractJournalEntry}>
+                  + В журнал
+                </button>
+
                 <button
                   type="button"
                   onClick={() => updateQuest({ status: "active", isSecret: false })}

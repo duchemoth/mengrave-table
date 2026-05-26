@@ -7,6 +7,14 @@ import type {
   ReferenceArticle,
 } from "../types/campaign";
 
+type JournalEntryDraft = {
+  type: "expedition" | "map" | "scene" | "inventory" | "master" | "other";
+  title: string;
+  text: string;
+  details?: string;
+  isHiddenFromPlayers?: boolean;
+};
+
 const FACTION_LABELS: Record<string, string> = {
   players: "Игроки",
   fief: "Феодалы",
@@ -58,6 +66,7 @@ type EncounterModalProps = {
   onShowGlobalMapToPlayers: () => void;
   onClose: () => void;
   onCreateSceneNote: (note: string) => void;
+  onCreateJournalEntry: (entry: JournalEntryDraft) => void;
   onUpdateMapEvent: (event: MapEvent) => void;
   onCreateLocationEvent: (location: Location) => MapEvent;
 };
@@ -404,6 +413,7 @@ export function EncounterModal({
   onShowGlobalMapToPlayers,
   onClose,
   onCreateSceneNote,
+  onCreateJournalEntry,
   onUpdateMapEvent,
   onCreateLocationEvent,
 }: EncounterModalProps) {
@@ -1024,6 +1034,7 @@ export function EncounterModal({
             onShowToPlayers={() => showCurrentToPlayers("localMap")}
             onBackToOverview={() => setMode("overview")}
             onClose={closeModal}
+            onCreateJournalEntry={onCreateJournalEntry}
           />
 
         ) : (

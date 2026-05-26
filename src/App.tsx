@@ -2363,6 +2363,7 @@ function App() {
                   locations={locations}
                   isPlayerMode={isPlayerMode}
                   onChangeQuests={setQuests}
+                  onCreateJournalEntry={addSystemJournalEntry}
                 />
               )}
 
@@ -2518,6 +2519,7 @@ function App() {
         onShowToPlayers={handleShowToPlayers}
         onClose={() => setEncounterTarget(null)}
         onCreateSceneNote={handleCreateSceneNote}
+        onCreateJournalEntry={addSystemJournalEntry}
         onUpdateMapEvent={handleUpdateEncounterEvent}
         onCreateLocationEvent={handleCreateLocationEvent}
       />
