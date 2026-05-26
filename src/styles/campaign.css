@@ -48,3 +48,170 @@
     padding: 8px 12px;
     font-size: 12px;
 }
+
+/* Main menu illustrated background */
+
+.campaign-start-menu {
+    position: fixed;
+    inset: 0;
+    z-index: 500;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    padding: 24px;
+    background:
+        linear-gradient(90deg,
+            rgba(18, 10, 8, 0.56) 0%,
+            rgba(18, 10, 8, 0.18) 28%,
+            rgba(18, 10, 8, 0.08) 50%,
+            rgba(18, 10, 8, 0.18) 72%,
+            rgba(18, 10, 8, 0.56) 100%),
+        radial-gradient(ellipse at center,
+            rgba(18, 10, 8, 0.08) 0%,
+            rgba(18, 10, 8, 0.18) 50%,
+            rgba(18, 10, 8, 0.62) 100%),
+        url("/images/menu/main-menu-bg.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    filter: none;
+}
+
+.campaign-start-menu::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background:
+        radial-gradient(ellipse at center,
+            rgba(18, 10, 8, 0.18) 0%,
+            rgba(18, 10, 8, 0.34) 42%,
+            rgba(18, 10, 8, 0.76) 100%),
+        linear-gradient(180deg,
+            rgba(18, 10, 8, 0.22) 0%,
+            rgba(18, 10, 8, 0.02) 42%,
+            rgba(18, 10, 8, 0.58) 100%);
+}
+
+.campaign-start-menu-backdrop {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background:
+        repeating-linear-gradient(45deg,
+            rgba(234, 216, 173, 0.025) 0,
+            rgba(234, 216, 173, 0.025) 1px,
+            transparent 1px,
+            transparent 9px);
+    opacity: 0.46;
+    backdrop-filter: none;
+}
+
+.campaign-start-menu-card {
+    position: relative;
+    z-index: 2;
+    width: min(520px, calc(100vw - 48px));
+    border: 1px solid rgba(234, 216, 173, 0.32);
+    border-radius: 26px;
+    padding: 28px;
+    color: #fff3cf;
+    background:
+        linear-gradient(180deg,
+            rgba(46, 23, 16, 0.88),
+            rgba(18, 10, 8, 0.94));
+    box-shadow:
+        0 28px 90px rgba(0, 0, 0, 0.62),
+        inset 0 1px 0 rgba(255, 244, 210, 0.16),
+        inset 0 0 0 1px rgba(18, 10, 8, 0.38);
+    backdrop-filter: blur(3px) saturate(0.9);
+}
+
+.campaign-start-menu-header {
+    text-align: center;
+}
+
+.campaign-start-menu-header p {
+    margin: 0 0 5px;
+    color: rgba(255, 243, 207, 0.72);
+    font-family: Inter, system-ui, sans-serif;
+    font-size: 12px;
+    font-weight: 950;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+}
+
+.campaign-start-menu-header h1 {
+    margin: 0;
+    color: #fff3cf;
+    text-shadow: 0 3px 18px rgba(0, 0, 0, 0.58);
+}
+
+.campaign-start-menu-header span {
+    display: block;
+    margin-top: 6px;
+    color: rgba(255, 243, 207, 0.74);
+    font-family: Inter, system-ui, sans-serif;
+    font-size: 12px;
+    font-weight: 900;
+}
+
+.campaign-start-menu-actions {
+    display: grid;
+    gap: 10px;
+    margin-top: 24px;
+}
+
+.campaign-start-menu-actions button {
+    border: 1px solid rgba(234, 216, 173, 0.28);
+    border-radius: 14px;
+    padding: 12px 14px;
+    color: #fff3cf;
+    background:
+        linear-gradient(180deg,
+            rgba(70, 34, 24, 0.96),
+            rgba(36, 17, 13, 0.96));
+    box-shadow:
+        inset 0 1px 0 rgba(255, 244, 210, 0.12),
+        0 8px 20px rgba(0, 0, 0, 0.22);
+    cursor: pointer;
+    font-family: Inter, system-ui, sans-serif;
+    font-size: 13px;
+    font-weight: 950;
+}
+
+.campaign-start-menu-actions button:hover {
+    border-color: rgba(215, 166, 90, 0.72);
+    filter: brightness(1.08);
+}
+
+.campaign-start-menu-actions button.primary {
+    border-color: rgba(215, 166, 90, 0.68);
+    background:
+        linear-gradient(180deg,
+            rgba(124, 55, 34, 0.98),
+            rgba(64, 24, 17, 0.98));
+}
+
+.campaign-start-menu-warning {
+    margin: 22px 0 0;
+    color: rgba(255, 243, 207, 0.66);
+    text-align: center;
+    font-family: Inter, system-ui, sans-serif;
+    font-size: 12px;
+    font-weight: 800;
+    line-height: 1.45;
+}
+
+@media (max-width: 900px) {
+    .campaign-start-menu {
+        padding: 16px;
+        background-position: center;
+    }
+
+    .campaign-start-menu-card {
+        width: min(460px, calc(100vw - 32px));
+        padding: 22px;
+    }
+}
