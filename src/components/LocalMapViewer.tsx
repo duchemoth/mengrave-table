@@ -20,6 +20,13 @@ export type LocalMapPoint = {
     isSecret: boolean;
     targetLocalMapId: string;
     linkedDossierId: string;
+
+    isKeyScene: boolean;
+    stakes: string;
+    choices: string;
+    findings: string;
+    threat: string;
+    consequences: string;
 };
 
 export type LocalMapLevel = {
@@ -127,6 +134,14 @@ function normalizeLocalMapPoint(value: unknown): LocalMapPoint | null {
             typeof point.targetLocalMapId === "string" ? point.targetLocalMapId : "",
         linkedDossierId:
             typeof point.linkedDossierId === "string" ? point.linkedDossierId : "",
+
+        isKeyScene: Boolean(point.isKeyScene),
+        stakes: typeof point.stakes === "string" ? point.stakes : "",
+        choices: typeof point.choices === "string" ? point.choices : "",
+        findings: typeof point.findings === "string" ? point.findings : "",
+        threat: typeof point.threat === "string" ? point.threat : "",
+        consequences:
+            typeof point.consequences === "string" ? point.consequences : "",
     };
 }
 
@@ -267,7 +282,18 @@ function createLocalMapPoint(x: number, y: number): LocalMapPoint {
         isSecret: false,
         targetLocalMapId: "",
         linkedDossierId: "",
+
+        isKeyScene: false,
+        stakes: "",
+        choices: "",
+        findings: "",
+        threat: "",
+        consequences: "",
     };
+}
+
+function hasText(value: string) {
+    return value.trim().length > 0;
 }
 
 export function LocalMapViewer({
@@ -643,7 +669,7 @@ export function LocalMapViewer({
                             <button
                                 key={point.id}
                                 className={`local-map-point local-map-point-${point.kind} ${selectedPointId === point.id ? "selected" : ""
-                                    } ${point.isSecret ? "secret" : ""}`}
+                                    } ${point.isSecret ? "secret" : ""} ${point.isKeyScene ? "key-scene" : ""}`}
                                 type="button"
                                 style={{
                                     left: `${point.x}%`,
@@ -681,6 +707,10 @@ export function LocalMapViewer({
                                                         ? "⚔"
                                                         : "?"}
                                 </span>
+
+                                {point.isKeyScene && (
+                                    <span className="local-map-point-key-badge">⋯</span>
+                                )}
 
                                 <span className="local-map-point-label">
                                     {point.title || "Без названия"}
@@ -746,6 +776,17 @@ export function LocalMapViewer({
                                         }
                                     />
                                     Скрыто от игроков
+                                </label>
+
+                                <label className="local-map-checkbox">
+                                    <input
+                                        type="checkbox"
+                                        checked={selectedPoint.isKeyScene}
+                                        onChange={(event) =>
+                                            updateSelectedPoint({ isKeyScene: event.target.checked })
+                                        }
+                                    />
+                                    Ключевая сцена / выбор
                                 </label>
 
                                 {selectedPoint.kind === "npc" && (
@@ -814,6 +855,74 @@ export function LocalMapViewer({
                                         placeholder="Ловушки, проверки, скрытые детали, последствия."
                                     />
                                 </label>
+
+                                <div className="local-map-key-scene-card">
+                                    <div className="local-map-key-scene-header">
+                                        <div>
+                                            <p className="eyebrow">Структура сцены</p>
+                                            <h4>Ставка, выбор, последствия</h4>
+                                        </div>
+
+                                        <span>
+                                            {selectedPoint.isKeyScene ? "Ключевая" : "Обычная"}
+                                        </span>
+                                    </div>
+
+                                    <label className="local-map-field">
+                                        Ставка
+                                        <textarea
+                                            value={selectedPoint.stakes}
+                                            onChange={(event) =>
+                                                updateSelectedPoint({ stakes: event.target.value })
+                                            }
+                                            placeholder="Что здесь можно выиграть, потерять или изменить?"
+                                        />
+                                    </label>
+
+                                    <label className="local-map-field">
+                                        Варианты действий
+                                        <textarea
+                                            value={selectedPoint.choices}
+                                            onChange={(event) =>
+                                                updateSelectedPoint({ choices: event.target.value })
+                                            }
+                                            placeholder="Какие решения доступны: спасать, вскрывать, бросить, рискнуть, торговаться..."
+                                        />
+                                    </label>
+
+                                    <label className="local-map-field">
+                                        Находки / улики
+                                        <textarea
+                                            value={selectedPoint.findings}
+                                            onChange={(event) =>
+                                                updateSelectedPoint({ findings: event.target.value })
+                                            }
+                                            placeholder="Что можно найти: предметы, следы, свидетельства, ресурсы, зацепки..."
+                                        />
+                                    </label>
+
+                                    <label className="local-map-field">
+                                        Угроза / давление
+                                        <textarea
+                                            value={selectedPoint.threat}
+                                            onChange={(event) =>
+                                                updateSelectedPoint({ threat: event.target.value })
+                                            }
+                                            placeholder="Что ухудшается со временем, при шуме, провале, жадности или промедлении?"
+                                        />
+                                    </label>
+
+                                    <label className="local-map-field">
+                                        Последствия
+                                        <textarea
+                                            value={selectedPoint.consequences}
+                                            onChange={(event) =>
+                                                updateSelectedPoint({ consequences: event.target.value })
+                                            }
+                                            placeholder="Что изменится после решения: кто выжил, что сгорело, кто запомнил, что стало недоступно..."
+                                        />
+                                    </label>
+                                </div>
 
                                 <label className="local-map-field">
                                     Целевая подкарта
@@ -898,6 +1007,7 @@ export function LocalMapViewer({
                                                     ? ` · ${dossierArticles.find((article) => article.id === point.linkedDossierId)?.title ?? "досье"}`
                                                     : ""}
                                                 {point.targetLocalMapId ? " · переход" : ""}
+                                                {point.isKeyScene ? " · сцена" : ""}
                                                 {point.isSecret ? " · скрыто" : ""}
                                             </small>
                                         </button>
@@ -1006,6 +1116,49 @@ export function LocalMapViewer({
                                     ? selectedPoint.description
                                     : "Описание точки пока не добавлено."}
                             </p>
+
+                            {(hasText(selectedPoint.stakes) ||
+                                hasText(selectedPoint.choices) ||
+                                hasText(selectedPoint.findings) ||
+                                hasText(selectedPoint.threat) ||
+                                hasText(selectedPoint.consequences)) && (
+                                    <div className="local-map-point-briefing">
+                                        {hasText(selectedPoint.stakes) && (
+                                            <article>
+                                                <strong>Ставка</strong>
+                                                <p>{selectedPoint.stakes}</p>
+                                            </article>
+                                        )}
+
+                                        {hasText(selectedPoint.choices) && !isPlayerMode && (
+                                            <article>
+                                                <strong>Варианты</strong>
+                                                <p>{selectedPoint.choices}</p>
+                                            </article>
+                                        )}
+
+                                        {hasText(selectedPoint.findings) && !isPlayerMode && (
+                                            <article>
+                                                <strong>Находки</strong>
+                                                <p>{selectedPoint.findings}</p>
+                                            </article>
+                                        )}
+
+                                        {hasText(selectedPoint.threat) && !isPlayerMode && (
+                                            <article>
+                                                <strong>Угроза</strong>
+                                                <p>{selectedPoint.threat}</p>
+                                            </article>
+                                        )}
+
+                                        {hasText(selectedPoint.consequences) && !isPlayerMode && (
+                                            <article>
+                                                <strong>Последствия</strong>
+                                                <p>{selectedPoint.consequences}</p>
+                                            </article>
+                                        )}
+                                    </div>
+                                )}
 
                             {selectedPoint.kind === "npc" &&
                                 linkedDossier &&

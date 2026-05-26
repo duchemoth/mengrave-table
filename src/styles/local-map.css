@@ -632,3 +632,104 @@
 .local-map-point-enemy.selected {
   filter: brightness(1.18);
 }
+
+/* Local map key scenes */
+
+.local-map-point.key-scene {
+  box-shadow:
+    0 0 0 2px rgba(18, 10, 8, 0.34),
+    0 0 0 5px rgba(234, 184, 80, 0.34),
+    0 10px 20px rgba(18, 10, 8, 0.36);
+}
+
+.local-map-point-key-badge {
+  position: absolute;
+  right: -7px;
+  top: -7px;
+  display: grid;
+  place-items: center;
+  min-width: 16px;
+  height: 16px;
+  border: 1px solid rgba(255, 243, 207, 0.78);
+  border-radius: 999px;
+  color: #fff3cf;
+  background:
+    radial-gradient(circle at 50% 42%, rgba(181, 125, 42, 0.98), rgba(74, 42, 18, 0.98));
+  box-shadow:
+    0 0 0 2px rgba(18, 10, 8, 0.36),
+    0 6px 12px rgba(18, 10, 8, 0.32);
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 11px;
+  font-weight: 950;
+  line-height: 1;
+  pointer-events: none;
+}
+
+.local-map-key-scene-card {
+  display: grid;
+  gap: 10px;
+  border: 1px solid rgba(181, 125, 42, 0.32);
+  border-radius: 16px;
+  padding: 12px;
+  background: rgba(255, 244, 210, 0.28);
+}
+
+.local-map-key-scene-header {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.local-map-key-scene-header h4 {
+  margin: 0;
+  color: var(--ink);
+  font-size: 17px;
+  line-height: 1.05;
+}
+
+.local-map-key-scene-header span {
+  border: 1px solid rgba(36, 26, 18, 0.16);
+  border-radius: 999px;
+  padding: 5px 8px;
+  color: var(--ink-soft);
+  background: rgba(255, 244, 210, 0.52);
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 10px;
+  font-weight: 950;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.local-map-point-briefing {
+  display: grid;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.local-map-point-briefing article {
+  display: grid;
+  gap: 4px;
+  border: 1px solid rgba(36, 26, 18, 0.14);
+  border-radius: 12px;
+  padding: 9px 10px;
+  background: rgba(255, 244, 210, 0.28);
+}
+
+.local-map-point-briefing strong {
+  color: var(--blood-seal);
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 10px;
+  font-weight: 950;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.local-map-point-briefing p {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 12px;
+  font-weight: 750;
+  line-height: 1.4;
+  white-space: pre-wrap;
+}
