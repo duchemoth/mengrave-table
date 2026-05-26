@@ -24,6 +24,7 @@ import { ContractTrackerPanel } from "./components/panels/ContractTrackerPanel";
 import { RelationshipTrackerPanel } from "./components/panels/RelationshipTrackerPanel";
 import { EncounterModal } from "./components/EncounterModal";
 import { HudTools } from "./components/HudTools";
+import { DiceRollerPanel } from "./components/DiceRollerPanel";
 import { MapView } from "./components/MapView";
 import { MasterNotes } from "./components/MasterNotes";
 import { CharacterRoster } from "./components/CharacterRoster";
@@ -909,6 +910,8 @@ function App() {
 
   const [isReferenceOpen, setIsReferenceOpen] = useState(false);
 
+  const [isDiceOpen, setIsDiceOpen] = useState(false);
+
   const [referenceInitialArticleId, setReferenceInitialArticleId] =
     useState<string | null>(null);
 
@@ -965,6 +968,7 @@ function App() {
         setIsHidingRevealedArea(false);
         setIsPlanningRoute(false);
         setIsSuggestingRoute(false);
+        setIsDiceOpen(false);
       }
     }
 
@@ -981,6 +985,7 @@ function App() {
       setIsRevealingFog(false);
       setIsHidingRevealedArea(false);
       setIsPlanningRoute(false);
+      setIsDiceOpen(false);
       return;
     }
 
@@ -1746,6 +1751,7 @@ function App() {
       x,
       y,
       isSecret: true,
+      scale: "major",
     });
 
     setSelectedEventId(newEvent.id);
@@ -1765,6 +1771,7 @@ function App() {
       x: clampMapCoordinate(location.x + 2),
       y: clampMapCoordinate(location.y + 2),
       isSecret: true,
+      scale: "major",
     });
 
     setSelectedEventId(newEvent.id);
@@ -2247,7 +2254,10 @@ function App() {
         <button
           className="campaign-menu-open-button"
           type="button"
-          onClick={() => setIsStartMenuOpen(true)}
+          onClick={() => {
+            setIsDiceOpen(false);
+            setIsStartMenuOpen(true);
+          }}
         >
           Меню
         </button>
@@ -2451,6 +2461,25 @@ function App() {
           onToggleNotes={() => setIsNotesOpen((current) => !current)}
           onToggleCharacters={() => setIsCharactersOpen((current) => !current)}
           onToggleReference={() => setIsReferenceOpen((current) => !current)}
+        />
+      )}
+
+      {!isCleanMapMode && !isPlayerMode && !isStartMenuOpen && (
+        <button
+          className={`dice-dock-button ${isDiceOpen ? "active" : ""}`}
+          type="button"
+          onClick={() => setIsDiceOpen((current) => !current)}
+          title="Открыть панель бросков"
+        >
+          <span>Броски</span>
+        </button>
+      )}
+
+      {!isCleanMapMode && !isPlayerMode && !isStartMenuOpen && (
+        <DiceRollerPanel
+          isOpen={isDiceOpen}
+          onClose={() => setIsDiceOpen(false)}
+          onCreateJournalEntry={addSystemJournalEntry}
         />
       )}
 

@@ -1,7 +1,13 @@
 import { useRef, useState } from "react";
 import type { CSSProperties } from "react";
 import { useMapViewport } from "../hooks/useMapViewport";
-import type { Location, MapEvent, MapGroup, UserMode } from "../types/campaign";
+import type {
+  Location,
+  MapEvent,
+  MapEventScale,
+  MapGroup,
+  UserMode,
+} from "../types/campaign";
 
 type RevealedMapArea = {
   id: string;
@@ -83,6 +89,10 @@ const MAP_EVENT_CATEGORY_META = {
   object: { label: "Объект", icon: "◆" },
   other: { label: "Другое", icon: "•" },
 } as const;
+
+function getMapEventScale(event: MapEvent): MapEventScale {
+  return event.scale === "minor" ? "minor" : "major";
+}
 
 export function MapView({
   locations,
@@ -839,11 +849,12 @@ export function MapView({
           {events.map((mapEvent) => {
             const meta = MAP_EVENT_CATEGORY_META[mapEvent.category];
             const isCompleted = mapEvent.status === "completed";
+            const eventScale = getMapEventScale(mapEvent);
 
             return (
               <div
                 key={mapEvent.id}
-                className={`map-event map-event-${mapEvent.category} ${isCompleted ? "completed" : ""
+                className={`map-event map-event-${mapEvent.category} map-event-scale-${eventScale} ${isCompleted ? "completed" : ""
                   }`}
                 style={{
                   left: `${mapEvent.x}%`,
@@ -866,7 +877,7 @@ export function MapView({
                     onOpenEventEncounter(mapEvent);
                     onExitCleanMapMode();
                   }}
-                  title={`${meta.label}: ${mapEvent.title}`}
+                  title={`${eventScale === "minor" ? "Минорное событие" : "Полноценное событие"} · ${meta.label}: ${mapEvent.title}`}
                 >
                   <span className="map-event-icon">{isCompleted ? "✔" : meta.icon}</span>
                 </button>

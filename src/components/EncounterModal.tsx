@@ -3,6 +3,7 @@ import { LocalMapViewer } from "./LocalMapViewer";
 import type {
   Location,
   MapEvent,
+  MapEventScale,
   MapGroup,
   ReferenceArticle,
 } from "../types/campaign";
@@ -79,6 +80,7 @@ type EventDraft = {
   masterNotes: string;
   imageUrl: string;
   isSecret: boolean;
+  scale: MapEventScale;
 };
 
 type EventTemplateContext =
@@ -131,6 +133,15 @@ const EVENT_TEMPLATE_SEVERITY_OPTIONS: {
     { value: "medium", label: "Средняя" },
     { value: "heavy", label: "Тяжёлая" },
   ];
+
+const EVENT_SCALE_LABELS: Record<MapEventScale, string> = {
+  major: "Полноценное событие",
+  minor: "Минорное событие",
+};
+
+function getMapEventScale(event: MapEvent): MapEventScale {
+  return event.scale === "minor" ? "minor" : "major";
+}
 
 function getEventTemplateCategory(
   templateKind: EventTemplateKind,
@@ -359,6 +370,7 @@ function buildEventTemplate(
     description: buildEventTemplateDescription(context, templateKind, severity),
     masterNotes: buildEventTemplateMasterNotes(context, templateKind, severity),
     isSecret: severity === "heavy" || templateKind === "threat" || templateKind === "infophone",
+    scale: severity === "light" ? "minor" : "major",
   };
 }
 
@@ -430,6 +442,7 @@ export function EncounterModal({
     masterNotes: "",
     imageUrl: "",
     isSecret: true,
+    scale: "major",
   });
 
   const [eventTemplateContext, setEventTemplateContext] =
@@ -512,6 +525,7 @@ export function EncounterModal({
       masterNotes: target.data.masterNotes,
       imageUrl: target.data.imageUrl,
       isSecret: target.data.isSecret,
+      scale: getMapEventScale(target.data),
     });
 
     setIsEventSaved(false);
@@ -663,6 +677,7 @@ export function EncounterModal({
       masterNotes: newEvent.masterNotes,
       imageUrl: newEvent.imageUrl,
       isSecret: newEvent.isSecret,
+      scale: getMapEventScale(newEvent),
     });
 
     setMode("eventEdit");
@@ -704,6 +719,7 @@ export function EncounterModal({
       masterNotes: eventDraft.masterNotes,
       imageUrl: eventDraft.imageUrl.trim(),
       isSecret: eventDraft.isSecret,
+      scale: eventDraft.scale,
     };
 
     onUpdateMapEvent(updatedEvent);
@@ -747,7 +763,7 @@ export function EncounterModal({
   }
 
   return (
-    <div className="encounter-backdrop" onClick={closeModal}>
+    <div className="encounter-backdrop">
       <section
         className={`encounter-modal ${mode === "localMap" ? "local-map-mode" : ""}`}
         onClick={(event) => event.stopPropagation()}
@@ -1183,6 +1199,21 @@ export function EncounterModal({
                         }
                         placeholder="/images/events/ambush-road.jpg"
                       />
+                    </label>
+
+                    <label className="event-field">
+                      Масштаб
+                      <select
+                        value={eventDraft.scale}
+                        onChange={(event) =>
+                          updateEventDraft({
+                            scale: event.target.value as MapEventScale,
+                          })
+                        }
+                      >
+                        <option value="major">{EVENT_SCALE_LABELS.major}</option>
+                        <option value="minor">{EVENT_SCALE_LABELS.minor}</option>
+                      </select>
                     </label>
 
                     <label className="event-checkbox">

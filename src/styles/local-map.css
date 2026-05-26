@@ -850,3 +850,9 @@
 .scene-card {
   min-width: 0;
 }
+
+/* Event scale field */
+
+.event-form-grid .event-checkbox {
+  align-self: end;
+}

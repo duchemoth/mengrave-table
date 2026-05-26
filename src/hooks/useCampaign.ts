@@ -295,6 +295,7 @@ export function useCampaign() {
               imageUrl: String(event.imageUrl ?? ""),
               status: event.status ?? "hidden",
               isSecret: Boolean(event.isSecret),
+              scale: event.scale === "minor" ? "minor" : "major",
             })),
           );
         }

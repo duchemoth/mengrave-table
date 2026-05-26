@@ -791,3 +791,55 @@
   line-height: 1;
   pointer-events: none;
 }
+
+/* Minor map events */
+
+.map-event-scale-minor {
+  width: 20px;
+  height: 20px;
+  z-index: 4;
+}
+
+.map-event-scale-minor .map-event-token {
+  width: 20px;
+  height: 20px;
+  border-width: 1px;
+  opacity: 0.84;
+  box-shadow:
+    0 6px 14px rgba(18, 10, 8, 0.3),
+    inset 0 0 0 1px rgba(255, 244, 210, 0.1);
+}
+
+.map-event-scale-minor .map-event-icon {
+  font-size: 10px;
+}
+
+.map-event-scale-minor .map-event-label {
+  left: calc(100% + 6px);
+  padding: 4px 7px;
+  font-size: 10px;
+  opacity: 0;
+}
+
+.map-event-scale-minor:hover .map-event-token,
+.map-event-scale-minor .map-event-token.selected {
+  opacity: 1;
+  transform: scale(1.08);
+}
+
+.map-event-scale-minor .map-event-label::before {
+  content: "минорное · ";
+  opacity: 0.72;
+}
+
+.map-event-scale-minor .map-event-token.selected {
+  outline: 1px solid rgba(255, 244, 210, 0.9);
+  box-shadow:
+    0 0 0 3px rgba(215, 166, 90, 0.18),
+    0 0 14px rgba(255, 244, 210, 0.34),
+    0 8px 16px rgba(18, 10, 8, 0.38);
+}
+
+.map-event-scale-major .map-event-token {
+  opacity: 1;
+}

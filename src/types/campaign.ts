@@ -261,6 +261,8 @@ export type MapEventCategory =
 
 export type MapEventStatus = "hidden" | "active" | "completed";
 
+export type MapEventScale = "major" | "minor";
+
 export type MapEvent = {
   id: string;
   title: string;
@@ -272,6 +274,7 @@ export type MapEvent = {
   x: number;
   y: number;
   isSecret: boolean;
+  scale?: MapEventScale;
 };
 
 export type CharacterMass = "deficit" | "normal" | "excess";

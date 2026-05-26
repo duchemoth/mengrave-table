@@ -2,6 +2,7 @@ import { useState } from "react";
 import type {
     MapEvent,
     MapEventCategory,
+    MapEventScale,
     MapEventStatus,
 } from "../../types/campaign";
 
@@ -19,6 +20,15 @@ const EVENT_STATUS_LABELS: Record<MapEventStatus, string> = {
     active: "Активно",
     completed: "Завершено",
 };
+
+const EVENT_SCALE_LABELS: Record<MapEventScale, string> = {
+    major: "полноценное",
+    minor: "минорное",
+};
+
+function getMapEventScale(event: MapEvent): MapEventScale {
+    return event.scale === "minor" ? "minor" : "major";
+}
 
 type EventStatusFilter = "all" | MapEventStatus;
 type EventCategoryFilter = "all" | MapEventCategory;
@@ -69,6 +79,7 @@ export function EventManager({
             x: 50,
             y: 50,
             isSecret: true,
+            scale: "major",
         });
 
         onSelectEvent(newEvent.id);
@@ -224,7 +235,7 @@ export function EventManager({
                         return (
                             <button
                                 key={event.id}
-                                className={`event-list-item ${isSelected ? "active" : ""}`}
+                                className={`event-list-item event-list-item-${getMapEventScale(event)} ${isSelected ? "active" : ""}`}
                                 type="button"
                                 onClick={() => onSelectEvent(event.id)}
                                 onDoubleClick={() => onOpenEvent(event)}
@@ -233,7 +244,8 @@ export function EventManager({
 
                                 <span className="event-list-meta">
                                     {EVENT_CATEGORY_LABELS[event.category]} ·{" "}
-                                    {EVENT_STATUS_LABELS[event.status]}
+                                    {EVENT_STATUS_LABELS[event.status]} ·{" "}
+                                    {EVENT_SCALE_LABELS[getMapEventScale(event)]}
                                     {event.isSecret ? " · скрыто" : ""}
                                 </span>
                             </button>
