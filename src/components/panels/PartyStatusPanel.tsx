@@ -114,6 +114,16 @@ export function PartyStatusPanel({
                     );
 
                     const protection = getItemName(inventory?.protectionSlot.itemId);
+                    const backpack = getItemName(inventory?.backpackSlot?.itemId);
+
+                    const backpackCapacity =
+                        inventory?.backpackSlot?.itemId
+                            ? arsenalItems.find(
+                                (item) => item.id === inventory.backpackSlot.itemId,
+                            )?.backpackSlotCount ?? 0
+                            : 0;
+
+                    const backpackUsedSlots = inventory?.backpack?.length ?? 0;
 
                     const quickSlots = inventory?.loadBearing.quickSlots ?? [];
                     const visibleQuickSlots = quickSlots.slice(0, 6);
@@ -154,6 +164,9 @@ export function PartyStatusPanel({
                                 <div>
                                     <strong>Защита</strong>
                                     <span>{protection}</span>
+                                    <span>
+                                        Рюкзак: {backpack} · {backpackUsedSlots}/{backpackCapacity}
+                                    </span>
                                     <span>
                                         {character.wallet.amperies} амп.{" "}
                                         {character.wallet.miliamperies} мА

@@ -52,6 +52,23 @@ const CHARACTER_SKILL_LABELS: {
         { key: "echoInfophone", label: "Эхо и инфофон" },
     ];
 
+const BACKPACK_CATEGORY_FILTERS: {
+    value: "all" | ArsenalItem["category"];
+    label: string;
+}[] = [
+        { value: "all", label: "Все категории" },
+        { value: "weapon", label: "Оружие" },
+        { value: "armor", label: "Броня" },
+        { value: "protection", label: "Защита" },
+        { value: "loadBearing", label: "Разгрузка" },
+        { value: "storage", label: "Поклажа" },
+        { value: "tool", label: "Инструменты" },
+        { value: "medicine", label: "Медицина" },
+        { value: "resource", label: "Ресурсы" },
+        { value: "quest", label: "Квестовое" },
+        { value: "misc", label: "Прочее / хлам" },
+    ];
+
 const STARTING_SKILL_POINTS = 12;
 const STARTING_SKILL_MAX = 3;
 
@@ -139,6 +156,13 @@ export function CharacterRoster({
     }, [isPlayerMode, activeTab]);
 
     const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+
+    const [backpackSearchQuery, setBackpackSearchQuery] = useState("");
+    const [backpackCategoryFilter, setBackpackCategoryFilter] = useState<
+        "all" | ArsenalItem["category"]
+    >("all");
+    const [backpackSelectedItemId, setBackpackSelectedItemId] = useState("");
+    const [backpackQuantity, setBackpackQuantity] = useState(1);
 
     const [openEquipmentSections, setOpenEquipmentSections] = useState<
         Record<EquipmentSection, boolean>
@@ -436,6 +460,29 @@ export function CharacterRoster({
             return;
         }
 
+        const nextCapacity = getBackpackSlotCount(itemId);
+        const usedSlots = getBackpackUsedSlots();
+
+        if (itemId === null && usedSlots > 0) {
+            const shouldRemoveBackpack = window.confirm(
+                "В рюкзаке уже есть предметы. Если снять рюкзак, содержимое останется в списке, но вместимость станет 0. Продолжить?",
+            );
+
+            if (!shouldRemoveBackpack) {
+                return;
+            }
+        }
+
+        if (itemId !== null && nextCapacity < usedSlots) {
+            const shouldEquipSmallerBackpack = window.confirm(
+                `В выбранном рюкзаке ${nextCapacity} слотов, а сейчас занято ${usedSlots}. Лишние предметы не удалятся, но рюкзак будет перегружен. Продолжить?`,
+            );
+
+            if (!shouldEquipSmallerBackpack) {
+                return;
+            }
+        }
+
         updateInventory({
             ...selectedCharacter.inventory,
             backpackSlot: {
@@ -559,10 +606,14 @@ export function CharacterRoster({
             return;
         }
 
-        const firstAvailableItem = arsenalItems[0];
+        const filteredItems = getFilteredBackpackAllowedItems();
+        const selectedItem =
+            filteredItems.find((item) => item.id === backpackSelectedItemId) ??
+            filteredItems[0] ??
+            null;
 
-        if (!firstAvailableItem) {
-            window.alert("В Арсенале пока нет предметов.");
+        if (!selectedItem) {
+            window.alert("Не найден подходящий предмет. Измени поиск или категорию.");
             return;
         }
 
@@ -572,12 +623,15 @@ export function CharacterRoster({
                 ...selectedCharacter.inventory.backpack,
                 {
                     id: `backpack-${Date.now()}`,
-                    itemId: firstAvailableItem.id,
-                    quantity: 1,
+                    itemId: selectedItem.id,
+                    quantity: Math.max(1, Math.floor(backpackQuantity)),
                     note: "",
                 },
             ],
         });
+
+        setBackpackSelectedItemId("");
+        setBackpackQuantity(1);
     }
 
     function updateBackpackEntry(
@@ -637,16 +691,63 @@ export function CharacterRoster({
         );
     }
 
-    function renderAnyItemSelect(
+    function getBackpackAllowedItems() {
+        return arsenalItems.filter((item) => {
+            if (item.slot === "backpack") {
+                return false;
+            }
+
+            if (item.slot === "loadBearing") {
+                return false;
+            }
+
+            return true;
+        });
+    }
+
+    function normalizeBackpackSearchText(value: string) {
+        return value.toLowerCase().replaceAll("ё", "е").replace(/\s+/g, " ").trim();
+    }
+
+    function getFilteredBackpackAllowedItems() {
+        const normalizedSearchQuery = normalizeBackpackSearchText(backpackSearchQuery);
+
+        return getBackpackAllowedItems().filter((item) => {
+            const matchesCategory =
+                backpackCategoryFilter === "all" || item.category === backpackCategoryFilter;
+
+            const searchableText = normalizeBackpackSearchText(
+                [
+                    item.name,
+                    item.description,
+                    item.rules,
+                    item.tags,
+                    item.rarity,
+                    item.weight,
+                    item.price,
+                ].join(" "),
+            );
+
+            const matchesSearch =
+                normalizedSearchQuery.length === 0 ||
+                searchableText.includes(normalizedSearchQuery);
+
+            return matchesCategory && matchesSearch;
+        });
+    }
+
+    function renderBackpackItemSelect(
         value: string,
         onChange: (itemId: string) => void,
     ) {
+        const availableItems = getBackpackAllowedItems();
+
         return (
             <select
                 value={value}
                 onChange={(event) => onChange(event.target.value)}
             >
-                {arsenalItems.map((item) => (
+                {availableItems.map((item) => (
                     <option key={item.id} value={item.id}>
                         {item.name}
                     </option>
@@ -1755,19 +1856,121 @@ export function CharacterRoster({
                                                             placeholder="Состояние, крепления, повреждения, особые карманы..."
                                                         />
 
-                                                        <p className="character-help-text">
+                                                        <p
+                                                            className={`character-help-text ${getBackpackUsedSlots() > getBackpackCapacity()
+                                                                ? "warning"
+                                                                : ""
+                                                                }`}
+                                                        >
                                                             Вместимость: {getBackpackUsedSlots()}/{getBackpackCapacity()} слотов.
+                                                            {getBackpackUsedSlots() > getBackpackCapacity()
+                                                                ? " Рюкзак перегружен."
+                                                                : ""}
                                                         </p>
                                                     </div>
 
-                                                    <button
-                                                        className="character-secondary-button"
-                                                        type="button"
-                                                        onClick={addBackpackEntry}
-                                                        disabled={getBackpackCapacity() <= 0 || getBackpackUsedSlots() >= getBackpackCapacity()}
-                                                    >
-                                                        Добавить предмет в рюкзак
-                                                    </button>
+                                                    <div className="character-backpack-add-card">
+                                                        <div className="character-backpack-add-header">
+                                                            <div>
+                                                                <p className="eyebrow">Добавить в рюкзак</p>
+                                                                <h4>Поиск предмета</h4>
+                                                            </div>
+
+                                                            <span>
+                                                                Найдено: {getFilteredBackpackAllowedItems().length}
+                                                            </span>
+                                                        </div>
+
+                                                        <div className="character-backpack-add-grid">
+                                                            <label className="character-field">
+                                                                Поиск
+                                                                <input
+                                                                    value={backpackSearchQuery}
+                                                                    onChange={(event) =>
+                                                                        setBackpackSearchQuery(event.target.value)
+                                                                    }
+                                                                    placeholder="Название, тег, описание..."
+                                                                />
+                                                            </label>
+
+                                                            <label className="character-field">
+                                                                Категория
+                                                                <select
+                                                                    value={backpackCategoryFilter}
+                                                                    onChange={(event) =>
+                                                                        setBackpackCategoryFilter(
+                                                                            event.target.value as "all" | ArsenalItem["category"],
+                                                                        )
+                                                                    }
+                                                                >
+                                                                    {BACKPACK_CATEGORY_FILTERS.map((filter) => (
+                                                                        <option key={filter.value} value={filter.value}>
+                                                                            {filter.label}
+                                                                        </option>
+                                                                    ))}
+                                                                </select>
+                                                            </label>
+
+                                                            <label className="character-field">
+                                                                Предмет
+                                                                <select
+                                                                    value={
+                                                                        getFilteredBackpackAllowedItems().some(
+                                                                            (item) => item.id === backpackSelectedItemId,
+                                                                        )
+                                                                            ? backpackSelectedItemId
+                                                                            : getFilteredBackpackAllowedItems()[0]?.id ?? ""
+                                                                    }
+                                                                    onChange={(event) =>
+                                                                        setBackpackSelectedItemId(event.target.value)
+                                                                    }
+                                                                    disabled={getFilteredBackpackAllowedItems().length === 0}
+                                                                >
+                                                                    {getFilteredBackpackAllowedItems().map((item) => (
+                                                                        <option key={item.id} value={item.id}>
+                                                                            {item.name}
+                                                                        </option>
+                                                                    ))}
+                                                                </select>
+                                                            </label>
+
+                                                            <label className="character-field">
+                                                                Кол-во
+                                                                <input
+                                                                    type="number"
+                                                                    min={1}
+                                                                    value={backpackQuantity}
+                                                                    onChange={(event) =>
+                                                                        setBackpackQuantity(
+                                                                            Math.max(
+                                                                                1,
+                                                                                Math.floor(Number(event.target.value) || 1),
+                                                                            ),
+                                                                        )
+                                                                    }
+                                                                />
+                                                            </label>
+                                                        </div>
+
+                                                        <button
+                                                            className="character-secondary-button"
+                                                            type="button"
+                                                            onClick={addBackpackEntry}
+                                                            disabled={
+                                                                getBackpackCapacity() <= 0 ||
+                                                                getBackpackUsedSlots() >= getBackpackCapacity() ||
+                                                                getFilteredBackpackAllowedItems().length === 0
+                                                            }
+                                                        >
+                                                            Добавить выбранный предмет
+                                                        </button>
+
+                                                        {getFilteredBackpackAllowedItems().length === 0 && (
+                                                            <p className="character-help-text warning">
+                                                                Подходящих предметов нет. Измени поиск или категорию.
+                                                            </p>
+                                                        )}
+                                                    </div>
 
                                                     {selectedCharacter.inventory.backpack.length === 0 ? (
                                                         <p className="character-help-text">
@@ -1780,7 +1983,7 @@ export function CharacterRoster({
                                                                     key={entry.id}
                                                                     className="character-backpack-row"
                                                                 >
-                                                                    {renderAnyItemSelect(entry.itemId, (itemId) =>
+                                                                    {renderBackpackItemSelect(entry.itemId, (itemId) =>
                                                                         updateBackpackEntry(entry.id, { itemId }),
                                                                     )}
 
