@@ -506,6 +506,7 @@ function getExpeditionRouteStatusLabel(status: ExpeditionRouteStatus) {
 }
 
 type EncounterDisplayMode = "overview" | "scene" | "localMap";
+type EncounterMode = EncounterDisplayMode | "eventEdit";
 
 function normalizeCampaignStart(value: unknown): CampaignStart {
   if (!value || typeof value !== "object" || Array.isArray(value)) {
@@ -886,7 +887,7 @@ function App() {
   >(null);
 
   const [encounterInitialMode, setEncounterInitialMode] =
-    useState<EncounterDisplayMode>("overview");
+    useState<EncounterMode>("overview");
 
   const [campaignStart, setCampaignStart] = useState<CampaignStart>({
     kind: "globalMap",
@@ -1748,6 +1749,7 @@ function App() {
     });
 
     setSelectedEventId(newEvent.id);
+    setEncounterInitialMode("eventEdit");
     setEncounterTarget({ kind: "event", data: newEvent });
     setIsPlacingEvent(false);
   }

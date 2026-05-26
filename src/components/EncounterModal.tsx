@@ -46,7 +46,7 @@ type EncounterMode = EncounterDisplayMode | "eventEdit";
 type EncounterModalProps = {
   target: EncounterTarget | null;
   isPlayerMode: boolean;
-  initialMode: EncounterDisplayMode;
+  initialMode: EncounterMode;
   canShowToPlayers: boolean;
   dossierArticles: ReferenceArticle[];
   onOpenDossier: (articleId: string) => void;
@@ -71,6 +71,287 @@ type EventDraft = {
   imageUrl: string;
   isSecret: boolean;
 };
+
+type EventTemplateContext =
+  | "route"
+  | "rest"
+  | "crash"
+  | "obscuria"
+  | "outpost";
+
+type EventTemplateKind =
+  | "threat"
+  | "find"
+  | "trace"
+  | "npc"
+  | "breakdown"
+  | "infophone"
+  | "social";
+
+type EventTemplateSeverity = "light" | "medium" | "heavy";
+
+const EVENT_TEMPLATE_CONTEXT_OPTIONS: {
+  value: EventTemplateContext;
+  label: string;
+}[] = [
+    { value: "route", label: "Маршрут" },
+    { value: "rest", label: "Привал" },
+    { value: "crash", label: "Крушение" },
+    { value: "obscuria", label: "Обскурия" },
+    { value: "outpost", label: "Форпост" },
+  ];
+
+const EVENT_TEMPLATE_KIND_OPTIONS: {
+  value: EventTemplateKind;
+  label: string;
+}[] = [
+    { value: "threat", label: "Угроза" },
+    { value: "find", label: "Находка" },
+    { value: "trace", label: "След" },
+    { value: "npc", label: "NPC" },
+    { value: "breakdown", label: "Поломка" },
+    { value: "infophone", label: "Инфофон" },
+    { value: "social", label: "Социальное" },
+  ];
+
+const EVENT_TEMPLATE_SEVERITY_OPTIONS: {
+  value: EventTemplateSeverity;
+  label: string;
+}[] = [
+    { value: "light", label: "Лёгкая" },
+    { value: "medium", label: "Средняя" },
+    { value: "heavy", label: "Тяжёлая" },
+  ];
+
+function getEventTemplateCategory(
+  templateKind: EventTemplateKind,
+): MapEvent["category"] {
+  if (templateKind === "threat") {
+    return "conflict";
+  }
+
+  if (templateKind === "find" || templateKind === "breakdown") {
+    return "object";
+  }
+
+  if (templateKind === "trace" || templateKind === "infophone") {
+    return "mystery";
+  }
+
+  if (templateKind === "npc" || templateKind === "social") {
+    return "incident";
+  }
+
+  return "other";
+}
+
+function getEventTemplateTitle(
+  context: EventTemplateContext,
+  templateKind: EventTemplateKind,
+  severity: EventTemplateSeverity,
+) {
+  const severityPrefix =
+    severity === "heavy" ? "Тяжёлое" : severity === "medium" ? "Неспокойное" : "Малое";
+
+  if (context === "rest" && templateKind === "threat") {
+    return `${severityPrefix} беспокойство на привале`;
+  }
+
+  if (context === "rest" && templateKind === "social") {
+    return "Разговор у привала";
+  }
+
+  if (context === "crash" && templateKind === "find") {
+    return "Находка среди обломков";
+  }
+
+  if (context === "crash" && templateKind === "threat") {
+    return "Опасность в поле обломков";
+  }
+
+  if (context === "crash" && templateKind === "npc") {
+    return "Выживший среди дыма";
+  }
+
+  if (context === "outpost" && templateKind === "social") {
+    return "Разговор на форпосте";
+  }
+
+  if (context === "outpost" && templateKind === "npc") {
+    return "Человек у ворот";
+  }
+
+  if (templateKind === "threat") {
+    return "Угроза на маршруте";
+  }
+
+  if (templateKind === "find") {
+    return "Полезная находка";
+  }
+
+  if (templateKind === "trace") {
+    return "Следы у дороги";
+  }
+
+  if (templateKind === "npc") {
+    return "Встреча на маршруте";
+  }
+
+  if (templateKind === "breakdown") {
+    return "Поломка снаряжения";
+  }
+
+  if (templateKind === "infophone") {
+    return "Сдвиг инфофона";
+  }
+
+  return "Сцена напряжения";
+}
+
+function buildEventTemplateDescription(
+  context: EventTemplateContext,
+  templateKind: EventTemplateKind,
+  severity: EventTemplateSeverity,
+) {
+  const pressureText =
+    severity === "heavy"
+      ? "Ситуация быстро становится опасной: промедление, шум или жадность могут ухудшить положение отряда."
+      : severity === "medium"
+        ? "Ситуация требует решения: можно пройти осторожно, рискнуть ради выгоды или потратить ресурс."
+        : "Ситуация выглядит небольшой, но может дать зацепку, ресурс или тревожный признак.";
+
+  if (templateKind === "threat") {
+    return [
+      "Впереди появляется признак угрозы: слишком свежие следы, странный шум, движение в стороне от маршрута или внезапная тишина.",
+      pressureText,
+    ].join("\n\n");
+  }
+
+  if (templateKind === "find") {
+    return [
+      "Отряд замечает место, где можно что-то подобрать, разобрать или проверить: обронённый груз, старый ящик, фрагмент механизма, след недавнего присутствия.",
+      pressureText,
+    ].join("\n\n");
+  }
+
+  if (templateKind === "trace") {
+    return [
+      "На земле, металле или растительности видны следы. Они могут принадлежать людям, чудовищу, беглецам, наёмникам или чему-то, что только притворяется знакомым.",
+      pressureText,
+    ].join("\n\n");
+  }
+
+  if (templateKind === "npc") {
+    return [
+      "На пути появляется человек или небольшая группа. Они выглядят уставшими, настороженными и не сразу готовы говорить правду.",
+      pressureText,
+    ].join("\n\n");
+  }
+
+  if (templateKind === "breakdown") {
+    return [
+      "Что-то идёт не так с вещами, грузом, оружием, переноской раненого, фонарём, креплением, тележкой или другим снаряжением.",
+      pressureText,
+    ].join("\n\n");
+  }
+
+  if (templateKind === "infophone") {
+    return [
+      "Место ощущается неправильно: звук глохнет, запахи становятся резче, мысли цепляются за чужие образы, а привычные ориентиры слегка плывут.",
+      pressureText,
+    ].join("\n\n");
+  }
+
+  if (context === "rest") {
+    return [
+      "Привал даёт отряду шанс перевести дыхание, обработать раны, распределить найденное и впервые спокойно заговорить после дороги.",
+      pressureText,
+    ].join("\n\n");
+  }
+
+  return [
+    "Сцена начинается с человеческого напряжения: кто-то просит помощи, скрывает правду, спорит, обвиняет или пытается использовать отряд.",
+    pressureText,
+  ].join("\n\n");
+}
+
+function buildEventTemplateMasterNotes(
+  context: EventTemplateContext,
+  templateKind: EventTemplateKind,
+  severity: EventTemplateSeverity,
+) {
+  const riskLine =
+    severity === "heavy"
+      ? "Цена провала высокая: Натиск +1, потеря ресурса, ранение, ухудшение отношений или появление преследователя."
+      : severity === "medium"
+        ? "Цена провала умеренная: расход времени, шум, потеря мелкого ресурса, осложнение следующей сцены."
+        : "Цена провала малая: тревожный признак, небольшая задержка, подозрение NPC или лёгкий расход.";
+
+  const contextLine =
+    context === "route"
+      ? "Контекст: маршрут. Важно дать выбор между скоростью, осторожностью и выгодой."
+      : context === "rest"
+        ? "Контекст: привал. Важно дать не только угрозу, но и человеческую сцену восстановления."
+        : context === "crash"
+          ? "Контекст: крушение. Любая находка или спасение должны конкурировать со временем, дымом, огнём и ранеными."
+          : context === "obscuria"
+            ? "Контекст: Обскурия. Не объясняй всё сразу, показывай признаки и последствия."
+            : "Контекст: форпост. Дави через подозрение, нехватку ресурсов, бюрократию и чужую память о поступках отряда.";
+
+  const kindLine =
+    templateKind === "threat"
+      ? "Вопрос сцены: обойти, проверить, вступить в контакт, устроить засаду или ускориться?"
+      : templateKind === "find"
+        ? "Вопрос сцены: забрать, оставить, вскрыть, потратить время, отдать NPC или скрыть от других?"
+        : templateKind === "trace"
+          ? "Вопрос сцены: идти по следу, отметить для позже, скрыть следы от себя или уйти другим маршрутом?"
+          : templateKind === "npc"
+            ? "Вопрос сцены: помочь, допросить, обменяться, бросить, взять с собой или использовать?"
+            : templateKind === "breakdown"
+              ? "Вопрос сцены: чинить сейчас, бросить, разобрать на детали, потратить ресурс или рискнуть дальше?"
+              : templateKind === "infophone"
+                ? "Вопрос сцены: идти через зону, обходить, включать Венцы, тратить время на проверку или принять риск?"
+                : "Вопрос сцены: кому верить, что обещать, чем заплатить и кто запомнит поступок?";
+
+  return [
+    contextLine,
+    kindLine,
+    "",
+    "Возможные проверки:",
+    "• Наблюдательность;",
+    "• Выживание;",
+    "• Следопытство;",
+    "• Первая помощь / Медицина;",
+    "• Ремонт / Устройства;",
+    "• Переговоры / Проницательность;",
+    "• Эхо и инфофон.",
+    "",
+    riskLine,
+    "",
+    "Возможные последствия:",
+    "• добавить запись в журнал;",
+    "• изменить отношение фракции;",
+    "• изменить Натиск;",
+    "• выдать ресурс экспедиции;",
+    "• создать локальную точку;",
+    "• открыть или скрыть следующее событие.",
+  ].join("\n");
+}
+
+function buildEventTemplate(
+  context: EventTemplateContext,
+  templateKind: EventTemplateKind,
+  severity: EventTemplateSeverity,
+): Partial<EventDraft> {
+  return {
+    title: getEventTemplateTitle(context, templateKind, severity),
+    category: getEventTemplateCategory(templateKind),
+    status: severity === "heavy" ? "hidden" : "active",
+    description: buildEventTemplateDescription(context, templateKind, severity),
+    masterNotes: buildEventTemplateMasterNotes(context, templateKind, severity),
+    isSecret: severity === "heavy" || templateKind === "threat" || templateKind === "infophone",
+  };
+}
 
 function getSceneStorageKey(target: EncounterTarget) {
   return `nri-table-scene-${target.kind}-${target.data.id}`;
@@ -141,6 +422,13 @@ export function EncounterModal({
     isSecret: true,
   });
 
+  const [eventTemplateContext, setEventTemplateContext] =
+    useState<EventTemplateContext>("route");
+  const [eventTemplateKind, setEventTemplateKind] =
+    useState<EventTemplateKind>("threat");
+  const [eventTemplateSeverity, setEventTemplateSeverity] =
+    useState<EventTemplateSeverity>("medium");
+
   const [isEventSaved, setIsEventSaved] = useState(false);
 
   const [shownPlayerMode, setShownPlayerMode] = useState<
@@ -170,8 +458,13 @@ export function EncounterModal({
       return;
     }
 
+    if (isPlayerMode && initialMode === "eventEdit") {
+      setMode("overview");
+      return;
+    }
+
     setMode(initialMode);
-  }, [target?.kind, target?.data.id, initialMode]);
+  }, [target?.kind, target?.data.id, initialMode, isPlayerMode]);
 
   useEffect(() => {
     return () => {
@@ -333,6 +626,16 @@ export function EncounterModal({
     }));
 
     setIsEventSaved(false);
+  }
+
+  function applyQuickEventTemplate() {
+    const template = buildEventTemplate(
+      eventTemplateContext,
+      eventTemplateKind,
+      eventTemplateSeverity,
+    );
+
+    updateEventDraft(template);
   }
 
   function createEventFromCurrentLocation() {
@@ -735,6 +1038,80 @@ export function EncounterModal({
               </div>
             ) : (
               <div className="event-edit-layout">
+                <section className="event-edit-card event-template-card">
+                  <p className="eyebrow">Быстрая заготовка</p>
+                  <h3>Собрать событие</h3>
+
+                  <div className="event-template-grid">
+                    <label className="event-field">
+                      Контекст
+                      <select
+                        value={eventTemplateContext}
+                        onChange={(event) =>
+                          setEventTemplateContext(
+                            event.target.value as EventTemplateContext,
+                          )
+                        }
+                      >
+                        {EVENT_TEMPLATE_CONTEXT_OPTIONS.map((option) => (
+                          <option key={option.value} value={option.value}>
+                            {option.label}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+
+                    <label className="event-field">
+                      Тип
+                      <select
+                        value={eventTemplateKind}
+                        onChange={(event) =>
+                          setEventTemplateKind(
+                            event.target.value as EventTemplateKind,
+                          )
+                        }
+                      >
+                        {EVENT_TEMPLATE_KIND_OPTIONS.map((option) => (
+                          <option key={option.value} value={option.value}>
+                            {option.label}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+
+                    <label className="event-field">
+                      Тяжесть
+                      <select
+                        value={eventTemplateSeverity}
+                        onChange={(event) =>
+                          setEventTemplateSeverity(
+                            event.target.value as EventTemplateSeverity,
+                          )
+                        }
+                      >
+                        {EVENT_TEMPLATE_SEVERITY_OPTIONS.map((option) => (
+                          <option key={option.value} value={option.value}>
+                            {option.label}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+
+                    <button
+                      className="secondary-button"
+                      type="button"
+                      onClick={applyQuickEventTemplate}
+                    >
+                      Заполнить заготовкой
+                    </button>
+                  </div>
+
+                  <p className="event-template-help">
+                    Заготовка перезапишет название, категорию, статус, описание,
+                    скрытость и заметки мастера. Иллюстрация не меняется.
+                  </p>
+                </section>
+
                 <section className="event-edit-card">
                   <p className="eyebrow">Событие</p>
                   <h3>Редактирование события</h3>
