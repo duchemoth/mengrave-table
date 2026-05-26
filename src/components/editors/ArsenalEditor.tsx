@@ -4,6 +4,7 @@ import type {
     ArsenalItem,
     ArsenalItemCategory,
     ArsenalItemSlot,
+    ArsenalResourceSubtype,
     ArsenalWeaponSubtype,
 } from "../../types/campaign";
 
@@ -66,6 +67,18 @@ const ARMOR_SUBTYPE_OPTIONS: {
         { value: "other", label: "Другое" },
     ];
 
+const RESOURCE_SUBTYPE_OPTIONS: {
+    value: ArsenalResourceSubtype;
+    label: string;
+}[] = [
+        { value: "supplies", label: "Припасы" },
+        { value: "fuel", label: "Топливо" },
+        { value: "ammo", label: "Боезапас" },
+        { value: "drink", label: "Питьё" },
+        { value: "materials", label: "Материалы" },
+        { value: "other", label: "Прочие ресурсы" },
+    ];
+
 function getWeaponSubtypeLabel(value: ArsenalWeaponSubtype | undefined) {
     return (
         WEAPON_SUBTYPE_OPTIONS.find((option) => option.value === value)?.label ??
@@ -77,6 +90,13 @@ function getArmorSubtypeLabel(value: ArsenalArmorSubtype | undefined) {
     return (
         ARMOR_SUBTYPE_OPTIONS.find((option) => option.value === value)?.label ??
         "Другое"
+    );
+}
+
+function getResourceSubtypeLabel(value: ArsenalResourceSubtype | undefined) {
+    return (
+        RESOURCE_SUBTYPE_OPTIONS.find((option) => option.value === value)?.label ??
+        "Прочие ресурсы"
     );
 }
 
@@ -109,6 +129,7 @@ function createArsenalItem(): ArsenalItem {
 
         weaponSubtype: undefined,
         armorSubtype: undefined,
+        resourceSubtype: undefined,
 
         description: "",
         rules: "",
@@ -230,6 +251,10 @@ export function ArsenalEditor({
             );
         }
 
+        if (item.category === "resource") {
+            return getResourceSubtypeLabel(item.resourceSubtype);
+        }
+
         return getArsenalCategoryLabel(item.category);
     }
 
@@ -240,6 +265,7 @@ export function ArsenalEditor({
                 slot: selectedItem?.slot === "smallWeapon" ? "smallWeapon" : "shoulderWeapon",
                 weaponSubtype: selectedItem?.weaponSubtype ?? "other",
                 armorSubtype: undefined,
+                resourceSubtype: undefined,
                 backpackSlotCount: undefined,
             });
             return;
@@ -251,6 +277,7 @@ export function ArsenalEditor({
                 slot: "torsoArmor",
                 weaponSubtype: undefined,
                 armorSubtype: selectedItem?.armorSubtype ?? "torso",
+                resourceSubtype: undefined,
                 backpackSlotCount: undefined,
             });
             return;
@@ -262,6 +289,7 @@ export function ArsenalEditor({
                 slot: "loadBearing",
                 weaponSubtype: undefined,
                 armorSubtype: undefined,
+                resourceSubtype: undefined,
                 quickSlotCount: selectedItem?.quickSlotCount ?? 2,
                 backpackSlotCount: undefined,
             });
@@ -274,8 +302,22 @@ export function ArsenalEditor({
                 slot: "backpack",
                 weaponSubtype: undefined,
                 armorSubtype: undefined,
+                resourceSubtype: undefined,
                 quickSlotCount: undefined,
                 backpackSlotCount: selectedItem?.backpackSlotCount ?? 6,
+            });
+            return;
+        }
+
+        if (category === "resource") {
+            updateItem({
+                category,
+                slot: "none",
+                weaponSubtype: undefined,
+                armorSubtype: undefined,
+                resourceSubtype: selectedItem?.resourceSubtype ?? "other",
+                quickSlotCount: undefined,
+                backpackSlotCount: undefined,
             });
             return;
         }
@@ -285,6 +327,7 @@ export function ArsenalEditor({
             slot: category === "protection" ? "protection" : "none",
             weaponSubtype: undefined,
             armorSubtype: undefined,
+            resourceSubtype: undefined,
             quickSlotCount: undefined,
             backpackSlotCount: undefined,
         });
@@ -549,6 +592,53 @@ export function ArsenalEditor({
                                                     </div>
                                                 );
                                             })
+                                        ) : group.key === "resource" ? (
+                                            RESOURCE_SUBTYPE_OPTIONS.map((subtype) => {
+                                                const subtypeItems = group.items.filter(
+                                                    (item) =>
+                                                        (item.resourceSubtype ?? "other") === subtype.value,
+                                                );
+
+                                                if (subtypeItems.length === 0) {
+                                                    return null;
+                                                }
+
+                                                const subtypeGroupKey = `${group.key}-${subtype.value}`;
+                                                const isSubtypeOpen =
+                                                    openSubtypeGroups[subtypeGroupKey] ?? false;
+
+                                                return (
+                                                    <div key={subtypeGroupKey} className="arsenal-subgroup">
+                                                        <button
+                                                            className="arsenal-subgroup-header"
+                                                            type="button"
+                                                            onClick={() => toggleSubtypeGroup(subtypeGroupKey)}
+                                                        >
+                                                            <span>
+                                                                {isSubtypeOpen ? "▼" : "▶"} {subtype.label}
+                                                            </span>
+
+                                                            <strong>{subtypeItems.length}</strong>
+                                                        </button>
+
+                                                        {isSubtypeOpen && (
+                                                            <div className="arsenal-group-items">
+                                                                {subtypeItems.map((item) => (
+                                                                    <button
+                                                                        key={item.id}
+                                                                        className={`arsenal-list-item ${selectedItem?.id === item.id ? "active" : ""}`}
+                                                                        type="button"
+                                                                        onClick={() => setSelectedItemId(item.id)}
+                                                                    >
+                                                                        <strong>{item.name}</strong>
+                                                                        <span>{getItemSubtypeLabel(item)}</span>
+                                                                    </button>
+                                                                ))}
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                );
+                                            })
                                         ) : (
                                             group.items.map((item) => (
                                                 <button
@@ -749,6 +839,26 @@ export function ArsenalEditor({
                                         }
                                     >
                                         {ARMOR_SUBTYPE_OPTIONS.map((option) => (
+                                            <option key={option.value} value={option.value}>
+                                                {option.label}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </label>
+                            )}
+
+                            {selectedItem.category === "resource" && (
+                                <label>
+                                    Подтип ресурса
+                                    <select
+                                        value={selectedItem.resourceSubtype ?? "other"}
+                                        onChange={(event) =>
+                                            updateItem({
+                                                resourceSubtype: event.target.value as ArsenalResourceSubtype,
+                                            })
+                                        }
+                                    >
+                                        {RESOURCE_SUBTYPE_OPTIONS.map((option) => (
                                             <option key={option.value} value={option.value}>
                                                 {option.label}
                                             </option>

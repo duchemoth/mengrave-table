@@ -88,6 +88,14 @@ export type ArsenalArmorSubtype =
   | "fullBody"
   | "other";
 
+export type ArsenalResourceSubtype =
+  | "supplies"
+  | "fuel"
+  | "ammo"
+  | "drink"
+  | "materials"
+  | "other";
+
 export type ArsenalItem = {
   id: string;
   name: string;
@@ -96,6 +104,7 @@ export type ArsenalItem = {
 
   weaponSubtype?: ArsenalWeaponSubtype;
   armorSubtype?: ArsenalArmorSubtype;
+  resourceSubtype?: ArsenalResourceSubtype;
 
   description: string;
   rules: string;

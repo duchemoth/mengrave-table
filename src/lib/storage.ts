@@ -4,6 +4,7 @@ import type {
   ArsenalItem,
   ArsenalItemCategory,
   ArsenalItemSlot,
+  ArsenalResourceSubtype,
   ArsenalWeaponSubtype,
   CharacterInventory,
   CharacterWallet,
@@ -344,6 +345,15 @@ const ARSENAL_ARMOR_SUBTYPES: ArsenalArmorSubtype[] = [
   "other",
 ];
 
+const ARSENAL_RESOURCE_SUBTYPES: ArsenalResourceSubtype[] = [
+  "supplies",
+  "fuel",
+  "ammo",
+  "drink",
+  "materials",
+  "other",
+];
+
 function normalizeArsenalSlot(slot: ArsenalItem["slot"] | undefined): ArsenalItemSlot {
   return slot && ARSENAL_ITEM_SLOTS.includes(slot) ? slot : "none";
 }
@@ -411,6 +421,14 @@ function normalizeArmorSubtype(
   return undefined;
 }
 
+function normalizeResourceSubtype(
+  value: ArsenalItem["resourceSubtype"] | undefined,
+): ArsenalResourceSubtype | undefined {
+  return value && ARSENAL_RESOURCE_SUBTYPES.includes(value)
+    ? value
+    : "other";
+}
+
 function normalizeQuickSlotCount(value: ArsenalItem["quickSlotCount"]) {
   if (value === 2 || value === 4 || value === 6) {
     return value;
@@ -440,6 +458,10 @@ function normalizeArsenalItem(item: Partial<ArsenalItem>): ArsenalItem {
       category === "weapon" ? normalizeWeaponSubtype(item.weaponSubtype) : undefined,
     armorSubtype:
       category === "armor" ? normalizeArmorSubtype(item.armorSubtype, slot) : undefined,
+    resourceSubtype:
+      category === "resource"
+        ? normalizeResourceSubtype(item.resourceSubtype)
+        : undefined,
 
     description: typeof item.description === "string" ? item.description : "",
     rules: typeof item.rules === "string" ? item.rules : "",
