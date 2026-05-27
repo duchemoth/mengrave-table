@@ -1503,6 +1503,38 @@ function App() {
     setEncounterTarget({ kind: "event", data: event });
   }
 
+  function handleEditEventEncounter(event: MapEvent) {
+    setEncounterInitialMode("eventEdit");
+    setEncounterTarget({ kind: "event", data: event });
+  }
+
+  function handleCompleteMapEvent(event: MapEvent) {
+    updateEvent({
+      ...event,
+      status: "completed",
+    });
+
+    addSystemJournalEntry({
+      type: "map",
+      title: "Событие завершено",
+      text: event.title,
+      details: "Событие отмечено как завершённое через контекстное меню карты.",
+      isHiddenFromPlayers: Boolean(event.isSecret),
+    });
+  }
+
+  function handleDeleteMapEventFromContext(event: MapEvent) {
+    const shouldDelete = window.confirm(
+      `Удалить событие «${event.title}»? Это действие нельзя отменить.`,
+    );
+
+    if (!shouldDelete) {
+      return;
+    }
+
+    handleDeleteEvent(event.id);
+  }
+
   function handleShowToPlayers(
     targetKind: "location" | "group" | "event",
     targetId: string,
@@ -2303,6 +2335,9 @@ function App() {
         onOpenLocationEncounter={handleOpenLocationEncounter}
         onOpenGroupEncounter={handleOpenGroupEncounter}
         onOpenEventEncounter={handleOpenEventEncounter}
+        onEditEventEncounter={handleEditEventEncounter}
+        onCompleteEvent={handleCompleteMapEvent}
+        onDeleteEvent={handleDeleteMapEventFromContext}
       />
 
       {!isCleanMapMode && (

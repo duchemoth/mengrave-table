@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { CSSProperties } from "react";
 import { useMapViewport } from "../hooks/useMapViewport";
 import type {
@@ -56,6 +56,9 @@ type MapViewProps = {
   onOpenLocationEncounter: (location: Location) => void;
   onOpenGroupEncounter: (group: MapGroup) => void;
   onOpenEventEncounter: (event: MapEvent) => void;
+  onEditEventEncounter: (event: MapEvent) => void;
+  onCompleteEvent: (event: MapEvent) => void;
+  onDeleteEvent: (event: MapEvent) => void;
 };
 
 function clamp(value: number) {
@@ -134,10 +137,19 @@ export function MapView({
   onClearRevealedAreas,
   onOpenGroupEncounter,
   onOpenEventEncounter,
+  onEditEventEncounter,
+  onCompleteEvent,
+  onDeleteEvent,
 }: MapViewProps) {
   const [draggedLocationId, setDraggedLocationId] = useState<string | null>(null);
   const [draggedGroupId, setDraggedGroupId] = useState<string | null>(null);
   const [draggedEventId, setDraggedEventId] = useState<string | null>(null);
+  const [eventMoveTargetId, setEventMoveTargetId] = useState<string | null>(null);
+  const [eventContextMenu, setEventContextMenu] = useState<{
+    event: MapEvent;
+    x: number;
+    y: number;
+  } | null>(null);
   const [isDraggingMarker, setIsDraggingMarker] = useState(false);
   const [didJustDragMarker, setDidJustDragMarker] = useState(false);
 
@@ -158,6 +170,24 @@ export function MapView({
     stopMapDrag,
     resetMapView,
   } = useMapViewport();
+
+  useEffect(() => {
+    function handleEscape(event: KeyboardEvent) {
+      if (event.key !== "Escape") {
+        return;
+      }
+
+      setEventMoveTargetId(null);
+      setEventContextMenu(null);
+    }
+
+    window.addEventListener("keydown", handleEscape);
+
+    return () => {
+      window.removeEventListener("keydown", handleEscape);
+    };
+  }, []);
+
 
   const isPlayerMode = userMode === "player";
 
@@ -223,26 +253,62 @@ export function MapView({
     setIsDraggingMarker(true);
   }
 
-  function startEventDrag(
+  function startEventDrag(event: React.MouseEvent<HTMLButtonElement>) {
+    event.stopPropagation();
+  }
+
+  function openEventContextMenu(
     event: React.MouseEvent<HTMLButtonElement>,
-    mapEventId: string,
+    mapEvent: MapEvent,
   ) {
-    if (event.button !== 0) {
-      return;
-    }
-
-    if (isPlanningRoute || isSuggestingRoute) {
-      return;
-    }
-
     if (userMode === "player") {
       return;
     }
 
+    event.preventDefault();
     event.stopPropagation();
-    didMoveMarkerRef.current = false;
-    setDraggedEventId(mapEventId);
-    setIsDraggingMarker(true);
+
+    setEventContextMenu({
+      event: mapEvent,
+      x: event.clientX,
+      y: event.clientY,
+    });
+
+    onSelectEvent(mapEvent.id);
+  }
+
+  function closeEventContextMenu() {
+    setEventContextMenu(null);
+  }
+
+  function openEventFromContext(mapEvent: MapEvent) {
+    closeEventContextMenu();
+    onSelectEvent(mapEvent.id);
+    onOpenEventEncounter(mapEvent);
+    onExitCleanMapMode();
+  }
+
+  function editEventFromContext(mapEvent: MapEvent) {
+    closeEventContextMenu();
+    onSelectEvent(mapEvent.id);
+    onEditEventEncounter(mapEvent);
+    onExitCleanMapMode();
+  }
+
+  function startMoveEventFromContext(mapEvent: MapEvent) {
+    closeEventContextMenu();
+    setEventMoveTargetId(mapEvent.id);
+    onSelectEvent(mapEvent.id);
+  }
+
+  function completeEventFromContext(mapEvent: MapEvent) {
+    closeEventContextMenu();
+    onCompleteEvent(mapEvent);
+  }
+
+  function deleteEventFromContext(mapEvent: MapEvent) {
+    closeEventContextMenu();
+    onDeleteEvent(mapEvent);
   }
 
   function handleMarkerMove(event: React.MouseEvent<HTMLDivElement>) {
@@ -327,11 +393,14 @@ export function MapView({
   }
 
   function handleMapClick(event: React.MouseEvent<HTMLDivElement>) {
+    closeEventContextMenu();
+
     if (userMode === "player" && !isSuggestingRoute) {
       return;
     }
 
     if (
+      !eventMoveTargetId &&
       !isPlacingEvent &&
       !isPlanningRoute &&
       !isSuggestingRoute &&
@@ -347,6 +416,12 @@ export function MapView({
     const y = clamp(((event.clientY - rect.top) / rect.height) * 100);
 
     event.stopPropagation();
+
+    if (eventMoveTargetId && userMode !== "player") {
+      onMoveEvent(eventMoveTargetId, x, y);
+      setEventMoveTargetId(null);
+      return;
+    }
 
     if (isSuggestingRoute) {
       onSuggestRouteAt(x, y);
@@ -427,13 +502,14 @@ export function MapView({
       >
         <div
           className={`map ${isDeveloperMode ? "map-editable" : ""} ${isPlacingEvent ? "map-placing-event" : ""
-            } ${isPlanningRoute ? "map-planning-route" : ""} ${isSuggestingRoute ? "map-suggesting-route" : ""} ${isRevealingFog ? "map-revealing-fog" : ""} ${isHidingRevealedArea ? "map-hiding-fog" : ""}`}
+            } ${eventMoveTargetId ? "map-moving-event" : ""} ${isPlanningRoute ? "map-planning-route" : ""} ${isSuggestingRoute ? "map-suggesting-route" : ""} ${isRevealingFog ? "map-revealing-fog" : ""} ${isHidingRevealedArea ? "map-hiding-fog" : ""}`}
           style={{
             transform: `translate(${offsetX}px, ${offsetY}px) scale(${scale})`,
             backgroundImage: `url("${globalMapImageUrl.trim() || "/map.jpg"}")`,
           }}
           onMouseDown={(event) => {
             if (
+              eventMoveTargetId ||
               isPlacingEvent ||
               isPlanningRoute ||
               isSuggestingRoute ||
@@ -448,6 +524,12 @@ export function MapView({
           {!isCleanMapMode && (
             <div className="map-label">
               Вольный Клинок · режим: {getModeTitle(userMode)}
+            </div>
+          )}
+
+          {!isCleanMapMode && eventMoveTargetId && (
+            <div className="map-hint">
+              Кликни по карте, чтобы переместить событие · Esc — отмена
             </div>
           )}
 
@@ -864,7 +946,8 @@ export function MapView({
                 <button
                   className={`map-event-token ${selectedEventId === mapEvent.id ? "selected" : ""
                     } ${isCompleted ? "completed" : ""}`}
-                  onMouseDown={(event) => startEventDrag(event, mapEvent.id)}
+                  onMouseDown={startEventDrag}
+                  onContextMenu={(event) => openEventContextMenu(event, mapEvent)}
                   onClick={(event) => {
                     if (isDraggingMarker || didJustDragMarker) return;
 
@@ -873,6 +956,7 @@ export function MapView({
                     }
 
                     event.stopPropagation();
+                    closeEventContextMenu();
                     onSelectEvent(mapEvent.id);
                     onOpenEventEncounter(mapEvent);
                     onExitCleanMapMode();
@@ -885,7 +969,8 @@ export function MapView({
                 <button
                   className={`map-event-label ${isCleanMapMode ? "hidden-in-clean-mode" : ""
                     }`}
-                  onMouseDown={(event) => startEventDrag(event, mapEvent.id)}
+                  onMouseDown={startEventDrag}
+                  onContextMenu={(event) => openEventContextMenu(event, mapEvent)}
                   onClick={(event) => {
                     if (isDraggingMarker || didJustDragMarker) return;
 
@@ -894,6 +979,7 @@ export function MapView({
                     }
 
                     event.stopPropagation();
+                    closeEventContextMenu();
                     onSelectEvent(mapEvent.id);
                     onOpenEventEncounter(mapEvent);
                     onExitCleanMapMode();
@@ -904,6 +990,60 @@ export function MapView({
               </div>
             );
           })}
+
+          {eventContextMenu && (
+            <div
+              className="map-event-context-menu"
+              style={{
+                left: eventContextMenu.x,
+                top: eventContextMenu.y,
+              }}
+              onMouseDown={(event) => event.stopPropagation()}
+              onClick={(event) => event.stopPropagation()}
+              onContextMenu={(event) => event.preventDefault()}
+            >
+              <div className="map-event-context-menu-title">
+                <span>Событие</span>
+                <strong>{eventContextMenu.event.title}</strong>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => openEventFromContext(eventContextMenu.event)}
+              >
+                Открыть
+              </button>
+
+              <button
+                type="button"
+                onClick={() => editEventFromContext(eventContextMenu.event)}
+              >
+                Редактировать
+              </button>
+
+              <button
+                type="button"
+                onClick={() => startMoveEventFromContext(eventContextMenu.event)}
+              >
+                Переместить
+              </button>
+
+              <button
+                type="button"
+                onClick={() => completeEventFromContext(eventContextMenu.event)}
+              >
+                Завершить
+              </button>
+
+              <button
+                className="danger"
+                type="button"
+                onClick={() => deleteEventFromContext(eventContextMenu.event)}
+              >
+                Удалить
+              </button>
+            </div>
+          )}
         </div>
       </div>
 
