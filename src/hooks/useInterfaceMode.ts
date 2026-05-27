@@ -1,8 +1,6 @@
 import { useState } from "react";
 import type { UserMode } from "../types/campaign";
 
-const DEVELOPER_PASSWORD = "550034";
-
 export function useInterfaceMode() {
   const isPlayerScreen =
     new URLSearchParams(window.location.search).get("view") === "player";
@@ -20,15 +18,6 @@ export function useInterfaceMode() {
   function changeMode(nextMode: UserMode) {
     if (isPlayerScreen) {
       return;
-    }
-
-    if (nextMode === "developer" && userMode !== "developer") {
-      const password = window.prompt("Введите пароль Эха");
-
-      if (password !== DEVELOPER_PASSWORD) {
-        window.alert("Неверный пароль");
-        return;
-      }
     }
 
     setUserMode(nextMode);

@@ -61,6 +61,8 @@ const ROUTE_SEGMENT_DISTANCE = 4;
 
 const ROUTE_AUTO_REVEAL_RADIUS = 4;
 
+const ECHO_ACCESS_PASSWORD = "550034";
+
 function normalizeJournalEntry(value: unknown): SessionJournalEntry | null {
   if (!value || typeof value !== "object" || Array.isArray(value)) {
     return null;
@@ -912,6 +914,10 @@ function App() {
 
   const [isDiceOpen, setIsDiceOpen] = useState(false);
 
+  const [isEchoUnlockOpen, setIsEchoUnlockOpen] = useState(false);
+  const [echoUnlockPassword, setEchoUnlockPassword] = useState("");
+  const [echoUnlockError, setEchoUnlockError] = useState("");
+
   const [referenceInitialArticleId, setReferenceInitialArticleId] =
     useState<string | null>(null);
 
@@ -962,6 +968,17 @@ function App() {
 
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
+      if (
+        event.ctrlKey &&
+        event.altKey &&
+        event.code === "KeyE" &&
+        !isKeyboardShortcutBlockedTarget(event.target)
+      ) {
+        event.preventDefault();
+        openEchoUnlock();
+        return;
+      }
+
       if (event.key === "Escape") {
         setIsPlacingEvent(false);
         setIsRevealingFog(false);
@@ -969,6 +986,7 @@ function App() {
         setIsPlanningRoute(false);
         setIsSuggestingRoute(false);
         setIsDiceOpen(false);
+        closeEchoUnlock();
       }
     }
 
@@ -977,7 +995,7 @@ function App() {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, []);
+  }, [userMode, isPlayerScreen]);
 
   useEffect(() => {
     if (isPlayerMode) {
@@ -1812,6 +1830,40 @@ function App() {
     return newEvent;
   }
 
+  function openEchoUnlock() {
+    if (isPlayerScreen) {
+      return;
+    }
+
+    if (userMode === "developer") {
+      changeMode("master");
+      return;
+    }
+
+    setEchoUnlockPassword("");
+    setEchoUnlockError("");
+    setIsEchoUnlockOpen(true);
+  }
+
+  function closeEchoUnlock() {
+    setIsEchoUnlockOpen(false);
+    setEchoUnlockPassword("");
+    setEchoUnlockError("");
+  }
+
+  function submitEchoUnlock(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    if (echoUnlockPassword !== ECHO_ACCESS_PASSWORD) {
+      setEchoUnlockError("Ключ не принят.");
+      setEchoUnlockPassword("");
+      return;
+    }
+
+    changeMode("developer");
+    closeEchoUnlock();
+  }
+
   function handleOpenPlayerScreen() {
     const playerUrl = new URL(window.location.href);
 
@@ -2264,6 +2316,46 @@ function App() {
         onEnableCleanMapMode={enableCleanMapMode}
         onRestoreInterface={restoreInterface}
       />
+
+      {isEchoUnlockOpen && (
+        <div className="echo-unlock-layer" role="presentation">
+          <form className="echo-unlock-card" onSubmit={submitEchoUnlock}>
+            <div className="echo-unlock-header">
+              <p className="eyebrow">Протокол доступа</p>
+              <h2>Эхо</h2>
+              <span>Введите ключ допуска</span>
+            </div>
+
+            <label className="echo-unlock-field">
+              Ключ
+              <input
+                autoFocus
+                type="password"
+                value={echoUnlockPassword}
+                onChange={(event) => {
+                  setEchoUnlockPassword(event.target.value);
+                  setEchoUnlockError("");
+                }}
+                placeholder="******"
+              />
+            </label>
+
+            {echoUnlockError && (
+              <p className="echo-unlock-error">{echoUnlockError}</p>
+            )}
+
+            <div className="echo-unlock-actions">
+              <button type="button" onClick={closeEchoUnlock}>
+                Отмена
+              </button>
+
+              <button className="primary" type="submit">
+                Подтвердить
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
 
       {!isPlayerMode && !isCleanMapMode && (
         <button

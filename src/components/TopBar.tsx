@@ -48,12 +48,15 @@ export function TopBar({
                 Мастер
               </button>
 
-              <button
-                className={`mode-toggle ${userMode === "developer" ? "active" : ""}`}
-                onClick={() => onChangeMode("developer")}
-              >
-                Эхо
-              </button>
+              {userMode === "developer" && (
+                <button
+                  className="mode-toggle mode-toggle-echo active"
+                  onClick={() => onChangeMode("master")}
+                  title="Выйти из режима Эха"
+                >
+                  Эхо
+                </button>
+              )}
             </div>
           )}
 

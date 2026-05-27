@@ -170,3 +170,131 @@
 .topbar-title h1 {
   font-size: clamp(24px, 2.4vw, 36px);
 }
+
+/* Hidden Echo access */
+
+.mode-toggle-echo {
+  border-color: rgba(109, 75, 120, 0.95);
+  color: #fff3cf;
+  background:
+    linear-gradient(180deg, rgba(70, 50, 77, 0.98), rgba(18, 10, 8, 0.98));
+}
+
+.echo-unlock-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 520;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background:
+    radial-gradient(circle at center, rgba(70, 50, 77, 0.18), transparent 42%),
+    rgba(18, 10, 8, 0.54);
+}
+
+.echo-unlock-card {
+  display: grid;
+  gap: 16px;
+  width: min(380px, calc(100vw - 48px));
+  border: 1px solid rgba(234, 216, 173, 0.28);
+  border-radius: 24px;
+  padding: 22px;
+  color: #fff3cf;
+  background:
+    linear-gradient(180deg, rgba(46, 23, 16, 0.96), rgba(18, 10, 8, 0.98));
+  box-shadow:
+    0 28px 90px rgba(0, 0, 0, 0.62),
+    inset 0 1px 0 rgba(255, 244, 210, 0.14);
+}
+
+.echo-unlock-header {
+  display: grid;
+  gap: 5px;
+  text-align: center;
+}
+
+.echo-unlock-header h2 {
+  margin: 0;
+  color: #fff3cf;
+  font-size: 34px;
+  line-height: 1;
+  text-shadow: 0 0 18px rgba(109, 75, 120, 0.72);
+}
+
+.echo-unlock-header span {
+  color: rgba(255, 243, 207, 0.7);
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.echo-unlock-field {
+  display: grid;
+  gap: 7px;
+  color: rgba(255, 243, 207, 0.74);
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.echo-unlock-field input {
+  width: 100%;
+  border: 1px solid rgba(234, 216, 173, 0.24);
+  border-radius: 14px;
+  padding: 12px 13px;
+  color: #fff3cf;
+  background: rgba(18, 10, 8, 0.72);
+  outline: none;
+  box-sizing: border-box;
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 16px;
+  font-weight: 900;
+  letter-spacing: 0.18em;
+}
+
+.echo-unlock-field input:focus {
+  border-color: rgba(215, 166, 90, 0.78);
+  box-shadow: 0 0 0 3px rgba(215, 166, 90, 0.12);
+}
+
+.echo-unlock-error {
+  margin: 0;
+  border: 1px solid rgba(124, 37, 34, 0.54);
+  border-radius: 14px;
+  padding: 9px 11px;
+  color: #ffd0c6;
+  background: rgba(124, 37, 34, 0.2);
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 900;
+  text-align: center;
+}
+
+.echo-unlock-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.echo-unlock-actions button {
+  border: 1px solid rgba(234, 216, 173, 0.2);
+  border-radius: 999px;
+  padding: 10px 12px;
+  color: #fff3cf;
+  background: rgba(90, 45, 34, 0.64);
+  cursor: pointer;
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 950;
+}
+
+.echo-unlock-actions button:hover {
+  border-color: rgba(215, 166, 90, 0.66);
+  background: rgba(90, 45, 34, 0.92);
+}
+
+.echo-unlock-actions button.primary {
+  border-color: rgba(109, 75, 120, 0.82);
+  background:
+    linear-gradient(180deg, rgba(70, 50, 77, 0.98), rgba(18, 10, 8, 0.98));
+}
