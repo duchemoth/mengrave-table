@@ -270,8 +270,8 @@ export function MapView({
 
     setEventContextMenu({
       event: mapEvent,
-      x: event.clientX,
-      y: event.clientY,
+      x: clamp(mapEvent.x + 2.4),
+      y: clamp(mapEvent.y - 1.2),
     });
 
     onSelectEvent(mapEvent.id);
@@ -995,8 +995,8 @@ export function MapView({
             <div
               className="map-event-context-menu"
               style={{
-                left: eventContextMenu.x,
-                top: eventContextMenu.y,
+                left: `${eventContextMenu.x}%`,
+                top: `${eventContextMenu.y}%`,
               }}
               onMouseDown={(event) => event.stopPropagation()}
               onClick={(event) => event.stopPropagation()}

@@ -851,8 +851,9 @@
 /* Map event context menu */
 
 .map-event-context-menu {
-  position: fixed;
+  position: absolute;
   z-index: 40;
+  translate: 0 -50%;
   display: grid;
   gap: 6px;
   width: 210px;

@@ -32,6 +32,7 @@ function getMapEventScale(event: MapEvent): MapEventScale {
 
 type EventStatusFilter = "all" | MapEventStatus;
 type EventCategoryFilter = "all" | MapEventCategory;
+type EventScaleFilter = "major" | "minor";
 
 type EventManagerProps = {
     events: MapEvent[];
@@ -55,14 +56,18 @@ export function EventManager({
     const [categoryFilter, setCategoryFilter] =
         useState<EventCategoryFilter>("all");
 
+    const [scaleFilter, setScaleFilter] = useState<EventScaleFilter>("major");
+
     const filteredEvents = events.filter((event) => {
+        const matchesScale = getMapEventScale(event) === scaleFilter;
+
         const matchesStatus =
             statusFilter === "all" || event.status === statusFilter;
 
         const matchesCategory =
             categoryFilter === "all" || event.category === categoryFilter;
 
-        return matchesStatus && matchesCategory;
+        return matchesScale && matchesStatus && matchesCategory;
     });
 
     const selectedEvent =
@@ -115,6 +120,36 @@ export function EventManager({
         <section className="panel editor-panel">
             <p className="eyebrow">Глобальная карта</p>
             <h2>События</h2>
+
+            <div className="event-scale-tabs">
+                <button
+                    className={`event-scale-tab ${scaleFilter === "major" ? "active" : ""}`}
+                    type="button"
+                    onClick={() => setScaleFilter("major")}
+                >
+                    Основные
+                    <span>
+                        {
+                            events.filter((event) => getMapEventScale(event) === "major")
+                                .length
+                        }
+                    </span>
+                </button>
+
+                <button
+                    className={`event-scale-tab ${scaleFilter === "minor" ? "active" : ""}`}
+                    type="button"
+                    onClick={() => setScaleFilter("minor")}
+                >
+                    Минорные
+                    <span>
+                        {
+                            events.filter((event) => getMapEventScale(event) === "minor")
+                                .length
+                        }
+                    </span>
+                </button>
+            </div>
 
             <div className="event-filter-tabs">
                 <button
@@ -225,7 +260,7 @@ export function EventManager({
                 </p>
             ) : filteredEvents.length === 0 ? (
                 <p className="editor-empty-text">
-                    В этом фильтре событий пока нет.
+                    В этой вкладке и фильтре событий пока нет.
                 </p>
             ) : (
                 <div className="event-list">
