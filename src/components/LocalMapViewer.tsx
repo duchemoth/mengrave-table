@@ -305,6 +305,17 @@ function hasText(value: string) {
     return value.trim().length > 0;
 }
 
+function shouldShowKeySceneFields(point: LocalMapPoint) {
+    return (
+        point.isKeyScene ||
+        hasText(point.stakes) ||
+        hasText(point.choices) ||
+        hasText(point.findings) ||
+        hasText(point.threat) ||
+        hasText(point.consequences)
+    );
+}
+
 export function LocalMapViewer({
     title,
     storageKey,
@@ -925,73 +936,83 @@ export function LocalMapViewer({
                                     />
                                 </label>
 
-                                <div className="local-map-key-scene-card">
-                                    <div className="local-map-key-scene-header">
-                                        <div>
-                                            <p className="eyebrow">Структура сцены</p>
-                                            <h4>Ставка, выбор, последствия</h4>
+                                {shouldShowKeySceneFields(selectedPoint) ? (
+                                    <div className="local-map-key-scene-card">
+                                        <div className="local-map-key-scene-header">
+                                            <div>
+                                                <p className="eyebrow">Структура сцены</p>
+                                                <h4>Ставка, выбор, последствия</h4>
+                                            </div>
+
+                                            <span>
+                                                {selectedPoint.isKeyScene ? "Ключевая" : "Заполнена"}
+                                            </span>
                                         </div>
 
+                                        <label className="local-map-field">
+                                            Ставка
+                                            <textarea
+                                                value={selectedPoint.stakes}
+                                                onChange={(event) =>
+                                                    updateSelectedPoint({ stakes: event.target.value })
+                                                }
+                                                placeholder="Что здесь можно выиграть, потерять или изменить?"
+                                            />
+                                        </label>
+
+                                        <label className="local-map-field">
+                                            Варианты действий
+                                            <textarea
+                                                value={selectedPoint.choices}
+                                                onChange={(event) =>
+                                                    updateSelectedPoint({ choices: event.target.value })
+                                                }
+                                                placeholder="Какие решения доступны: спасать, вскрывать, бросить, рискнуть, торговаться..."
+                                            />
+                                        </label>
+
+                                        <label className="local-map-field">
+                                            Находки / улики
+                                            <textarea
+                                                value={selectedPoint.findings}
+                                                onChange={(event) =>
+                                                    updateSelectedPoint({ findings: event.target.value })
+                                                }
+                                                placeholder="Что можно найти: предметы, следы, свидетельства, ресурсы, зацепки..."
+                                            />
+                                        </label>
+
+                                        <label className="local-map-field">
+                                            Угроза / давление
+                                            <textarea
+                                                value={selectedPoint.threat}
+                                                onChange={(event) =>
+                                                    updateSelectedPoint({ threat: event.target.value })
+                                                }
+                                                placeholder="Что ухудшается со временем, при шуме, провале, жадности или промедлении?"
+                                            />
+                                        </label>
+
+                                        <label className="local-map-field">
+                                            Последствия
+                                            <textarea
+                                                value={selectedPoint.consequences}
+                                                onChange={(event) =>
+                                                    updateSelectedPoint({ consequences: event.target.value })
+                                                }
+                                                placeholder="Что изменится после решения: кто выжил, что сгорело, кто запомнил, что стало недоступно..."
+                                            />
+                                        </label>
+                                    </div>
+                                ) : (
+                                    <div className="local-map-key-scene-placeholder">
+                                        <strong>Обычная точка</strong>
                                         <span>
-                                            {selectedPoint.isKeyScene ? "Ключевая" : "Обычная"}
+                                            Включи “Ключевая сцена / выбор”, если у точки есть ставка,
+                                            варианты действий, находки, угроза или последствия.
                                         </span>
                                     </div>
-
-                                    <label className="local-map-field">
-                                        Ставка
-                                        <textarea
-                                            value={selectedPoint.stakes}
-                                            onChange={(event) =>
-                                                updateSelectedPoint({ stakes: event.target.value })
-                                            }
-                                            placeholder="Что здесь можно выиграть, потерять или изменить?"
-                                        />
-                                    </label>
-
-                                    <label className="local-map-field">
-                                        Варианты действий
-                                        <textarea
-                                            value={selectedPoint.choices}
-                                            onChange={(event) =>
-                                                updateSelectedPoint({ choices: event.target.value })
-                                            }
-                                            placeholder="Какие решения доступны: спасать, вскрывать, бросить, рискнуть, торговаться..."
-                                        />
-                                    </label>
-
-                                    <label className="local-map-field">
-                                        Находки / улики
-                                        <textarea
-                                            value={selectedPoint.findings}
-                                            onChange={(event) =>
-                                                updateSelectedPoint({ findings: event.target.value })
-                                            }
-                                            placeholder="Что можно найти: предметы, следы, свидетельства, ресурсы, зацепки..."
-                                        />
-                                    </label>
-
-                                    <label className="local-map-field">
-                                        Угроза / давление
-                                        <textarea
-                                            value={selectedPoint.threat}
-                                            onChange={(event) =>
-                                                updateSelectedPoint({ threat: event.target.value })
-                                            }
-                                            placeholder="Что ухудшается со временем, при шуме, провале, жадности или промедлении?"
-                                        />
-                                    </label>
-
-                                    <label className="local-map-field">
-                                        Последствия
-                                        <textarea
-                                            value={selectedPoint.consequences}
-                                            onChange={(event) =>
-                                                updateSelectedPoint({ consequences: event.target.value })
-                                            }
-                                            placeholder="Что изменится после решения: кто выжил, что сгорело, кто запомнил, что стало недоступно..."
-                                        />
-                                    </label>
-                                </div>
+                                )}
 
                                 <label className="local-map-field">
                                     Целевая подкарта
