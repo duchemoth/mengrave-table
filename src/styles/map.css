@@ -32,7 +32,7 @@
   transition: transform 80ms linear;
   border: 2px solid rgba(36, 26, 18, 0.42);
   border-radius: 28px;
-  background-image: url("/map.jpg");
+  background-image: url("/mengrave-table/map.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;

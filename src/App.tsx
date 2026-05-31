@@ -47,7 +47,7 @@ import type {
 
 const MASTER_NOTES_STORAGE_KEY = "nri-table-master-notes";
 const GLOBAL_MAP_STORAGE_KEY = "nri-table-global-map";
-const DEFAULT_GLOBAL_MAP_IMAGE_URL = "/map.jpg";
+const DEFAULT_GLOBAL_MAP_IMAGE_URL = `${import.meta.env.BASE_URL}map.jpg`;
 
 const PLAYER_PRESENTATION_STORAGE_KEY = "nri-table-player-presentation";
 
@@ -1317,7 +1317,7 @@ function App() {
     }
 
     try {
-      const response = await fetch("/campaigns/demo-campaign.json", {
+      const response = await fetch(`${import.meta.env.BASE_URL}campaigns/demo-campaign.json`, {
         cache: "no-store",
       });
 

@@ -52,29 +52,33 @@
 /* Main menu illustrated background */
 
 .campaign-start-menu {
-    position: fixed;
-    inset: 0;
-    z-index: 500;
-    display: grid;
-    place-items: center;
-    overflow: hidden;
-    padding: 24px;
-    background:
-        linear-gradient(90deg,
-            rgba(18, 10, 8, 0.56) 0%,
-            rgba(18, 10, 8, 0.18) 28%,
-            rgba(18, 10, 8, 0.08) 50%,
-            rgba(18, 10, 8, 0.18) 72%,
-            rgba(18, 10, 8, 0.56) 100%),
-        radial-gradient(ellipse at center,
-            rgba(18, 10, 8, 0.08) 0%,
-            rgba(18, 10, 8, 0.18) 50%,
-            rgba(18, 10, 8, 0.62) 100%),
-        url("/images/menu/main-menu-bg.png");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    filter: none;
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  padding: 24px;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(18, 10, 8, 0.56) 0%,
+      rgba(18, 10, 8, 0.18) 28%,
+      rgba(18, 10, 8, 0.08) 50%,
+      rgba(18, 10, 8, 0.18) 72%,
+      rgba(18, 10, 8, 0.56) 100%
+    ),
+    radial-gradient(
+      ellipse at center,
+      rgba(18, 10, 8, 0.08) 0%,
+      rgba(18, 10, 8, 0.18) 50%,
+      rgba(18, 10, 8, 0.62) 100%
+    ),
+    url("/mengrave-table/images/menu/main-menu-bg.webp");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  filter: none;
 }
 
 .campaign-start-menu::before {
