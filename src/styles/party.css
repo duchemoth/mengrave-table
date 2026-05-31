@@ -472,3 +472,316 @@
 .bottom-panel-tab-content .party-status-list::-webkit-scrollbar {
   display: none;
 }
+
+/* Party attachments */
+
+.party-add-attachment-button,
+.party-attachment-edit-button {
+  border: 1px solid rgba(36, 26, 18, 0.24);
+  border-radius: 999px;
+  padding: 7px 9px;
+  color: #fff3cf;
+  background: linear-gradient(180deg, #5a2d22, var(--leather));
+  font-size: 11px;
+  font-weight: 900;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.party-status-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.party-add-attachment-button {
+  padding: 7px 10px;
+}
+
+.party-add-attachment-button:hover,
+.party-attachment-edit-button:hover {
+  filter: brightness(1.08);
+}
+
+.party-attachment-card {
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
+  gap: 10px;
+  flex: 0 0 310px;
+  width: 310px;
+  min-height: 355px;
+  max-height: 375px;
+  scroll-snap-align: start;
+  border: 1px solid rgba(124, 37, 34, 0.38);
+  border-radius: 20px;
+  padding: 14px;
+  overflow: hidden;
+  background:
+    linear-gradient(180deg,
+      rgba(255, 244, 210, 0.42),
+      rgba(124, 37, 34, 0.12));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 244, 210, 0.24),
+    0 10px 22px rgba(18, 10, 8, 0.18);
+}
+
+.party-attachment-empty-card {
+  border-style: dashed;
+  opacity: 0.9;
+}
+
+.party-attachment-eyebrow {
+  margin: 0 0 4px;
+  color: var(--blood);
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.party-attachment-card-main {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+}
+
+.party-attachment-icon {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border: 1px solid rgba(36, 26, 18, 0.24);
+  border-radius: 12px;
+  color: #fff3cf;
+  background: linear-gradient(135deg, #3a2118, #120a08);
+  font-weight: 900;
+}
+
+.party-attachment-card h5 {
+  overflow: hidden;
+  margin: 0;
+  color: var(--ink);
+  font-size: 14px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.party-attachment-card p {
+  overflow: hidden;
+  margin: 3px 0 0;
+  color: var(--ink-soft);
+  font-size: 11px;
+  font-weight: 800;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.party-attachment-meta,
+.party-attachment-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.party-attachment-meta span,
+.party-attachment-tags span {
+  border: 1px solid rgba(36, 26, 18, 0.14);
+  border-radius: 999px;
+  padding: 4px 7px;
+  color: var(--ink-soft);
+  background: rgba(255, 244, 210, 0.4);
+  font-size: 10px;
+  font-weight: 900;
+}
+
+.party-attachment-edit-button {
+  justify-self: stretch;
+}
+
+/* Attachment modal */
+
+.attachment-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 900;
+  display: grid;
+  place-items: center;
+  padding: 22px;
+  background: rgba(18, 10, 8, 0.42);
+}
+
+.attachment-modal {
+  width: min(760px, calc(100vw - 44px));
+  max-height: min(86vh, 820px);
+  overflow: auto;
+  display: grid;
+  gap: 12px;
+  border: 1px solid rgba(234, 216, 173, 0.34);
+  border-radius: 24px;
+  padding: 16px;
+  background:
+    linear-gradient(135deg, rgba(234, 216, 173, 0.98), rgba(216, 195, 154, 0.98));
+  box-shadow: 0 28px 90px rgba(0, 0, 0, 0.5);
+}
+
+.attachment-modal-header,
+.attachment-modal-actions {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.attachment-modal-header h3 {
+  margin: 0;
+  color: var(--ink);
+  font-size: 26px;
+  line-height: 1;
+}
+
+.attachment-modal-close {
+  border: 1px solid rgba(36, 26, 18, 0.24);
+  border-radius: 999px;
+  width: 34px;
+  height: 34px;
+  color: var(--ink);
+  background: rgba(255, 244, 210, 0.5);
+  cursor: pointer;
+  font-size: 20px;
+  font-weight: 900;
+}
+
+.attachment-form-grid,
+.attachment-rating-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.attachment-field {
+  display: grid;
+  gap: 6px;
+  color: var(--ink-soft);
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.attachment-field input,
+.attachment-field select,
+.attachment-field textarea {
+  width: 100%;
+  border: 1px solid rgba(36, 26, 18, 0.24);
+  border-radius: 12px;
+  padding: 9px 11px;
+  color: var(--ink);
+  background: rgba(255, 244, 210, 0.58);
+  outline: none;
+  font: 800 12px/1.4 Inter, system-ui, sans-serif;
+}
+
+.attachment-field textarea {
+  min-height: 88px;
+  resize: vertical;
+}
+
+.attachment-toggle-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.attachment-toggle-row label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid rgba(36, 26, 18, 0.16);
+  border-radius: 999px;
+  padding: 7px 10px;
+  color: var(--ink-soft);
+  background: rgba(255, 244, 210, 0.36);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.attachment-rating-field {
+  display: grid;
+  gap: 8px;
+  border: 1px solid rgba(36, 26, 18, 0.16);
+  border-radius: 16px;
+  padding: 10px;
+  background: rgba(255, 244, 210, 0.32);
+}
+
+.attachment-rating-field strong,
+.attachment-tags-field strong {
+  display: block;
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.attachment-rating-field small {
+  display: block;
+  margin-top: 3px;
+  color: var(--ink-soft);
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.attachment-rating-buttons,
+.attachment-tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.attachment-rating-buttons button,
+.attachment-tag-list button {
+  border: 1px solid rgba(36, 26, 18, 0.18);
+  border-radius: 999px;
+  padding: 6px 9px;
+  color: var(--ink-soft);
+  background: rgba(255, 244, 210, 0.42);
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.attachment-rating-buttons button.active,
+.attachment-tag-list button.active {
+  border-color: rgba(124, 37, 34, 0.5);
+  color: #fff3cf;
+  background: linear-gradient(180deg, #5a2d22, var(--leather));
+}
+
+.attachment-tags-field {
+  display: grid;
+  gap: 8px;
+}
+
+.attachment-modal-actions {
+  justify-content: end;
+}
+
+@media (max-width: 1000px) {
+  .party-operational-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .party-attachments-panel {
+    height: auto;
+    max-height: 260px;
+  }
+}
+
+@media (max-width: 760px) {
+
+  .attachment-form-grid,
+  .attachment-rating-grid {
+    grid-template-columns: 1fr;
+  }
+}

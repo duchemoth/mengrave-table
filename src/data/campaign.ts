@@ -111,6 +111,8 @@ export const campaignData: CampaignData = {
 
   events: [],
 
+  attachments: [],
+
   characters: [],
 
   referenceArticles: [],

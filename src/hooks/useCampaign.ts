@@ -4,6 +4,7 @@ import type {
   ArsenalItem,
   CampaignStart,
   Location,
+  MapAttachment,
   MapEvent,
   MapGroup,
   PlayerCharacter,
@@ -12,6 +13,7 @@ import type {
 } from "../types/campaign";
 import { normalizeLocation, normalizeQuest } from "../lib/campaignNormalize";
 import {
+  ATTACHMENTS_STORAGE_KEY,
   CHARACTERS_STORAGE_KEY,
   REFERENCE_ARTICLES_STORAGE_KEY,
   EVENTS_STORAGE_KEY,
@@ -21,6 +23,7 @@ import {
   LOCATIONS_STORAGE_KEY,
   NPCS_STORAGE_KEY,
   QUESTS_STORAGE_KEY,
+  loadSavedAttachments,
   loadSavedCharacters,
   loadSavedReferenceArticles,
   loadSavedEvents,
@@ -28,6 +31,7 @@ import {
   loadSavedLocations,
   loadSavedQuests,
   loadSavedTextList,
+  normalizeMapAttachment,
   saveToStorage,
   createEmptyInventory,
   createEmptyWallet,
@@ -38,6 +42,8 @@ export function useCampaign() {
   const [locations, setLocations] = useState<Location[]>(loadSavedLocations);
   const [groups, setGroups] = useState<MapGroup[]>(loadSavedGroups);
   const [events, setEvents] = useState<MapEvent[]>(loadSavedEvents);
+  const [attachments, setAttachments] =
+    useState<MapAttachment[]>(loadSavedAttachments);
   const [characters, setCharacters] =
     useState<PlayerCharacter[]>(loadSavedCharacters);
   const [quests, setQuests] = useState<Quest[]>(loadSavedQuests);
@@ -67,6 +73,10 @@ export function useCampaign() {
   useEffect(() => {
     saveToStorage(EVENTS_STORAGE_KEY, events);
   }, [events]);
+
+  useEffect(() => {
+    saveToStorage(ATTACHMENTS_STORAGE_KEY, attachments);
+  }, [attachments]);
 
   useEffect(() => {
     saveToStorage(CHARACTERS_STORAGE_KEY, characters);
@@ -180,6 +190,31 @@ export function useCampaign() {
     );
   }
 
+  function createAttachment(attachment: Omit<MapAttachment, "id">) {
+    const newAttachment: MapAttachment = {
+      ...attachment,
+      id: `attachment-${Date.now()}`,
+    };
+
+    setAttachments((currentAttachments) => [...currentAttachments, newAttachment]);
+
+    return newAttachment;
+  }
+
+  function updateAttachment(updatedAttachment: MapAttachment) {
+    setAttachments((currentAttachments) =>
+      currentAttachments.map((attachment) =>
+        attachment.id === updatedAttachment.id ? updatedAttachment : attachment,
+      ),
+    );
+  }
+
+  function deleteAttachment(attachmentId: string) {
+    setAttachments((currentAttachments) =>
+      currentAttachments.filter((attachment) => attachment.id !== attachmentId),
+    );
+  }
+
   function exportCampaign(extraCampaignData: Record<string, unknown> = {}) {
     const archiveData = {
       version: 2,
@@ -189,6 +224,7 @@ export function useCampaign() {
         locations,
         groups,
         events,
+        attachments,
         characters,
         referenceArticles,
         quests,
@@ -220,6 +256,7 @@ export function useCampaign() {
         locations?: Location[];
         groups?: MapGroup[];
         events?: MapEvent[];
+        attachments?: MapAttachment[];
         revealedAreas?: unknown[];
         masterNotes?: unknown;
         globalMap?: unknown;
@@ -242,6 +279,7 @@ export function useCampaign() {
             locations?: Location[];
             groups?: MapGroup[];
             events?: MapEvent[];
+            attachments?: MapAttachment[];
             characters?: PlayerCharacter[];
             referenceArticles?: ReferenceArticle[];
             quests?: unknown[];
@@ -300,6 +338,16 @@ export function useCampaign() {
           );
         }
 
+        if (Array.isArray(parsedData.campaign?.attachments)) {
+          setAttachments(
+            parsedData.campaign.attachments.map((attachment, index) =>
+              normalizeMapAttachment(attachment, index),
+            ),
+          );
+        } else {
+          setAttachments([]);
+        }
+
         if (Array.isArray(parsedData.campaign?.characters)) {
           setCharacters(parsedData.campaign.characters);
         }
@@ -339,6 +387,7 @@ export function useCampaign() {
     locations,
     groups,
     events,
+    attachments,
     characters,
     referenceArticles,
     quests,
@@ -367,6 +416,10 @@ export function useCampaign() {
     updateEvent,
     createEvent,
     deleteEvent,
+
+    createAttachment,
+    updateAttachment,
+    deleteAttachment,
 
     createCharacter,
     updateCharacter,

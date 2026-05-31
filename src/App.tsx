@@ -41,6 +41,7 @@ import type {
   CampaignRelationsState,
   CampaignStart,
   Location,
+  MapAttachment,
   MapEvent,
   MapGroup,
 } from "./types/campaign";
@@ -674,6 +675,7 @@ const PLAYER_SCREEN_SYNC_KEYS = [
   "nri-table-locations",
   "nri-table-groups",
   "nri-table-events",
+  "nri-table-attachments",
   "nri-table-characters",
   "nri-table-reference-articles",
   "nri-table-quests",
@@ -798,6 +800,7 @@ function App() {
     locations,
     groups,
     events,
+    attachments,
     characters,
     referenceArticles,
     quests,
@@ -809,14 +812,17 @@ function App() {
     updateLocation,
     updateGroup,
     updateEvent,
+    updateAttachment,
     createGroup,
     createEvent,
+    createAttachment,
     createCharacter,
     createReferenceArticle,
     updateCharacter,
     updateReferenceArticle,
     deleteGroup,
     deleteEvent,
+    deleteAttachment,
     deleteCharacter,
     deleteReferenceArticle,
     deleteLocation,
@@ -847,6 +853,9 @@ function App() {
   const [selectedGroupId, setSelectedGroupId] = useState<string | null>(null);
   const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
   const [isPlacingEvent, setIsPlacingEvent] = useState(false);
+
+  const [requestedAttachmentEditorId, setRequestedAttachmentEditorId] =
+    useState<string | null>(null);
 
   const [isPlanningRoute, setIsPlanningRoute] = useState(false);
 
@@ -1098,6 +1107,14 @@ function App() {
     }
 
     return !event.isSecret && event.status !== "hidden";
+  });
+
+  const visibleAttachments = attachments.filter((attachment) => {
+    if (!isPlayerMode) {
+      return true;
+    }
+
+    return !attachment.isSecret && attachment.isVisibleToPlayers;
   });
 
   const dossierArticles = referenceArticles.filter(
@@ -1451,6 +1468,88 @@ function App() {
       x,
       y,
     });
+  }
+
+  function handleCreateAttachment(attachment: Omit<MapAttachment, "id">) {
+    createAttachment(attachment);
+  }
+
+  function handleUpdateAttachment(attachment: MapAttachment) {
+    updateAttachment(attachment);
+  }
+
+  function handleDeleteAttachment(attachmentId: string) {
+    const attachment = attachments.find((currentAttachment) => {
+      return currentAttachment.id === attachmentId;
+    });
+
+    if (!attachment) {
+      return;
+    }
+
+    const shouldDelete = window.confirm(
+      `Удалить сопровождение «${attachment.title}»? Это действие нельзя отменить.`,
+    );
+
+    if (!shouldDelete) {
+      return;
+    }
+
+    deleteAttachment(attachmentId);
+  }
+
+  function handleEditAttachmentFromMap(attachment: MapAttachment) {
+    setActiveBottomPanelTab("party");
+
+    if (!isBottomDrawerOpen) {
+      toggleBottomDrawer();
+    }
+
+    setRequestedAttachmentEditorId(attachment.id);
+  }
+
+  function handleLeaveAttachmentHereFromMap(
+    attachment: MapAttachment,
+    x: number,
+    y: number,
+  ) {
+    updateAttachment({
+      ...attachment,
+      attachedToGroupId: null,
+      x,
+      y,
+    });
+  }
+
+  function handleAttachAttachmentToPlayersFromMap(attachment: MapAttachment) {
+    const playerGroup = groups.find((group) => group.faction === "players");
+
+    if (!playerGroup) {
+      window.alert("Группа Вольного Клинка не найдена.");
+      return;
+    }
+
+    updateAttachment({
+      ...attachment,
+      attachedToGroupId: playerGroup.id,
+      x: playerGroup.x,
+      y: playerGroup.y,
+      offsetX: attachment.offsetX || 1.35,
+      offsetY: attachment.offsetY || 1.15,
+    });
+  }
+
+  function handleToggleAttachmentPlayerVisibilityFromMap(
+    attachment: MapAttachment,
+  ) {
+    updateAttachment({
+      ...attachment,
+      isVisibleToPlayers: !attachment.isVisibleToPlayers,
+    });
+  }
+
+  function handleDeleteAttachmentFromMap(attachment: MapAttachment) {
+    handleDeleteAttachment(attachment.id);
   }
 
   function applyCampaignStart(start: CampaignStart) {
@@ -2391,6 +2490,7 @@ function App() {
         locations={visibleLocations}
         groups={visibleGroups}
         events={visibleEvents}
+        attachments={visibleAttachments}
         globalMapImageUrl={globalMapImageUrl}
         selectedLocationId={selectedLocationId}
         selectedGroupId={selectedGroupId}
@@ -2430,6 +2530,13 @@ function App() {
         onEditEventEncounter={handleEditEventEncounter}
         onCompleteEvent={handleCompleteMapEvent}
         onDeleteEvent={handleDeleteMapEventFromContext}
+        onEditAttachment={handleEditAttachmentFromMap}
+        onLeaveAttachmentHere={handleLeaveAttachmentHereFromMap}
+        onAttachAttachmentToPlayers={handleAttachAttachmentToPlayersFromMap}
+        onToggleAttachmentPlayerVisibility={
+          handleToggleAttachmentPlayerVisibilityFromMap
+        }
+        onDeleteAttachment={handleDeleteAttachmentFromMap}
       />
 
       {!isCleanMapMode && (
@@ -2490,7 +2597,15 @@ function App() {
                 <PartyStatusPanel
                   characters={visibleCharacters}
                   arsenalItems={visibleArsenalItems}
+                  groups={groups}
+                  attachments={visibleAttachments}
+                  canEdit={!isPlayerMode}
+                  requestedAttachmentEditorId={requestedAttachmentEditorId}
+                  onAttachmentEditorRequestHandled={() => setRequestedAttachmentEditorId(null)}
                   onOpenCharacter={handleOpenCharacterSheet}
+                  onCreateAttachment={handleCreateAttachment}
+                  onUpdateAttachment={handleUpdateAttachment}
+                  onDeleteAttachment={handleDeleteAttachment}
                 />
               )}
 

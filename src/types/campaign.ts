@@ -211,6 +211,7 @@ export type CampaignData = {
   locations: Location[];
   groups: MapGroup[];
   events: MapEvent[];
+  attachments: MapAttachment[];
   characters: PlayerCharacter[];
   referenceArticles: ReferenceArticle[];
   quests: Quest[];
@@ -275,6 +276,43 @@ export type MapEvent = {
   y: number;
   isSecret: boolean;
   scale?: MapEventScale;
+};
+
+export type MapAttachmentKind =
+  | "survivors"
+  | "wounded"
+  | "cargo"
+  | "cart"
+  | "vehicle"
+  | "prisoners"
+  | "dangerous"
+  | "device"
+  | "other";
+
+export type MapAttachment = {
+  id: string;
+  title: string;
+
+  kind: MapAttachmentKind;
+  status: string;
+  tagIds: string[];
+
+  description: string;
+  masterNotes: string;
+  imageUrl: string;
+
+  x: number;
+  y: number;
+
+  isSecret: boolean;
+  isVisibleToPlayers: boolean;
+
+  attachedToGroupId: string | null;
+  offsetX: number;
+  offsetY: number;
+
+  burden: number;
+  risk: number;
 };
 
 export type CharacterMass = "deficit" | "normal" | "excess";
@@ -435,6 +473,7 @@ export type ReferenceVisibility = "players" | "master" | "echo";
 
 export type ReferenceSection =
   | "rules"
+  | "campaign"
   | "lore"
   | "bestiary"
   | "equipment"

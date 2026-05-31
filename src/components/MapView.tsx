@@ -1,8 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import type { CSSProperties } from "react";
 import { useMapViewport } from "../hooks/useMapViewport";
+import { getAttachmentKindConfig, getAttachmentStatusLabel } from "../data/attachments";
 import type {
   Location,
+  MapAttachment,
   MapEvent,
   MapEventScale,
   MapGroup,
@@ -20,6 +22,7 @@ type MapViewProps = {
   locations: Location[];
   groups: MapGroup[];
   events: MapEvent[];
+  attachments: MapAttachment[];
   globalMapImageUrl: string;
   selectedLocationId: string;
   selectedGroupId: string | null;
@@ -59,6 +62,12 @@ type MapViewProps = {
   onEditEventEncounter: (event: MapEvent) => void;
   onCompleteEvent: (event: MapEvent) => void;
   onDeleteEvent: (event: MapEvent) => void;
+
+  onEditAttachment: (attachment: MapAttachment) => void;
+  onLeaveAttachmentHere: (attachment: MapAttachment, x: number, y: number) => void;
+  onAttachAttachmentToPlayers: (attachment: MapAttachment) => void;
+  onToggleAttachmentPlayerVisibility: (attachment: MapAttachment) => void;
+  onDeleteAttachment: (attachment: MapAttachment) => void;
 };
 
 function clamp(value: number) {
@@ -101,6 +110,7 @@ export function MapView({
   locations,
   groups,
   events,
+  attachments,
   globalMapImageUrl,
   selectedLocationId,
   selectedGroupId,
@@ -140,6 +150,11 @@ export function MapView({
   onEditEventEncounter,
   onCompleteEvent,
   onDeleteEvent,
+  onEditAttachment,
+  onLeaveAttachmentHere,
+  onAttachAttachmentToPlayers,
+  onToggleAttachmentPlayerVisibility,
+  onDeleteAttachment,
 }: MapViewProps) {
   const [draggedLocationId, setDraggedLocationId] = useState<string | null>(null);
   const [draggedGroupId, setDraggedGroupId] = useState<string | null>(null);
@@ -150,6 +165,13 @@ export function MapView({
     x: number;
     y: number;
   } | null>(null);
+
+  const [attachmentContextMenu, setAttachmentContextMenu] = useState<{
+    attachment: MapAttachment;
+    x: number;
+    y: number;
+  } | null>(null);
+
   const [isDraggingMarker, setIsDraggingMarker] = useState(false);
   const [didJustDragMarker, setDidJustDragMarker] = useState(false);
 
@@ -179,6 +201,7 @@ export function MapView({
 
       setEventMoveTargetId(null);
       setEventContextMenu(null);
+      setAttachmentContextMenu(null);
     }
 
     window.addEventListener("keydown", handleEscape);
@@ -192,6 +215,34 @@ export function MapView({
   const isPlayerMode = userMode === "player";
 
   const playerMapGroup = groups.find((group) => group.faction === "players");
+
+  function getAttachmentMapPosition(attachment: MapAttachment) {
+    if (!attachment.attachedToGroupId) {
+      return {
+        x: clamp(attachment.x),
+        y: clamp(attachment.y),
+        isAttached: false,
+      };
+    }
+
+    const attachedGroup = groups.find((group) => {
+      return group.id === attachment.attachedToGroupId;
+    });
+
+    if (!attachedGroup) {
+      return {
+        x: clamp(attachment.x),
+        y: clamp(attachment.y),
+        isAttached: false,
+      };
+    }
+
+    return {
+      x: clamp(attachedGroup.x + attachment.offsetX),
+      y: clamp(attachedGroup.y + attachment.offsetY),
+      isAttached: true,
+    };
+  }
 
   const fogAnchor = {
     x: playerMapGroup?.x ?? 50,
@@ -311,6 +362,57 @@ export function MapView({
     onDeleteEvent(mapEvent);
   }
 
+  function openAttachmentContextMenu(
+    event: React.MouseEvent<HTMLButtonElement>,
+    attachment: MapAttachment,
+  ) {
+    if (userMode === "player") {
+      return;
+    }
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    const position = getAttachmentMapPosition(attachment);
+
+    setAttachmentContextMenu({
+      attachment,
+      x: clamp(position.x + 2.2),
+      y: clamp(position.y - 1.2),
+    });
+  }
+
+  function closeAttachmentContextMenu() {
+    setAttachmentContextMenu(null);
+  }
+
+  function editAttachmentFromContext(attachment: MapAttachment) {
+    closeAttachmentContextMenu();
+    onEditAttachment(attachment);
+  }
+
+  function leaveAttachmentHereFromContext(attachment: MapAttachment) {
+    const position = getAttachmentMapPosition(attachment);
+
+    closeAttachmentContextMenu();
+    onLeaveAttachmentHere(attachment, position.x, position.y);
+  }
+
+  function attachAttachmentToPlayersFromContext(attachment: MapAttachment) {
+    closeAttachmentContextMenu();
+    onAttachAttachmentToPlayers(attachment);
+  }
+
+  function toggleAttachmentVisibilityFromContext(attachment: MapAttachment) {
+    closeAttachmentContextMenu();
+    onToggleAttachmentPlayerVisibility(attachment);
+  }
+
+  function deleteAttachmentFromContext(attachment: MapAttachment) {
+    closeAttachmentContextMenu();
+    onDeleteAttachment(attachment);
+  }
+
   function handleMarkerMove(event: React.MouseEvent<HTMLDivElement>) {
     if (!draggedLocationId) {
       return;
@@ -394,6 +496,7 @@ export function MapView({
 
   function handleMapClick(event: React.MouseEvent<HTMLDivElement>) {
     closeEventContextMenu();
+    closeAttachmentContextMenu();
 
     if (userMode === "player" && !isSuggestingRoute) {
       return;
@@ -928,6 +1031,57 @@ export function MapView({
               </div>
             );
           })}
+
+          {attachments.map((attachment) => {
+            const config = getAttachmentKindConfig(attachment.kind);
+            const statusLabel = getAttachmentStatusLabel(
+              attachment.kind,
+              attachment.status,
+            );
+            const position = getAttachmentMapPosition(attachment);
+
+            return (
+              <div
+                key={attachment.id}
+                className={`map-attachment ${position.isAttached ? "attached" : "detached"
+                  }`}
+                style={{
+                  left: `${position.x}%`,
+                  top: `${position.y}%`,
+                }}
+              >
+                {position.isAttached && (
+                  <span
+                    className="map-attachment-tether"
+                    aria-hidden="true"
+                  />
+                )}
+
+                <button
+                  className="map-attachment-token"
+                  type="button"
+                  title={`Сопровождение: ${attachment.title}`}
+                  onContextMenu={(event) =>
+                    openAttachmentContextMenu(event, attachment)
+                  }
+                  onClick={(event) => {
+                    event.stopPropagation();
+                  }}
+                >
+                  <span className="map-attachment-icon">{config.icon}</span>
+                </button>
+
+                <span className="map-attachment-label">
+                  {attachment.title || config.defaultTitle}
+                  <small>
+                    {config.label} · {statusLabel} · Нагрузка{" "}
+                    {attachment.burden} · Риск {attachment.risk}
+                  </small>
+                </span>
+              </div>
+            );
+          })}
+
           {events.map((mapEvent) => {
             const meta = MAP_EVENT_CATEGORY_META[mapEvent.category];
             const isCompleted = mapEvent.status === "completed";
@@ -990,6 +1144,78 @@ export function MapView({
               </div>
             );
           })}
+
+          {attachmentContextMenu && (
+            <div
+              className="map-attachment-context-menu"
+              style={{
+                left: `${attachmentContextMenu.x}%`,
+                top: `${attachmentContextMenu.y}%`,
+              }}
+              onMouseDown={(event) => event.stopPropagation()}
+              onClick={(event) => event.stopPropagation()}
+              onContextMenu={(event) => event.preventDefault()}
+            >
+              <div className="map-event-context-menu-title">
+                <span>Сопровождение</span>
+                <strong>{attachmentContextMenu.attachment.title}</strong>
+              </div>
+
+              <button
+                type="button"
+                onClick={() =>
+                  editAttachmentFromContext(attachmentContextMenu.attachment)
+                }
+              >
+                Редактировать
+              </button>
+
+              {attachmentContextMenu.attachment.attachedToGroupId ? (
+                <button
+                  type="button"
+                  onClick={() =>
+                    leaveAttachmentHereFromContext(attachmentContextMenu.attachment)
+                  }
+                >
+                  Оставить здесь
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() =>
+                    attachAttachmentToPlayersFromContext(
+                      attachmentContextMenu.attachment,
+                    )
+                  }
+                >
+                  Прикрепить к Вольному Клинку
+                </button>
+              )}
+
+              <button
+                type="button"
+                onClick={() =>
+                  toggleAttachmentVisibilityFromContext(
+                    attachmentContextMenu.attachment,
+                  )
+                }
+              >
+                {attachmentContextMenu.attachment.isVisibleToPlayers
+                  ? "Скрыть от игроков"
+                  : "Показать игрокам"}
+              </button>
+
+              <button
+                className="danger"
+                type="button"
+                onClick={() =>
+                  deleteAttachmentFromContext(attachmentContextMenu.attachment)
+                }
+              >
+                Удалить
+              </button>
+            </div>
+          )}
 
           {eventContextMenu && (
             <div

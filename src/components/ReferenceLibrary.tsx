@@ -9,6 +9,7 @@ import type {
 
 const SECTION_LABELS: Record<ReferenceSection, string> = {
     rules: "Правила",
+    campaign: "Кампания",
     lore: "Лорбук",
     bestiary: "Бестиарий",
     equipment: "Снаряжение",
@@ -20,6 +21,7 @@ const SECTION_LABELS: Record<ReferenceSection, string> = {
 
 const SECTIONS: ReferenceSection[] = [
     "rules",
+    "campaign",
     "lore",
     "bestiary",
     "equipment",
@@ -234,6 +236,31 @@ export function ReferenceLibrary({
                     "Секреты мастера:",
                     "",
                     "Связанные места / поручения:",
+                    "",
+                ].join("\n"),
+            });
+        } else if (activeSection === "campaign") {
+            onUpdateArticle({
+                ...article,
+                section: "campaign",
+                title: "Новая статья кампании",
+                subsection: "Пепел Вояжа",
+                visibility: "master",
+                tags: "кампания, мастер",
+                content: [
+                    "Назначение статьи:",
+                    "",
+                    "Кратко для Мастера:",
+                    "",
+                    "Что важно показать игрокам:",
+                    "",
+                    "Ключевые сцены / точки:",
+                    "",
+                    "Решения игроков:",
+                    "",
+                    "Последствия:",
+                    "",
+                    "Связанные NPC / события / локации:",
                     "",
                 ].join("\n"),
             });
@@ -513,7 +540,9 @@ export function ReferenceLibrary({
                                         placeholder={
                                             selectedArticle.section === "dossier"
                                                 ? "Например: Апис, Форпост Горста, Вояж, Бриганты..."
-                                                : "Например: Базовая механика, Бой, Обскурия..."
+                                                : selectedArticle.section === "campaign"
+                                                    ? "Например: Пепел Вояжа, Апис, Крушение, Путь к Горсту, Форпост Горста..."
+                                                    : "Например: Базовая механика, Бой, Обскурия..."
                                         }
                                     />
                                 </label>
@@ -539,7 +568,9 @@ export function ReferenceLibrary({
                                         placeholder={
                                             selectedArticle.section === "dossier"
                                                 ? "Описание NPC, роль, поведение, сведения для игроков и скрытые заметки мастера..."
-                                                : "Текст правила, лора, описания или заметки..."
+                                                : selectedArticle.section === "campaign"
+                                                    ? "Обзор сцены, маршрут, последствия решений, подсказки мастеру, связки между событиями..."
+                                                    : "Текст правила, лора, описания или заметки..."
                                         }
                                     />
                                 </label>

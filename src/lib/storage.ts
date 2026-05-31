@@ -16,6 +16,8 @@ import type {
   CharacterWoundStatus,
   CharacterWoundType,
   Location,
+  MapAttachment,
+  MapAttachmentKind,
   MapEvent,
   MapGroup,
   PlayerCharacter,
@@ -30,6 +32,7 @@ export const ITEMS_STORAGE_KEY = "nri-table-items";
 export const ARSENAL_ITEMS_STORAGE_KEY = "nri-table-arsenal-items";
 export const GROUPS_STORAGE_KEY = "nri-table-groups";
 export const EVENTS_STORAGE_KEY = "nri-table-events";
+export const ATTACHMENTS_STORAGE_KEY = "nri-table-attachments";
 export const CHARACTERS_STORAGE_KEY = "nri-table-characters";
 export const REFERENCE_ARTICLES_STORAGE_KEY = "nri-table-reference-articles";
 
@@ -561,6 +564,111 @@ export function loadSavedEvents() {
     }));
   } catch {
     return campaignData.events;
+  }
+}
+
+const MAP_ATTACHMENT_KINDS: MapAttachmentKind[] = [
+  "survivors",
+  "wounded",
+  "cargo",
+  "cart",
+  "vehicle",
+  "prisoners",
+  "dangerous",
+  "device",
+  "other",
+];
+
+function normalizeAttachmentKind(value: unknown): MapAttachmentKind {
+  return MAP_ATTACHMENT_KINDS.includes(value as MapAttachmentKind)
+    ? (value as MapAttachmentKind)
+    : "other";
+}
+
+function normalizeAttachmentNumber(value: unknown, fallback: number, min: number, max: number) {
+  if (typeof value !== "number" || !Number.isFinite(value)) {
+    return fallback;
+  }
+
+  return Math.max(min, Math.min(max, value));
+}
+
+export function normalizeMapAttachment(
+  attachment: Partial<MapAttachment>,
+  index = 0,
+): MapAttachment {
+  return {
+    id:
+      typeof attachment.id === "string" && attachment.id.trim().length > 0
+        ? attachment.id
+        : `attachment-${Date.now()}-${index}`,
+
+    title:
+      typeof attachment.title === "string" && attachment.title.trim().length > 0
+        ? attachment.title
+        : "Сопровождение",
+
+    kind: normalizeAttachmentKind(attachment.kind),
+
+    status:
+      typeof attachment.status === "string" && attachment.status.trim().length > 0
+        ? attachment.status
+        : "stable",
+
+    tagIds: Array.isArray(attachment.tagIds)
+      ? attachment.tagIds.map(String).filter(Boolean)
+      : [],
+
+    description:
+      typeof attachment.description === "string" ? attachment.description : "",
+
+    masterNotes:
+      typeof attachment.masterNotes === "string" ? attachment.masterNotes : "",
+
+    imageUrl: typeof attachment.imageUrl === "string" ? attachment.imageUrl : "",
+
+    x: normalizeAttachmentNumber(attachment.x, 50, 0, 100),
+    y: normalizeAttachmentNumber(attachment.y, 50, 0, 100),
+
+    isSecret: Boolean(attachment.isSecret),
+    isVisibleToPlayers:
+      typeof attachment.isVisibleToPlayers === "boolean"
+        ? attachment.isVisibleToPlayers
+        : true,
+
+    attachedToGroupId:
+      typeof attachment.attachedToGroupId === "string" &&
+        attachment.attachedToGroupId.trim().length > 0
+        ? attachment.attachedToGroupId
+        : null,
+
+    offsetX: normalizeAttachmentNumber(attachment.offsetX, 2.4, -10, 10),
+    offsetY: normalizeAttachmentNumber(attachment.offsetY, 2.1, -10, 10),
+
+    burden: Math.floor(normalizeAttachmentNumber(attachment.burden, 1, 0, 5)),
+    risk: Math.floor(normalizeAttachmentNumber(attachment.risk, 1, 0, 5)),
+  };
+}
+
+export function loadSavedAttachments() {
+  const savedAttachments = localStorage.getItem(ATTACHMENTS_STORAGE_KEY);
+
+  if (!savedAttachments) {
+    return campaignData.attachments;
+  }
+
+  try {
+    const parsedAttachments = JSON.parse(savedAttachments);
+
+    if (!Array.isArray(parsedAttachments)) {
+      return campaignData.attachments;
+    }
+
+    return parsedAttachments.map((attachment, index) =>
+      normalizeMapAttachment(attachment as Partial<MapAttachment>, index),
+    );
+  } catch {
+    return campaignData.attachments;
   }
 }
 
