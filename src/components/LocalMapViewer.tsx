@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { ReferenceArticle } from "../types/campaign";
 
 type JournalEntryDraft = {
@@ -13,9 +13,13 @@ export type LocalMapPointKind =
     | "interest"
     | "entrance"
     | "danger"
+    | "hazard"
     | "object"
     | "npc"
-    | "enemy";
+    | "player"
+    | "enemy"
+    | "creature"
+    | "corpse";
 
 export type LocalMapPoint = {
     id: string;
@@ -72,10 +76,51 @@ const LOCAL_MAP_POINT_KIND_LABELS: Record<LocalMapPointKind, string> = {
     interest: "Интерес",
     entrance: "Вход",
     danger: "Опасность",
+    hazard: "Активная угроза",
     object: "Объект",
     npc: "Персонаж",
+    player: "Игрок",
     enemy: "Противник",
+    creature: "Существо",
+    corpse: "Труп",
 };
+
+function getLocalMapPointIcon(kind: LocalMapPointKind) {
+    switch (kind) {
+        case "entrance":
+            return "⇣";
+        case "danger":
+            return "!";
+        case "hazard":
+            return "☣";
+        case "object":
+            return "◆";
+        case "npc":
+            return "♟";
+        case "player":
+            return "♟";
+        case "enemy":
+            return "♟";
+        case "creature":
+            return "☠";
+        case "corpse":
+            return "†";
+        case "interest":
+        default:
+            return "?";
+    }
+}
+
+const DRAGGABLE_LOCAL_MAP_POINT_KINDS: LocalMapPointKind[] = [
+    "npc",
+    "player",
+    "enemy",
+    "creature",
+];
+
+function isDraggableLocalMapPoint(kind: LocalMapPointKind) {
+    return DRAGGABLE_LOCAL_MAP_POINT_KINDS.includes(kind);
+}
 
 function clampLocalMapCoordinate(value: number) {
     return Math.max(0, Math.min(100, value));
@@ -111,9 +156,13 @@ function normalizeLocalMapPoint(value: unknown): LocalMapPoint | null {
     const kind: LocalMapPointKind =
         point.kind === "entrance" ||
             point.kind === "danger" ||
+            point.kind === "hazard" ||
             point.kind === "object" ||
             point.kind === "npc" ||
+            point.kind === "player" ||
             point.kind === "enemy" ||
+            point.kind === "creature" ||
+            point.kind === "corpse" ||
             point.kind === "interest"
             ? point.kind
             : "interest";
@@ -336,6 +385,19 @@ export function LocalMapViewer({
     const [isPlacingPoint, setIsPlacingPoint] = useState(false);
     const [levelHistory, setLevelHistory] = useState<string[]>([]);
 
+    const localMapFrameRef = useRef<HTMLDivElement | null>(null);
+
+    const pointDragStateRef = useRef<{
+        pointId: string;
+        startClientX: number;
+        startClientY: number;
+        didMove: boolean;
+    } | null>(null);
+
+    const didJustDragPointRef = useRef(false);
+
+    const [draggingPointId, setDraggingPointId] = useState<string | null>(null);
+
     const activeLevel =
         localMapLevels.find((level) => level.id === activeLevelId) ??
         localMapLevels[0] ??
@@ -399,6 +461,65 @@ export function LocalMapViewer({
         setLevelHistory([]);
     }, [storageKey]);
 
+    useEffect(() => {
+        if (!draggingPointId) {
+            return;
+        }
+
+        function handleMouseMove(event: MouseEvent) {
+            const dragState = pointDragStateRef.current;
+            const frameElement = localMapFrameRef.current;
+
+            if (!dragState || !frameElement) {
+                return;
+            }
+
+            const movementDistance = Math.hypot(
+                event.clientX - dragState.startClientX,
+                event.clientY - dragState.startClientY,
+            );
+
+            if (movementDistance > 4) {
+                dragState.didMove = true;
+            }
+
+            const rect = frameElement.getBoundingClientRect();
+
+            const x = clampLocalMapCoordinate(
+                ((event.clientX - rect.left) / rect.width) * 100,
+            );
+
+            const y = clampLocalMapCoordinate(
+                ((event.clientY - rect.top) / rect.height) * 100,
+            );
+
+            updatePointPosition(dragState.pointId, x, y);
+        }
+
+        function handleMouseUp() {
+            const didMove = Boolean(pointDragStateRef.current?.didMove);
+
+            if (didMove) {
+                didJustDragPointRef.current = true;
+
+                window.setTimeout(() => {
+                    didJustDragPointRef.current = false;
+                }, 0);
+            }
+
+            pointDragStateRef.current = null;
+            setDraggingPointId(null);
+        }
+
+        window.addEventListener("mousemove", handleMouseMove);
+        window.addEventListener("mouseup", handleMouseUp);
+
+        return () => {
+            window.removeEventListener("mousemove", handleMouseMove);
+            window.removeEventListener("mouseup", handleMouseUp);
+        };
+    }, [draggingPointId, activeLevel.id]);
+
     function saveDraft(
         nextLevels: LocalMapLevel[],
         nextActiveLevelId = activeLevelId,
@@ -443,6 +564,47 @@ export function LocalMapViewer({
         updateActiveLevel({
             points: nextPoints,
         });
+    }
+
+    function updatePointPosition(pointId: string, x: number, y: number) {
+        updateLocalMapLevels((currentLevels) =>
+            currentLevels.map((level) =>
+                level.id === activeLevel.id
+                    ? {
+                        ...level,
+                        points: level.points.map((point) =>
+                            point.id === pointId ? { ...point, x, y } : point,
+                        ),
+                    }
+                    : level,
+            ),
+        );
+    }
+
+    function startLocalMapPointDrag(
+        event: React.MouseEvent<HTMLButtonElement>,
+        point: LocalMapPoint,
+    ) {
+        if (
+            isPlayerMode ||
+            isPlacingPoint ||
+            !isDraggableLocalMapPoint(point.kind)
+        ) {
+            return;
+        }
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        pointDragStateRef.current = {
+            pointId: point.id,
+            startClientX: event.clientX,
+            startClientY: event.clientY,
+            didMove: false,
+        };
+
+        setSelectedPointId(point.id);
+        setDraggingPointId(point.id);
     }
 
     function updateLocalMapImageUrl(nextImageUrl: string) {
@@ -724,6 +886,7 @@ export function LocalMapViewer({
             <div className="local-map-layout">
                 <section className="local-map-main">
                     <div
+                        ref={localMapFrameRef}
                         className={`local-map-frame ${isPlacingPoint ? "placing-point" : ""
                             }`}
                         onClick={handleLocalMapClick}
@@ -749,7 +912,7 @@ export function LocalMapViewer({
                             <button
                                 key={point.id}
                                 className={`local-map-point local-map-point-${point.kind} ${selectedPointId === point.id ? "selected" : ""
-                                    } ${point.isSecret ? "secret" : ""} ${point.isKeyScene ? "key-scene" : ""}`}
+                                    } ${point.isSecret ? "secret" : ""} ${point.isKeyScene ? "key-scene" : ""} ${isDraggableLocalMapPoint(point.kind) ? "draggable" : ""} ${draggingPointId === point.id ? "dragging" : ""}`}
                                 type="button"
                                 style={{
                                     left: `${point.x}%`,
@@ -760,12 +923,22 @@ export function LocalMapViewer({
                                         ? `${point.title} — двойной клик для перехода`
                                         : point.title
                                 }
+                                onMouseDown={(event) => startLocalMapPointDrag(event, point)}
                                 onClick={(event) => {
                                     event.stopPropagation();
+
+                                    if (didJustDragPointRef.current) {
+                                        return;
+                                    }
+
                                     setSelectedPointId(point.id);
                                 }}
                                 onDoubleClick={(event) => {
                                     event.stopPropagation();
+
+                                    if (didJustDragPointRef.current) {
+                                        return;
+                                    }
 
                                     if (!point.targetLocalMapId) {
                                         return;
@@ -775,17 +948,7 @@ export function LocalMapViewer({
                                 }}
                             >
                                 <span className="local-map-point-icon">
-                                    {point.kind === "entrance"
-                                        ? "⇣"
-                                        : point.kind === "danger"
-                                            ? "!"
-                                            : point.kind === "object"
-                                                ? "◆"
-                                                : point.kind === "npc"
-                                                    ? "♟"
-                                                    : point.kind === "enemy"
-                                                        ? "⚔"
-                                                        : "?"}
+                                    {getLocalMapPointIcon(point.kind)}
                                 </span>
 
                                 {point.isKeyScene && (
@@ -841,9 +1004,13 @@ export function LocalMapViewer({
                                         <option value="interest">Интерес</option>
                                         <option value="entrance">Вход / переход</option>
                                         <option value="danger">Опасность</option>
+                                        <option value="hazard">Активная угроза среды</option>
                                         <option value="object">Объект</option>
                                         <option value="npc">Персонаж / NPC</option>
+                                        <option value="player">Игрок</option>
                                         <option value="enemy">Противник</option>
+                                        <option value="creature">Существо</option>
+                                        <option value="corpse">Труп</option>
                                     </select>
                                 </label>
 

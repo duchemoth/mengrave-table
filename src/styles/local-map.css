@@ -518,6 +518,77 @@
   filter: brightness(1.18);
 }
 
+/* Local map player points */
+
+.local-map-point-player {
+  border-color: rgba(255, 224, 150, 0.88);
+  color: #fff3cf;
+  background:
+    radial-gradient(circle at 50% 42%, rgba(166, 118, 34, 0.98), rgba(52, 34, 14, 0.98));
+  box-shadow:
+    0 0 0 2px rgba(18, 10, 8, 0.34),
+    0 10px 20px rgba(18, 10, 8, 0.38),
+    0 0 16px rgba(214, 164, 66, 0.22);
+}
+
+.local-map-point-player:hover,
+.local-map-point-player.selected {
+  filter: brightness(1.18);
+}
+
+/* Local map creature points */
+
+.local-map-point-creature {
+  border-color: rgba(230, 212, 212, 0.82);
+  color: #fff0f0;
+  background:
+    radial-gradient(circle at 50% 42%, rgba(70, 22, 22, 0.98), rgba(16, 10, 10, 0.98));
+  box-shadow:
+    0 0 0 2px rgba(18, 10, 8, 0.34),
+    0 10px 20px rgba(18, 10, 8, 0.38),
+    0 0 18px rgba(105, 24, 24, 0.22);
+}
+
+.local-map-point-creature:hover,
+.local-map-point-creature.selected {
+  filter: brightness(1.18);
+}
+
+/* Local map corpse points */
+
+.local-map-point-corpse {
+  border-color: rgba(215, 205, 190, 0.82);
+  color: #f4ead8;
+  background:
+    radial-gradient(circle at 50% 42%, rgba(102, 78, 54, 0.98), rgba(26, 20, 15, 0.98));
+  box-shadow:
+    0 0 0 2px rgba(18, 10, 8, 0.34),
+    0 10px 20px rgba(18, 10, 8, 0.36);
+}
+
+.local-map-point-corpse:hover,
+.local-map-point-corpse.selected {
+  filter: brightness(1.16);
+}
+
+/* Local map active hazard points */
+
+.local-map-point-hazard {
+  border-color: rgba(206, 232, 170, 0.86);
+  color: #efffd5;
+  background:
+    radial-gradient(circle at 50% 42%, rgba(80, 114, 40, 0.98), rgba(18, 28, 12, 0.98));
+  box-shadow:
+    0 0 0 2px rgba(18, 10, 8, 0.34),
+    0 10px 20px rgba(18, 10, 8, 0.38),
+    0 0 18px rgba(126, 178, 68, 0.22);
+}
+
+.local-map-point-hazard:hover,
+.local-map-point-hazard.selected {
+  filter: brightness(1.18);
+}
+
 /* Local map linked dossier */
 
 .local-map-linked-dossier {
@@ -891,4 +962,22 @@
   height: 360px;
   box-sizing: border-box;
   resize: vertical;
+}
+
+/* Local map draggable combat figures */
+
+.local-map-point.draggable {
+  cursor: grab;
+}
+
+.local-map-point.dragging {
+  z-index: 12;
+  cursor: grabbing;
+  filter: brightness(1.2);
+  transform: translate(-50%, -50%) scale(1.12);
+}
+
+.local-map-frame:has(.local-map-point.dragging) {
+  cursor: grabbing;
+  user-select: none;
 }
