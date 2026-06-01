@@ -1287,3 +1287,15 @@
     grid-template-columns: 1fr;
   }
 }
+
+.character-slot-locked {
+  border: 1px dashed rgba(124, 37, 34, 0.35);
+  border-radius: 12px;
+  padding: 10px 12px;
+  color: rgba(67, 45, 32, 0.74);
+  background: rgba(124, 37, 34, 0.08);
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 900;
+  line-height: 1.35;
+}

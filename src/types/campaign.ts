@@ -107,7 +107,8 @@ export type ArsenalItemSlot =
   | "none";
 
 export type ArsenalWeaponSubtype =
-  | "melee"
+  | "combatMelee"
+  | "improvisedMelee"
   | "firearm"
   | "throwing"
   | "special"
@@ -163,6 +164,10 @@ export type ArsenalItemCondition =
   | "radiating"
   | "incomplete"
   | "trophy";
+
+export type ArsenalItemSlotUsage =
+  | "normal"
+  | "twoShoulders";
 
 export type ArsenalLootTag =
   | "voyage"
@@ -227,6 +232,8 @@ export type ArsenalItem = {
 
   weight: string;
   price: string;
+
+  slotUsage: ArsenalItemSlotUsage;
 
   quickSlotCount?: 2 | 4 | 6;
   backpackSlotCount?: number;

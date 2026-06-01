@@ -6,6 +6,7 @@ import type {
   ArsenalItemCondition,
   ArsenalItemRarity,
   ArsenalItemSlot,
+  ArsenalItemSlotUsage,
   ArsenalLootAvailability,
   ArsenalLootTag,
   ArsenalResourceSubtype,
@@ -339,8 +340,14 @@ const ARSENAL_ITEM_SLOTS: ArsenalItemSlot[] = [
   "none",
 ];
 
+const ARSENAL_ITEM_SLOT_USAGES: ArsenalItemSlotUsage[] = [
+  "normal",
+  "twoShoulders",
+];
+
 const ARSENAL_WEAPON_SUBTYPES: ArsenalWeaponSubtype[] = [
-  "melee",
+  "combatMelee",
+  "improvisedMelee",
   "firearm",
   "throwing",
   "special",
@@ -448,6 +455,21 @@ function normalizeArsenalSlot(slot: ArsenalItem["slot"] | undefined): ArsenalIte
   return slot && ARSENAL_ITEM_SLOTS.includes(slot) ? slot : "none";
 }
 
+function normalizeArsenalSlotUsage(
+  value: unknown,
+  slot: ArsenalItemSlot,
+): ArsenalItemSlotUsage {
+  if (
+    slot === "shoulderWeapon" &&
+    typeof value === "string" &&
+    ARSENAL_ITEM_SLOT_USAGES.includes(value as ArsenalItemSlotUsage)
+  ) {
+    return value as ArsenalItemSlotUsage;
+  }
+
+  return "normal";
+}
+
 function normalizeArsenalCategory(
   category: ArsenalItem["category"] | undefined,
   slot: ArsenalItemSlot,
@@ -479,8 +501,12 @@ function normalizeArsenalCategory(
 }
 
 function normalizeWeaponSubtype(
-  value: ArsenalItem["weaponSubtype"] | undefined,
+  value: ArsenalItem["weaponSubtype"] | "melee" | undefined,
 ): ArsenalWeaponSubtype | undefined {
+  if (value === "melee") {
+    return "combatMelee";
+  }
+
   return value && ARSENAL_WEAPON_SUBTYPES.includes(value) ? value : undefined;
 }
 
@@ -891,6 +917,11 @@ export function normalizeArsenalItem(item: Partial<ArsenalItem>): ArsenalItem {
 
     weight: typeof item.weight === "string" ? item.weight : "",
     price: typeof item.price === "string" ? item.price : "",
+
+    slotUsage: normalizeArsenalSlotUsage(
+      (item as Partial<ArsenalItem>).slotUsage,
+      slot,
+    ),
 
     quickSlotCount:
       slot === "loadBearing" ? normalizeQuickSlotCount(item.quickSlotCount) : undefined,

@@ -338,6 +338,30 @@ export function CharacterRoster({
         return arsenalItems.find((item) => item.id === itemId) ?? null;
     }
 
+    function isTwoShoulderWeapon(itemId: string | null) {
+        const item = getArsenalItem(itemId);
+
+        return item?.slot === "shoulderWeapon" && item.slotUsage === "twoShoulders";
+    }
+
+    function getBlockedShoulderSlot(
+        slotKey: keyof CharacterInventory["weaponSlots"],
+    ): keyof CharacterInventory["weaponSlots"] | null {
+        if (!selectedCharacter) {
+            return null;
+        }
+
+        if (slotKey === "small") {
+            return null;
+        }
+
+        const oppositeSlotKey = slotKey === "shoulder1" ? "shoulder2" : "shoulder1";
+        const oppositeItemId =
+            selectedCharacter.inventory.weaponSlots[oppositeSlotKey].itemId;
+
+        return isTwoShoulderWeapon(oppositeItemId) ? oppositeSlotKey : null;
+    }
+
     function getArsenalItemsForSlots(slots: ArsenalItemSlot[]) {
         return arsenalItems.filter((item) => slots.includes(item.slot));
     }
@@ -364,14 +388,63 @@ export function CharacterRoster({
             return;
         }
 
+        const weaponSlots = selectedCharacter.inventory.weaponSlots;
+
+        if (slotKey === "small") {
+            updateInventory({
+                ...selectedCharacter.inventory,
+                weaponSlots: {
+                    ...weaponSlots,
+                    small: {
+                        ...weaponSlots.small,
+                        itemId,
+                    },
+                },
+            });
+            return;
+        }
+
+        const oppositeSlotKey = slotKey === "shoulder1" ? "shoulder2" : "shoulder1";
+        const selectedItem = getArsenalItem(itemId);
+
+        if (selectedItem?.slotUsage === "twoShoulders") {
+            updateInventory({
+                ...selectedCharacter.inventory,
+                weaponSlots: {
+                    ...weaponSlots,
+                    [slotKey]: {
+                        ...weaponSlots[slotKey],
+                        itemId,
+                    },
+                    [oppositeSlotKey]: {
+                        ...weaponSlots[oppositeSlotKey],
+                        itemId: null,
+                        note: "Занято тяжёлым оружием",
+                    },
+                },
+            });
+            return;
+        }
+
         updateInventory({
             ...selectedCharacter.inventory,
             weaponSlots: {
-                ...selectedCharacter.inventory.weaponSlots,
+                ...weaponSlots,
                 [slotKey]: {
-                    ...selectedCharacter.inventory.weaponSlots[slotKey],
+                    ...weaponSlots[slotKey],
                     itemId,
                 },
+                ...(itemId === null
+                    ? {
+                        [oppositeSlotKey]: {
+                            ...weaponSlots[oppositeSlotKey],
+                            note:
+                                weaponSlots[oppositeSlotKey].note === "Занято тяжёлым оружием"
+                                    ? ""
+                                    : weaponSlots[oppositeSlotKey].note,
+                        },
+                    }
+                    : {}),
             },
         });
     }
@@ -878,12 +951,14 @@ export function CharacterRoster({
         value: string | null,
         allowedSlots: ArsenalItemSlot[],
         onChange: (itemId: string | null) => void,
+        isDisabled = false,
     ) {
         const availableItems = getArsenalItemsForSlots(allowedSlots);
 
         return (
             <select
                 value={value ?? ""}
+                disabled={isDisabled}
                 onChange={(event) => onChange(event.target.value || null)}
             >
                 <option value="">Пусто</option>
@@ -1980,18 +2055,30 @@ export function CharacterRoster({
                                                             <p className="eyebrow">Плечо 1</p>
                                                             <h4>Основное оружие</h4>
 
-                                                            {renderInventorySelect(
-                                                                selectedCharacter.inventory.weaponSlots.shoulder1.itemId,
-                                                                ["shoulderWeapon"],
-                                                                (itemId) => updateWeaponSlot("shoulder1", itemId),
+                                                            {getBlockedShoulderSlot("shoulder1") ? (
+                                                                <div className="character-slot-locked">
+                                                                    Занято тяжёлым оружием:{" "}
+                                                                    {getInventoryItemName(
+                                                                        selectedCharacter.inventory.weaponSlots[
+                                                                            getBlockedShoulderSlot("shoulder1") ?? "shoulder2"
+                                                                        ].itemId,
+                                                                    )}
+                                                                </div>
+                                                            ) : (
+                                                                renderInventorySelect(
+                                                                    selectedCharacter.inventory.weaponSlots.shoulder1.itemId,
+                                                                    ["shoulderWeapon"],
+                                                                    (itemId) => updateWeaponSlot("shoulder1", itemId),
+                                                                )
                                                             )}
 
                                                             <input
                                                                 value={selectedCharacter.inventory.weaponSlots.shoulder1.note}
+                                                                disabled={Boolean(getBlockedShoulderSlot("shoulder1"))}
                                                                 onChange={(event) =>
                                                                     updateWeaponSlotNote("shoulder1", event.target.value)
                                                                 }
-                                                                placeholder="Заметка: ремень, состояние, боезапас..."
+                                                                placeholder="Заметка: ремень, состояние, боезапас."
                                                             />
                                                         </div>
 
@@ -1999,18 +2086,30 @@ export function CharacterRoster({
                                                             <p className="eyebrow">Плечо 2</p>
                                                             <h4>Запасное оружие</h4>
 
-                                                            {renderInventorySelect(
-                                                                selectedCharacter.inventory.weaponSlots.shoulder2.itemId,
-                                                                ["shoulderWeapon"],
-                                                                (itemId) => updateWeaponSlot("shoulder2", itemId),
+                                                            {getBlockedShoulderSlot("shoulder2") ? (
+                                                                <div className="character-slot-locked">
+                                                                    Занято тяжёлым оружием:{" "}
+                                                                    {getInventoryItemName(
+                                                                        selectedCharacter.inventory.weaponSlots[
+                                                                            getBlockedShoulderSlot("shoulder2") ?? "shoulder1"
+                                                                        ].itemId,
+                                                                    )}
+                                                                </div>
+                                                            ) : (
+                                                                renderInventorySelect(
+                                                                    selectedCharacter.inventory.weaponSlots.shoulder2.itemId,
+                                                                    ["shoulderWeapon"],
+                                                                    (itemId) => updateWeaponSlot("shoulder2", itemId),
+                                                                )
                                                             )}
 
                                                             <input
                                                                 value={selectedCharacter.inventory.weaponSlots.shoulder2.note}
+                                                                disabled={Boolean(getBlockedShoulderSlot("shoulder2"))}
                                                                 onChange={(event) =>
                                                                     updateWeaponSlotNote("shoulder2", event.target.value)
                                                                 }
-                                                                placeholder="Заметка..."
+                                                                placeholder="Заметка."
                                                             />
                                                         </div>
 

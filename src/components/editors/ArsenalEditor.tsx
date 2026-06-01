@@ -6,6 +6,7 @@ import type {
     ArsenalItemCondition,
     ArsenalItemRarity,
     ArsenalItemSlot,
+    ArsenalItemSlotUsage,
     ArsenalLootAvailability,
     ArsenalLootTag,
     ArsenalResourceSubtype,
@@ -45,11 +46,20 @@ const SLOT_OPTIONS: {
         { value: "none", label: "Обычный предмет / без слота" },
     ];
 
+const SLOT_USAGE_OPTIONS: {
+    value: ArsenalItemSlotUsage;
+    label: string;
+}[] = [
+        { value: "normal", label: "Обычное использование слотов" },
+        { value: "twoShoulders", label: "Занимает оба основных оружейных слота" },
+    ];
+
 const WEAPON_SUBTYPE_OPTIONS: {
     value: ArsenalWeaponSubtype;
     label: string;
 }[] = [
-        { value: "melee", label: "Холодное" },
+        { value: "combatMelee", label: "Холодное — боевое" },
+        { value: "improvisedMelee", label: "Холодное — импровизированное" },
         { value: "firearm", label: "Огнестрельное" },
         { value: "throwing", label: "Метательное" },
         { value: "special", label: "Особое" },
@@ -270,6 +280,8 @@ function createArsenalItem(): ArsenalItem {
         weight: "",
         price: "",
 
+        slotUsage: "normal",
+
         quickSlotCount: undefined,
         backpackSlotCount: undefined,
         isVisibleToPlayers: true,
@@ -403,7 +415,8 @@ export function ArsenalEditor({
             updateItem({
                 category,
                 slot: selectedItem?.slot === "smallWeapon" ? "smallWeapon" : "shoulderWeapon",
-                weaponSubtype: selectedItem?.weaponSubtype ?? "other",
+                weaponSubtype: selectedItem?.weaponSubtype ?? "combatMelee",
+                slotUsage: selectedItem?.slotUsage ?? "normal",
                 armorSubtype: undefined,
                 resourceSubtype: undefined,
                 backpackSlotCount: undefined,
@@ -468,6 +481,7 @@ export function ArsenalEditor({
             weaponSubtype: undefined,
             armorSubtype: undefined,
             resourceSubtype: undefined,
+            slotUsage: "normal",
             quickSlotCount: undefined,
             backpackSlotCount: undefined,
         });
@@ -511,7 +525,11 @@ export function ArsenalEditor({
             updateItem({
                 slot,
                 category: "weapon",
-                weaponSubtype: selectedItem?.weaponSubtype ?? "other",
+                weaponSubtype: selectedItem?.weaponSubtype ?? "combatMelee",
+                slotUsage:
+                    slot === "shoulderWeapon"
+                        ? selectedItem?.slotUsage ?? "normal"
+                        : "normal",
                 armorSubtype: undefined,
                 backpackSlotCount: undefined,
             });
@@ -520,6 +538,7 @@ export function ArsenalEditor({
 
         updateItem({
             slot,
+            slotUsage: "normal",
             backpackSlotCount: undefined,
         });
     }
@@ -914,6 +933,26 @@ export function ArsenalEditor({
                                     </select>
                                 </label>
 
+                                {selectedItem.category === "weapon" && selectedItem.slot === "shoulderWeapon" && (
+                                    <label>
+                                        Использование слотов
+                                        <select
+                                            value={selectedItem.slotUsage}
+                                            onChange={(event) =>
+                                                updateItem({
+                                                    slotUsage: event.target.value as ArsenalItemSlotUsage,
+                                                })
+                                            }
+                                        >
+                                            {SLOT_USAGE_OPTIONS.map((option) => (
+                                                <option key={option.value} value={option.value}>
+                                                    {option.label}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </label>
+                                )}
+
                                 <label>
                                     Масса
                                     <input
@@ -1139,6 +1178,13 @@ export function ArsenalEditor({
 
                                 <dt>Состояние</dt>
                                 <dd>{getConditionLabel(selectedItem.condition)}</dd>
+
+                                {selectedItem.category === "weapon" && selectedItem.slotUsage === "twoShoulders" && (
+                                    <>
+                                        <dt>Использование слотов</dt>
+                                        <dd>Занимает оба основных оружейных слота</dd>
+                                    </>
+                                )}
 
                                 {selectedItem.quickSlotCount && (
                                     <>
