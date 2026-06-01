@@ -3,7 +3,11 @@ import type {
   ArsenalArmorSubtype,
   ArsenalItem,
   ArsenalItemCategory,
+  ArsenalItemCondition,
+  ArsenalItemRarity,
   ArsenalItemSlot,
+  ArsenalLootAvailability,
+  ArsenalLootTag,
   ArsenalResourceSubtype,
   ArsenalWeaponSubtype,
   CharacterBodyZone,
@@ -364,6 +368,83 @@ const ARSENAL_RESOURCE_SUBTYPES: ArsenalResourceSubtype[] = [
   "other",
 ];
 
+const ARSENAL_ITEM_RARITIES: ArsenalItemRarity[] = [
+  "junk",
+  "common",
+  "standard",
+  "good",
+  "rare",
+  "faction",
+  "elite",
+  "unique",
+  "forbidden",
+  "quest",
+];
+
+const ARSENAL_LOOT_AVAILABILITIES: ArsenalLootAvailability[] = [
+  "never",
+  "starter",
+  "commonLoot",
+  "dangerLoot",
+  "reward",
+  "manual",
+];
+
+const ARSENAL_ITEM_CONDITIONS: ArsenalItemCondition[] = [
+  "new",
+  "working",
+  "worn",
+  "damaged",
+  "makeshift",
+  "dirty",
+  "infected",
+  "radiating",
+  "incomplete",
+  "trophy",
+];
+
+const ARSENAL_LOOT_TAGS: ArsenalLootTag[] = [
+  "apis",
+  "voyage",
+  "horst",
+  "obscuria",
+  "battle",
+  "technical",
+  "medical",
+  "domestic",
+  "storage",
+  "corpse",
+  "infection",
+  "weapon",
+  "ammo",
+  "armor",
+  "healing",
+  "repair",
+  "tool",
+  "fuel",
+  "food",
+  "water",
+  "document",
+  "clue",
+  "quest",
+  "container",
+  "noisy",
+  "heavy",
+  "fragile",
+  "suspicious",
+  "forbidden",
+  "radiating",
+  "reflectionRisk",
+  "infectionRisk",
+  "inspectionRisk",
+  "euler",
+  "evergal",
+  "temerat",
+  "valour",
+  "brigand",
+  "celiate",
+];
+
 function normalizeArsenalSlot(slot: ArsenalItem["slot"] | undefined): ArsenalItemSlot {
   return slot && ARSENAL_ITEM_SLOTS.includes(slot) ? slot : "none";
 }
@@ -447,7 +528,297 @@ function normalizeQuickSlotCount(value: ArsenalItem["quickSlotCount"]) {
   return undefined;
 }
 
-function normalizeArsenalItem(item: Partial<ArsenalItem>): ArsenalItem {
+function normalizeArsenalRarity(value: unknown): ArsenalItemRarity {
+  if (typeof value === "string") {
+    if (ARSENAL_ITEM_RARITIES.includes(value as ArsenalItemRarity)) {
+      return value as ArsenalItemRarity;
+    }
+
+    const normalizedValue = value.toLowerCase();
+
+    if (normalizedValue.includes("хлам") || normalizedValue.includes("мусор")) {
+      return "junk";
+    }
+
+    if (normalizedValue.includes("распрост") || normalizedValue.includes("част")) {
+      return "common";
+    }
+
+    if (normalizedValue.includes("обыч")) {
+      return "standard";
+    }
+
+    if (normalizedValue.includes("доброт") || normalizedValue.includes("качеств")) {
+      return "good";
+    }
+
+    if (normalizedValue.includes("редк")) {
+      return "rare";
+    }
+
+    if (normalizedValue.includes("фрак")) {
+      return "faction";
+    }
+
+    if (normalizedValue.includes("элит")) {
+      return "elite";
+    }
+
+    if (normalizedValue.includes("уник")) {
+      return "unique";
+    }
+
+    if (normalizedValue.includes("запрещ")) {
+      return "forbidden";
+    }
+
+    if (normalizedValue.includes("сюжет") || normalizedValue.includes("квест")) {
+      return "quest";
+    }
+  }
+
+  return "standard";
+}
+
+function guessArsenalLootAvailability(item: Partial<ArsenalItem>): ArsenalLootAvailability {
+  const text = [
+    item.name,
+    item.description,
+    item.rules,
+    item.tags,
+    item.rarity,
+  ]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
+
+  if (
+    item.category === "quest" ||
+    text.includes("сюжет") ||
+    text.includes("квест") ||
+    text.includes("уник") ||
+    text.includes("валор") ||
+    text.includes("целлиат")
+  ) {
+    return "manual";
+  }
+
+  if (
+    text.includes("запрещ") ||
+    text.includes("амнезиин") ||
+    text.includes("венец") ||
+    text.includes("фонит")
+  ) {
+    return "manual";
+  }
+
+  if (item.category === "medicine" || item.category === "resource" || item.category === "tool") {
+    return "commonLoot";
+  }
+
+  if (item.category === "weapon" || item.category === "armor" || item.category === "protection") {
+    return "dangerLoot";
+  }
+
+  if (item.category === "misc" || item.category === "storage" || item.category === "loadBearing") {
+    return "starter";
+  }
+
+  return "commonLoot";
+}
+
+function normalizeLootAvailability(
+  value: unknown,
+  item: Partial<ArsenalItem>,
+): ArsenalLootAvailability {
+  if (
+    typeof value === "string" &&
+    ARSENAL_LOOT_AVAILABILITIES.includes(value as ArsenalLootAvailability)
+  ) {
+    return value as ArsenalLootAvailability;
+  }
+
+  return guessArsenalLootAvailability(item);
+}
+
+function guessArsenalItemCondition(item: Partial<ArsenalItem>): ArsenalItemCondition {
+  const text = [item.name, item.description, item.rules, item.tags]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
+
+  if (text.includes("нов")) {
+    return "new";
+  }
+
+  if (
+    text.includes("плох") ||
+    text.includes("стар") ||
+    text.includes("ржав") ||
+    text.includes("потрёп") ||
+    text.includes("потреп")
+  ) {
+    return "worn";
+  }
+
+  if (
+    text.includes("слом") ||
+    text.includes("повреж") ||
+    text.includes("неполад") ||
+    text.includes("осеч")
+  ) {
+    return "damaged";
+  }
+
+  if (text.includes("самодель")) {
+    return "makeshift";
+  }
+
+  if (text.includes("гряз")) {
+    return "dirty";
+  }
+
+  if (text.includes("зараж") || text.includes("эхоцит")) {
+    return "infected";
+  }
+
+  if (text.includes("фонит") || text.includes("инфофон")) {
+    return "radiating";
+  }
+
+  if (text.includes("неполн") || text.includes("без ")) {
+    return "incomplete";
+  }
+
+  if (text.includes("троф")) {
+    return "trophy";
+  }
+
+  return "working";
+}
+
+function normalizeArsenalItemCondition(
+  value: unknown,
+  item: Partial<ArsenalItem>,
+): ArsenalItemCondition {
+  if (
+    typeof value === "string" &&
+    ARSENAL_ITEM_CONDITIONS.includes(value as ArsenalItemCondition)
+  ) {
+    return value as ArsenalItemCondition;
+  }
+
+  return guessArsenalItemCondition(item);
+}
+
+function addLootTag(tags: Set<ArsenalLootTag>, tag: ArsenalLootTag) {
+  tags.add(tag);
+}
+
+function guessArsenalLootTags(item: Partial<ArsenalItem>): ArsenalLootTag[] {
+  const tags = new Set<ArsenalLootTag>();
+  const text = [item.name, item.description, item.rules, item.tags]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
+
+  if (item.category === "weapon") {
+    addLootTag(tags, "weapon");
+    addLootTag(tags, "battle");
+  }
+
+  if (item.category === "armor" || item.category === "protection") {
+    addLootTag(tags, "armor");
+    addLootTag(tags, "battle");
+  }
+
+  if (item.category === "medicine") {
+    addLootTag(tags, "medical");
+    addLootTag(tags, "healing");
+  }
+
+  if (item.category === "tool") {
+    addLootTag(tags, "technical");
+    addLootTag(tags, "tool");
+    addLootTag(tags, "repair");
+  }
+
+  if (item.category === "resource") {
+    if (item.resourceSubtype === "ammo") {
+      addLootTag(tags, "ammo");
+      addLootTag(tags, "battle");
+    }
+
+    if (item.resourceSubtype === "fuel") {
+      addLootTag(tags, "fuel");
+      addLootTag(tags, "technical");
+    }
+
+    if (item.resourceSubtype === "drink") {
+      addLootTag(tags, "water");
+      addLootTag(tags, "domestic");
+    }
+
+    if (item.resourceSubtype === "supplies") {
+      addLootTag(tags, "food");
+      addLootTag(tags, "domestic");
+    }
+
+    if (item.resourceSubtype === "materials") {
+      addLootTag(tags, "technical");
+      addLootTag(tags, "repair");
+    }
+  }
+
+  if (item.category === "quest") {
+    addLootTag(tags, "quest");
+    addLootTag(tags, "clue");
+  }
+
+  if (item.category === "storage") {
+    addLootTag(tags, "storage");
+    addLootTag(tags, "container");
+  }
+
+  if (text.includes("апис")) addLootTag(tags, "apis");
+  if (text.includes("вояж")) addLootTag(tags, "voyage");
+  if (text.includes("горст")) addLootTag(tags, "horst");
+  if (text.includes("обскур")) addLootTag(tags, "obscuria");
+  if (text.includes("труп")) addLootTag(tags, "corpse");
+  if (text.includes("документ") || text.includes("накладн") || text.includes("запис")) addLootTag(tags, "document");
+  if (text.includes("улика") || text.includes("след")) addLootTag(tags, "clue");
+  if (text.includes("контейнер") || text.includes("ящик")) addLootTag(tags, "container");
+  if (text.includes("шум")) addLootTag(tags, "noisy");
+  if (text.includes("тяж")) addLootTag(tags, "heavy");
+  if (text.includes("хруп")) addLootTag(tags, "fragile");
+  if (text.includes("подозр")) addLootTag(tags, "suspicious");
+  if (text.includes("запрещ")) addLootTag(tags, "forbidden");
+  if (text.includes("фонит") || text.includes("инфофон")) addLootTag(tags, "radiating");
+  if (text.includes("отраж")) addLootTag(tags, "reflectionRisk");
+  if (text.includes("зараж") || text.includes("эхоцит")) addLootTag(tags, "infectionRisk");
+  if (text.includes("досмотр")) addLootTag(tags, "inspectionRisk");
+  if (text.includes("эйлер")) addLootTag(tags, "euler");
+  if (text.includes("эвергал")) addLootTag(tags, "evergal");
+  if (text.includes("темер")) addLootTag(tags, "temerat");
+  if (text.includes("валор")) addLootTag(tags, "valour");
+  if (text.includes("бриган")) addLootTag(tags, "brigand");
+  if (text.includes("целлиат")) addLootTag(tags, "celiate");
+
+  return Array.from(tags);
+}
+
+function normalizeArsenalLootTags(value: unknown, item: Partial<ArsenalItem>): ArsenalLootTag[] {
+  if (Array.isArray(value)) {
+    return value
+      .filter((tag): tag is ArsenalLootTag => {
+        return typeof tag === "string" && ARSENAL_LOOT_TAGS.includes(tag as ArsenalLootTag);
+      });
+  }
+
+  return guessArsenalLootTags(item);
+}
+
+export function normalizeArsenalItem(item: Partial<ArsenalItem>): ArsenalItem {
   const slot = normalizeArsenalSlot(item.slot);
   const category = normalizeArsenalCategory(item.category, slot);
 
@@ -476,7 +847,21 @@ function normalizeArsenalItem(item: Partial<ArsenalItem>): ArsenalItem {
     description: typeof item.description === "string" ? item.description : "",
     rules: typeof item.rules === "string" ? item.rules : "",
     tags: typeof item.tags === "string" ? item.tags : "",
-    rarity: typeof item.rarity === "string" ? item.rarity : "",
+
+    rarity: normalizeArsenalRarity(item.rarity),
+    lootAvailability: normalizeLootAvailability(
+      (item as Partial<ArsenalItem>).lootAvailability,
+      item,
+    ),
+    condition: normalizeArsenalItemCondition(
+      (item as Partial<ArsenalItem>).condition,
+      item,
+    ),
+    lootTags: normalizeArsenalLootTags(
+      (item as Partial<ArsenalItem>).lootTags,
+      item,
+    ),
+
     weight: typeof item.weight === "string" ? item.weight : "",
     price: typeof item.price === "string" ? item.price : "",
 
@@ -501,21 +886,27 @@ export function loadSavedArsenalItems() {
   const savedItems = localStorage.getItem(ARSENAL_ITEMS_STORAGE_KEY);
 
   if (!savedItems) {
-    return campaignData.arsenalItems;
+    return campaignData.arsenalItems.map((item) =>
+      normalizeArsenalItem(item as Partial<ArsenalItem>),
+    );
   }
 
   try {
     const parsedItems = JSON.parse(savedItems);
 
     if (!Array.isArray(parsedItems)) {
-      return campaignData.arsenalItems;
+      return campaignData.arsenalItems.map((item) =>
+        normalizeArsenalItem(item as Partial<ArsenalItem>),
+      );
     }
 
     return parsedItems.map((item) =>
       normalizeArsenalItem(item as Partial<ArsenalItem>),
     );
   } catch {
-    return campaignData.arsenalItems;
+    return campaignData.arsenalItems.map((item) =>
+      normalizeArsenalItem(item as Partial<ArsenalItem>),
+    );
   }
 }
 

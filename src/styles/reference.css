@@ -388,3 +388,65 @@
   color: var(--blood-seal);
   font-size: 11px;
 }
+
+/* Arsenal loot metadata */
+
+.arsenal-loot-tags-panel {
+  display: grid;
+  gap: 10px;
+  border: 1px solid rgba(36, 26, 18, 0.16);
+  border-radius: 16px;
+  padding: 12px;
+  background: rgba(255, 244, 210, 0.3);
+}
+
+.arsenal-loot-tags-panel h4 {
+  margin: 2px 0 0;
+  color: var(--ink);
+  font-size: 18px;
+  line-height: 1;
+}
+
+.arsenal-loot-tag-group {
+  display: grid;
+  gap: 6px;
+}
+
+.arsenal-loot-tag-group strong {
+  color: var(--blood-seal);
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 11px;
+  font-weight: 950;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.arsenal-loot-tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.arsenal-loot-tag-list button {
+  border: 1px solid rgba(36, 26, 18, 0.18);
+  border-radius: 999px;
+  padding: 6px 9px;
+  color: var(--ink-soft);
+  background: rgba(255, 244, 210, 0.42);
+  cursor: pointer;
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.arsenal-loot-tag-list button:hover {
+  border-color: rgba(124, 37, 34, 0.36);
+  color: var(--ink);
+  background: rgba(255, 244, 210, 0.64);
+}
+
+.arsenal-loot-tag-list button.active {
+  border-color: rgba(124, 37, 34, 0.5);
+  color: #fff3cf;
+  background: linear-gradient(180deg, #5a2d22, var(--leather));
+}

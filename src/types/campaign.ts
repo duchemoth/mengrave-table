@@ -132,6 +132,79 @@ export type ArsenalResourceSubtype =
   | "materials"
   | "other";
 
+export type ArsenalItemRarity =
+  | "junk"
+  | "common"
+  | "standard"
+  | "good"
+  | "rare"
+  | "faction"
+  | "elite"
+  | "unique"
+  | "forbidden"
+  | "quest";
+
+export type ArsenalLootAvailability =
+  | "never"
+  | "starter"
+  | "commonLoot"
+  | "dangerLoot"
+  | "reward"
+  | "manual";
+
+export type ArsenalItemCondition =
+  | "new"
+  | "working"
+  | "worn"
+  | "damaged"
+  | "makeshift"
+  | "dirty"
+  | "infected"
+  | "radiating"
+  | "incomplete"
+  | "trophy";
+
+export type ArsenalLootTag =
+  | "apis"
+  | "voyage"
+  | "horst"
+  | "obscuria"
+  | "battle"
+  | "technical"
+  | "medical"
+  | "domestic"
+  | "storage"
+  | "corpse"
+  | "infection"
+  | "weapon"
+  | "ammo"
+  | "armor"
+  | "healing"
+  | "repair"
+  | "tool"
+  | "fuel"
+  | "food"
+  | "water"
+  | "document"
+  | "clue"
+  | "quest"
+  | "container"
+  | "noisy"
+  | "heavy"
+  | "fragile"
+  | "suspicious"
+  | "forbidden"
+  | "radiating"
+  | "reflectionRisk"
+  | "infectionRisk"
+  | "inspectionRisk"
+  | "euler"
+  | "evergal"
+  | "temerat"
+  | "valour"
+  | "brigand"
+  | "celiate";
+
 export type ArsenalItem = {
   id: string;
   name: string;
@@ -144,8 +217,15 @@ export type ArsenalItem = {
 
   description: string;
   rules: string;
+
+  // Свободные ручные теги / заметки. Новому генератору лучше использовать lootTags.
   tags: string;
-  rarity: string;
+
+  rarity: ArsenalItemRarity;
+  lootAvailability: ArsenalLootAvailability;
+  condition: ArsenalItemCondition;
+  lootTags: ArsenalLootTag[];
+
   weight: string;
   price: string;
 

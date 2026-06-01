@@ -36,6 +36,7 @@ import {
   createEmptyInventory,
   createEmptyWallet,
   loadSavedArsenalItems,
+  normalizeArsenalItem,
 } from "../lib/storage";
 
 export function useCampaign() {
@@ -369,7 +370,11 @@ export function useCampaign() {
         }
 
         if (Array.isArray(parsedData.campaign?.arsenalItems)) {
-          setArsenalItems(parsedData.campaign.arsenalItems);
+          setArsenalItems(
+            parsedData.campaign.arsenalItems.map((item) =>
+              normalizeArsenalItem(item as Partial<ArsenalItem>),
+            ),
+          );
         }
 
         onSuccess?.(normalizedLocations[0].id, parsedData.campaign);

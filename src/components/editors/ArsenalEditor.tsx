@@ -3,7 +3,11 @@ import type {
     ArsenalArmorSubtype,
     ArsenalItem,
     ArsenalItemCategory,
+    ArsenalItemCondition,
+    ArsenalItemRarity,
     ArsenalItemSlot,
+    ArsenalLootAvailability,
+    ArsenalLootTag,
     ArsenalResourceSubtype,
     ArsenalWeaponSubtype,
 } from "../../types/campaign";
@@ -79,6 +83,99 @@ const RESOURCE_SUBTYPE_OPTIONS: {
         { value: "other", label: "Прочие ресурсы" },
     ];
 
+const RARITY_OPTIONS: {
+    value: ArsenalItemRarity;
+    label: string;
+}[] = [
+        { value: "junk", label: "Хлам / мусор" },
+        { value: "common", label: "Распространённое" },
+        { value: "standard", label: "Обычное" },
+        { value: "good", label: "Добротное" },
+        { value: "rare", label: "Редкое" },
+        { value: "faction", label: "Фракционное" },
+        { value: "elite", label: "Элитное" },
+        { value: "unique", label: "Уникальное" },
+        { value: "forbidden", label: "Запрещённое" },
+        { value: "quest", label: "Сюжетное" },
+    ];
+
+const LOOT_AVAILABILITY_OPTIONS: {
+    value: ArsenalLootAvailability;
+    label: string;
+}[] = [
+        { value: "never", label: "Не выпадает" },
+        { value: "starter", label: "Стартовый / безопасный лут" },
+        { value: "commonLoot", label: "Обычные находки" },
+        { value: "dangerLoot", label: "Опасные находки" },
+        { value: "reward", label: "Ценная награда" },
+        { value: "manual", label: "Только вручную / сюжетно" },
+    ];
+
+const CONDITION_OPTIONS: {
+    value: ArsenalItemCondition;
+    label: string;
+}[] = [
+        { value: "new", label: "Новое" },
+        { value: "working", label: "Рабочее" },
+        { value: "worn", label: "Потрёпанное" },
+        { value: "damaged", label: "Повреждённое" },
+        { value: "makeshift", label: "Самодельное" },
+        { value: "dirty", label: "Грязное" },
+        { value: "infected", label: "Заражённое" },
+        { value: "radiating", label: "Фонящее" },
+        { value: "incomplete", label: "Неполное" },
+        { value: "trophy", label: "Трофейное" },
+    ];
+
+const LOOT_TAG_OPTIONS: {
+    value: ArsenalLootTag;
+    label: string;
+    group: string;
+}[] = [
+        { value: "apis", label: "Апис", group: "Контекст" },
+        { value: "voyage", label: "Вояж", group: "Контекст" },
+        { value: "horst", label: "Горст", group: "Контекст" },
+        { value: "obscuria", label: "Обскурия", group: "Контекст" },
+        { value: "battle", label: "Бой", group: "Контекст" },
+        { value: "technical", label: "Техника", group: "Контекст" },
+        { value: "medical", label: "Медицина", group: "Контекст" },
+        { value: "domestic", label: "Быт", group: "Контекст" },
+        { value: "storage", label: "Склад / поклажа", group: "Контекст" },
+        { value: "corpse", label: "Труп", group: "Контекст" },
+        { value: "infection", label: "Заражение", group: "Контекст" },
+
+        { value: "weapon", label: "Оружие", group: "Функция" },
+        { value: "ammo", label: "Боеприпасы", group: "Функция" },
+        { value: "armor", label: "Броня", group: "Функция" },
+        { value: "healing", label: "Лечение", group: "Функция" },
+        { value: "repair", label: "Ремонт", group: "Функция" },
+        { value: "tool", label: "Инструмент", group: "Функция" },
+        { value: "fuel", label: "Топливо", group: "Функция" },
+        { value: "food", label: "Еда", group: "Функция" },
+        { value: "water", label: "Вода", group: "Функция" },
+        { value: "document", label: "Документ", group: "Функция" },
+        { value: "clue", label: "Улика", group: "Функция" },
+        { value: "quest", label: "Квестовое", group: "Функция" },
+        { value: "container", label: "Контейнер", group: "Функция" },
+
+        { value: "noisy", label: "Шумит", group: "Риск" },
+        { value: "heavy", label: "Тяжёлое", group: "Риск" },
+        { value: "fragile", label: "Хрупкое", group: "Риск" },
+        { value: "suspicious", label: "Подозрительное", group: "Риск" },
+        { value: "forbidden", label: "Запрещённое", group: "Риск" },
+        { value: "radiating", label: "Фонит", group: "Риск" },
+        { value: "reflectionRisk", label: "Риск Отражения", group: "Риск" },
+        { value: "infectionRisk", label: "Риск заражения", group: "Риск" },
+        { value: "inspectionRisk", label: "Опасно на досмотре", group: "Риск" },
+
+        { value: "euler", label: "Эйлер", group: "Фракция" },
+        { value: "evergal", label: "Эвергаль", group: "Фракция" },
+        { value: "temerat", label: "Темерат", group: "Фракция" },
+        { value: "valour", label: "Валор", group: "Фракция" },
+        { value: "brigand", label: "Бриганты", group: "Фракция" },
+        { value: "celiate", label: "Целлиат", group: "Фракция" },
+    ];
+
 function getWeaponSubtypeLabel(value: ArsenalWeaponSubtype | undefined) {
     return (
         WEAPON_SUBTYPE_OPTIONS.find((option) => option.value === value)?.label ??
@@ -98,6 +195,38 @@ function getResourceSubtypeLabel(value: ArsenalResourceSubtype | undefined) {
         RESOURCE_SUBTYPE_OPTIONS.find((option) => option.value === value)?.label ??
         "Прочие ресурсы"
     );
+}
+
+function getRarityLabel(value: ArsenalItemRarity) {
+    return RARITY_OPTIONS.find((option) => option.value === value)?.label ?? value;
+}
+
+function getLootAvailabilityLabel(value: ArsenalLootAvailability) {
+    return (
+        LOOT_AVAILABILITY_OPTIONS.find((option) => option.value === value)?.label ??
+        value
+    );
+}
+
+function getConditionLabel(value: ArsenalItemCondition) {
+    return CONDITION_OPTIONS.find((option) => option.value === value)?.label ?? value;
+}
+
+function getLootTagLabel(value: ArsenalLootTag) {
+    return LOOT_TAG_OPTIONS.find((option) => option.value === value)?.label ?? value;
+}
+
+function groupLootTagsByGroup() {
+    const groups = new Map<string, typeof LOOT_TAG_OPTIONS>();
+
+    LOOT_TAG_OPTIONS.forEach((option) => {
+        groups.set(option.group, [...(groups.get(option.group) ?? []), option]);
+    });
+
+    return Array.from(groups.entries()).map(([title, options]) => ({
+        title,
+        options,
+    }));
 }
 
 function getArmorSubtypeFromSlot(slot: ArsenalItemSlot): ArsenalArmorSubtype | undefined {
@@ -134,7 +263,11 @@ function createArsenalItem(): ArsenalItem {
         description: "",
         rules: "",
         tags: "",
-        rarity: "",
+        rarity: "standard",
+        lootAvailability: "commonLoot",
+        condition: "working",
+        lootTags: [],
+
         weight: "",
         price: "",
 
@@ -201,6 +334,8 @@ export function ArsenalEditor({
 
     const [openSubtypeGroups, setOpenSubtypeGroups] = useState<Record<string, boolean>>({});
 
+    const lootTagGroups = useMemo(() => groupLootTagsByGroup(), []);
+
     const filteredItems = useMemo(() => {
         const normalizedSearch = searchQuery.trim().toLowerCase();
 
@@ -210,7 +345,13 @@ export function ArsenalEditor({
                 item.name.toLowerCase().includes(normalizedSearch) ||
                 item.description.toLowerCase().includes(normalizedSearch) ||
                 item.rules.toLowerCase().includes(normalizedSearch) ||
-                item.tags.toLowerCase().includes(normalizedSearch);
+                item.tags.toLowerCase().includes(normalizedSearch) ||
+                getRarityLabel(item.rarity).toLowerCase().includes(normalizedSearch) ||
+                getLootAvailabilityLabel(item.lootAvailability).toLowerCase().includes(normalizedSearch) ||
+                getConditionLabel(item.condition).toLowerCase().includes(normalizedSearch) ||
+                item.lootTags.some((tag) =>
+                    getLootTagLabel(tag).toLowerCase().includes(normalizedSearch),
+                );
 
             const matchesCategory =
                 categoryFilter === "all" || item.category === categoryFilter;
@@ -413,6 +554,22 @@ export function ArsenalEditor({
                     : item,
             ),
         );
+    }
+
+    function toggleLootTag(tag: ArsenalLootTag) {
+        if (!selectedItem) {
+            return;
+        }
+
+        const currentTags = Array.isArray(selectedItem.lootTags)
+            ? selectedItem.lootTags
+            : [];
+
+        updateItem({
+            lootTags: currentTags.includes(tag)
+                ? currentTags.filter((currentTag) => currentTag !== tag)
+                : [...currentTags, tag],
+        });
     }
 
     function deleteItem() {
@@ -691,7 +848,7 @@ export function ArsenalEditor({
                                 </label>
 
                                 <label>
-                                    Слот
+                                    Слот / место
                                     <select
                                         value={selectedItem.slot}
                                         onChange={(event) =>
@@ -707,72 +864,55 @@ export function ArsenalEditor({
                                 </label>
                             </div>
 
-                            {selectedItem.slot === "loadBearing" && (
+                            <div className="arsenal-form-grid">
                                 <label>
-                                    Быстрые слоты разгрузки
+                                    Редкость
                                     <select
-                                        value={selectedItem.quickSlotCount ?? 2}
+                                        value={selectedItem.rarity}
+                                        onChange={(event) =>
+                                            updateItem({ rarity: event.target.value as ArsenalItemRarity })
+                                        }
+                                    >
+                                        {RARITY_OPTIONS.map((option) => (
+                                            <option key={option.value} value={option.value}>
+                                                {option.label}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </label>
+
+                                <label>
+                                    Доступность в находках
+                                    <select
+                                        value={selectedItem.lootAvailability}
                                         onChange={(event) =>
                                             updateItem({
-                                                quickSlotCount: Number(event.target.value) as 2 | 4 | 6,
+                                                lootAvailability: event.target.value as ArsenalLootAvailability,
                                             })
                                         }
                                     >
-                                        <option value={2}>2 слота</option>
-                                        <option value={4}>4 слота</option>
-                                        <option value={6}>6 слотов</option>
+                                        {LOOT_AVAILABILITY_OPTIONS.map((option) => (
+                                            <option key={option.value} value={option.value}>
+                                                {option.label}
+                                            </option>
+                                        ))}
                                     </select>
                                 </label>
-                            )}
 
-                            {selectedItem.slot === "backpack" && (
                                 <label>
-                                    Слоты рюкзака
-                                    <input
-                                        type="number"
-                                        min={0}
-                                        value={selectedItem.backpackSlotCount ?? 6}
+                                    Состояние
+                                    <select
+                                        value={selectedItem.condition}
                                         onChange={(event) =>
-                                            updateItem({
-                                                backpackSlotCount: Math.max(
-                                                    0,
-                                                    Math.floor(Number(event.target.value) || 0),
-                                                ),
-                                            })
+                                            updateItem({ condition: event.target.value as ArsenalItemCondition })
                                         }
-                                        placeholder="Например: 4, 6, 8, 12"
-                                    />
-                                </label>
-                            )}
-
-                            <label>
-                                Описание
-                                <textarea
-                                    value={selectedItem.description}
-                                    onChange={(event) =>
-                                        updateItem({ description: event.target.value })
-                                    }
-                                    placeholder="Краткое описание предмета, внешний вид, назначение..."
-                                />
-                            </label>
-
-                            <label>
-                                Правила / свойства
-                                <textarea
-                                    value={selectedItem.rules}
-                                    onChange={(event) => updateItem({ rules: event.target.value })}
-                                    placeholder="Урон, защита, особенности, ограничения, эффекты..."
-                                />
-                            </label>
-
-                            <div className="arsenal-form-grid">
-                                <label>
-                                    Редкость / доступ
-                                    <input
-                                        value={selectedItem.rarity}
-                                        onChange={(event) => updateItem({ rarity: event.target.value })}
-                                        placeholder="обычное / редкое / фракционное"
-                                    />
+                                    >
+                                        {CONDITION_OPTIONS.map((option) => (
+                                            <option key={option.value} value={option.value}>
+                                                {option.label}
+                                            </option>
+                                        ))}
+                                    </select>
                                 </label>
 
                                 <label>
@@ -794,14 +934,44 @@ export function ArsenalEditor({
                                 </label>
 
                                 <label>
-                                    Теги
+                                    Ручные теги / заметки
                                     <input
                                         value={selectedItem.tags}
                                         onChange={(event) => updateItem({ tags: event.target.value })}
-                                        placeholder="шумное, надёжное, редкое"
+                                        placeholder="Свободный текст, если нужно"
                                     />
                                 </label>
                             </div>
+
+                            <section className="arsenal-loot-tags-panel">
+                                <div>
+                                    <p className="eyebrow">Генератор находок</p>
+                                    <h4>Лут-теги</h4>
+                                </div>
+
+                                {lootTagGroups.map((group) => (
+                                    <div key={group.title} className="arsenal-loot-tag-group">
+                                        <strong>{group.title}</strong>
+
+                                        <div className="arsenal-loot-tag-list">
+                                            {group.options.map((option) => {
+                                                const isActive = selectedItem.lootTags.includes(option.value);
+
+                                                return (
+                                                    <button
+                                                        key={option.value}
+                                                        className={isActive ? "active" : ""}
+                                                        type="button"
+                                                        onClick={() => toggleLootTag(option.value)}
+                                                    >
+                                                        {option.label}
+                                                    </button>
+                                                );
+                                            })}
+                                        </div>
+                                    </div>
+                                ))}
+                            </section>
 
                             {selectedItem.category === "weapon" && (
                                 <label>
@@ -904,12 +1074,14 @@ export function ArsenalEditor({
                             )}
 
                             <dl>
-                                {selectedItem.rarity.trim().length > 0 && (
-                                    <>
-                                        <dt>Доступ</dt>
-                                        <dd>{selectedItem.rarity}</dd>
-                                    </>
-                                )}
+                                <dt>Редкость</dt>
+                                <dd>{getRarityLabel(selectedItem.rarity)}</dd>
+
+                                <dt>Доступность</dt>
+                                <dd>{getLootAvailabilityLabel(selectedItem.lootAvailability)}</dd>
+
+                                <dt>Состояние</dt>
+                                <dd>{getConditionLabel(selectedItem.condition)}</dd>
 
                                 {selectedItem.weight.trim().length > 0 && (
                                     <>
@@ -929,6 +1101,17 @@ export function ArsenalEditor({
                                     <>
                                         <dt>Теги</dt>
                                         <dd>{selectedItem.tags}</dd>
+                                    </>
+                                )}
+
+                                {selectedItem.lootTags.length > 0 && (
+                                    <>
+                                        <dt>Лут-теги</dt>
+                                        <dd>
+                                            {selectedItem.lootTags
+                                                .map((tag) => getLootTagLabel(tag))
+                                                .join(", ")}
+                                        </dd>
                                     </>
                                 )}
                             </dl>
