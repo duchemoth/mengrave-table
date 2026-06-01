@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { LocalMapViewer } from "./LocalMapViewer";
 import type {
+  ArsenalItem,
   Location,
   MapEvent,
   MapEventScale,
@@ -58,6 +59,7 @@ type EncounterModalProps = {
   initialMode: EncounterMode;
   canShowToPlayers: boolean;
   dossierArticles: ReferenceArticle[];
+  arsenalItems: ArsenalItem[];
   onOpenDossier: (articleId: string) => void;
   onShowToPlayers: (
     targetKind: EncounterTarget["kind"],
@@ -420,6 +422,7 @@ export function EncounterModal({
   initialMode,
   canShowToPlayers,
   dossierArticles,
+  arsenalItems,
   onOpenDossier,
   onShowToPlayers,
   onShowGlobalMapToPlayers,
@@ -1046,6 +1049,7 @@ export function EncounterModal({
             isPlayerMode={isPlayerMode}
             canShowToPlayers={canShowToPlayers}
             dossierArticles={dossierArticles}
+            arsenalItems={arsenalItems}
             onOpenDossier={onOpenDossier}
             onShowToPlayers={() => showCurrentToPlayers("localMap")}
             onBackToOverview={() => setMode("overview")}

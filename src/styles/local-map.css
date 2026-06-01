@@ -981,3 +981,118 @@
   cursor: grabbing;
   user-select: none;
 }
+
+/* Loot generator modal */
+
+.loot-generator-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(18, 10, 8, 0.48);
+  backdrop-filter: blur(3px);
+}
+
+.loot-generator-modal {
+  width: min(720px, calc(100vw - 48px));
+  max-height: min(760px, calc(100dvh - 48px));
+  display: grid;
+  gap: 14px;
+  overflow: auto;
+  border: 1px solid rgba(234, 216, 173, 0.34);
+  border-radius: 22px;
+  padding: 16px;
+  color: var(--ink);
+  background:
+    linear-gradient(135deg, rgba(234, 216, 173, 0.98), rgba(216, 195, 154, 0.97));
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.44);
+}
+
+.loot-generator-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.loot-generator-header h3 {
+  margin: 2px 0 4px;
+  color: var(--ink);
+  font-size: 30px;
+  line-height: 1;
+}
+
+.loot-generator-header small,
+.loot-generator-hint {
+  color: var(--ink-soft);
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 850;
+  line-height: 1.4;
+}
+
+.loot-generator-close {
+  width: 34px;
+  height: 34px;
+  border: 1px solid rgba(36, 26, 18, 0.2);
+  border-radius: 999px;
+  color: var(--ink);
+  background: rgba(255, 244, 210, 0.4);
+  cursor: pointer;
+  font-size: 22px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.loot-generator-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.loot-generator-grid label,
+.loot-generator-checkbox {
+  display: grid;
+  gap: 6px;
+  color: var(--ink-soft);
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.loot-generator-checkbox {
+  grid-template-columns: auto 1fr;
+  align-items: center;
+}
+
+.loot-generator-grid select,
+.loot-generator-result {
+  width: 100%;
+  border: 1px solid rgba(36, 26, 18, 0.24);
+  border-radius: 12px;
+  padding: 10px 12px;
+  color: var(--ink);
+  background: rgba(255, 244, 210, 0.58);
+  outline: none;
+  font: 800 13px/1.45 Inter, system-ui, sans-serif;
+}
+
+.loot-generator-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.loot-generator-result {
+  min-height: 220px;
+  resize: vertical;
+  white-space: pre-wrap;
+}
+
+@media (max-width: 760px) {
+  .loot-generator-grid {
+    grid-template-columns: 1fr;
+  }
+}

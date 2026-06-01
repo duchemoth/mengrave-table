@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import type { ReferenceArticle } from "../types/campaign";
+import { LootGeneratorModal } from "./LootGeneratorModal";
+import type { ArsenalItem, ReferenceArticle } from "../types/campaign";
 
 type JournalEntryDraft = {
     type: "expedition" | "map" | "scene" | "inventory" | "master" | "other";
@@ -63,6 +64,7 @@ type LocalMapViewerProps = {
     isPlayerMode: boolean;
     canShowToPlayers: boolean;
     dossierArticles: ReferenceArticle[];
+    arsenalItems: ArsenalItem[];
     onOpenDossier: (articleId: string) => void;
     onShowToPlayers: () => void;
     onBackToOverview: () => void;
@@ -371,6 +373,7 @@ export function LocalMapViewer({
     isPlayerMode,
     canShowToPlayers,
     dossierArticles,
+    arsenalItems,
     onOpenDossier,
     onShowToPlayers,
     onBackToOverview,
@@ -384,6 +387,8 @@ export function LocalMapViewer({
     const [selectedPointId, setSelectedPointId] = useState<string | null>(null);
     const [isPlacingPoint, setIsPlacingPoint] = useState(false);
     const [levelHistory, setLevelHistory] = useState<string[]>([]);
+
+    const [isLootGeneratorOpen, setIsLootGeneratorOpen] = useState(false);
 
     const localMapFrameRef = useRef<HTMLDivElement | null>(null);
 
@@ -440,6 +445,7 @@ export function LocalMapViewer({
             setSelectedPointId(null);
             setIsPlacingPoint(false);
             setLevelHistory([]);
+            setIsLootGeneratorOpen(false);
             return;
         }
 
@@ -459,6 +465,7 @@ export function LocalMapViewer({
         setSelectedPointId(null);
         setIsPlacingPoint(false);
         setLevelHistory([]);
+        setIsLootGeneratorOpen(false);
     }, [storageKey]);
 
     useEffect(() => {
@@ -657,6 +664,26 @@ export function LocalMapViewer({
         updateActiveLevelPoints(nextPoints);
     }
 
+    function insertGeneratedFindings(text: string) {
+        if (!selectedPoint || !text.trim()) {
+            return;
+        }
+
+        const nextFindings = [
+            selectedPoint.findings.trim(),
+            text.trim(),
+        ]
+            .filter(Boolean)
+            .join("\n\n");
+
+        updateSelectedPoint({
+            findings: nextFindings,
+            isKeyScene: true,
+        });
+
+        setIsLootGeneratorOpen(false);
+    }
+
     function deleteSelectedPoint() {
         if (!selectedPoint) {
             return;
@@ -839,6 +866,7 @@ export function LocalMapViewer({
         setSelectedPointId(null);
         setIsPlacingPoint(false);
         setLevelHistory([]);
+        setIsLootGeneratorOpen(false);
         saveDraft(nextLevels, nextActiveLevelId);
     }
 
@@ -1214,6 +1242,16 @@ export function LocalMapViewer({
                                         Создать подуровень из точки
                                     </button>
 
+                                    {!isPlayerMode && (
+                                        <button
+                                            className="secondary-button"
+                                            type="button"
+                                            onClick={() => setIsLootGeneratorOpen(true)}
+                                        >
+                                            Сгенерировать находки
+                                        </button>
+                                    )}
+
                                     <button
                                         className="secondary-button"
                                         type="button"
@@ -1482,6 +1520,16 @@ export function LocalMapViewer({
                     Закрыть
                 </button>
             </footer>
+
+            {selectedPoint && (
+                <LootGeneratorModal
+                    isOpen={isLootGeneratorOpen}
+                    sourceTitle={`${activeLevel.title} — ${selectedPoint.title}`}
+                    arsenalItems={arsenalItems}
+                    onClose={() => setIsLootGeneratorOpen(false)}
+                    onInsertToFindings={insertGeneratedFindings}
+                />
+            )}
         </>
     );
 }

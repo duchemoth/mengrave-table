@@ -2785,6 +2785,7 @@ function App() {
         initialMode={encounterInitialMode}
         canShowToPlayers={!isPlayerMode && !isPlayerScreen}
         dossierArticles={dossierArticles}
+        arsenalItems={arsenalItems}
         onOpenDossier={handleOpenDossier}
         onShowGlobalMapToPlayers={handleShowGlobalMapToPlayers}
         onShowToPlayers={handleShowToPlayers}

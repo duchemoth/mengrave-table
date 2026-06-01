@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "exportedAt": "2026-06-01T07:59:55.511Z",
+  "exportedAt": "2026-06-01T12:41:26.087Z",
   "type": "mogila-chelovechestva-campaign",
   "campaign": {
     "locations": [
@@ -203,7 +203,7 @@
         "scale": "major"
       },
       {
-        "title": "Шум свозь чащу",
+        "title": "Шум сквозь чащу",
         "category": "object",
         "status": "active",
         "description": "Лес и низина закрывают обзор, стволы стоят плотно, воздух влажный, звук тонет в ветках и паре.",
@@ -4162,8 +4162,8 @@
           "corpse",
           "storage"
         ],
-        "weight": "200 гр",
-        "price": "",
+        "weight": "200 г",
+        "price": "50 мА",
         "isVisibleToPlayers": true
       },
       {
@@ -4187,8 +4187,8 @@
           "storage",
           "suspicious"
         ],
-        "weight": "",
-        "price": "50 амп",
+        "weight": "4 кг",
+        "price": "50 А",
         "isVisibleToPlayers": true
       },
       {
@@ -4207,19 +4207,19 @@
           "armor",
           "battle"
         ],
-        "weight": "",
+        "weight": "3 кг",
         "price": "2 А",
         "isVisibleToPlayers": true
       },
       {
         "id": "arsenal-item-1778758549674",
-        "name": "Стёганный койф",
+        "name": "Стёганый койф",
         "category": "armor",
         "slot": "headArmor",
         "armorSubtype": "head",
-        "description": "",
+        "description": "Мягкий стёганый головной убор под шлем или вместо шлема. Плохо держит серьёзный удар, но защищает от холода, грязи, мелких осколков и ссадин.",
         "rules": "",
-        "tags": "простая защита головы; можно выдавать как дешёвую находку, не ломает баланс",
+        "tags": "Мягкий стёганый головной убор под шлем или сам по себе. Плохо держит серьёзный удар, но защищает от холода, грязи, мелких осколков и ссадин.",
         "rarity": "common",
         "lootAvailability": "starter",
         "condition": "worn",
@@ -4230,8 +4230,8 @@
           "corpse",
           "storage"
         ],
-        "weight": "",
-        "price": "",
+        "weight": "0,5 кг",
+        "price": "800 мА",
         "isVisibleToPlayers": true
       },
       {
@@ -4256,7 +4256,7 @@
           "inspectionRisk",
           "celiate"
         ],
-        "weight": "",
+        "weight": "1,5 кг",
         "price": "25–40 А",
         "isVisibleToPlayers": true
       },
@@ -4265,7 +4265,7 @@
         "name": "Разгрузка старая",
         "category": "loadBearing",
         "slot": "loadBearing",
-        "description": "",
+        "description": "Потёртая система ремней, карманов и креплений для мелкого снаряжения. Неудобная, но позволяет держать под рукой патроны, нож, жгут или инструмент.",
         "rules": "",
         "tags": "полезна для переноски мелких предметов; можно выдавать часто, но в грязном или изношенном виде",
         "rarity": "common",
@@ -4277,8 +4277,8 @@
           "battle",
           "corpse"
         ],
-        "weight": "",
-        "price": "",
+        "weight": "1 кг",
+        "price": "1 А",
         "quickSlotCount": 4,
         "isVisibleToPlayers": true
       },
@@ -4296,12 +4296,11 @@
         "lootTags": [
           "healing",
           "medical",
-          "apis",
           "voyage",
-          "horst",
+          "fief",
           "storage"
         ],
-        "weight": "",
+        "weight": "100 г",
         "price": "350 мА",
         "isVisibleToPlayers": true
       },
@@ -4326,7 +4325,7 @@
           "suspicious",
           "inspectionRisk"
         ],
-        "weight": "",
+        "weight": "1,2 кг",
         "price": "18 А",
         "isVisibleToPlayers": true
       },
@@ -4336,7 +4335,7 @@
         "category": "armor",
         "slot": "torsoArmor",
         "armorSubtype": "torso",
-        "description": "",
+        "description": "Лёгкий жилет с защитными вставками против пистольверной пули, осколков и грубого удара. Не делает владельца неуязвимым и плохо помогает против тяжёлого оружия.",
         "rules": "",
         "tags": "полноценная защитная находка; лучше выдавать за риск, через вооружённого NPC, охрану или закрытый ящик",
         "rarity": "good",
@@ -4347,19 +4346,22 @@
           "battle",
           "corpse",
           "suspicious",
-          "inspectionRisk"
+          "inspectionRisk",
+          "temerat",
+          "voyage",
+          "fief"
         ],
-        "weight": "",
-        "price": "",
+        "weight": "5 кг",
+        "price": "20 А",
         "isVisibleToPlayers": true
       },
       {
         "id": "arsenal-item-1779097740520",
-        "name": "Кожаные Налокотники с Наручами",
+        "name": "Кожаные налокотники с наручами",
         "category": "armor",
         "slot": "armsArmor",
         "armorSubtype": "arms",
-        "description": "",
+        "description": "Потрёпанная защита предплечий и локтей из толстой кожи с грубыми вставками. Полезна против царапин, укусов, скользящих ударов и грязной работы.",
         "rules": "",
         "tags": "простая защита рук; хороша как обычный лут, особенно в грязных рабочих или боевых местах",
         "rarity": "common",
@@ -4372,17 +4374,17 @@
           "corpse",
           "storage"
         ],
-        "weight": "",
-        "price": "",
+        "weight": "1 кг",
+        "price": "700 мА",
         "isVisibleToPlayers": true
       },
       {
         "id": "arsenal-item-1779097776936",
-        "name": "Кожаная Защита Ног",
+        "name": "Кожаная защита ног",
         "category": "armor",
         "slot": "legsArmor",
         "armorSubtype": "legs",
-        "description": "",
+        "description": "Набор кожаных щитков и ремней для голеней и коленей. Помогает в лесу, грязи, среди обломков и в ближней свалке, но не считается тяжёлой бронёй.",
         "rules": "",
         "tags": "простая защита ног; уместна как рабочая экипировка, трофей или часть неполного комплекта",
         "rarity": "common",
@@ -4395,8 +4397,8 @@
           "domestic",
           "storage"
         ],
-        "weight": "",
-        "price": "",
+        "weight": "1,5 кг",
+        "price": "1 А",
         "isVisibleToPlayers": true
       },
       {
@@ -4404,7 +4406,7 @@
         "name": "Маска Химзащиты",
         "category": "protection",
         "slot": "protection",
-        "description": "",
+        "description": "Закрывающая лицо маска с фильтром и плотными ремнями. Защищает от дыма, пыли, грязной взвеси и части заражающих факторов, но требует исправного фильтра.",
         "rules": "",
         "tags": "не обычный мусор; выдавать как полезную защиту от дыма, грязной среды или заражённого места",
         "rarity": "good",
@@ -4420,8 +4422,8 @@
           "suspicious",
           "inspectionRisk"
         ],
-        "weight": "",
-        "price": "",
+        "weight": "1 кг",
+        "price": "8 А",
         "isVisibleToPlayers": true
       },
       {
@@ -4429,7 +4431,7 @@
         "name": "Армейская Разгрузочная Система",
         "category": "loadBearing",
         "slot": "loadBearing",
-        "description": "",
+        "description": "Добротная военная система ремней, подсумков и креплений. Удобна для боеприпасов, медицинских средств и быстрого доступа, но заметно выдаёт боевое происхождение.",
         "rules": "",
         "tags": "хорошая носимая система; заметная, может иметь служебный след или вопросы к происхождению",
         "rarity": "good",
@@ -4443,9 +4445,9 @@
           "suspicious",
           "inspectionRisk"
         ],
-        "weight": "",
-        "price": "",
-        "quickSlotCount": 4,
+        "weight": "1,5 кг",
+        "price": "4 А",
+        "quickSlotCount": 6,
         "isVisibleToPlayers": true
       },
       {
@@ -4453,7 +4455,7 @@
         "name": "Точильный Камень",
         "category": "tool",
         "slot": "none",
-        "description": "",
+        "description": "Небольшой камень для правки ножей, топоров и простых лезвий. Дешёвый, тихий и полезный предмет для дороги.",
         "rules": "",
         "tags": "простой полезный предмет; можно выдавать часто, не ломает баланс",
         "rarity": "common",
@@ -4467,8 +4469,8 @@
           "weapon",
           "storage"
         ],
-        "weight": "",
-        "price": "",
+        "weight": "300 г",
+        "price": "100 мА",
         "isVisibleToPlayers": true
       },
       {
@@ -4476,7 +4478,7 @@
         "name": "Экстренный стимдоз",
         "category": "medicine",
         "slot": "none",
-        "description": "",
+        "description": "Сильный одноразовый стимулятор для краткого рывка через боль, шок или истощение. Помогает выиграть время, но не лечит рану и может дорого обойтись после действия.",
         "rules": "",
         "tags": "не выдавать пачками; лучше как разовая находка у санитара, охраны, в аварийном шкафу или у важного NPC",
         "rarity": "rare",
@@ -4488,12 +4490,11 @@
           "corpse",
           "battle",
           "voyage",
-          "apis",
           "suspicious",
           "inspectionRisk"
         ],
-        "weight": "",
-        "price": "",
+        "weight": "50 г",
+        "price": "5 А",
         "isVisibleToPlayers": true
       },
       {
@@ -4502,7 +4503,7 @@
         "category": "resource",
         "slot": "none",
         "resourceSubtype": "supplies",
-        "description": "",
+        "description": "Плотный сухой батончик из злаков, жира и дешёвого белка. Не вкусный, но быстро возвращает силы и помещается почти в любой карман.",
         "rules": "",
         "tags": "мелкая безопасная находка; хорошо для пассажирских сумок и аварийного шкафа",
         "rarity": "common",
@@ -4511,12 +4512,11 @@
         "lootTags": [
           "food",
           "domestic",
-          "apis",
           "voyage",
           "storage"
         ],
-        "weight": "",
-        "price": "",
+        "weight": "100 г",
+        "price": "50 мА",
         "isVisibleToPlayers": true
       },
       {
@@ -4525,7 +4525,7 @@
         "category": "resource",
         "slot": "none",
         "resourceSubtype": "drink",
-        "description": "",
+        "description": "Простой кожаный или прорезиненный бурдюк с водой. Важен не как ценность сам по себе, а как ресурс для группы, раненых и тяжёлого перехода.",
         "rules": "",
         "tags": "базовый ресурс выживания; удобно выдавать с моральной или логистической ценой — кому достанется вода, кто её несёт, можно ли доверять источнику",
         "rarity": "common",
@@ -4534,13 +4534,12 @@
         "lootTags": [
           "water",
           "domestic",
-          "apis",
           "voyage",
           "storage",
           "obscuria"
         ],
-        "weight": "",
-        "price": "",
+        "weight": "1 кг",
+        "price": "150 мА",
         "isVisibleToPlayers": true
       },
       {
@@ -4549,7 +4548,7 @@
         "category": "weapon",
         "slot": "shoulderWeapon",
         "weaponSubtype": "melee",
-        "description": "",
+        "description": "Простое древковое оружие человеческого роста или чуть меньше. Удобно для удержания прохода, добивания на дистанции и осторожной работы против твари.",
         "rules": "",
         "tags": "хорошее простое оружие для удержания прохода; не выдавать как мусор, но можно находить у оборонительных точек и тел",
         "rarity": "standard",
@@ -4560,10 +4559,10 @@
           "battle",
           "corpse",
           "domestic",
-          "horst"
+          "fief"
         ],
-        "weight": "",
-        "price": "",
+        "weight": "2 кг",
+        "price": "2 А",
         "isVisibleToPlayers": true
       },
       {
@@ -4572,7 +4571,7 @@
         "category": "weapon",
         "slot": "shoulderWeapon",
         "weaponSubtype": "melee",
-        "description": "",
+        "description": "Тяжёлая служебная дубинка для караула, разгона и ближней драки. Не изящная, но надёжная и понятная.",
         "rules": "",
         "tags": "простое служебное оружие; если предмет явно служебный, может вызвать вопросы о происхождении",
         "rarity": "common",
@@ -4582,11 +4581,11 @@
           "weapon",
           "battle",
           "corpse",
-          "horst",
+          "fief",
           "temerat"
         ],
-        "weight": "",
-        "price": "",
+        "weight": "1 кг",
+        "price": "500 мА",
         "isVisibleToPlayers": true
       },
       {
@@ -4608,8 +4607,8 @@
           "corpse",
           "domestic"
         ],
-        "weight": "",
-        "price": "",
+        "weight": "2 кг",
+        "price": "3 А",
         "isVisibleToPlayers": true
       },
       {
@@ -4633,7 +4632,7 @@
           "fuel"
         ],
         "weight": "1 кг",
-        "price": "1,5 амп",
+        "price": "1,5 А",
         "isVisibleToPlayers": true
       },
       {
@@ -4655,7 +4654,7 @@
           "heavy"
         ],
         "weight": "3 кг",
-        "price": "500 м/амп",
+        "price": "500 мА",
         "isVisibleToPlayers": true
       },
       {
@@ -4673,14 +4672,13 @@
           "medical",
           "healing",
           "infectionRisk",
-          "apis",
           "voyage",
-          "horst",
+          "fief",
           "storage",
           "domestic"
         ],
         "weight": "0,5 кг",
-        "price": "1.5 А",
+        "price": "1,5 А",
         "isVisibleToPlayers": true
       },
       {
@@ -4698,7 +4696,7 @@
           "noisy"
         ],
         "weight": "1 кг",
-        "price": "200 м/амп",
+        "price": "200 мА",
         "isVisibleToPlayers": true
       },
       {
@@ -4719,7 +4717,7 @@
           "storage"
         ],
         "weight": "1,5 кг",
-        "price": "2 амп",
+        "price": "2 А",
         "isVisibleToPlayers": true
       },
       {
@@ -4738,8 +4736,8 @@
           "storage",
           "tool"
         ],
-        "weight": "200 гр",
-        "price": "2 амп",
+        "weight": "200 г",
+        "price": "2 А",
         "isVisibleToPlayers": true
       },
       {
@@ -4752,14 +4750,16 @@
         "rules": "",
         "tags": "надёжное",
         "rarity": "standard",
-        "lootAvailability": "dangerLoot",
+        "lootAvailability": "starter",
         "condition": "working",
         "lootTags": [
           "armor",
-          "battle"
+          "domestic",
+          "storage",
+          "corpse"
         ],
         "weight": "4 кг",
-        "price": "5 амп",
+        "price": "5 А",
         "isVisibleToPlayers": true
       },
       {
@@ -4767,7 +4767,7 @@
         "name": "Подсумок",
         "category": "loadBearing",
         "slot": "loadBearing",
-        "description": "",
+        "description": "Малый карман или навесная сумка на ремень. Подходит для патронов, жгута, ампулы, инструмента, ключа или любой мелочи, которую нужно быстро достать.",
         "rules": "",
         "tags": "удобен как мелкий контейнер для патронов, жгута, таблеток, инструмента или личного хлама",
         "rarity": "common",
@@ -4779,8 +4779,8 @@
           "ammo",
           "medical"
         ],
-        "weight": "",
-        "price": "",
+        "weight": "200 г",
+        "price": "250 мА",
         "isVisibleToPlayers": true
       },
       {
@@ -4799,12 +4799,13 @@
           "fuel",
           "technical",
           "voyage",
-          "apis",
           "storage",
-          "repair"
+          "repair",
+          "obscuria",
+          "domestic"
         ],
-        "weight": "100 гр",
-        "price": "1 амп",
+        "weight": "100 г",
+        "price": "1 А",
         "isVisibleToPlayers": true
       },
       {
@@ -4827,7 +4828,7 @@
           "voyage",
           "suspicious"
         ],
-        "weight": "150 гр",
+        "weight": "150 г",
         "price": "3 А",
         "isVisibleToPlayers": true
       },
@@ -4851,7 +4852,7 @@
           "storage",
           "voyage"
         ],
-        "weight": "200 гр",
+        "weight": "200 г",
         "price": "5 А",
         "isVisibleToPlayers": true
       },
@@ -4874,8 +4875,8 @@
           "storage",
           "suspicious"
         ],
-        "weight": "",
-        "price": "6 амп",
+        "weight": "1 кг",
+        "price": "6 А",
         "isVisibleToPlayers": true
       },
       {
@@ -4898,7 +4899,7 @@
           "storage",
           "noisy"
         ],
-        "weight": "",
+        "weight": "4 кг",
         "price": "40 А",
         "isVisibleToPlayers": true
       },
@@ -4928,7 +4929,7 @@
         "category": "armor",
         "slot": "headArmor",
         "armorSubtype": "head",
-        "description": "",
+        "description": "Простая плотная рабочая шапка, характерная для служилых и мастеровых низшего ранга. Греет и немного защищает от грязи, но не является настоящей бронёй.",
         "rules": "",
         "tags": "простая рабочая одежда; может указывать на происхождение владельца, но не должна считаться боевой защитой",
         "rarity": "common",
@@ -4940,7 +4941,7 @@
           "storage",
           "corpse"
         ],
-        "weight": "",
+        "weight": "200 г",
         "price": "200 мА",
         "isVisibleToPlayers": true
       },
@@ -4965,7 +4966,7 @@
           "storage",
           "fragile"
         ],
-        "weight": "",
+        "weight": "1 кг",
         "price": "1 мА",
         "isVisibleToPlayers": true
       },
@@ -4984,7 +4985,7 @@
           "storage",
           "container"
         ],
-        "weight": "",
+        "weight": "800 г",
         "price": "150 мА",
         "backpackSlotCount": 6,
         "isVisibleToPlayers": true
@@ -4994,7 +4995,7 @@
         "name": "Малый Вещмешок",
         "category": "storage",
         "slot": "backpack",
-        "description": "",
+        "description": "Небольшой мешок для личных вещей, еды, мелкого инструмента и запасной одежды. Дешёвый, грубый и почти всегда чужой.",
         "rules": "",
         "tags": "",
         "rarity": "standard",
@@ -5002,10 +5003,12 @@
         "condition": "working",
         "lootTags": [
           "storage",
-          "container"
+          "container",
+          "domestic",
+          "corpse"
         ],
-        "weight": "",
-        "price": "",
+        "weight": "500 г",
+        "price": "300 мА",
         "backpackSlotCount": 4,
         "isVisibleToPlayers": true
       },
@@ -5025,7 +5028,7 @@
           "container",
           "voyage"
         ],
-        "weight": "",
+        "weight": "700 г",
         "price": "300 мА",
         "backpackSlotCount": 6,
         "isVisibleToPlayers": true
@@ -5046,11 +5049,10 @@
           "water",
           "domestic",
           "corpse",
-          "apis",
           "voyage",
           "storage"
         ],
-        "weight": "",
+        "weight": "500 г",
         "price": "120 мА",
         "isVisibleToPlayers": true
       },
@@ -5074,7 +5076,7 @@
           "container",
           "suspicious"
         ],
-        "weight": "",
+        "weight": "600 г",
         "price": "250 мА",
         "isVisibleToPlayers": true
       },
@@ -5093,11 +5095,10 @@
         "lootTags": [
           "food",
           "domestic",
-          "apis",
           "voyage",
           "storage"
         ],
-        "weight": "",
+        "weight": "500 г",
         "price": "80 мА",
         "isVisibleToPlayers": true
       },
@@ -5118,20 +5119,19 @@
           "domestic",
           "obscuria",
           "voyage",
-          "apis",
           "storage"
         ],
-        "weight": "",
+        "weight": "700 г",
         "price": "250 мА",
         "isVisibleToPlayers": true
       },
       {
         "id": "arsenal-item-1779720319291",
-        "name": "Тёплая дорожная куртка",
+        "name": "Тёплый дорожный жупан",
         "category": "armor",
         "slot": "torsoArmor",
         "armorSubtype": "torso",
-        "description": "защита от холода, грязи и мелких царапин",
+        "description": "Тёплая дорожная одежда из плотной ткани с грубой подкладкой. Защищает от холода, сырости, грязи и мелких царапин, но не заменяет настоящую броню.",
         "rules": "",
         "tags": "полезна против холода, дождя и плохого привала; может быть грязной, мокрой, чужой или с личными следами владельца",
         "rarity": "standard",
@@ -5144,7 +5144,7 @@
           "armor",
           "medical"
         ],
-        "weight": "",
+        "weight": "1,5 кг",
         "price": "600 мА",
         "isVisibleToPlayers": true
       },
@@ -5164,7 +5164,7 @@
           "medical",
           "storage"
         ],
-        "weight": "",
+        "weight": "300 г",
         "price": "50 мА",
         "isVisibleToPlayers": true
       },
@@ -5185,7 +5185,7 @@
           "healing",
           "storage"
         ],
-        "weight": "",
+        "weight": "1,5 кг",
         "price": "300 мА",
         "isVisibleToPlayers": true
       },
@@ -5208,7 +5208,7 @@
           "armor",
           "fragile"
         ],
-        "weight": "",
+        "weight": "1 кг",
         "price": "500 мА",
         "isVisibleToPlayers": true
       },
@@ -5230,7 +5230,7 @@
           "storage",
           "corpse"
         ],
-        "weight": "",
+        "weight": "400 г",
         "price": "80 мА",
         "isVisibleToPlayers": true
       },
@@ -5253,7 +5253,7 @@
           "corpse",
           "storage"
         ],
-        "weight": "",
+        "weight": "300 г",
         "price": "400 мА",
         "isVisibleToPlayers": true
       },
@@ -5276,7 +5276,7 @@
           "domestic",
           "suspicious"
         ],
-        "weight": "",
+        "weight": "150 г",
         "price": "200 мА",
         "isVisibleToPlayers": true
       },
@@ -5296,7 +5296,7 @@
           "tool",
           "repair"
         ],
-        "weight": "",
+        "weight": "100 г",
         "price": "150 мА",
         "isVisibleToPlayers": true
       },
@@ -5312,10 +5312,9 @@
         "lootAvailability": "starter",
         "condition": "working",
         "lootTags": [
-          "apis",
           "document"
         ],
-        "weight": "",
+        "weight": "200 г",
         "price": "120 мА",
         "isVisibleToPlayers": true
       },
@@ -5336,7 +5335,7 @@
           "tool",
           "storage"
         ],
-        "weight": "",
+        "weight": "50 г",
         "price": "20 мА",
         "isVisibleToPlayers": true
       },
@@ -5355,7 +5354,7 @@
           "quest",
           "clue"
         ],
-        "weight": "",
+        "weight": "10 г",
         "price": "0–300 мА",
         "isVisibleToPlayers": true
       },
@@ -5374,7 +5373,7 @@
           "quest",
           "clue"
         ],
-        "weight": "",
+        "weight": "10 г",
         "price": "0–500 мА",
         "isVisibleToPlayers": true
       },
@@ -5393,7 +5392,7 @@
           "quest",
           "clue"
         ],
-        "weight": "",
+        "weight": "100 г",
         "price": "0–150 мА",
         "isVisibleToPlayers": true
       },
@@ -5416,7 +5415,7 @@
           "repair",
           "corpse"
         ],
-        "weight": "",
+        "weight": "150 г",
         "price": "120 мА",
         "isVisibleToPlayers": true
       },
@@ -5440,7 +5439,7 @@
           "technical",
           "storage"
         ],
-        "weight": "",
+        "weight": "300 г",
         "price": "300 мА",
         "isVisibleToPlayers": true
       },
@@ -5458,9 +5457,9 @@
         "lootTags": [
           "quest",
           "clue",
-          "apis"
+          "voyage"
         ],
-        "weight": "",
+        "weight": "50 г",
         "price": "0–100 мА",
         "isVisibleToPlayers": true
       },
@@ -5479,7 +5478,7 @@
           "quest",
           "clue"
         ],
-        "weight": "",
+        "weight": "50 г",
         "price": "0 / 5–50 А",
         "isVisibleToPlayers": true
       },
@@ -5498,7 +5497,7 @@
           "quest",
           "clue"
         ],
-        "weight": "",
+        "weight": "50 г",
         "price": "0 / 1–10 А",
         "isVisibleToPlayers": true
       },
@@ -5520,7 +5519,7 @@
           "obscuria",
           "storage"
         ],
-        "weight": "",
+        "weight": "700 г",
         "price": "700 мА",
         "isVisibleToPlayers": true
       },
@@ -5542,10 +5541,9 @@
           "domestic",
           "tool",
           "voyage",
-          "apis",
           "storage"
         ],
-        "weight": "",
+        "weight": "200 г",
         "price": "150 мА",
         "isVisibleToPlayers": true
       },
@@ -5568,8 +5566,8 @@
           "storage",
           "obscuria"
         ],
-        "weight": "",
-        "price": "1.5 А",
+        "weight": "800 г",
+        "price": "1,5 А",
         "isVisibleToPlayers": true
       },
       {
@@ -5593,7 +5591,7 @@
           "storage",
           "noisy"
         ],
-        "weight": "",
+        "weight": "1,5 кг",
         "price": "800 мА",
         "isVisibleToPlayers": true
       },
@@ -5616,8 +5614,8 @@
           "domestic",
           "storage"
         ],
-        "weight": "",
-        "price": "1.2 А",
+        "weight": "1 кг",
+        "price": "1,2 А",
         "isVisibleToPlayers": true
       },
       {
@@ -5638,7 +5636,7 @@
           "storage",
           "heavy"
         ],
-        "weight": "",
+        "weight": "3 кг",
         "price": "1 А",
         "isVisibleToPlayers": true
       },
@@ -5660,7 +5658,7 @@
           "voyage",
           "storage"
         ],
-        "weight": "",
+        "weight": "4 кг",
         "price": "2 А",
         "isVisibleToPlayers": true
       },
@@ -5683,7 +5681,7 @@
           "storage",
           "suspicious"
         ],
-        "weight": "",
+        "weight": "700 г",
         "price": "1 А",
         "isVisibleToPlayers": true
       },
@@ -5703,7 +5701,7 @@
           "clue",
           "voyage"
         ],
-        "weight": "",
+        "weight": "100 г",
         "price": "0–200 мА",
         "isVisibleToPlayers": true
       },
@@ -5726,7 +5724,7 @@
           "voyage",
           "fragile"
         ],
-        "weight": "",
+        "weight": "2 кг",
         "price": "2 А",
         "isVisibleToPlayers": true
       },
@@ -5745,7 +5743,7 @@
           "quest",
           "clue"
         ],
-        "weight": "",
+        "weight": "50 г",
         "price": "80 мА",
         "isVisibleToPlayers": true
       },
@@ -5764,7 +5762,7 @@
           "quest",
           "clue"
         ],
-        "weight": "",
+        "weight": "50 г",
         "price": "0 / 2–5 А",
         "isVisibleToPlayers": true
       },
@@ -5786,7 +5784,7 @@
           "tool",
           "storage"
         ],
-        "weight": "",
+        "weight": "300 г",
         "price": "500 мА",
         "isVisibleToPlayers": true
       },
@@ -5808,7 +5806,7 @@
           "storage",
           "domestic"
         ],
-        "weight": "",
+        "weight": "2 кг",
         "price": "2 А",
         "isVisibleToPlayers": true
       },
@@ -5830,7 +5828,7 @@
           "storage",
           "domestic"
         ],
-        "weight": "",
+        "weight": "3 кг",
         "price": "5 А",
         "isVisibleToPlayers": true
       },
@@ -5855,7 +5853,7 @@
           "suspicious",
           "inspectionRisk"
         ],
-        "weight": "",
+        "weight": "1 кг",
         "price": "3 А",
         "isVisibleToPlayers": true
       },
@@ -5877,7 +5875,7 @@
           "storage",
           "domestic"
         ],
-        "weight": "",
+        "weight": "400 г",
         "price": "700 мА",
         "isVisibleToPlayers": true
       },
@@ -5899,7 +5897,7 @@
           "domestic",
           "storage"
         ],
-        "weight": "",
+        "weight": "400 г",
         "price": "500 мА",
         "isVisibleToPlayers": true
       },
@@ -5924,7 +5922,7 @@
           "storage",
           "noisy"
         ],
-        "weight": "",
+        "weight": "800 г",
         "price": "400 мА",
         "isVisibleToPlayers": true
       },
@@ -5946,7 +5944,7 @@
           "storage",
           "noisy"
         ],
-        "weight": "",
+        "weight": "700 г",
         "price": "600 мА",
         "isVisibleToPlayers": true
       },
@@ -5968,7 +5966,7 @@
           "storage",
           "fragile"
         ],
-        "weight": "",
+        "weight": "700 г",
         "price": "400 мА",
         "isVisibleToPlayers": true
       },
@@ -5990,7 +5988,7 @@
           "domestic",
           "storage"
         ],
-        "weight": "",
+        "weight": "100 г",
         "price": "150 мА",
         "isVisibleToPlayers": true
       },
@@ -6012,7 +6010,7 @@
           "domestic",
           "storage"
         ],
-        "weight": "",
+        "weight": "100 г",
         "price": "100 мА",
         "isVisibleToPlayers": true
       },
@@ -6031,7 +6029,7 @@
           "storage",
           "container"
         ],
-        "weight": "",
+        "weight": "300 г",
         "price": "100 мА",
         "backpackSlotCount": 4,
         "isVisibleToPlayers": true
@@ -6055,7 +6053,7 @@
           "obscuria",
           "storage"
         ],
-        "weight": "",
+        "weight": "1 кг",
         "price": "1 А",
         "isVisibleToPlayers": true
       },
@@ -6078,8 +6076,8 @@
           "technical",
           "heavy"
         ],
-        "weight": "",
-        "price": "1.2 А",
+        "weight": "1,5 кг",
+        "price": "1,2 А",
         "isVisibleToPlayers": true
       },
       {
@@ -6101,7 +6099,7 @@
           "heavy",
           "fragile"
         ],
-        "weight": "",
+        "weight": "3 кг",
         "price": "300 мА",
         "isVisibleToPlayers": true
       },
@@ -6121,11 +6119,11 @@
           "technical",
           "obscuria",
           "voyage",
-          "horst",
+          "fief",
           "noisy",
           "suspicious"
         ],
-        "weight": "",
+        "weight": "400 г",
         "price": "1 А",
         "isVisibleToPlayers": true
       },
@@ -6147,8 +6145,8 @@
           "obscuria",
           "storage"
         ],
-        "weight": "",
-        "price": "1.5 А",
+        "weight": "200 г",
+        "price": "1,5 А",
         "isVisibleToPlayers": true
       },
       {
@@ -6166,7 +6164,7 @@
           "quest",
           "clue"
         ],
-        "weight": "",
+        "weight": "50 г",
         "price": "1–10 А",
         "isVisibleToPlayers": true
       },
@@ -6190,7 +6188,7 @@
           "obscuria",
           "storage"
         ],
-        "weight": "",
+        "weight": "400 г",
         "price": "1 А",
         "isVisibleToPlayers": true
       },
@@ -6211,7 +6209,7 @@
           "storage",
           "obscuria"
         ],
-        "weight": "",
+        "weight": "500 г",
         "price": "200 мА",
         "isVisibleToPlayers": true
       },
@@ -6233,8 +6231,8 @@
           "obscuria",
           "heavy"
         ],
-        "weight": "",
-        "price": "1.5 А",
+        "weight": "2 кг",
+        "price": "1,5 А",
         "isVisibleToPlayers": true
       },
       {
@@ -6254,7 +6252,7 @@
           "medical",
           "healing"
         ],
-        "weight": "",
+        "weight": "800 г",
         "price": "800 мА",
         "isVisibleToPlayers": true
       },
@@ -6276,7 +6274,7 @@
           "storage",
           "corpse"
         ],
-        "weight": "",
+        "weight": "200 г",
         "price": "150 мА",
         "isVisibleToPlayers": true
       },
@@ -6299,7 +6297,7 @@
           "storage",
           "corpse"
         ],
-        "weight": "",
+        "weight": "300 г",
         "price": "400 мА",
         "isVisibleToPlayers": true
       },
@@ -6322,8 +6320,8 @@
           "suspicious",
           "inspectionRisk"
         ],
-        "weight": "",
-        "price": "1.5 А",
+        "weight": "400 г",
+        "price": "1,5 А",
         "isVisibleToPlayers": true
       },
       {
@@ -6345,7 +6343,7 @@
           "storage",
           "technical"
         ],
-        "weight": "",
+        "weight": "2 кг",
         "price": "200 мА",
         "isVisibleToPlayers": true
       },
@@ -6366,7 +6364,7 @@
           "battle",
           "heavy"
         ],
-        "weight": "",
+        "weight": "1,2 кг",
         "price": "500 мА",
         "isVisibleToPlayers": true
       },
@@ -6388,8 +6386,8 @@
           "domestic",
           "storage"
         ],
-        "weight": "",
-        "price": "1.2 А",
+        "weight": "1 кг",
+        "price": "1,2 А",
         "isVisibleToPlayers": true
       },
       {
@@ -6411,7 +6409,7 @@
           "domestic",
           "heavy"
         ],
-        "weight": "",
+        "weight": "1,8 кг",
         "price": "2 А",
         "isVisibleToPlayers": true
       },
@@ -6432,7 +6430,7 @@
           "battle",
           "suspicious"
         ],
-        "weight": "",
+        "weight": "1 кг",
         "price": "6 А",
         "isVisibleToPlayers": true
       },
@@ -6444,7 +6442,7 @@
         "weaponSubtype": "melee",
         "description": "нормальное оружие, не стартовая мелочь",
         "rules": "",
-        "tags": "",
+        "tags": "нормальное клинковое оружие; не мусор, но и не редкая награда",
         "rarity": "standard",
         "lootAvailability": "dangerLoot",
         "condition": "worn",
@@ -6452,7 +6450,7 @@
           "weapon",
           "battle"
         ],
-        "weight": "",
+        "weight": "1,3 кг",
         "price": "12 А",
         "isVisibleToPlayers": true
       },
@@ -6473,9 +6471,9 @@
           "battle",
           "corpse",
           "obscuria",
-          "horst"
+          "fief"
         ],
-        "weight": "",
+        "weight": "2,5 кг",
         "price": "3 А",
         "isVisibleToPlayers": true
       },
@@ -6498,7 +6496,7 @@
           "armor",
           "domestic"
         ],
-        "weight": "",
+        "weight": "4 кг",
         "price": "2 А",
         "isVisibleToPlayers": true
       },
@@ -6519,7 +6517,7 @@
           "battle",
           "voyage"
         ],
-        "weight": "",
+        "weight": "1,2 кг",
         "price": "10 А",
         "isVisibleToPlayers": true
       },
@@ -6539,7 +6537,7 @@
           "weapon",
           "battle"
         ],
-        "weight": "",
+        "weight": "400 г",
         "price": "2 А",
         "isVisibleToPlayers": true
       },
@@ -6562,7 +6560,7 @@
           "brigand",
           "suspicious"
         ],
-        "weight": "",
+        "weight": "500 г",
         "price": "0–100 мА",
         "isVisibleToPlayers": true
       },
@@ -6582,7 +6580,7 @@
           "weapon",
           "battle"
         ],
-        "weight": "",
+        "weight": "400 г",
         "price": "0–100 мА",
         "isVisibleToPlayers": true
       },
@@ -6606,7 +6604,7 @@
           "inspectionRisk",
           "suspicious"
         ],
-        "weight": "",
+        "weight": "1,1 кг",
         "price": "35 А",
         "isVisibleToPlayers": true
       },
@@ -6628,7 +6626,7 @@
           "voyage",
           "clue"
         ],
-        "weight": "",
+        "weight": "1,2 кг",
         "price": "45 А",
         "isVisibleToPlayers": true
       },
@@ -6651,7 +6649,7 @@
           "corpse",
           "suspicious"
         ],
-        "weight": "",
+        "weight": "3 кг",
         "price": "35 А",
         "isVisibleToPlayers": true
       },
@@ -6672,7 +6670,7 @@
           "battle",
           "voyage"
         ],
-        "weight": "",
+        "weight": "3,5 кг",
         "price": "60 А",
         "isVisibleToPlayers": true
       },
@@ -6696,7 +6694,7 @@
           "domestic",
           "suspicious"
         ],
-        "weight": "",
+        "weight": "4 кг",
         "price": "50 А",
         "isVisibleToPlayers": true
       },
@@ -6721,7 +6719,7 @@
           "noisy",
           "suspicious"
         ],
-        "weight": "",
+        "weight": "4 кг",
         "price": "40 А",
         "isVisibleToPlayers": true
       },
@@ -6734,7 +6732,7 @@
         "description": "хороша против прорыва, тяжелая",
         "rules": "",
         "tags": "",
-        "rarity": "standard",
+        "rarity": "good",
         "lootAvailability": "dangerLoot",
         "condition": "working",
         "lootTags": [
@@ -6742,7 +6740,7 @@
           "battle",
           "heavy"
         ],
-        "weight": "",
+        "weight": "4,5 кг",
         "price": "70 А",
         "isVisibleToPlayers": true
       },
@@ -6765,7 +6763,7 @@
           "storage",
           "domestic"
         ],
-        "weight": "",
+        "weight": "200 г",
         "price": "300 мА",
         "isVisibleToPlayers": true
       },
@@ -6787,7 +6785,7 @@
           "battle",
           "storage"
         ],
-        "weight": "",
+        "weight": "500 г",
         "price": "700 мА",
         "isVisibleToPlayers": true
       },
@@ -6809,7 +6807,7 @@
           "corpse",
           "storage"
         ],
-        "weight": "",
+        "weight": "500 г",
         "price": "800 мА",
         "quickSlotCount": 2,
         "isVisibleToPlayers": true
@@ -6828,7 +6826,7 @@
         "lootTags": [
           "clue"
         ],
-        "weight": "",
+        "weight": "300 г",
         "price": "50–200 мА",
         "isVisibleToPlayers": true
       },
@@ -6848,7 +6846,7 @@
           "armor",
           "battle"
         ],
-        "weight": "",
+        "weight": "4 кг",
         "price": "4 А",
         "isVisibleToPlayers": true
       },
@@ -6868,27 +6866,31 @@
           "armor",
           "battle"
         ],
-        "weight": "",
+        "weight": "4 кг",
         "price": "8 А",
         "isVisibleToPlayers": true
       },
       {
         "id": "arsenal-item-1779722891000",
-        "name": "Лёгкая бронекуртка",
+        "name": "Лёгкий куяк",
         "category": "armor",
         "slot": "torsoArmor",
         "armorSubtype": "torso",
-        "description": "пассажир/охранник с деньгами",
+        "description": "Лёгкая корпусная защита из плотной ткани, кожи и нашитых защитных элементов. Не держит тяжёлый удар как полноценная кираса, но помогает против скользящих ударов, осколков, зубов и грязной ближней свалки.",
         "rules": "",
         "tags": "",
-        "rarity": "standard",
+        "rarity": "good",
         "lootAvailability": "dangerLoot",
         "condition": "working",
         "lootTags": [
           "armor",
-          "battle"
+          "battle",
+          "fief",
+          "storage",
+          "corpse",
+          "inspectionRisk"
         ],
-        "weight": "",
+        "weight": "5 кг",
         "price": "12 А",
         "isVisibleToPlayers": true
       },
@@ -6909,7 +6911,7 @@
           "battle",
           "heavy"
         ],
-        "weight": "",
+        "weight": "7 кг",
         "price": "20 А",
         "isVisibleToPlayers": true
       },
@@ -6929,8 +6931,8 @@
           "armor",
           "battle"
         ],
-        "weight": "",
-        "price": "1.5 А",
+        "weight": "1,2 кг",
+        "price": "1,5 А",
         "isVisibleToPlayers": true
       },
       {
@@ -6949,7 +6951,7 @@
           "armor",
           "battle"
         ],
-        "weight": "",
+        "weight": "1,5 кг",
         "price": "6 А",
         "isVisibleToPlayers": true
       },
@@ -6963,13 +6965,13 @@
         "rules": "",
         "tags": "",
         "rarity": "standard",
-        "lootAvailability": "dangerLoot",
+        "lootAvailability": "commonLoot",
         "condition": "working",
         "lootTags": [
           "armor",
           "battle"
         ],
-        "weight": "",
+        "weight": "1 кг",
         "price": "1 А",
         "isVisibleToPlayers": true
       },
@@ -6994,7 +6996,7 @@
           "technical",
           "heavy"
         ],
-        "weight": "",
+        "weight": "5 кг",
         "price": "0–1 А",
         "isVisibleToPlayers": true
       },
@@ -7015,7 +7017,7 @@
           "battle",
           "clue"
         ],
-        "weight": "",
+        "weight": "8 кг",
         "price": "5–15 А",
         "isVisibleToPlayers": true
       },
@@ -7036,7 +7038,7 @@
           "battle",
           "voyage"
         ],
-        "weight": "",
+        "weight": "6 кг",
         "price": "15–25 А",
         "isVisibleToPlayers": true
       },
@@ -7059,7 +7061,7 @@
           "obscuria",
           "corpse"
         ],
-        "weight": "",
+        "weight": "1,2 кг",
         "price": "500 мА",
         "isVisibleToPlayers": true
       },
@@ -7084,7 +7086,7 @@
           "storage",
           "fragile"
         ],
-        "weight": "",
+        "weight": "300 г",
         "price": "700 мА",
         "isVisibleToPlayers": true
       },
@@ -7103,13 +7105,13 @@
           "quest",
           "clue"
         ],
-        "weight": "",
+        "weight": "50 г",
         "price": "10–30 А",
         "isVisibleToPlayers": true
       },
       {
         "id": "arsenal-item-1779723210431",
-        "name": "Пустая оболочка криптожeтона",
+        "name": "Пустая оболочка криптожетона",
         "category": "quest",
         "slot": "none",
         "description": "заготовка для мошенничества",
@@ -7122,7 +7124,7 @@
           "quest",
           "clue"
         ],
-        "weight": "",
+        "weight": "50 г",
         "price": "3 А",
         "isVisibleToPlayers": true
       },
@@ -7141,7 +7143,7 @@
           "quest",
           "clue"
         ],
-        "weight": "",
+        "weight": "50 г",
         "price": "5–20 А",
         "isVisibleToPlayers": true
       },
@@ -7166,7 +7168,7 @@
           "quest",
           "clue"
         ],
-        "weight": "",
+        "weight": "50 г",
         "price": "8–15 А",
         "isVisibleToPlayers": true
       },
@@ -7189,7 +7191,7 @@
           "domestic",
           "suspicious"
         ],
-        "weight": "",
+        "weight": "100 г",
         "price": "1 А",
         "isVisibleToPlayers": true
       },
@@ -7208,11 +7210,10 @@
           "medical",
           "healing",
           "domestic",
-          "apis",
           "voyage",
           "storage"
         ],
-        "weight": "",
+        "weight": "50 г",
         "price": "2 А",
         "isVisibleToPlayers": true
       },
@@ -7238,7 +7239,7 @@
           "inspectionRisk",
           "brigand"
         ],
-        "weight": "",
+        "weight": "700 г",
         "price": "25 А",
         "isVisibleToPlayers": true
       },
@@ -7262,7 +7263,7 @@
           "brigand",
           "suspicious"
         ],
-        "weight": "",
+        "weight": "500 г",
         "price": "2 А",
         "isVisibleToPlayers": true
       },
@@ -7283,7 +7284,7 @@
           "container",
           "evergal"
         ],
-        "weight": "",
+        "weight": "1 кг",
         "price": "20–60 А",
         "isVisibleToPlayers": true
       },
@@ -7294,15 +7295,21 @@
         "slot": "none",
         "description": "опасная улика, не трогать руками",
         "rules": "",
-        "tags": "",
+        "tags": "не выдавать как обычный ресурс; это подозрительная находка, улика или источник риска заражения",
         "rarity": "standard",
         "lootAvailability": "manual",
         "condition": "working",
         "lootTags": [
           "quest",
-          "clue"
+          "clue",
+          "suspicious",
+          "inspectionRisk",
+          "forbidden",
+          "radiating",
+          "reflectionRisk",
+          "infectionRisk"
         ],
-        "weight": "",
+        "weight": "500 г",
         "price": "5–50 А",
         "isVisibleToPlayers": true
       },
@@ -7320,10 +7327,9 @@
         "lootTags": [
           "quest",
           "clue",
-          "apis",
           "document"
         ],
-        "weight": "",
+        "weight": "20 г",
         "price": "0 / 5 А",
         "isVisibleToPlayers": true
       },
@@ -7342,7 +7348,7 @@
           "quest",
           "clue"
         ],
-        "weight": "",
+        "weight": "300 г",
         "price": "300–900 мА",
         "isVisibleToPlayers": true
       },
@@ -7361,7 +7367,7 @@
           "quest",
           "clue"
         ],
-        "weight": "",
+        "weight": "50 г",
         "price": "0 / 10 А",
         "isVisibleToPlayers": true
       },
@@ -7386,7 +7392,7 @@
           "suspicious",
           "inspectionRisk"
         ],
-        "weight": "",
+        "weight": "500 г",
         "price": "5 А",
         "isVisibleToPlayers": true
       },
@@ -7406,7 +7412,7 @@
           "clue",
           "voyage"
         ],
-        "weight": "",
+        "weight": "50 г",
         "price": "10 А",
         "isVisibleToPlayers": true
       },
@@ -7429,7 +7435,7 @@
           "storage",
           "suspicious"
         ],
-        "weight": "",
+        "weight": "300 г",
         "price": "500 мА",
         "isVisibleToPlayers": true
       },
@@ -7452,7 +7458,7 @@
           "suspicious",
           "inspectionRisk"
         ],
-        "weight": "",
+        "weight": "5 кг",
         "price": "8–15 А",
         "isVisibleToPlayers": true
       },
@@ -7467,12 +7473,12 @@
         "tags": "",
         "rarity": "standard",
         "lootAvailability": "dangerLoot",
-        "condition": "incomplete",
+        "condition": "working",
         "lootTags": [
           "weapon",
           "battle"
         ],
-        "weight": "",
+        "weight": "1,1 кг",
         "price": "25–40 А",
         "isVisibleToPlayers": true
       },
@@ -7492,7 +7498,7 @@
           "weapon",
           "battle"
         ],
-        "weight": "",
+        "weight": "3,5 кг",
         "price": "40–70 А",
         "isVisibleToPlayers": true
       },
@@ -7504,14 +7510,14 @@
         "description": "крайне опасно, лучше как сюжетный предмет",
         "rules": "",
         "tags": "",
-        "rarity": "standard",
+        "rarity": "rare",
         "lootAvailability": "manual",
         "condition": "working",
         "lootTags": [
           "quest",
           "clue"
         ],
-        "weight": "",
+        "weight": "1 кг",
         "price": "15–40 А",
         "isVisibleToPlayers": true
       },
@@ -7530,7 +7536,7 @@
           "quest",
           "clue"
         ],
-        "weight": "",
+        "weight": "200 г",
         "price": "5–20 А",
         "isVisibleToPlayers": true
       },
@@ -7548,9 +7554,9 @@
         "lootTags": [
           "quest",
           "clue",
-          "apis"
+          "voyage"
         ],
-        "weight": "",
+        "weight": "50 г",
         "price": "0 / 5–20 А",
         "isVisibleToPlayers": false
       },
@@ -7569,7 +7575,7 @@
           "quest",
           "clue"
         ],
-        "weight": "",
+        "weight": "50 г",
         "price": "0 / 20+ А",
         "isVisibleToPlayers": true
       },
@@ -7581,16 +7587,15 @@
         "description": "ведёт к заказчику",
         "rules": "",
         "tags": "",
-        "rarity": "standard",
+        "rarity": "rare",
         "lootAvailability": "manual",
         "condition": "working",
         "lootTags": [
           "quest",
           "clue",
-          "apis",
           "document"
         ],
-        "weight": "",
+        "weight": "20 г",
         "price": "0 / 10+ А",
         "isVisibleToPlayers": true
       },
@@ -7602,14 +7607,14 @@
         "description": "связь, но может отслеживаться",
         "rules": "",
         "tags": "",
-        "rarity": "standard",
+        "rarity": "rare",
         "lootAvailability": "manual",
         "condition": "working",
         "lootTags": [
           "quest",
           "clue"
         ],
-        "weight": "",
+        "weight": "1,5 кг",
         "price": "10–30 А",
         "isVisibleToPlayers": true
       },
@@ -7636,7 +7641,7 @@
           "suspicious",
           "inspectionRisk"
         ],
-        "weight": "",
+        "weight": "2 кг",
         "price": "5 А",
         "isVisibleToPlayers": true
       },
@@ -7659,7 +7664,7 @@
           "suspicious",
           "inspectionRisk"
         ],
-        "weight": "",
+        "weight": "400 г",
         "price": "3 А",
         "isVisibleToPlayers": true
       },
@@ -7679,7 +7684,7 @@
           "weapon",
           "battle"
         ],
-        "weight": "",
+        "weight": "800 г",
         "price": "2 А",
         "isVisibleToPlayers": true
       },
@@ -7698,7 +7703,7 @@
           "quest",
           "clue"
         ],
-        "weight": "",
+        "weight": "100 г",
         "price": "0–5 А",
         "isVisibleToPlayers": true
       },
@@ -7717,7 +7722,7 @@
           "quest",
           "clue"
         ],
-        "weight": "",
+        "weight": "50 г",
         "price": "0–2 А",
         "isVisibleToPlayers": true
       },
@@ -7736,13 +7741,12 @@
         "lootTags": [
           "fuel",
           "technical",
-          "apis",
           "voyage",
           "fragile",
           "suspicious",
           "inspectionRisk"
         ],
-        "weight": "",
+        "weight": "1 кг",
         "price": "300–700 мА",
         "isVisibleToPlayers": true
       },
@@ -7761,13 +7765,12 @@
         "lootTags": [
           "fuel",
           "technical",
-          "apis",
           "voyage",
-          "horst",
+          "fief",
           "storage",
           "suspicious"
         ],
-        "weight": "",
+        "weight": "1 кг",
         "price": "500 мА",
         "isVisibleToPlayers": true
       },
@@ -7790,8 +7793,8 @@
           "storage",
           "obscuria"
         ],
-        "weight": "",
-        "price": "1.5 А",
+        "weight": "900 г",
+        "price": "1,5 А",
         "isVisibleToPlayers": true
       },
       {
@@ -7814,8 +7817,8 @@
           "storage",
           "fragile"
         ],
-        "weight": "",
-        "price": "1.2 А",
+        "weight": "400 г",
+        "price": "1,2 А",
         "isVisibleToPlayers": true
       },
       {
@@ -7832,10 +7835,15 @@
         "condition": "working",
         "lootTags": [
           "weapon",
-          "battle"
+          "battle",
+          "tool",
+          "technical",
+          "noisy",
+          "suspicious",
+          "inspectionRisk"
         ],
-        "weight": "",
-        "price": "",
+        "weight": "1 кг",
+        "price": "8 А",
         "isVisibleToPlayers": true
       },
       {
@@ -7852,13 +7860,12 @@
         "lootTags": [
           "medical",
           "healing",
-          "apis",
           "voyage",
           "domestic",
-          "horst",
+          "fief",
           "storage"
         ],
-        "weight": "",
+        "weight": "300 г",
         "price": "300 мА",
         "isVisibleToPlayers": true
       },
@@ -7881,9 +7888,10 @@
           "obscuria",
           "heavy",
           "suspicious",
-          "inspectionRisk"
+          "inspectionRisk",
+          "fragile"
         ],
-        "weight": "",
+        "weight": "10 кг",
         "price": "20–60 А",
         "quickSlotCount": 2,
         "isVisibleToPlayers": true
@@ -7907,10 +7915,11 @@
           "noisy",
           "heavy",
           "suspicious",
-          "inspectionRisk"
+          "inspectionRisk",
+          "fragile"
         ],
-        "weight": "",
-        "price": "до 100 А",
+        "weight": "8 кг",
+        "price": "60–100 А",
         "quickSlotCount": 2,
         "isVisibleToPlayers": true
       },
@@ -7934,7 +7943,7 @@
           "suspicious",
           "inspectionRisk"
         ],
-        "weight": "",
+        "weight": "500 г",
         "price": "2–5 А",
         "isVisibleToPlayers": true
       },
@@ -7958,7 +7967,7 @@
           "suspicious",
           "inspectionRisk"
         ],
-        "weight": "",
+        "weight": "1 кг",
         "price": "5–15 А",
         "isVisibleToPlayers": true
       },
@@ -7982,7 +7991,7 @@
           "suspicious",
           "inspectionRisk"
         ],
-        "weight": "",
+        "weight": "1,5 кг",
         "price": "5–20 А",
         "isVisibleToPlayers": true
       },
@@ -8006,7 +8015,7 @@
           "suspicious",
           "inspectionRisk"
         ],
-        "weight": "",
+        "weight": "1,2 кг",
         "price": "15–30 А",
         "isVisibleToPlayers": true
       },
@@ -8030,7 +8039,7 @@
           "suspicious",
           "inspectionRisk"
         ],
-        "weight": "",
+        "weight": "300 г",
         "price": "5 А",
         "isVisibleToPlayers": true
       },
@@ -8056,7 +8065,7 @@
           "suspicious",
           "inspectionRisk"
         ],
-        "weight": "",
+        "weight": "700 г",
         "price": "8–20 А",
         "isVisibleToPlayers": true
       },
@@ -8076,11 +8085,10 @@
           "healing",
           "domestic",
           "obscuria",
-          "apis",
           "voyage",
           "suspicious"
         ],
-        "weight": "",
+        "weight": "100 г",
         "price": "1 А",
         "isVisibleToPlayers": true
       },
@@ -8099,7 +8107,7 @@
           "quest",
           "clue"
         ],
-        "weight": "",
+        "weight": "100 г",
         "price": "0–500 мА",
         "isVisibleToPlayers": true
       },
@@ -8118,7 +8126,7 @@
           "quest",
           "clue"
         ],
-        "weight": "",
+        "weight": "100 г",
         "price": "0–200 мА",
         "isVisibleToPlayers": true
       },
@@ -8138,7 +8146,7 @@
           "food",
           "domestic"
         ],
-        "weight": "",
+        "weight": "500 г",
         "price": "200 мА",
         "isVisibleToPlayers": true
       },
@@ -8157,13 +8165,12 @@
         "lootTags": [
           "food",
           "domestic",
-          "horst",
+          "fief",
           "obscuria",
           "storage",
-          "voyage",
-          "apis"
+          "voyage"
         ],
-        "weight": "",
+        "weight": "700 г",
         "price": "250 мА",
         "isVisibleToPlayers": true
       },
@@ -8186,7 +8193,7 @@
           "storage",
           "container"
         ],
-        "weight": "",
+        "weight": "800 г",
         "price": "500 мА",
         "isVisibleToPlayers": true
       },
@@ -8206,10 +8213,9 @@
           "food",
           "domestic",
           "storage",
-          "apis",
-          "horst"
+          "fief"
         ],
-        "weight": "",
+        "weight": "1 кг",
         "price": "100 мА",
         "isVisibleToPlayers": true
       },
@@ -8229,12 +8235,12 @@
           "food",
           "domestic",
           "obscuria",
-          "horst",
+          "fief",
           "voyage",
           "storage"
         ],
-        "weight": "",
-        "price": "",
+        "weight": "500 г",
+        "price": "200 мА",
         "isVisibleToPlayers": true
       },
       {
@@ -8252,12 +8258,11 @@
         "lootTags": [
           "water",
           "domestic",
-          "apis",
           "voyage",
-          "horst",
+          "fief",
           "obscuria"
         ],
-        "weight": "",
+        "weight": "600 г",
         "price": "50–100 мА",
         "isVisibleToPlayers": true
       },
@@ -8276,12 +8281,11 @@
           "medical",
           "water",
           "domestic",
-          "apis",
           "voyage",
-          "horst",
+          "fief",
           "obscuria"
         ],
-        "weight": "",
+        "weight": "10 г",
         "price": "100 мА",
         "isVisibleToPlayers": true
       },
@@ -8303,7 +8307,7 @@
           "storage",
           "corpse"
         ],
-        "weight": "",
+        "weight": "500 г",
         "price": "200 мА",
         "isVisibleToPlayers": true
       },
@@ -8325,7 +8329,7 @@
           "infection",
           "storage"
         ],
-        "weight": "",
+        "weight": "100 г",
         "price": "50 мА",
         "isVisibleToPlayers": true
       },
@@ -8347,7 +8351,7 @@
           "repair",
           "storage"
         ],
-        "weight": "",
+        "weight": "300 г",
         "price": "80 мА",
         "isVisibleToPlayers": true
       },
@@ -8369,7 +8373,7 @@
           "medical",
           "storage"
         ],
-        "weight": "",
+        "weight": "50 г",
         "price": "80 мА",
         "isVisibleToPlayers": true
       },
@@ -8388,12 +8392,11 @@
           "healing",
           "corpse",
           "domestic",
-          "apis",
           "voyage",
-          "horst",
+          "fief",
           "storage"
         ],
-        "weight": "",
+        "weight": "100 г",
         "price": "100–300 мА",
         "isVisibleToPlayers": true
       },
@@ -8412,11 +8415,10 @@
           "medical",
           "domestic",
           "corpse",
-          "apis",
           "voyage",
           "suspicious"
         ],
-        "weight": "",
+        "weight": "500 г",
         "price": "200–500 мА",
         "isVisibleToPlayers": true
       },
@@ -8436,7 +8438,7 @@
           "food",
           "domestic"
         ],
-        "weight": "",
+        "weight": "500 г",
         "price": "150–300 мА",
         "isVisibleToPlayers": true
       },
@@ -8456,7 +8458,7 @@
           "armor",
           "battle"
         ],
-        "weight": "",
+        "weight": "10 кг",
         "price": "25 А",
         "isVisibleToPlayers": true
       },
@@ -8466,7 +8468,7 @@
         "category": "armor",
         "slot": "headArmor",
         "armorSubtype": "head",
-        "description": "",
+        "description": "Простая маска против дыма, пыли и тяжёлого запаха. Помогает дышать в плохих условиях, но не спасает от серьёзного заражения или инфофона.",
         "rules": "",
         "tags": "помогает против дыма и пыли, но не является полноценной защитой от заражения или инфофона",
         "rarity": "common",
@@ -8479,8 +8481,8 @@
           "technical",
           "storage"
         ],
-        "weight": "",
-        "price": "",
+        "weight": "500 г",
+        "price": "500 мА",
         "isVisibleToPlayers": true
       },
       {
@@ -8489,7 +8491,7 @@
         "category": "armor",
         "slot": "headArmor",
         "armorSubtype": "head",
-        "description": "",
+        "description": "Использованная маска с пятнами, запахом гари и старой влаги. Может помочь в крайнем случае, но сама вызывает сомнения.",
         "rules": "",
         "tags": "временная и сомнительная защита; может сама быть источником запаха, грязи или инфекции",
         "rarity": "junk",
@@ -8500,10 +8502,11 @@
           "armor",
           "medical",
           "corpse",
-          "suspicious"
+          "suspicious",
+          "infectionRisk"
         ],
-        "weight": "",
-        "price": "",
+        "weight": "500 г",
+        "price": "100 мА",
         "isVisibleToPlayers": true
       },
       {
@@ -8512,7 +8515,7 @@
         "category": "armor",
         "slot": "torsoArmor",
         "armorSubtype": "torso",
-        "description": "",
+        "description": "Дешёвая стёганая защита корпуса из грубой ткани и набивки. Лучше обычной одежды, но быстро намокает, рвётся и плохо держит тяжёлый удар.",
         "rules": "",
         "tags": "базовая лёгкая защита; хороша как стартовая или бедная находка",
         "rarity": "common",
@@ -8525,17 +8528,17 @@
           "corpse",
           "storage"
         ],
-        "weight": "",
-        "price": "",
+        "weight": "3 кг",
+        "price": "2 А",
         "isVisibleToPlayers": true
       },
       {
         "id": "arsenal-item-1780296375818",
-        "name": "Рваный кожанный гамбезон с вставками",
+        "name": "Рваный кожаный гамбезон с вставками",
         "category": "armor",
         "slot": "torsoArmor",
         "armorSubtype": "torso",
-        "description": "",
+        "description": "Повреждённый кожано-стёганый защитный слой с грубыми вставками. Даёт неполную защиту корпуса, но требует ремонта и выглядит подозрительно.",
         "rules": "",
         "tags": "защита хуже нормы, но лучше обычной одежды; хорошо как трофей или временная замена",
         "rarity": "common",
@@ -8548,8 +8551,8 @@
           "corpse",
           "suspicious"
         ],
-        "weight": "",
-        "price": "",
+        "weight": "4 кг",
+        "price": "3 А",
         "isVisibleToPlayers": true
       },
       {
@@ -8558,7 +8561,7 @@
         "category": "armor",
         "slot": "none",
         "armorSubtype": "torso",
-        "description": "",
+        "description": "Сборный комплект из разных элементов брони, в котором не хватает части зон. Полезен как временная защита, но оставляет явные уязвимости.",
         "rules": "",
         "tags": "комплект без одной-двух зон; удобно выдавать, если не хочется сразу давать полную броню",
         "rarity": "standard",
@@ -8570,8 +8573,8 @@
           "storage",
           "suspicious"
         ],
-        "weight": "",
-        "price": "",
+        "weight": "6 кг",
+        "price": "6 А",
         "isVisibleToPlayers": true
       },
       {
@@ -8580,7 +8583,7 @@
         "category": "armor",
         "slot": "torsoArmor",
         "armorSubtype": "torso",
-        "description": "",
+        "description": "Повреждённая защитная плита с трещиной или вмятиной. Может быть материалом для ремонта, уликой боя или слабой временной защитой.",
         "rules": "",
         "tags": "может быть уликой боя или материалом для ремонта; как защита ненадёжна",
         "rarity": "standard",
@@ -8594,8 +8597,8 @@
           "fragile",
           "suspicious"
         ],
-        "weight": "",
-        "price": "",
+        "weight": "2,5 кг",
+        "price": "2 А",
         "isVisibleToPlayers": true
       },
       {
@@ -8604,7 +8607,7 @@
         "category": "armor",
         "slot": "headArmor",
         "armorSubtype": "head",
-        "description": "",
+        "description": "Шлем с трещиной, пробоиной или сорванным креплением. Носить можно только от безысходности; чаще это источник металла, запчастей или следов боя.",
         "rules": "",
         "tags": "скорее деталь сцены или материал; носить можно только как плохую временную защиту",
         "rarity": "junk",
@@ -8616,8 +8619,8 @@
           "corpse",
           "repair"
         ],
-        "weight": "",
-        "price": "",
+        "weight": "1 кг",
+        "price": "200 мА",
         "isVisibleToPlayers": true
       }
     ],
@@ -9011,10 +9014,82 @@
         "points": [
           {
             "id": "local-point-1780283506501-46nxcaf8syo",
-            "title": "Новая точка",
-            "kind": "npc",
-            "x": 66.77884615384615,
+            "title": "Тварь",
+            "kind": "creature",
+            "x": 66.39423076923077,
             "y": 31.55715811965812,
+            "description": "",
+            "masterNotes": "",
+            "isSecret": false,
+            "targetLocalMapId": "",
+            "linkedDossierId": "",
+            "isKeyScene": false,
+            "stakes": "",
+            "choices": "",
+            "findings": "",
+            "threat": "",
+            "consequences": ""
+          },
+          {
+            "id": "local-point-1780308683965-tlaasfvzovf",
+            "title": "Новая точка",
+            "kind": "player",
+            "x": 30.144230769230766,
+            "y": 96.51442307692307,
+            "description": "",
+            "masterNotes": "",
+            "isSecret": false,
+            "targetLocalMapId": "",
+            "linkedDossierId": "",
+            "isKeyScene": false,
+            "stakes": "",
+            "choices": "",
+            "findings": "",
+            "threat": "",
+            "consequences": ""
+          },
+          {
+            "id": "local-point-1780308691901-esefwc1cuyw",
+            "title": "Новая точка",
+            "kind": "player",
+            "x": 22.163461538461537,
+            "y": 95.65972222222221,
+            "description": "",
+            "masterNotes": "",
+            "isSecret": false,
+            "targetLocalMapId": "",
+            "linkedDossierId": "",
+            "isKeyScene": false,
+            "stakes": "",
+            "choices": "",
+            "findings": "",
+            "threat": "",
+            "consequences": ""
+          },
+          {
+            "id": "local-point-1780308696485-34mjz2uy542",
+            "title": "Новая точка",
+            "kind": "player",
+            "x": 33.99038461538461,
+            "y": 97.5400641025641,
+            "description": "",
+            "masterNotes": "",
+            "isSecret": false,
+            "targetLocalMapId": "",
+            "linkedDossierId": "",
+            "isKeyScene": false,
+            "stakes": "",
+            "choices": "",
+            "findings": "",
+            "threat": "",
+            "consequences": ""
+          },
+          {
+            "id": "local-point-1780308925021-tvsqnsizc2",
+            "title": "Новая точка",
+            "kind": "player",
+            "x": 25.817307692307693,
+            "y": 96.17254273504273,
             "description": "",
             "masterNotes": "",
             "isSecret": false,
@@ -9037,10 +9112,82 @@
             "points": [
               {
                 "id": "local-point-1780283506501-46nxcaf8syo",
-                "title": "Новая точка",
-                "kind": "npc",
-                "x": 66.77884615384615,
+                "title": "Тварь",
+                "kind": "creature",
+                "x": 66.39423076923077,
                 "y": 31.55715811965812,
+                "description": "",
+                "masterNotes": "",
+                "isSecret": false,
+                "targetLocalMapId": "",
+                "linkedDossierId": "",
+                "isKeyScene": false,
+                "stakes": "",
+                "choices": "",
+                "findings": "",
+                "threat": "",
+                "consequences": ""
+              },
+              {
+                "id": "local-point-1780308683965-tlaasfvzovf",
+                "title": "Новая точка",
+                "kind": "player",
+                "x": 30.144230769230766,
+                "y": 96.51442307692307,
+                "description": "",
+                "masterNotes": "",
+                "isSecret": false,
+                "targetLocalMapId": "",
+                "linkedDossierId": "",
+                "isKeyScene": false,
+                "stakes": "",
+                "choices": "",
+                "findings": "",
+                "threat": "",
+                "consequences": ""
+              },
+              {
+                "id": "local-point-1780308691901-esefwc1cuyw",
+                "title": "Новая точка",
+                "kind": "player",
+                "x": 22.163461538461537,
+                "y": 95.65972222222221,
+                "description": "",
+                "masterNotes": "",
+                "isSecret": false,
+                "targetLocalMapId": "",
+                "linkedDossierId": "",
+                "isKeyScene": false,
+                "stakes": "",
+                "choices": "",
+                "findings": "",
+                "threat": "",
+                "consequences": ""
+              },
+              {
+                "id": "local-point-1780308696485-34mjz2uy542",
+                "title": "Новая точка",
+                "kind": "player",
+                "x": 33.99038461538461,
+                "y": 97.5400641025641,
+                "description": "",
+                "masterNotes": "",
+                "isSecret": false,
+                "targetLocalMapId": "",
+                "linkedDossierId": "",
+                "isKeyScene": false,
+                "stakes": "",
+                "choices": "",
+                "findings": "",
+                "threat": "",
+                "consequences": ""
+              },
+              {
+                "id": "local-point-1780308925021-tvsqnsizc2",
+                "title": "Новая точка",
+                "kind": "player",
+                "x": 25.817307692307693,
+                "y": 96.17254273504273,
                 "description": "",
                 "masterNotes": "",
                 "isSecret": false,
