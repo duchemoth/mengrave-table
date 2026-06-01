@@ -132,9 +132,6 @@ const LOOT_TAG_OPTIONS: {
     label: string;
     group: string;
 }[] = [
-        { value: "apis", label: "Апис", group: "Контекст" },
-        { value: "voyage", label: "Вояж", group: "Контекст" },
-        { value: "horst", label: "Горст", group: "Контекст" },
         { value: "obscuria", label: "Обскурия", group: "Контекст" },
         { value: "battle", label: "Бой", group: "Контекст" },
         { value: "technical", label: "Техника", group: "Контекст" },
@@ -168,6 +165,8 @@ const LOOT_TAG_OPTIONS: {
         { value: "infectionRisk", label: "Риск заражения", group: "Риск" },
         { value: "inspectionRisk", label: "Опасно на досмотре", group: "Риск" },
 
+        { value: "voyage", label: "Вояж", group: "Фракция" },
+        { value: "fief", label: "Феод", group: "Фракция" },
         { value: "euler", label: "Эйлер", group: "Фракция" },
         { value: "evergal", label: "Эвергаль", group: "Фракция" },
         { value: "temerat", label: "Темерат", group: "Фракция" },
@@ -973,6 +972,26 @@ export function ArsenalEditor({
                                 ))}
                             </section>
 
+                            <label>
+                                Описание
+                                <textarea
+                                    value={selectedItem.description}
+                                    onChange={(event) =>
+                                        updateItem({ description: event.target.value })
+                                    }
+                                    placeholder="Что это за предмет, как выглядит, где используется..."
+                                />
+                            </label>
+
+                            <label>
+                                Свойства / правила
+                                <textarea
+                                    value={selectedItem.rules}
+                                    onChange={(event) => updateItem({ rules: event.target.value })}
+                                    placeholder="Краткие правила, эффекты, ограничения, поломки, особенности..."
+                                />
+                            </label>
+
                             {selectedItem.category === "weapon" && (
                                 <label>
                                     Подтип оружия
@@ -1037,6 +1056,44 @@ export function ArsenalEditor({
                                 </label>
                             )}
 
+                            {selectedItem.slot === "loadBearing" && (
+                                <label>
+                                    Количество быстрых слотов
+                                    <select
+                                        value={selectedItem.quickSlotCount ?? 2}
+                                        onChange={(event) =>
+                                            updateItem({
+                                                quickSlotCount: Number(event.target.value) as 2 | 4 | 6,
+                                            })
+                                        }
+                                    >
+                                        <option value={2}>2 быстрых слота</option>
+                                        <option value={4}>4 быстрых слота</option>
+                                        <option value={6}>6 быстрых слотов</option>
+                                    </select>
+                                </label>
+                            )}
+
+                            {selectedItem.slot === "backpack" && (
+                                <label>
+                                    Вместимость поклажи
+                                    <input
+                                        type="number"
+                                        min={0}
+                                        max={30}
+                                        value={selectedItem.backpackSlotCount ?? 6}
+                                        onChange={(event) =>
+                                            updateItem({
+                                                backpackSlotCount: Math.max(
+                                                    0,
+                                                    Math.floor(Number(event.target.value) || 0),
+                                                ),
+                                            })
+                                        }
+                                    />
+                                </label>
+                            )}
+
                             <label className="editor-checkbox">
                                 <input
                                     type="checkbox"
@@ -1082,6 +1139,20 @@ export function ArsenalEditor({
 
                                 <dt>Состояние</dt>
                                 <dd>{getConditionLabel(selectedItem.condition)}</dd>
+
+                                {selectedItem.quickSlotCount && (
+                                    <>
+                                        <dt>Быстрые слоты</dt>
+                                        <dd>{selectedItem.quickSlotCount}</dd>
+                                    </>
+                                )}
+
+                                {typeof selectedItem.backpackSlotCount === "number" && (
+                                    <>
+                                        <dt>Вместимость поклажи</dt>
+                                        <dd>{selectedItem.backpackSlotCount}</dd>
+                                    </>
+                                )}
 
                                 {selectedItem.weight.trim().length > 0 && (
                                     <>

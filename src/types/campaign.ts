@@ -165,9 +165,8 @@ export type ArsenalItemCondition =
   | "trophy";
 
 export type ArsenalLootTag =
-  | "apis"
   | "voyage"
-  | "horst"
+  | "fief"
   | "obscuria"
   | "battle"
   | "technical"

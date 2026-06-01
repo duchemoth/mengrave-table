@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "exportedAt": "2026-06-01T04:02:53.281Z",
+  "exportedAt": "2026-06-01T07:59:55.511Z",
   "type": "mogila-chelovechestva-campaign",
   "campaign": {
     "locations": [
@@ -4151,8 +4151,17 @@
         "weaponSubtype": "melee",
         "description": "Старенький",
         "rules": "",
-        "tags": "тихое",
-        "rarity": "обычное",
+        "tags": "слабое оружие и бытовой инструмент; хороший мусорный лут, который не ломает баланс",
+        "rarity": "common",
+        "lootAvailability": "starter",
+        "condition": "worn",
+        "lootTags": [
+          "weapon",
+          "fragile",
+          "domestic",
+          "corpse",
+          "storage"
+        ],
         "weight": "200 гр",
         "price": "",
         "isVisibleToPlayers": true
@@ -4165,8 +4174,19 @@
         "weaponSubtype": "firearm",
         "description": "Старенькая винтовка с рассохшимся деревянным ложем.",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "полноценное длинное оружие; лучше выдавать за риск или осмысленный осмотр, а не как рядовой мусор",
+        "rarity": "standard",
+        "lootAvailability": "reward",
+        "condition": "worn",
+        "lootTags": [
+          "weapon",
+          "battle",
+          "ammo",
+          "voyage",
+          "corpse",
+          "storage",
+          "suspicious"
+        ],
         "weight": "",
         "price": "50 амп",
         "isVisibleToPlayers": true
@@ -4180,7 +4200,13 @@
         "description": "Лёгкий тканевый поддоспешник. Гасит удары и немного спасает от режущего урона, но на этом всё.\nбазовая защита от порезов/осколков",
         "rules": "",
         "tags": "",
-        "rarity": "",
+        "rarity": "standard",
+        "lootAvailability": "dangerLoot",
+        "condition": "worn",
+        "lootTags": [
+          "armor",
+          "battle"
+        ],
         "weight": "",
         "price": "2 А",
         "isVisibleToPlayers": true
@@ -4193,8 +4219,17 @@
         "armorSubtype": "head",
         "description": "",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "простая защита головы; можно выдавать как дешёвую находку, не ломает баланс",
+        "rarity": "common",
+        "lootAvailability": "starter",
+        "condition": "worn",
+        "lootTags": [
+          "armor",
+          "battle",
+          "domestic",
+          "corpse",
+          "storage"
+        ],
         "weight": "",
         "price": "",
         "isVisibleToPlayers": true
@@ -4206,8 +4241,21 @@
         "slot": "protection",
         "description": "работает грубо, тяжёлая задавка",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "не выдавать случайно; это сильная и опасная вещь, лучше как сюжетный предмет, рискованный трофей или тяжёлый выбор",
+        "rarity": "rare",
+        "lootAvailability": "manual",
+        "condition": "worn",
+        "lootTags": [
+          "armor",
+          "heavy",
+          "technical",
+          "obscuria",
+          "radiating",
+          "reflectionRisk",
+          "suspicious",
+          "inspectionRisk",
+          "celiate"
+        ],
         "weight": "",
         "price": "25–40 А",
         "isVisibleToPlayers": true
@@ -4219,8 +4267,16 @@
         "slot": "loadBearing",
         "description": "",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "полезна для переноски мелких предметов; можно выдавать часто, но в грязном или изношенном виде",
+        "rarity": "common",
+        "lootAvailability": "commonLoot",
+        "condition": "worn",
+        "lootTags": [
+          "domestic",
+          "storage",
+          "battle",
+          "corpse"
+        ],
         "weight": "",
         "price": "",
         "quickSlotCount": 4,
@@ -4233,8 +4289,18 @@
         "slot": "quick",
         "description": "быстро остановить кровь на конечности",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "хороший стартовый лут; можно найти в аварийном шкафу, санитарной сумке, у Мары или рядом с раненым",
+        "rarity": "common",
+        "lootAvailability": "starter",
+        "condition": "working",
+        "lootTags": [
+          "healing",
+          "medical",
+          "apis",
+          "voyage",
+          "horst",
+          "storage"
+        ],
         "weight": "",
         "price": "350 мА",
         "isVisibleToPlayers": true
@@ -4247,8 +4313,19 @@
         "weaponSubtype": "firearm",
         "description": "старый барабанный короткоствол, риск осечки",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "не стартовый безопасный лут; выдавать как рискованную боевую находку, возможны осечки и вопросы к происхождению",
+        "rarity": "standard",
+        "lootAvailability": "dangerLoot",
+        "condition": "worn",
+        "lootTags": [
+          "weapon",
+          "battle",
+          "ammo",
+          "corpse",
+          "brigand",
+          "suspicious",
+          "inspectionRisk"
+        ],
         "weight": "",
         "price": "18 А",
         "isVisibleToPlayers": true
@@ -4261,36 +4338,63 @@
         "armorSubtype": "torso",
         "description": "",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "полноценная защитная находка; лучше выдавать за риск, через вооружённого NPC, охрану или закрытый ящик",
+        "rarity": "good",
+        "lootAvailability": "reward",
+        "condition": "working",
+        "lootTags": [
+          "armor",
+          "battle",
+          "corpse",
+          "suspicious",
+          "inspectionRisk"
+        ],
         "weight": "",
         "price": "",
         "isVisibleToPlayers": true
       },
       {
         "id": "arsenal-item-1779097740520",
-        "name": "Кожанные Налокотники с Наручами",
+        "name": "Кожаные Налокотники с Наручами",
         "category": "armor",
         "slot": "armsArmor",
         "armorSubtype": "arms",
         "description": "",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "простая защита рук; хороша как обычный лут, особенно в грязных рабочих или боевых местах",
+        "rarity": "common",
+        "lootAvailability": "commonLoot",
+        "condition": "worn",
+        "lootTags": [
+          "armor",
+          "battle",
+          "domestic",
+          "corpse",
+          "storage"
+        ],
         "weight": "",
         "price": "",
         "isVisibleToPlayers": true
       },
       {
         "id": "arsenal-item-1779097776936",
-        "name": "Кожанная Защита Ног",
+        "name": "Кожаная Защита Ног",
         "category": "armor",
         "slot": "legsArmor",
         "armorSubtype": "legs",
         "description": "",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "простая защита ног; уместна как рабочая экипировка, трофей или часть неполного комплекта",
+        "rarity": "common",
+        "lootAvailability": "commonLoot",
+        "condition": "worn",
+        "lootTags": [
+          "armor",
+          "battle",
+          "corpse",
+          "domestic",
+          "storage"
+        ],
         "weight": "",
         "price": "",
         "isVisibleToPlayers": true
@@ -4302,8 +4406,20 @@
         "slot": "protection",
         "description": "",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "не обычный мусор; выдавать как полезную защиту от дыма, грязной среды или заражённого места",
+        "rarity": "good",
+        "lootAvailability": "reward",
+        "condition": "working",
+        "lootTags": [
+          "armor",
+          "battle",
+          "medical",
+          "obscuria",
+          "infection",
+          "technical",
+          "suspicious",
+          "inspectionRisk"
+        ],
         "weight": "",
         "price": "",
         "isVisibleToPlayers": true
@@ -4315,8 +4431,18 @@
         "slot": "loadBearing",
         "description": "",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "хорошая носимая система; заметная, может иметь служебный след или вопросы к происхождению",
+        "rarity": "good",
+        "lootAvailability": "reward",
+        "condition": "working",
+        "lootTags": [
+          "domestic",
+          "battle",
+          "corpse",
+          "temerat",
+          "suspicious",
+          "inspectionRisk"
+        ],
         "weight": "",
         "price": "",
         "quickSlotCount": 4,
@@ -4329,8 +4455,18 @@
         "slot": "none",
         "description": "",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "простой полезный предмет; можно выдавать часто, не ломает баланс",
+        "rarity": "common",
+        "lootAvailability": "starter",
+        "condition": "working",
+        "lootTags": [
+          "technical",
+          "tool",
+          "repair",
+          "domestic",
+          "weapon",
+          "storage"
+        ],
         "weight": "",
         "price": "",
         "isVisibleToPlayers": true
@@ -4342,8 +4478,20 @@
         "slot": "none",
         "description": "",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "не выдавать пачками; лучше как разовая находка у санитара, охраны, в аварийном шкафу или у важного NPC",
+        "rarity": "rare",
+        "lootAvailability": "reward",
+        "condition": "working",
+        "lootTags": [
+          "medical",
+          "healing",
+          "corpse",
+          "battle",
+          "voyage",
+          "apis",
+          "suspicious",
+          "inspectionRisk"
+        ],
         "weight": "",
         "price": "",
         "isVisibleToPlayers": true
@@ -4356,8 +4504,17 @@
         "resourceSubtype": "supplies",
         "description": "",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "мелкая безопасная находка; хорошо для пассажирских сумок и аварийного шкафа",
+        "rarity": "common",
+        "lootAvailability": "starter",
+        "condition": "worn",
+        "lootTags": [
+          "food",
+          "domestic",
+          "apis",
+          "voyage",
+          "storage"
+        ],
         "weight": "",
         "price": "",
         "isVisibleToPlayers": true
@@ -4370,8 +4527,18 @@
         "resourceSubtype": "drink",
         "description": "",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "базовый ресурс выживания; удобно выдавать с моральной или логистической ценой — кому достанется вода, кто её несёт, можно ли доверять источнику",
+        "rarity": "common",
+        "lootAvailability": "starter",
+        "condition": "working",
+        "lootTags": [
+          "water",
+          "domestic",
+          "apis",
+          "voyage",
+          "storage",
+          "obscuria"
+        ],
         "weight": "",
         "price": "",
         "isVisibleToPlayers": true
@@ -4384,8 +4551,17 @@
         "weaponSubtype": "melee",
         "description": "",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "хорошее простое оружие для удержания прохода; не выдавать как мусор, но можно находить у оборонительных точек и тел",
+        "rarity": "standard",
+        "lootAvailability": "dangerLoot",
+        "condition": "working",
+        "lootTags": [
+          "weapon",
+          "battle",
+          "corpse",
+          "domestic",
+          "horst"
+        ],
         "weight": "",
         "price": "",
         "isVisibleToPlayers": true
@@ -4398,8 +4574,17 @@
         "weaponSubtype": "melee",
         "description": "",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "простое служебное оружие; если предмет явно служебный, может вызвать вопросы о происхождении",
+        "rarity": "common",
+        "lootAvailability": "dangerLoot",
+        "condition": "working",
+        "lootTags": [
+          "weapon",
+          "battle",
+          "corpse",
+          "horst",
+          "temerat"
+        ],
         "weight": "",
         "price": "",
         "isVisibleToPlayers": true
@@ -4412,8 +4597,17 @@
         "weaponSubtype": "melee",
         "description": "Малый щит",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "малый щит, полезный, но не имбовый; можно выдавать как простую защитную находку",
+        "rarity": "common",
+        "lootAvailability": "commonLoot",
+        "condition": "working",
+        "lootTags": [
+          "weapon",
+          "battle",
+          "armor",
+          "corpse",
+          "domestic"
+        ],
         "weight": "",
         "price": "",
         "isVisibleToPlayers": true
@@ -4425,8 +4619,19 @@
         "slot": "none",
         "description": "Стандартный надёжный источник освещения, работающий на малых брусках лютаурина. Не требователен к качеству топлива.",
         "rules": "",
-        "tags": "надёжное",
-        "rarity": "обычное",
+        "tags": "хороший рабочий источник света; может требовать топливный элемент или давать цену при повреждении",
+        "rarity": "standard",
+        "lootAvailability": "commonLoot",
+        "condition": "working",
+        "lootTags": [
+          "technical",
+          "tool",
+          "repair",
+          "domestic",
+          "obscuria",
+          "storage",
+          "fuel"
+        ],
         "weight": "1 кг",
         "price": "1,5 амп",
         "isVisibleToPlayers": true
@@ -4438,8 +4643,17 @@
         "slot": "none",
         "description": "Моток синтетической верёвки. Старая, но неплохо сохранившаяся.",
         "rules": "",
-        "tags": "",
-        "rarity": "обычное",
+        "tags": "универсальная полезная находка; хорошо работает для спуска, вытягивания, связывания груза, носилок и обхода препятствий",
+        "rarity": "common",
+        "lootAvailability": "commonLoot",
+        "condition": "worn",
+        "lootTags": [
+          "tool",
+          "domestic",
+          "storage",
+          "obscuria",
+          "heavy"
+        ],
         "weight": "3 кг",
         "price": "500 м/амп",
         "isVisibleToPlayers": true
@@ -4451,8 +4665,20 @@
         "slot": "none",
         "description": "Медпакет первого эшелона: жгут, гемостатик, окклюзионный пластырь, обеззараживание, шина, ножницы для разрезания одежды, маркер, нитриловые перчатки.",
         "rules": "",
-        "tags": "надёжное, быстросъёмное.",
-        "rarity": "обычное",
+        "tags": "основной безопасный медицинский лут; уместен в поклаже, санитарной точке, аварийном шкафу, рядом с ранеными или в складе",
+        "rarity": "standard",
+        "lootAvailability": "commonLoot",
+        "condition": "working",
+        "lootTags": [
+          "medical",
+          "healing",
+          "infectionRisk",
+          "apis",
+          "voyage",
+          "horst",
+          "storage",
+          "domestic"
+        ],
         "weight": "0,5 кг",
         "price": "1.5 А",
         "isVisibleToPlayers": true
@@ -4465,7 +4691,12 @@
         "description": "Мелкие металлические детали в плотном бумажном свёртке. Можно использовать для крафта или обмена.",
         "rules": "",
         "tags": "шумное, мусор",
-        "rarity": "обычное",
+        "rarity": "standard",
+        "lootAvailability": "starter",
+        "condition": "working",
+        "lootTags": [
+          "noisy"
+        ],
         "weight": "1 кг",
         "price": "200 м/амп",
         "isVisibleToPlayers": true
@@ -4477,8 +4708,16 @@
         "slot": "none",
         "description": "Застиранное экспедиционное одеяло в свёртке. Может помочь сохранить тепло на привале.",
         "rules": "",
-        "tags": "",
-        "rarity": "обычное",
+        "tags": "безопасная бытовая находка; полезно для раненых, холода, привала и выживших",
+        "rarity": "common",
+        "lootAvailability": "starter",
+        "condition": "working",
+        "lootTags": [
+          "domestic",
+          "medical",
+          "healing",
+          "storage"
+        ],
         "weight": "1,5 кг",
         "price": "2 амп",
         "isVisibleToPlayers": true
@@ -4490,8 +4729,15 @@
         "slot": "loadBearing",
         "description": "Кожаный пояс с потёртой металлической бляхой.",
         "rules": "",
-        "tags": "надёжное",
-        "rarity": "обычное",
+        "tags": "мелкая универсальная вещь; может заменить крепёж, стяжку, ремень для груза или временную фиксацию",
+        "rarity": "common",
+        "lootAvailability": "starter",
+        "condition": "working",
+        "lootTags": [
+          "domestic",
+          "storage",
+          "tool"
+        ],
         "weight": "200 гр",
         "price": "2 амп",
         "isVisibleToPlayers": true
@@ -4505,7 +4751,13 @@
         "description": "Простой комплект рабочей робы, широко распространённый в Союзе Вольных Государств.\nМассово шьётся для \"болванок\" в любом форт-граде.\nУдобный, но защищает лишь от непогоды и слабых механических воздействий.",
         "rules": "",
         "tags": "надёжное",
-        "rarity": "обычное",
+        "rarity": "standard",
+        "lootAvailability": "dangerLoot",
+        "condition": "working",
+        "lootTags": [
+          "armor",
+          "battle"
+        ],
         "weight": "4 кг",
         "price": "5 амп",
         "isVisibleToPlayers": true
@@ -4517,8 +4769,16 @@
         "slot": "loadBearing",
         "description": "",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "удобен как мелкий контейнер для патронов, жгута, таблеток, инструмента или личного хлама",
+        "rarity": "common",
+        "lootAvailability": "starter",
+        "condition": "working",
+        "lootTags": [
+          "domestic",
+          "storage",
+          "ammo",
+          "medical"
+        ],
         "weight": "",
         "price": "",
         "isVisibleToPlayers": true
@@ -4531,8 +4791,18 @@
         "resourceSubtype": "fuel",
         "description": "Малый стержень лютаурина низкого качества.",
         "rules": "",
-        "tags": "валюта, ресурс",
-        "rarity": "обычное",
+        "tags": "топливо и энергоценность; можно находить в техточках, поклаже, рядом с генераторами и рабочими устройствами, но не выдавать слишком много",
+        "rarity": "standard",
+        "lootAvailability": "commonLoot",
+        "condition": "working",
+        "lootTags": [
+          "fuel",
+          "technical",
+          "voyage",
+          "apis",
+          "storage",
+          "repair"
+        ],
         "weight": "100 гр",
         "price": "1 амп",
         "isVisibleToPlayers": true
@@ -4545,8 +4815,18 @@
         "resourceSubtype": "ammo",
         "description": "Готовая к зарядке пластиковая кассета с 6 патронами для пистольвера\nбоезапас дорогой в кризис",
         "rules": "",
-        "tags": "",
-        "rarity": "обычное",
+        "tags": "можно выдавать малым количеством; если найден на теле или в спорном грузе, может вызвать вопросы на досмотре",
+        "rarity": "standard",
+        "lootAvailability": "commonLoot",
+        "condition": "working",
+        "lootTags": [
+          "ammo",
+          "battle",
+          "corpse",
+          "storage",
+          "voyage",
+          "suspicious"
+        ],
         "weight": "150 гр",
         "price": "3 А",
         "isVisibleToPlayers": true
@@ -4559,8 +4839,18 @@
         "resourceSubtype": "ammo",
         "description": "боезапас для карабина/винтовки",
         "rules": "",
-        "tags": "",
-        "rarity": "обычное",
+        "tags": "базовый полезный боезапас; лучше выдавать ограниченно, чтобы стрельба оставалась ресурсным решением",
+        "rarity": "standard",
+        "lootAvailability": "commonLoot",
+        "condition": "working",
+        "lootTags": [
+          "ammo",
+          "battle",
+          "weapon",
+          "corpse",
+          "storage",
+          "voyage"
+        ],
         "weight": "200 гр",
         "price": "5 А",
         "isVisibleToPlayers": true
@@ -4573,8 +4863,17 @@
         "resourceSubtype": "ammo",
         "description": "Маленькая коробочка с 4 картечными патронами для ручницы.",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "сильнее обычной мелкой находки; хорошо подходит после боя, у охраны, на трупе или в оружейном ящике",
+        "rarity": "standard",
+        "lootAvailability": "dangerLoot",
+        "condition": "working",
+        "lootTags": [
+          "ammo",
+          "battle",
+          "corpse",
+          "storage",
+          "suspicious"
+        ],
         "weight": "",
         "price": "6 амп",
         "isVisibleToPlayers": true
@@ -4587,8 +4886,18 @@
         "weaponSubtype": "firearm",
         "description": "Старенькое картечное ружьё с горизонтальным расположением стволов",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "сильная близкая находка; лучше за тяжёлый риск, доступ к оружейному ящику или важного вооружённого NPC",
+        "rarity": "good",
+        "lootAvailability": "reward",
+        "condition": "working",
+        "lootTags": [
+          "weapon",
+          "battle",
+          "ammo",
+          "corpse",
+          "storage",
+          "noisy"
+        ],
         "weight": "",
         "price": "40 А",
         "isVisibleToPlayers": true
@@ -4602,7 +4911,13 @@
         "description": "Простой шлем-черепник на кожаном ремешке.",
         "rules": "",
         "tags": "",
-        "rarity": "обычное",
+        "rarity": "standard",
+        "lootAvailability": "dangerLoot",
+        "condition": "working",
+        "lootTags": [
+          "armor",
+          "battle"
+        ],
         "weight": "1,5 кг",
         "price": "12 А",
         "isVisibleToPlayers": true
@@ -4615,10 +4930,18 @@
         "armorSubtype": "head",
         "description": "",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "простая рабочая одежда; может указывать на происхождение владельца, но не должна считаться боевой защитой",
+        "rarity": "common",
+        "lootAvailability": "starter",
+        "condition": "working",
+        "lootTags": [
+          "armor",
+          "domestic",
+          "storage",
+          "corpse"
+        ],
         "weight": "",
-        "price": "",
+        "price": "200 мА",
         "isVisibleToPlayers": true
       },
       {
@@ -4629,10 +4952,21 @@
         "armorSubtype": "head",
         "description": "Плохой выбор в качестве защиты. Мешает обзору.",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "защищает лицо при технической работе и от искр; в бою неудобна, но может спасти от осколков, света или грязи",
+        "rarity": "standard",
+        "lootAvailability": "commonLoot",
+        "condition": "worn",
+        "lootTags": [
+          "armor",
+          "domestic",
+          "technical",
+          "tool",
+          "repair",
+          "storage",
+          "fragile"
+        ],
         "weight": "",
-        "price": "",
+        "price": "1 мА",
         "isVisibleToPlayers": true
       },
       {
@@ -4643,7 +4977,13 @@
         "description": "Грубая сумка с ремнём; можно таскать мелкий груз",
         "rules": "",
         "tags": "",
-        "rarity": "",
+        "rarity": "standard",
+        "lootAvailability": "starter",
+        "condition": "working",
+        "lootTags": [
+          "storage",
+          "container"
+        ],
         "weight": "",
         "price": "150 мА",
         "backpackSlotCount": 6,
@@ -4657,7 +4997,13 @@
         "description": "",
         "rules": "",
         "tags": "",
-        "rarity": "",
+        "rarity": "standard",
+        "lootAvailability": "starter",
+        "condition": "working",
+        "lootTags": [
+          "storage",
+          "container"
+        ],
         "weight": "",
         "price": "",
         "backpackSlotCount": 4,
@@ -4671,7 +5017,14 @@
         "description": "крепче обычного, с биркой каравана",
         "rules": "",
         "tags": "",
-        "rarity": "",
+        "rarity": "standard",
+        "lootAvailability": "starter",
+        "condition": "working",
+        "lootTags": [
+          "storage",
+          "container",
+          "voyage"
+        ],
         "weight": "",
         "price": "300 мА",
         "backpackSlotCount": 6,
@@ -4685,8 +5038,18 @@
         "resourceSubtype": "drink",
         "description": "обычная фляга; полезна в дороге",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "хороший личный лут у пассажира, трупа, выжившего, в сумке; может быть пустой, грязной или с мутной водой",
+        "rarity": "common",
+        "lootAvailability": "starter",
+        "condition": "worn",
+        "lootTags": [
+          "water",
+          "domestic",
+          "corpse",
+          "apis",
+          "voyage",
+          "storage"
+        ],
         "weight": "",
         "price": "120 мА",
         "isVisibleToPlayers": true
@@ -4699,8 +5062,18 @@
         "resourceSubtype": "drink",
         "description": "чистая, проверенная; вызывает меньше вопросов",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "вода или жидкость с пломбой владельца/службы; может быть полезным ресурсом, уликой или поводом для спора при досмотре",
+        "rarity": "standard",
+        "lootAvailability": "commonLoot",
+        "condition": "working",
+        "lootTags": [
+          "water",
+          "domestic",
+          "voyage",
+          "storage",
+          "container",
+          "suspicious"
+        ],
         "weight": "",
         "price": "250 мА",
         "isVisibleToPlayers": true
@@ -4713,8 +5086,17 @@
         "resourceSubtype": "supplies",
         "description": "дешёвая злаковая еда на день",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "может быть личной вещью выжившего; хорош для моральной сцены с группой",
+        "rarity": "common",
+        "lootAvailability": "starter",
+        "condition": "worn",
+        "lootTags": [
+          "food",
+          "domestic",
+          "apis",
+          "voyage",
+          "storage"
+        ],
         "weight": "",
         "price": "80 мА",
         "isVisibleToPlayers": true
@@ -4727,8 +5109,18 @@
         "resourceSubtype": "supplies",
         "description": "нормальный запас на день пути",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "нормальная находка в караванном грузе, аварийном шкафу, у охраны или в поклаже",
+        "rarity": "standard",
+        "lootAvailability": "commonLoot",
+        "condition": "working",
+        "lootTags": [
+          "food",
+          "domestic",
+          "obscuria",
+          "voyage",
+          "apis",
+          "storage"
+        ],
         "weight": "",
         "price": "250 мА",
         "isVisibleToPlayers": true
@@ -4741,8 +5133,17 @@
         "armorSubtype": "torso",
         "description": "защита от холода, грязи и мелких царапин",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "полезна против холода, дождя и плохого привала; может быть грязной, мокрой, чужой или с личными следами владельца",
+        "rarity": "standard",
+        "lootAvailability": "commonLoot",
+        "condition": "dirty",
+        "lootTags": [
+          "domestic",
+          "storage",
+          "obscuria",
+          "armor",
+          "medical"
+        ],
         "weight": "",
         "price": "600 мА",
         "isVisibleToPlayers": true
@@ -4750,13 +5151,19 @@
       {
         "id": "arsenal-item-1779720356074",
         "name": "Запасные портянки/бельё",
-        "category": "armor",
-        "slot": "legsArmor",
-        "armorSubtype": "legs",
+        "category": "misc",
+        "slot": "none",
         "description": "мелочь, но в экспедиции ценится.",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "бытовой санитарный расходник; помогает с сыростью, холодом, натиранием и уходом за ранеными, но не является бронёй",
+        "rarity": "common",
+        "lootAvailability": "starter",
+        "condition": "working",
+        "lootTags": [
+          "domestic",
+          "medical",
+          "storage"
+        ],
         "weight": "",
         "price": "50 мА",
         "isVisibleToPlayers": true
@@ -4768,8 +5175,16 @@
         "slot": "none",
         "description": "тепло, носилки, укрытие, перевязка",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "простая бытовая находка; можно использовать как укрытие, подстилку, перевязочный материал или часть самодельных носилок",
+        "rarity": "common",
+        "lootAvailability": "starter",
+        "condition": "working",
+        "lootTags": [
+          "domestic",
+          "medical",
+          "healing",
+          "storage"
+        ],
         "weight": "",
         "price": "300 мА",
         "isVisibleToPlayers": true
@@ -4782,8 +5197,17 @@
         "armorSubtype": "torso",
         "description": "не броня, но полезен в сумеречной зоне",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "защищает от дождя и сырости, помогает укрыть груз или раненого; не должен выпадать как броня",
+        "rarity": "common",
+        "lootAvailability": "commonLoot",
+        "condition": "working",
+        "lootTags": [
+          "domestic",
+          "storage",
+          "obscuria",
+          "armor",
+          "fragile"
+        ],
         "weight": "",
         "price": "500 мА",
         "isVisibleToPlayers": true
@@ -4795,8 +5219,17 @@
         "slot": "none",
         "description": "бытовое, но нужно для привала",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "личная вещь; хороша для поклажи, трупов, привалов и бытовых сцен",
+        "rarity": "common",
+        "lootAvailability": "starter",
+        "condition": "working",
+        "lootTags": [
+          "domestic",
+          "water",
+          "food",
+          "storage",
+          "corpse"
+        ],
         "weight": "",
         "price": "80 мА",
         "isVisibleToPlayers": true
@@ -4809,8 +5242,17 @@
         "weaponSubtype": "melee",
         "description": "инструмент, не полноценное оружие",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "скорее инструмент, чем полноценное оружие; уместен почти в любой личной поклаже",
+        "rarity": "common",
+        "lootAvailability": "starter",
+        "condition": "working",
+        "lootTags": [
+          "weapon",
+          "tool",
+          "domestic",
+          "corpse",
+          "storage"
+        ],
         "weight": "",
         "price": "400 мА",
         "isVisibleToPlayers": true
@@ -4823,8 +5265,17 @@
         "weaponSubtype": "melee",
         "description": "мелкий инструмент, скрываемый",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "мелкий скрываемый предмет; неопасен по балансу, но может быть замечен при досмотре",
+        "rarity": "common",
+        "lootAvailability": "starter",
+        "condition": "worn",
+        "lootTags": [
+          "weapon",
+          "corpse",
+          "storage",
+          "domestic",
+          "suspicious"
+        ],
         "weight": "",
         "price": "200 мА",
         "isVisibleToPlayers": true
@@ -4837,7 +5288,14 @@
         "description": "развести огонь, если сухо и безопасно",
         "rules": "",
         "tags": "",
-        "rarity": "",
+        "rarity": "standard",
+        "lootAvailability": "commonLoot",
+        "condition": "working",
+        "lootTags": [
+          "technical",
+          "tool",
+          "repair"
+        ],
         "weight": "",
         "price": "150 мА",
         "isVisibleToPlayers": true
@@ -4850,7 +5308,13 @@
         "description": "заметки, маршруты, долги, письма",
         "rules": "",
         "tags": "",
-        "rarity": "",
+        "rarity": "standard",
+        "lootAvailability": "starter",
+        "condition": "working",
+        "lootTags": [
+          "apis",
+          "document"
+        ],
         "weight": "",
         "price": "120 мА",
         "isVisibleToPlayers": true
@@ -4862,8 +5326,16 @@
         "slot": "none",
         "description": "писать на бумаге, ткани, стене",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "мелкий безопасный предмет; полезен для пометок, карт, записок, маркировки пути и быстрых схем",
+        "rarity": "common",
+        "lootAvailability": "starter",
+        "condition": "working",
+        "lootTags": [
+          "domestic",
+          "document",
+          "tool",
+          "storage"
+        ],
         "weight": "",
         "price": "20 мА",
         "isVisibleToPlayers": true
@@ -4876,7 +5348,13 @@
         "description": "ценность сюжетная, не торговая",
         "rules": "",
         "tags": "",
-        "rarity": "",
+        "rarity": "standard",
+        "lootAvailability": "manual",
+        "condition": "working",
+        "lootTags": [
+          "quest",
+          "clue"
+        ],
         "weight": "",
         "price": "0–300 мА",
         "isVisibleToPlayers": true
@@ -4889,7 +5367,13 @@
         "description": "якорный предмет, личная цель",
         "rules": "",
         "tags": "",
-        "rarity": "",
+        "rarity": "standard",
+        "lootAvailability": "manual",
+        "condition": "worn",
+        "lootTags": [
+          "quest",
+          "clue"
+        ],
         "weight": "",
         "price": "0–500 мА",
         "isVisibleToPlayers": true
@@ -4902,7 +5386,13 @@
         "description": "эмоциональная ставка, связь с NPC",
         "rules": "",
         "tags": "",
-        "rarity": "",
+        "rarity": "standard",
+        "lootAvailability": "manual",
+        "condition": "working",
+        "lootTags": [
+          "quest",
+          "clue"
+        ],
         "weight": "",
         "price": "0–150 мА",
         "isVisibleToPlayers": true
@@ -4915,8 +5405,17 @@
         "armorSubtype": "arms",
         "description": "защита рук от грязи, металла, холода",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "бытовая защита рук от грязи, холода, щепок и мелкой работы; не броня",
+        "rarity": "common",
+        "lootAvailability": "starter",
+        "condition": "dirty",
+        "lootTags": [
+          "armor",
+          "domestic",
+          "storage",
+          "repair",
+          "corpse"
+        ],
         "weight": "",
         "price": "120 мА",
         "isVisibleToPlayers": true
@@ -4929,8 +5428,18 @@
         "armorSubtype": "arms",
         "description": "лучше для обломков, тросов, металла",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "полезны при разборе обломков, ремонте, переноске груза и работе с горячими или грязными предметами",
+        "rarity": "common",
+        "lootAvailability": "commonLoot",
+        "condition": "working",
+        "lootTags": [
+          "armor",
+          "domestic",
+          "repair",
+          "tool",
+          "technical",
+          "storage"
+        ],
         "weight": "",
         "price": "300 мА",
         "isVisibleToPlayers": true
@@ -4943,7 +5452,14 @@
         "description": "доказательство, что человек был на борту",
         "rules": "",
         "tags": "",
-        "rarity": "",
+        "rarity": "standard",
+        "lootAvailability": "manual",
+        "condition": "working",
+        "lootTags": [
+          "quest",
+          "clue",
+          "apis"
+        ],
         "weight": "",
         "price": "0–100 мА",
         "isVisibleToPlayers": true
@@ -4956,7 +5472,13 @@
         "description": "огромный риск; цена зависит от доступа",
         "rules": "",
         "tags": "",
-        "rarity": "",
+        "rarity": "standard",
+        "lootAvailability": "manual",
+        "condition": "working",
+        "lootTags": [
+          "quest",
+          "clue"
+        ],
         "weight": "",
         "price": "0 / 5–50 А",
         "isVisibleToPlayers": true
@@ -4969,7 +5491,13 @@
         "description": "улика, доступ, проблема у ворот",
         "rules": "",
         "tags": "",
-        "rarity": "",
+        "rarity": "standard",
+        "lootAvailability": "manual",
+        "condition": "damaged",
+        "lootTags": [
+          "quest",
+          "clue"
+        ],
         "weight": "",
         "price": "0 / 1–10 А",
         "isVisibleToPlayers": true
@@ -4981,8 +5509,17 @@
         "slot": "none",
         "description": "слабый, но надёжный свет",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "базовый безопасный лут; хорош для аварийных шкафов, сумок и бытовых точек",
+        "rarity": "common",
+        "lootAvailability": "starter",
+        "condition": "working",
+        "lootTags": [
+          "technical",
+          "tool",
+          "domestic",
+          "obscuria",
+          "storage"
+        ],
         "weight": "",
         "price": "700 мА",
         "isVisibleToPlayers": true
@@ -4995,8 +5532,19 @@
         "resourceSubtype": "fuel",
         "description": "заряд/батарея для фонаря",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "маленький безопасный расходник; хорошо выдавать вместе с фонарём или в теххламе",
+        "rarity": "common",
+        "lootAvailability": "commonLoot",
+        "condition": "working",
+        "lootTags": [
+          "fuel",
+          "technical",
+          "domestic",
+          "tool",
+          "voyage",
+          "apis",
+          "storage"
+        ],
         "weight": "",
         "price": "150 мА",
         "isVisibleToPlayers": true
@@ -5008,8 +5556,18 @@
         "slot": "none",
         "description": "крепкий, маркированный, лучше обычного",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "более надёжный фонарь с фракционным следом; может вызвать вопрос о происхождении, если найден в спорной ситуации",
+        "rarity": "standard",
+        "lootAvailability": "commonLoot",
+        "condition": "working",
+        "lootTags": [
+          "technical",
+          "tool",
+          "voyage",
+          "domestic",
+          "storage",
+          "obscuria"
+        ],
         "weight": "",
         "price": "1.5 А",
         "isVisibleToPlayers": true
@@ -5022,8 +5580,19 @@
         "weaponSubtype": "melee",
         "description": "двери, ящики, панели, обломки",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "прежде всего инструмент для дверей, ящиков, панелей и обломков; как оружие грубый, шумный и заметный",
+        "rarity": "common",
+        "lootAvailability": "commonLoot",
+        "condition": "working",
+        "lootTags": [
+          "weapon",
+          "container",
+          "tool",
+          "repair",
+          "technical",
+          "storage",
+          "noisy"
+        ],
         "weight": "",
         "price": "800 мА",
         "isVisibleToPlayers": true
@@ -5036,8 +5605,17 @@
         "weaponSubtype": "melee",
         "description": "дерево, ремни, тонкие двери, самооборона",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "хороший рабочий предмет; полезен для ремней, дерева, тонких дверей и самообороны",
+        "rarity": "standard",
+        "lootAvailability": "commonLoot",
+        "condition": "working",
+        "lootTags": [
+          "weapon",
+          "tool",
+          "repair",
+          "domestic",
+          "storage"
+        ],
         "weight": "",
         "price": "1.2 А",
         "isVisibleToPlayers": true
@@ -5049,8 +5627,17 @@
         "slot": "none",
         "description": "спуск, перенос груза, привязка раненого",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "полезен для подъёма, крепления, вытягивания и обхода препятствий; может замедлять переноску",
+        "rarity": "standard",
+        "lootAvailability": "commonLoot",
+        "condition": "worn",
+        "lootTags": [
+          "tool",
+          "repair",
+          "domestic",
+          "storage",
+          "heavy"
+        ],
         "weight": "",
         "price": "1 А",
         "isVisibleToPlayers": true
@@ -5062,8 +5649,17 @@
         "slot": "none",
         "description": "тяжелее и надёжнее, выдерживает людей",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "лучше обычного троса; уместен как ценная рабочая находка, но тяжёлый и заметный",
+        "rarity": "good",
+        "lootAvailability": "reward",
+        "condition": "working",
+        "lootTags": [
+          "heavy",
+          "tool",
+          "repair",
+          "voyage",
+          "storage"
+        ],
         "weight": "",
         "price": "2 А",
         "isVisibleToPlayers": true
@@ -5075,8 +5671,18 @@
         "slot": "protection",
         "description": "помогают пройти дымный сектор",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "временная защита от дыма, пыли и грязной среды; не является полноценной защитой от инфофона или тяжёлого заражения",
+        "rarity": "standard",
+        "lootAvailability": "commonLoot",
+        "condition": "working",
+        "lootTags": [
+          "armor",
+          "medical",
+          "infection",
+          "domestic",
+          "storage",
+          "suspicious"
+        ],
         "weight": "",
         "price": "1 А",
         "isVisibleToPlayers": true
@@ -5089,7 +5695,14 @@
         "description": "бесполезна для паники, полезна для процедур",
         "rules": "",
         "tags": "",
-        "rarity": "",
+        "rarity": "standard",
+        "lootAvailability": "manual",
+        "condition": "working",
+        "lootTags": [
+          "quest",
+          "clue",
+          "voyage"
+        ],
         "weight": "",
         "price": "0–200 мА",
         "isVisibleToPlayers": true
@@ -5101,8 +5714,18 @@
         "slot": "none",
         "description": "тушение локального огня, дефицитен после пожара",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "полезен в аварийных и технических сценах; может стать сильным ресурсом против пожара, дыма или перегрева",
+        "rarity": "standard",
+        "lootAvailability": "starter",
+        "condition": "working",
+        "lootTags": [
+          "tool",
+          "technical",
+          "repair",
+          "storage",
+          "voyage",
+          "fragile"
+        ],
         "weight": "",
         "price": "2 А",
         "isVisibleToPlayers": true
@@ -5115,7 +5738,13 @@
         "description": "сигнал в дыму, лесу, обломках",
         "rules": "",
         "tags": "",
-        "rarity": "",
+        "rarity": "standard",
+        "lootAvailability": "manual",
+        "condition": "working",
+        "lootTags": [
+          "quest",
+          "clue"
+        ],
         "weight": "",
         "price": "80 мА",
         "isVisibleToPlayers": true
@@ -5128,7 +5757,13 @@
         "description": "не товар; доступ и улика",
         "rules": "",
         "tags": "",
-        "rarity": "",
+        "rarity": "standard",
+        "lootAvailability": "manual",
+        "condition": "working",
+        "lootTags": [
+          "quest",
+          "clue"
+        ],
         "weight": "",
         "price": "0 / 2–5 А",
         "isVisibleToPlayers": true
@@ -5141,8 +5776,16 @@
         "weaponSubtype": "melee",
         "description": "резать ремни, ткань, шнуры",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "универсальный предмет; годится для ремней, ткани, шнуров, мелкой работы и крайней самообороны",
+        "rarity": "common",
+        "lootAvailability": "starter",
+        "condition": "working",
+        "lootTags": [
+          "weapon",
+          "domestic",
+          "tool",
+          "storage"
+        ],
         "weight": "",
         "price": "500 мА",
         "isVisibleToPlayers": true
@@ -5154,8 +5797,17 @@
         "slot": "none",
         "description": "отвёртки, ключи, кусачки",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "основной универсальный ремонтный лут; не элитный, но сильно расширяет варианты действий",
+        "rarity": "standard",
+        "lootAvailability": "commonLoot",
+        "condition": "working",
+        "lootTags": [
+          "technical",
+          "tool",
+          "repair",
+          "storage",
+          "domestic"
+        ],
         "weight": "",
         "price": "2 А",
         "isVisibleToPlayers": true
@@ -5167,8 +5819,17 @@
         "slot": "none",
         "description": "полевая починка оружия/фонаря/механизмов",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "лучше давать как полезную находку за осмотр техточки или поклажи; может тратиться частями",
+        "rarity": "standard",
+        "lootAvailability": "commonLoot",
+        "condition": "working",
+        "lootTags": [
+          "technical",
+          "tool",
+          "repair",
+          "storage",
+          "domestic"
+        ],
         "weight": "",
         "price": "5 А",
         "isVisibleToPlayers": true
@@ -5180,8 +5841,20 @@
         "slot": "none",
         "description": "вскрытие/ремонт караванных креплений",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "фракционный инструмент, не рядовой мусор; может быть полезен и одновременно проблемен при проверке",
+        "rarity": "faction",
+        "lootAvailability": "reward",
+        "condition": "working",
+        "lootTags": [
+          "technical",
+          "tool",
+          "repair",
+          "voyage",
+          "clue",
+          "document",
+          "suspicious",
+          "inspectionRisk"
+        ],
         "weight": "",
         "price": "3 А",
         "isVisibleToPlayers": true
@@ -5193,8 +5866,17 @@
         "slot": "none",
         "description": "проволока, кабель, сетка",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "простой инструмент для проволоки, кабеля, сетки, пломб и растяжек",
+        "rarity": "common",
+        "lootAvailability": "commonLoot",
+        "condition": "working",
+        "lootTags": [
+          "technical",
+          "tool",
+          "repair",
+          "storage",
+          "domestic"
+        ],
         "weight": "",
         "price": "700 мА",
         "isVisibleToPlayers": true
@@ -5206,8 +5888,17 @@
         "slot": "none",
         "description": "металл, гвозди, зажимы",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "универсальный рабочий инструмент; хорошо подходит для техмусора и ремонтных сцен",
+        "rarity": "common",
+        "lootAvailability": "commonLoot",
+        "condition": "working",
+        "lootTags": [
+          "technical",
+          "tool",
+          "repair",
+          "domestic",
+          "storage"
+        ],
         "weight": "",
         "price": "500 мА",
         "isVisibleToPlayers": true
@@ -5220,8 +5911,19 @@
         "weaponSubtype": "melee",
         "description": "обломки, ремонт, грубое оружие",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "полезен для ремонта и как грубое оружие; использование часто шумное",
+        "rarity": "common",
+        "lootAvailability": "commonLoot",
+        "condition": "worn",
+        "lootTags": [
+          "weapon",
+          "tool",
+          "repair",
+          "technical",
+          "domestic",
+          "storage",
+          "noisy"
+        ],
         "weight": "",
         "price": "400 мА",
         "isVisibleToPlayers": true
@@ -5233,8 +5935,17 @@
         "slot": "none",
         "description": "дерево, лёгкие балки",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "полезна для дерева, веток, завалов и временных конструкций; медленная и шумная",
+        "rarity": "common",
+        "lootAvailability": "commonLoot",
+        "condition": "worn",
+        "lootTags": [
+          "tool",
+          "repair",
+          "domestic",
+          "storage",
+          "noisy"
+        ],
         "weight": "",
         "price": "600 мА",
         "isVisibleToPlayers": true
@@ -5246,8 +5957,17 @@
         "slot": "none",
         "description": "ремонт, ловушка, крепление",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "хороший расходник для ремонта, обхода контактов и временного подключения",
+        "rarity": "common",
+        "lootAvailability": "commonLoot",
+        "condition": "working",
+        "lootTags": [
+          "technical",
+          "repair",
+          "tool",
+          "storage",
+          "fragile"
+        ],
         "weight": "",
         "price": "400 мА",
         "isVisibleToPlayers": true
@@ -5259,8 +5979,17 @@
         "slot": "none",
         "description": "кабели, быстрый ремонт",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "маленький полезный расходник; удобно выдавать пачками с кабелем, фонарём или инструментами",
+        "rarity": "common",
+        "lootAvailability": "commonLoot",
+        "condition": "working",
+        "lootTags": [
+          "repair",
+          "technical",
+          "tool",
+          "domestic",
+          "storage"
+        ],
         "weight": "",
         "price": "150 мА",
         "isVisibleToPlayers": true
@@ -5272,8 +6001,17 @@
         "slot": "none",
         "description": "трос, груз, переноска",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "мелкий крепёж для тросов, груза, ремней и временных фиксаций",
+        "rarity": "common",
+        "lootAvailability": "commonLoot",
+        "condition": "working",
+        "lootTags": [
+          "tool",
+          "repair",
+          "technical",
+          "domestic",
+          "storage"
+        ],
         "weight": "",
         "price": "100 мА",
         "isVisibleToPlayers": true
@@ -5286,7 +6024,13 @@
         "description": "перенос лута и припасов",
         "rules": "",
         "tags": "",
-        "rarity": "",
+        "rarity": "standard",
+        "lootAvailability": "starter",
+        "condition": "working",
+        "lootTags": [
+          "storage",
+          "container"
+        ],
         "weight": "",
         "price": "100 мА",
         "backpackSlotCount": 4,
@@ -5300,8 +6044,17 @@
         "weaponSubtype": "melee",
         "description": "завалы, грязь, кострище, окопчик",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "больше инструмент, чем оружие; полезна в грязи, завале, привале, у кострища или в низине",
+        "rarity": "common",
+        "lootAvailability": "commonLoot",
+        "condition": "working",
+        "lootTags": [
+          "weapon",
+          "tool",
+          "domestic",
+          "obscuria",
+          "storage"
+        ],
         "weight": "",
         "price": "1 А",
         "isVisibleToPlayers": true
@@ -5314,8 +6067,17 @@
         "weaponSubtype": "melee",
         "description": "камень, металл, обломки",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "рабочий инструмент для камня, металла и обломков; как оружие опасна, но неудобна",
+        "rarity": "standard",
+        "lootAvailability": "commonLoot",
+        "condition": "worn",
+        "lootTags": [
+          "weapon",
+          "tool",
+          "repair",
+          "technical",
+          "heavy"
+        ],
         "weight": "",
         "price": "1.2 А",
         "isVisibleToPlayers": true
@@ -5327,8 +6089,18 @@
         "slot": "none",
         "description": "если покупать материалы; часто собираются из хлама",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "предмет для эвакуации раненых; полезен, но замедляет группу",
+        "rarity": "common",
+        "lootAvailability": "commonLoot",
+        "condition": "makeshift",
+        "lootTags": [
+          "technical",
+          "tool",
+          "medical",
+          "domestic",
+          "heavy",
+          "fragile"
+        ],
         "weight": "",
         "price": "300 мА",
         "isVisibleToPlayers": true
@@ -5340,8 +6112,19 @@
         "slot": "none",
         "description": "привлечь помощь, но повышает риск",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "выдавать ограниченно; полезна для сигнала, отвлечения, освещения, но почти всегда привлекает внимание",
+        "rarity": "standard",
+        "lootAvailability": "commonLoot",
+        "condition": "working",
+        "lootTags": [
+          "tool",
+          "technical",
+          "obscuria",
+          "voyage",
+          "horst",
+          "noisy",
+          "suspicious"
+        ],
         "weight": "",
         "price": "1 А",
         "isVisibleToPlayers": true
@@ -5353,8 +6136,17 @@
         "slot": "none",
         "description": "помогает, но не спасает от инфофона",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "полезен для маршрута, но не решает проблемы плохой зоны сам по себе",
+        "rarity": "standard",
+        "lootAvailability": "commonLoot",
+        "condition": "working",
+        "lootTags": [
+          "tool",
+          "repair",
+          "domestic",
+          "obscuria",
+          "storage"
+        ],
         "weight": "",
         "price": "1.5 А",
         "isVisibleToPlayers": true
@@ -5367,7 +6159,13 @@
         "description": "цена зависит от актуальности",
         "rules": "",
         "tags": "",
-        "rarity": "",
+        "rarity": "standard",
+        "lootAvailability": "manual",
+        "condition": "working",
+        "lootTags": [
+          "quest",
+          "clue"
+        ],
         "weight": "",
         "price": "1–10 А",
         "isVisibleToPlayers": true
@@ -5379,8 +6177,19 @@
         "slot": "none",
         "description": "полезен против грязи, не гарантирует от эхоцитоза",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "хороший практичный лут; не делает опасную воду полностью безопасной без проверки",
+        "rarity": "standard",
+        "lootAvailability": "commonLoot",
+        "condition": "working",
+        "lootTags": [
+          "infectionRisk",
+          "tool",
+          "water",
+          "domestic",
+          "medical",
+          "obscuria",
+          "storage"
+        ],
         "weight": "",
         "price": "1 А",
         "isVisibleToPlayers": true
@@ -5392,8 +6201,16 @@
         "slot": "none",
         "description": "огонь в сырости",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "безопасный малый ресурс; полезен для костра, привала, сушки, тепла и бытовых сцен",
+        "rarity": "common",
+        "lootAvailability": "commonLoot",
+        "condition": "working",
+        "lootTags": [
+          "fuel",
+          "domestic",
+          "storage",
+          "obscuria"
+        ],
         "weight": "",
         "price": "200 мА",
         "isVisibleToPlayers": true
@@ -5405,8 +6222,17 @@
         "slot": "none",
         "description": "укрытие от дождя/пепла",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "полезен для привала, укрытия раненых, защиты груза, дождя и временной карантинной зоны",
+        "rarity": "standard",
+        "lootAvailability": "commonLoot",
+        "condition": "working",
+        "lootTags": [
+          "domestic",
+          "storage",
+          "medical",
+          "obscuria",
+          "heavy"
+        ],
         "weight": "",
         "price": "1.5 А",
         "isVisibleToPlayers": true
@@ -5418,8 +6244,16 @@
         "slot": "none",
         "description": "спать у обломков, утеплить раненого",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "безопасная находка против холода и сырости; хорошо подходит для раненых, привала и долгого ожидания",
+        "rarity": "common",
+        "lootAvailability": "starter",
+        "condition": "working",
+        "lootTags": [
+          "storage",
+          "domestic",
+          "medical",
+          "healing"
+        ],
         "weight": "",
         "price": "800 мА",
         "isVisibleToPlayers": true
@@ -5432,8 +6266,16 @@
         "weaponSubtype": "melee",
         "description": "слабое оружие, бытовой предмет",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "слабое импровизированное оружие; хорошо подходит для бытового хлама, сумок, кухни, тележек и паники",
+        "rarity": "junk",
+        "lootAvailability": "starter",
+        "condition": "dirty",
+        "lootTags": [
+          "weapon",
+          "domestic",
+          "storage",
+          "corpse"
+        ],
         "weight": "",
         "price": "150 мА",
         "isVisibleToPlayers": true
@@ -5446,8 +6288,17 @@
         "weaponSubtype": "melee",
         "description": "инструмент и крайняя самооборона",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "нормальная малополезная находка; можно выдавать часто, но без ощущения боевой награды",
+        "rarity": "common",
+        "lootAvailability": "starter",
+        "condition": "working",
+        "lootTags": [
+          "weapon",
+          "tool",
+          "domestic",
+          "storage",
+          "corpse"
+        ],
         "weight": "",
         "price": "400 мА",
         "isVisibleToPlayers": true
@@ -5460,22 +6311,40 @@
         "weaponSubtype": "melee",
         "description": "уже оружие, может вызвать вопросы",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "уже явно оружие, а не бытовой инструмент; лучше после боя, у охраны, мародёра или вооружённого NPC",
+        "rarity": "standard",
+        "lootAvailability": "dangerLoot",
+        "condition": "working",
+        "lootTags": [
+          "weapon",
+          "battle",
+          "corpse",
+          "suspicious",
+          "inspectionRisk"
+        ],
         "weight": "",
         "price": "1.5 А",
         "isVisibleToPlayers": true
       },
       {
         "id": "arsenal-item-1779721901025",
-        "name": "металлическая труба",
+        "name": "Металлическая труба",
         "category": "weapon",
         "slot": "shoulderWeapon",
         "weaponSubtype": "melee",
         "description": "часто добывается из обломков",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "импровизированное оружие из обломков; хорошо как плохая, но мгновенно доступная находка",
+        "rarity": "junk",
+        "lootAvailability": "starter",
+        "condition": "dirty",
+        "lootTags": [
+          "weapon",
+          "tool",
+          "repair",
+          "storage",
+          "technical"
+        ],
         "weight": "",
         "price": "200 мА",
         "isVisibleToPlayers": true
@@ -5489,7 +6358,14 @@
         "description": "инструмент и грубое оружие",
         "rules": "",
         "tags": "",
-        "rarity": "",
+        "rarity": "standard",
+        "lootAvailability": "dangerLoot",
+        "condition": "working",
+        "lootTags": [
+          "weapon",
+          "battle",
+          "heavy"
+        ],
         "weight": "",
         "price": "500 мА",
         "isVisibleToPlayers": true
@@ -5502,8 +6378,16 @@
         "weaponSubtype": "melee",
         "description": "аварийный/рабочий, годится в драке",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "универсальная полевая находка; хорош для завалов, костра, ремней, лёгкой самообороны",
+        "rarity": "common",
+        "lootAvailability": "commonLoot",
+        "condition": "worn",
+        "lootTags": [
+          "weapon",
+          "tool",
+          "domestic",
+          "storage"
+        ],
         "weight": "",
         "price": "1.2 А",
         "isVisibleToPlayers": true
@@ -5517,7 +6401,16 @@
         "description": "хороший инструмент, опасное оружие",
         "rules": "",
         "tags": "",
-        "rarity": "",
+        "rarity": "standard",
+        "lootAvailability": "commonLoot",
+        "condition": "worn",
+        "lootTags": [
+          "weapon",
+          "tool",
+          "storage",
+          "domestic",
+          "heavy"
+        ],
         "weight": "",
         "price": "2 А",
         "isVisibleToPlayers": true
@@ -5531,7 +6424,14 @@
         "description": "низкое качество, статусно подозрителен",
         "rules": "",
         "tags": "",
-        "rarity": "",
+        "rarity": "standard",
+        "lootAvailability": "dangerLoot",
+        "condition": "working",
+        "lootTags": [
+          "weapon",
+          "battle",
+          "suspicious"
+        ],
         "weight": "",
         "price": "6 А",
         "isVisibleToPlayers": true
@@ -5545,7 +6445,13 @@
         "description": "нормальное оружие, не стартовая мелочь",
         "rules": "",
         "tags": "",
-        "rarity": "",
+        "rarity": "standard",
+        "lootAvailability": "dangerLoot",
+        "condition": "worn",
+        "lootTags": [
+          "weapon",
+          "battle"
+        ],
         "weight": "",
         "price": "12 А",
         "isVisibleToPlayers": true
@@ -5558,8 +6464,17 @@
         "weaponSubtype": "melee",
         "description": "удержать проход, отбиться на дороге",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "уместна там, где люди готовились отбиваться от твари; хорошая находка, но громоздкая и заметная",
+        "rarity": "standard",
+        "lootAvailability": "dangerLoot",
+        "condition": "working",
+        "lootTags": [
+          "weapon",
+          "battle",
+          "corpse",
+          "obscuria",
+          "horst"
+        ],
         "weight": "",
         "price": "3 А",
         "isVisibleToPlayers": true
@@ -5572,8 +6487,17 @@
         "weaponSubtype": "melee",
         "description": "защита в тесноте, тяжёлый",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "защита в тесноте и на дороге; тяжёлый, грубый, может мешать переноске и досмотру",
+        "rarity": "standard",
+        "lootAvailability": "commonLoot",
+        "condition": "makeshift",
+        "lootTags": [
+          "weapon",
+          "battle",
+          "heavy",
+          "armor",
+          "domestic"
+        ],
         "weight": "",
         "price": "2 А",
         "isVisibleToPlayers": true
@@ -5587,7 +6511,14 @@
         "description": "оружие охраны Вояжа, может быть фракционным",
         "rules": "",
         "tags": "",
-        "rarity": "",
+        "rarity": "standard",
+        "lootAvailability": "dangerLoot",
+        "condition": "working",
+        "lootTags": [
+          "weapon",
+          "battle",
+          "voyage"
+        ],
         "weight": "",
         "price": "10 А",
         "isVisibleToPlayers": true
@@ -5601,7 +6532,13 @@
         "description": "полезен на карабине или отдельно",
         "rules": "",
         "tags": "",
-        "rarity": "",
+        "rarity": "standard",
+        "lootAvailability": "dangerLoot",
+        "condition": "working",
+        "lootTags": [
+          "weapon",
+          "battle"
+        ],
         "weight": "",
         "price": "2 А",
         "isVisibleToPlayers": true
@@ -5614,8 +6551,17 @@
         "weaponSubtype": "melee",
         "description": "мусорное импровизированное оружие",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "мусорное оружие отчаяния; можно выдавать как признак бедности, паники или мародёрства",
+        "rarity": "junk",
+        "lootAvailability": "starter",
+        "condition": "makeshift",
+        "lootTags": [
+          "weapon",
+          "battle",
+          "corpse",
+          "brigand",
+          "suspicious"
+        ],
         "weight": "",
         "price": "0–100 мА",
         "isVisibleToPlayers": true
@@ -5629,7 +6575,13 @@
         "description": "свет, страх, риск пожара",
         "rules": "",
         "tags": "",
-        "rarity": "",
+        "rarity": "standard",
+        "lootAvailability": "dangerLoot",
+        "condition": "working",
+        "lootTags": [
+          "weapon",
+          "battle"
+        ],
         "weight": "",
         "price": "0–100 мА",
         "isVisibleToPlayers": true
@@ -5642,8 +6594,18 @@
         "weaponSubtype": "firearm",
         "description": "надёжнее, хорошо в коридорах",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "нормальное оружие, не мусор; лучше после боя, у вооружённого NPC или как награда за риск",
+        "rarity": "standard",
+        "lootAvailability": "dangerLoot",
+        "condition": "working",
+        "lootTags": [
+          "weapon",
+          "ammo",
+          "battle",
+          "corpse",
+          "inspectionRisk",
+          "suspicious"
+        ],
         "weight": "",
         "price": "35 А",
         "isVisibleToPlayers": true
@@ -5657,7 +6619,15 @@
         "description": "служебный след, номер/пломба",
         "rules": "",
         "tags": "",
-        "rarity": "",
+        "rarity": "standard",
+        "lootAvailability": "dangerLoot",
+        "condition": "working",
+        "lootTags": [
+          "weapon",
+          "battle",
+          "voyage",
+          "clue"
+        ],
         "weight": "",
         "price": "45 А",
         "isVisibleToPlayers": true
@@ -5670,8 +6640,17 @@
         "weaponSubtype": "firearm",
         "description": "рабочий огнестрел, но капризный",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "рабочий огнестрел, но капризный; выдавать как боевую находку с риском осечки или плохого состояния",
+        "rarity": "standard",
+        "lootAvailability": "dangerLoot",
+        "condition": "worn",
+        "lootTags": [
+          "weapon",
+          "battle",
+          "ammo",
+          "corpse",
+          "suspicious"
+        ],
         "weight": "",
         "price": "35 А",
         "isVisibleToPlayers": true
@@ -5685,7 +6664,14 @@
         "description": "ценный и заметный лут",
         "rules": "",
         "tags": "",
-        "rarity": "",
+        "rarity": "standard",
+        "lootAvailability": "dangerLoot",
+        "condition": "working",
+        "lootTags": [
+          "weapon",
+          "battle",
+          "voyage"
+        ],
         "weight": "",
         "price": "60 А",
         "isVisibleToPlayers": true
@@ -5698,8 +6684,18 @@
         "weaponSubtype": "firearm",
         "description": "дальность, неудобна в тесноте",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "дальнобойная, но старая; хороша как трофей, находка у погибшего или спорное оружие в поклаже",
+        "rarity": "standard",
+        "lootAvailability": "dangerLoot",
+        "condition": "worn",
+        "lootTags": [
+          "weapon",
+          "battle",
+          "ammo",
+          "corpse",
+          "domestic",
+          "suspicious"
+        ],
         "weight": "",
         "price": "50 А",
         "isVisibleToPlayers": true
@@ -5712,8 +6708,19 @@
         "weaponSubtype": "firearm",
         "description": "страшна близко, громкая и грубая",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "страшна близко, но грубая и ненадёжная; подходит как грязный трофей, не как чистая награда",
+        "rarity": "standard",
+        "lootAvailability": "dangerLoot",
+        "condition": "damaged",
+        "lootTags": [
+          "weapon",
+          "battle",
+          "ammo",
+          "corpse",
+          "brigand",
+          "noisy",
+          "suspicious"
+        ],
         "weight": "",
         "price": "40 А",
         "isVisibleToPlayers": true
@@ -5727,7 +6734,14 @@
         "description": "хороша против прорыва, тяжелая",
         "rules": "",
         "tags": "",
-        "rarity": "",
+        "rarity": "standard",
+        "lootAvailability": "dangerLoot",
+        "condition": "working",
+        "lootTags": [
+          "weapon",
+          "battle",
+          "heavy"
+        ],
         "weight": "",
         "price": "70 А",
         "isVisibleToPlayers": true
@@ -5739,8 +6753,18 @@
         "slot": "none",
         "description": "снижает риск поломок",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "полезный расходник для стрелков; хорошо сочетается с набором чистки и патронами",
+        "rarity": "common",
+        "lootAvailability": "commonLoot",
+        "condition": "working",
+        "lootTags": [
+          "tool",
+          "repair",
+          "weapon",
+          "battle",
+          "storage",
+          "domestic"
+        ],
         "weight": "",
         "price": "300 мА",
         "isVisibleToPlayers": true
@@ -5752,8 +6776,17 @@
         "slot": "none",
         "description": "нужен после дыма, грязи, крушения",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "полезен для обслуживания огнестрела; хороший лут для стрелка, охраны или оружейной поклажи",
+        "rarity": "standard",
+        "lootAvailability": "commonLoot",
+        "condition": "working",
+        "lootTags": [
+          "tool",
+          "repair",
+          "weapon",
+          "battle",
+          "storage"
+        ],
         "weight": "",
         "price": "700 мА",
         "isVisibleToPlayers": true
@@ -5765,8 +6798,17 @@
         "slot": "loadBearing",
         "description": "быстрый доступ к боезапасу",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "полезен для стрелка, но сам по себе не усиливает баланс резко; хорошо как трофей или часть поклажи",
+        "rarity": "common",
+        "lootAvailability": "commonLoot",
+        "condition": "worn",
+        "lootTags": [
+          "ammo",
+          "battle",
+          "domestic",
+          "corpse",
+          "storage"
+        ],
         "weight": "",
         "price": "800 мА",
         "quickSlotCount": 2,
@@ -5780,7 +6822,12 @@
         "description": "мусор, улика, переплавка",
         "rules": "",
         "tags": "",
-        "rarity": "",
+        "rarity": "standard",
+        "lootAvailability": "starter",
+        "condition": "working",
+        "lootTags": [
+          "clue"
+        ],
         "weight": "",
         "price": "50–200 мА",
         "isVisibleToPlayers": true
@@ -5794,7 +6841,13 @@
         "description": "дёшево, грубо, работает",
         "rules": "",
         "tags": "",
-        "rarity": "",
+        "rarity": "standard",
+        "lootAvailability": "dangerLoot",
+        "condition": "working",
+        "lootTags": [
+          "armor",
+          "battle"
+        ],
         "weight": "",
         "price": "4 А",
         "isVisibleToPlayers": true
@@ -5808,7 +6861,13 @@
         "description": "против осколков, не чудо",
         "rules": "",
         "tags": "",
-        "rarity": "",
+        "rarity": "standard",
+        "lootAvailability": "dangerLoot",
+        "condition": "worn",
+        "lootTags": [
+          "armor",
+          "battle"
+        ],
         "weight": "",
         "price": "8 А",
         "isVisibleToPlayers": true
@@ -5822,7 +6881,13 @@
         "description": "пассажир/охранник с деньгами",
         "rules": "",
         "tags": "",
-        "rarity": "",
+        "rarity": "standard",
+        "lootAvailability": "dangerLoot",
+        "condition": "working",
+        "lootTags": [
+          "armor",
+          "battle"
+        ],
         "weight": "",
         "price": "12 А",
         "isVisibleToPlayers": true
@@ -5836,7 +6901,14 @@
         "description": "тяжёлая, простая защита торса",
         "rules": "",
         "tags": "",
-        "rarity": "",
+        "rarity": "standard",
+        "lootAvailability": "dangerLoot",
+        "condition": "worn",
+        "lootTags": [
+          "armor",
+          "battle",
+          "heavy"
+        ],
         "weight": "",
         "price": "20 А",
         "isVisibleToPlayers": true
@@ -5850,7 +6922,13 @@
         "description": "падение, обломки, удары",
         "rules": "",
         "tags": "",
-        "rarity": "",
+        "rarity": "standard",
+        "lootAvailability": "dangerLoot",
+        "condition": "working",
+        "lootTags": [
+          "armor",
+          "battle"
+        ],
         "weight": "",
         "price": "1.5 А",
         "isVisibleToPlayers": true
@@ -5864,7 +6942,13 @@
         "description": "маркированный",
         "rules": "",
         "tags": "",
-        "rarity": "",
+        "rarity": "standard",
+        "lootAvailability": "dangerLoot",
+        "condition": "working",
+        "lootTags": [
+          "armor",
+          "battle"
+        ],
         "weight": "",
         "price": "6 А",
         "isVisibleToPlayers": true
@@ -5878,7 +6962,13 @@
         "description": "защита рук от обломков",
         "rules": "",
         "tags": "",
-        "rarity": "",
+        "rarity": "standard",
+        "lootAvailability": "dangerLoot",
+        "condition": "working",
+        "lootTags": [
+          "armor",
+          "battle"
+        ],
         "weight": "",
         "price": "1 А",
         "isVisibleToPlayers": true
@@ -5891,8 +6981,19 @@
         "weaponSubtype": "melee",
         "description": "импровизированный щит из обломков",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "импровизированный щит из обломков; хорошо как временное решение, не как нормальная броня",
+        "rarity": "junk",
+        "lootAvailability": "starter",
+        "condition": "makeshift",
+        "lootTags": [
+          "weapon",
+          "battle",
+          "armor",
+          "storage",
+          "repair",
+          "technical",
+          "heavy"
+        ],
         "weight": "",
         "price": "0–1 А",
         "isVisibleToPlayers": true
@@ -5906,7 +7007,14 @@
         "description": "хороша, но след нападающих",
         "rules": "",
         "tags": "",
-        "rarity": "",
+        "rarity": "standard",
+        "lootAvailability": "dangerLoot",
+        "condition": "damaged",
+        "lootTags": [
+          "armor",
+          "battle",
+          "clue"
+        ],
         "weight": "",
         "price": "5–15 А",
         "isVisibleToPlayers": true
@@ -5920,7 +7028,14 @@
         "description": "ценный, но юридически неприятный",
         "rules": "",
         "tags": "",
-        "rarity": "",
+        "rarity": "standard",
+        "lootAvailability": "dangerLoot",
+        "condition": "working",
+        "lootTags": [
+          "armor",
+          "battle",
+          "voyage"
+        ],
         "weight": "",
         "price": "15–25 А",
         "isVisibleToPlayers": true
@@ -5933,8 +7048,17 @@
         "armorSubtype": "torso",
         "description": "дождь, пепел, скрыть вид",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "бытовая одежда для дороги, маскировки от дождя и скрытия лица; не считать полноценной защитой",
+        "rarity": "common",
+        "lootAvailability": "commonLoot",
+        "condition": "working",
+        "lootTags": [
+          "armor",
+          "domestic",
+          "storage",
+          "obscuria",
+          "corpse"
+        ],
         "weight": "",
         "price": "500 мА",
         "isVisibleToPlayers": true
@@ -5947,8 +7071,19 @@
         "armorSubtype": "head",
         "description": "дым, пыль, искры",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "защита глаз и лица от пыли, брызг, дыма и грязной работы; не полноценная броня",
+        "rarity": "common",
+        "lootAvailability": "commonLoot",
+        "condition": "working",
+        "lootTags": [
+          "armor",
+          "medical",
+          "technical",
+          "domestic",
+          "infection",
+          "storage",
+          "fragile"
+        ],
         "weight": "",
         "price": "700 мА",
         "isVisibleToPlayers": true
@@ -5961,7 +7096,13 @@
         "description": "опасен при проверке",
         "rules": "",
         "tags": "",
-        "rarity": "",
+        "rarity": "standard",
+        "lootAvailability": "manual",
+        "condition": "working",
+        "lootTags": [
+          "quest",
+          "clue"
+        ],
         "weight": "",
         "price": "10–30 А",
         "isVisibleToPlayers": true
@@ -5974,7 +7115,13 @@
         "description": "заготовка для мошенничества",
         "rules": "",
         "tags": "",
-        "rarity": "",
+        "rarity": "standard",
+        "lootAvailability": "manual",
+        "condition": "working",
+        "lootTags": [
+          "quest",
+          "clue"
+        ],
         "weight": "",
         "price": "3 А",
         "isVisibleToPlayers": true
@@ -5987,7 +7134,13 @@
         "description": "работает не везде, риск задержания",
         "rules": "",
         "tags": "",
-        "rarity": "",
+        "rarity": "standard",
+        "lootAvailability": "manual",
+        "condition": "working",
+        "lootTags": [
+          "quest",
+          "clue"
+        ],
         "weight": "",
         "price": "5–20 А",
         "isVisibleToPlayers": true
@@ -5999,8 +7152,20 @@
         "slot": "none",
         "description": "стереть память, создать проблему",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "не давать случайно; лучше через Севу Рога, серый груз, мини-контейнер Эвергалей или грязную сделку",
+        "rarity": "forbidden",
+        "lootAvailability": "manual",
+        "condition": "working",
+        "lootTags": [
+          "medical",
+          "healing",
+          "evergal",
+          "forbidden",
+          "suspicious",
+          "inspectionRisk",
+          "quest",
+          "clue"
+        ],
         "weight": "",
         "price": "8–15 А",
         "isVisibleToPlayers": true
@@ -6012,8 +7177,18 @@
         "slot": "none",
         "description": "помогает, но грязный состав",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "нормален как мутный лут у пассажира, мародёра, трупа или в личной сумке; на досмотре может вызвать вопросы",
+        "rarity": "standard",
+        "lootAvailability": "dangerLoot",
+        "condition": "worn",
+        "lootTags": [
+          "medical",
+          "healing",
+          "corpse",
+          "battle",
+          "domestic",
+          "suspicious"
+        ],
         "weight": "",
         "price": "1 А",
         "isVisibleToPlayers": true
@@ -6025,8 +7200,18 @@
         "slot": "none",
         "description": "временно убирает истощение, потом откат",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "можно выдавать как бытовой стимулятор; не должен решать тяжёлые раны, скорее поддерживает темп/бодрость",
+        "rarity": "standard",
+        "lootAvailability": "commonLoot",
+        "condition": "working",
+        "lootTags": [
+          "medical",
+          "healing",
+          "domestic",
+          "apis",
+          "voyage",
+          "storage"
+        ],
         "weight": "",
         "price": "2 А",
         "isVisibleToPlayers": true
@@ -6039,8 +7224,20 @@
         "weaponSubtype": "firearm",
         "description": "скрытый, плохой, юридически грязный",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "не выдавать случайно без причины; хороший предмет для грязной сделки, обыска, тайника или проблемы с законом",
+        "rarity": "forbidden",
+        "lootAvailability": "manual",
+        "condition": "worn",
+        "lootTags": [
+          "weapon",
+          "battle",
+          "forbidden",
+          "ammo",
+          "corpse",
+          "suspicious",
+          "inspectionRisk",
+          "brigand"
+        ],
         "weight": "",
         "price": "25 А",
         "isVisibleToPlayers": true
@@ -6053,8 +7250,18 @@
         "resourceSubtype": "ammo",
         "description": "дешёвые, риск осечки",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "выдавать как дешёвый рискованный боезапас; возможны осечки, грязь, несовпадение калибра или вопросы к происхождению",
+        "rarity": "common",
+        "lootAvailability": "dangerLoot",
+        "condition": "worn",
+        "lootTags": [
+          "ammo",
+          "battle",
+          "weapon",
+          "corpse",
+          "brigand",
+          "suspicious"
+        ],
         "weight": "",
         "price": "2 А",
         "isVisibleToPlayers": true
@@ -6067,7 +7274,15 @@
         "description": "Сева сам может не знать, что в нём",
         "rules": "",
         "tags": "",
-        "rarity": "",
+        "rarity": "standard",
+        "lootAvailability": "manual",
+        "condition": "working",
+        "lootTags": [
+          "quest",
+          "clue",
+          "container",
+          "evergal"
+        ],
         "weight": "",
         "price": "20–60 А",
         "isVisibleToPlayers": true
@@ -6080,7 +7295,13 @@
         "description": "опасная улика, не трогать руками",
         "rules": "",
         "tags": "",
-        "rarity": "",
+        "rarity": "standard",
+        "lootAvailability": "manual",
+        "condition": "working",
+        "lootTags": [
+          "quest",
+          "clue"
+        ],
         "weight": "",
         "price": "5–50 А",
         "isVisibleToPlayers": true
@@ -6093,7 +7314,15 @@
         "description": "крючки, шантаж, враги",
         "rules": "",
         "tags": "",
-        "rarity": "",
+        "rarity": "standard",
+        "lootAvailability": "manual",
+        "condition": "working",
+        "lootTags": [
+          "quest",
+          "clue",
+          "apis",
+          "document"
+        ],
         "weight": "",
         "price": "0 / 5 А",
         "isVisibleToPlayers": true
@@ -6106,7 +7335,13 @@
         "description": "мелкая наличность",
         "rules": "",
         "tags": "",
-        "rarity": "",
+        "rarity": "standard",
+        "lootAvailability": "manual",
+        "condition": "new",
+        "lootTags": [
+          "quest",
+          "clue"
+        ],
         "weight": "",
         "price": "300–900 мА",
         "isVisibleToPlayers": true
@@ -6119,7 +7354,13 @@
         "description": "кто-то потом спросит за него",
         "rules": "",
         "tags": "",
-        "rarity": "",
+        "rarity": "standard",
+        "lootAvailability": "manual",
+        "condition": "working",
+        "lootTags": [
+          "quest",
+          "clue"
+        ],
         "weight": "",
         "price": "0 / 10 А",
         "isVisibleToPlayers": true
@@ -6131,8 +7372,20 @@
         "slot": "none",
         "description": "открыть шкаф, ящик, замок",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "не выдавать случайно; хорош для тайника, серого NPC, трупа преступника или грязного выбора",
+        "rarity": "forbidden",
+        "lootAvailability": "manual",
+        "condition": "working",
+        "lootTags": [
+          "technical",
+          "tool",
+          "repair",
+          "document",
+          "clue",
+          "forbidden",
+          "suspicious",
+          "inspectionRisk"
+        ],
         "weight": "",
         "price": "5 А",
         "isVisibleToPlayers": true
@@ -6145,7 +7398,14 @@
         "description": "очень опасная вещь после крушения",
         "rules": "",
         "tags": "",
-        "rarity": "",
+        "rarity": "standard",
+        "lootAvailability": "manual",
+        "condition": "working",
+        "lootTags": [
+          "quest",
+          "clue",
+          "voyage"
+        ],
         "weight": "",
         "price": "10 А",
         "isVisibleToPlayers": true
@@ -6158,8 +7418,17 @@
         "armorSubtype": "head",
         "description": "скрывает лицо, пахнет дымом/маслом",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "больше скрывает лицо и защищает от грязи/дыма, чем реально спасает; может пахнуть гарью, маслом или кровью",
+        "rarity": "junk",
+        "lootAvailability": "starter",
+        "condition": "dirty",
+        "lootTags": [
+          "armor",
+          "domestic",
+          "corpse",
+          "storage",
+          "suspicious"
+        ],
         "weight": "",
         "price": "500 мА",
         "isVisibleToPlayers": true
@@ -6172,8 +7441,17 @@
         "armorSubtype": "torso",
         "description": "полезен, но заметен",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "полезен, но имеет слабую зону; может требовать ремонта или давать защиту только частично",
+        "rarity": "standard",
+        "lootAvailability": "dangerLoot",
+        "condition": "damaged",
+        "lootTags": [
+          "armor",
+          "battle",
+          "corpse",
+          "suspicious",
+          "inspectionRisk"
+        ],
         "weight": "",
         "price": "8–15 А",
         "isVisibleToPlayers": true
@@ -6187,7 +7465,13 @@
         "description": "оружие без чистой истории",
         "rules": "",
         "tags": "",
-        "rarity": "",
+        "rarity": "standard",
+        "lootAvailability": "dangerLoot",
+        "condition": "incomplete",
+        "lootTags": [
+          "weapon",
+          "battle"
+        ],
         "weight": "",
         "price": "25–40 А",
         "isVisibleToPlayers": true
@@ -6201,7 +7485,13 @@
         "description": "ценный лут, риск вопросов",
         "rules": "",
         "tags": "",
-        "rarity": "",
+        "rarity": "standard",
+        "lootAvailability": "dangerLoot",
+        "condition": "working",
+        "lootTags": [
+          "weapon",
+          "battle"
+        ],
         "weight": "",
         "price": "40–70 А",
         "isVisibleToPlayers": true
@@ -6214,7 +7504,13 @@
         "description": "крайне опасно, лучше как сюжетный предмет",
         "rules": "",
         "tags": "",
-        "rarity": "",
+        "rarity": "standard",
+        "lootAvailability": "manual",
+        "condition": "working",
+        "lootTags": [
+          "quest",
+          "clue"
+        ],
         "weight": "",
         "price": "15–40 А",
         "isVisibleToPlayers": true
@@ -6227,7 +7523,13 @@
         "description": "улика, ремонт/экспертиза",
         "rules": "",
         "tags": "",
-        "rarity": "",
+        "rarity": "standard",
+        "lootAvailability": "manual",
+        "condition": "damaged",
+        "lootTags": [
+          "quest",
+          "clue"
+        ],
         "weight": "",
         "price": "5–20 А",
         "isVisibleToPlayers": true
@@ -6240,7 +7542,14 @@
         "description": "показывает, что атака была подготовлена",
         "rules": "",
         "tags": "",
-        "rarity": "",
+        "rarity": "standard",
+        "lootAvailability": "manual",
+        "condition": "working",
+        "lootTags": [
+          "quest",
+          "clue",
+          "apis"
+        ],
         "weight": "",
         "price": "0 / 5–20 А",
         "isVisibleToPlayers": false
@@ -6253,7 +7562,13 @@
         "description": "будущий крючок кампании",
         "rules": "",
         "tags": "",
-        "rarity": "",
+        "rarity": "standard",
+        "lootAvailability": "manual",
+        "condition": "working",
+        "lootTags": [
+          "quest",
+          "clue"
+        ],
         "weight": "",
         "price": "0 / 20+ А",
         "isVisibleToPlayers": true
@@ -6266,7 +7581,15 @@
         "description": "ведёт к заказчику",
         "rules": "",
         "tags": "",
-        "rarity": "",
+        "rarity": "standard",
+        "lootAvailability": "manual",
+        "condition": "working",
+        "lootTags": [
+          "quest",
+          "clue",
+          "apis",
+          "document"
+        ],
         "weight": "",
         "price": "0 / 10+ А",
         "isVisibleToPlayers": true
@@ -6279,7 +7602,13 @@
         "description": "связь, но может отслеживаться",
         "rules": "",
         "tags": "",
-        "rarity": "",
+        "rarity": "standard",
+        "lootAvailability": "manual",
+        "condition": "working",
+        "lootTags": [
+          "quest",
+          "clue"
+        ],
         "weight": "",
         "price": "10–30 А",
         "isVisibleToPlayers": true
@@ -6291,8 +7620,22 @@
         "slot": "none",
         "description": "карабкаться, крепить, улика атаки",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "лучше как улика или трофей, а не случайный лут; предмет сам задаёт вопрос, кто и зачем его использовал",
+        "rarity": "faction",
+        "lootAvailability": "manual",
+        "condition": "worn",
+        "lootTags": [
+          "technical",
+          "tool",
+          "repair",
+          "clue",
+          "battle",
+          "voyage",
+          "brigand",
+          "quest",
+          "suspicious",
+          "inspectionRisk"
+        ],
         "weight": "",
         "price": "5 А",
         "isVisibleToPlayers": true
@@ -6304,8 +7647,18 @@
         "slot": "none",
         "description": "коридоры, отход, паника",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "не бытовой лут; может помочь скрыться, отступить или сорвать досмотр, но почти всегда вызывает подозрение",
+        "rarity": "standard",
+        "lootAvailability": "dangerLoot",
+        "condition": "working",
+        "lootTags": [
+          "tool",
+          "battle",
+          "technical",
+          "noisy",
+          "suspicious",
+          "inspectionRisk"
+        ],
         "weight": "",
         "price": "3 А",
         "isVisibleToPlayers": true
@@ -6319,7 +7672,13 @@
         "description": "пожар, диверсия",
         "rules": "",
         "tags": "",
-        "rarity": "",
+        "rarity": "standard",
+        "lootAvailability": "dangerLoot",
+        "condition": "working",
+        "lootTags": [
+          "weapon",
+          "battle"
+        ],
         "weight": "",
         "price": "2 А",
         "isVisibleToPlayers": true
@@ -6332,7 +7691,13 @@
         "description": "опознавательная улика",
         "rules": "",
         "tags": "",
-        "rarity": "",
+        "rarity": "standard",
+        "lootAvailability": "manual",
+        "condition": "working",
+        "lootTags": [
+          "quest",
+          "clue"
+        ],
         "weight": "",
         "price": "0–5 А",
         "isVisibleToPlayers": true
@@ -6345,7 +7710,13 @@
         "description": "что принимали нападающие?",
         "rules": "",
         "tags": "",
-        "rarity": "",
+        "rarity": "standard",
+        "lootAvailability": "manual",
+        "condition": "working",
+        "lootTags": [
+          "quest",
+          "clue"
+        ],
         "weight": "",
         "price": "0–2 А",
         "isVisibleToPlayers": true
@@ -6358,8 +7729,19 @@
         "resourceSubtype": "fuel",
         "description": "дешевле, риск нестабильности",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "полезен, но с риском; может течь, пахнуть, нагреваться, фонить, шуметь при переноске или вызвать вопросы при проверке",
+        "rarity": "standard",
+        "lootAvailability": "dangerLoot",
+        "condition": "damaged",
+        "lootTags": [
+          "fuel",
+          "technical",
+          "apis",
+          "voyage",
+          "fragile",
+          "suspicious",
+          "inspectionRisk"
+        ],
         "weight": "",
         "price": "300–700 мА",
         "isVisibleToPlayers": true
@@ -6372,8 +7754,19 @@
         "resourceSubtype": "fuel",
         "description": "горючее для огня/механизмов",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "хороша для техники, комгена, фонарей; на досмотре могут спросить, откуда взяли",
+        "rarity": "standard",
+        "lootAvailability": "commonLoot",
+        "condition": "working",
+        "lootTags": [
+          "fuel",
+          "technical",
+          "apis",
+          "voyage",
+          "horst",
+          "storage",
+          "suspicious"
+        ],
         "weight": "",
         "price": "500 мА",
         "isVisibleToPlayers": true
@@ -6385,8 +7778,18 @@
         "slot": "none",
         "description": "прочный, ярче",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "добротный рабочий фонарь; уместен в поклаже, караванной точке, техместе или на трупе рабочего",
+        "rarity": "standard",
+        "lootAvailability": "commonLoot",
+        "condition": "working",
+        "lootTags": [
+          "technical",
+          "tool",
+          "domestic",
+          "voyage",
+          "storage",
+          "obscuria"
+        ],
         "weight": "",
         "price": "1.5 А",
         "isVisibleToPlayers": true
@@ -6399,8 +7802,18 @@
         "armorSubtype": "head",
         "description": "руки свободны",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "полезный безопасный предмет для тёмных зон; если найден повреждённым, может моргать, шуметь или быстро садиться",
+        "rarity": "standard",
+        "lootAvailability": "commonLoot",
+        "condition": "working",
+        "lootTags": [
+          "technical",
+          "domestic",
+          "tool",
+          "obscuria",
+          "storage",
+          "fragile"
+        ],
         "weight": "",
         "price": "1.2 А",
         "isVisibleToPlayers": true
@@ -6414,7 +7827,13 @@
         "description": "подать знак, отметить место",
         "rules": "",
         "tags": "",
-        "rarity": "",
+        "rarity": "standard",
+        "lootAvailability": "dangerLoot",
+        "condition": "working",
+        "lootTags": [
+          "weapon",
+          "battle"
+        ],
         "weight": "",
         "price": "",
         "isVisibleToPlayers": true
@@ -6426,8 +7845,19 @@
         "slot": "none",
         "description": "раненый/ночь/сырость",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "хороший безопасный лут для раненых, ночёвки, сырого маршрута, выживших",
+        "rarity": "common",
+        "lootAvailability": "starter",
+        "condition": "working",
+        "lootTags": [
+          "medical",
+          "healing",
+          "apis",
+          "voyage",
+          "domestic",
+          "horst",
+          "storage"
+        ],
         "weight": "",
         "price": "300 мА",
         "isVisibleToPlayers": true
@@ -6439,8 +7869,20 @@
         "slot": "loadBearing",
         "description": "сюжетный ремонтный трофей",
         "rules": "",
-        "tags": "шумный",
-        "rarity": "",
+        "tags": "очень ценная групповая вещь; генератор не должен выдавать случайно без решения Мастера",
+        "rarity": "rare",
+        "lootAvailability": "manual",
+        "condition": "damaged",
+        "lootTags": [
+          "noisy",
+          "technical",
+          "repair",
+          "fuel",
+          "obscuria",
+          "heavy",
+          "suspicious",
+          "inspectionRisk"
+        ],
         "weight": "",
         "price": "20–60 А",
         "quickSlotCount": 2,
@@ -6453,8 +7895,20 @@
         "slot": "loadBearing",
         "description": "Очень ценная вещь",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "не выдавать случайно; это групповая техническая ценность и отдельная причина для риска, ремонта, шума и досмотра",
+        "rarity": "rare",
+        "lootAvailability": "manual",
+        "condition": "working",
+        "lootTags": [
+          "technical",
+          "repair",
+          "fuel",
+          "obscuria",
+          "noisy",
+          "heavy",
+          "suspicious",
+          "inspectionRisk"
+        ],
         "weight": "",
         "price": "до 100 А",
         "quickSlotCount": 2,
@@ -6467,8 +7921,19 @@
         "slot": "none",
         "description": "без источника ограниченно полезен",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "значимая техническая находка; не мусор, особенно если в группе есть Венцы",
+        "rarity": "rare",
+        "lootAvailability": "reward",
+        "condition": "working",
+        "lootTags": [
+          "technical",
+          "tool",
+          "repair",
+          "obscuria",
+          "radiating",
+          "suspicious",
+          "inspectionRisk"
+        ],
         "weight": "",
         "price": "2–5 А",
         "isVisibleToPlayers": true
@@ -6480,8 +7945,19 @@
         "slot": "none",
         "description": "ценный техно-лут",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "полезен для группового питания устройств; лучше как награда за техсцену или ремонтный риск",
+        "rarity": "rare",
+        "lootAvailability": "reward",
+        "condition": "working",
+        "lootTags": [
+          "technical",
+          "repair",
+          "fuel",
+          "obscuria",
+          "tool",
+          "suspicious",
+          "inspectionRisk"
+        ],
         "weight": "",
         "price": "5–15 А",
         "isVisibleToPlayers": true
@@ -6493,8 +7969,19 @@
         "slot": "protection",
         "description": "может спасти или сломать пользователя",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "не выдавать случайно; предмет должен быть проблемой, уликой, ремонтной задачей или тяжёлым выбором",
+        "rarity": "rare",
+        "lootAvailability": "manual",
+        "condition": "damaged",
+        "lootTags": [
+          "technical",
+          "obscuria",
+          "repair",
+          "radiating",
+          "reflectionRisk",
+          "suspicious",
+          "inspectionRisk"
+        ],
         "weight": "",
         "price": "5–20 А",
         "isVisibleToPlayers": true
@@ -6502,12 +7989,23 @@
       {
         "id": "arsenal-item-1779724467110",
         "name": "Венец пассажирский аварийный",
-        "category": "misc",
-        "slot": "none",
+        "category": "protection",
+        "slot": "protection",
         "description": "короткий режим, плохая подгонка",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "не случайный лут; аварийный защитный предмет с риском, фракционным следом и вопросами при проверке",
+        "rarity": "faction",
+        "lootAvailability": "manual",
+        "condition": "worn",
+        "lootTags": [
+          "technical",
+          "obscuria",
+          "voyage",
+          "radiating",
+          "reflectionRisk",
+          "suspicious",
+          "inspectionRisk"
+        ],
         "weight": "",
         "price": "15–30 А",
         "isVisibleToPlayers": true
@@ -6519,8 +8017,19 @@
         "slot": "none",
         "description": "проверить/настроить Венец",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "специализированная вещь; лучше не выдавать как случайный мусор",
+        "rarity": "rare",
+        "lootAvailability": "reward",
+        "condition": "working",
+        "lootTags": [
+          "technical",
+          "tool",
+          "repair",
+          "obscuria",
+          "celiate",
+          "suspicious",
+          "inspectionRisk"
+        ],
         "weight": "",
         "price": "5 А",
         "isVisibleToPlayers": true
@@ -6532,8 +8041,21 @@
         "slot": "none",
         "description": "грубо показывает ухудшение среды",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "сильная разведочная находка; может быть неточным, повреждённым или требовать проверки",
+        "rarity": "rare",
+        "lootAvailability": "reward",
+        "condition": "working",
+        "lootTags": [
+          "technical",
+          "tool",
+          "radiating",
+          "obscuria",
+          "reflectionRisk",
+          "celiate",
+          "euler",
+          "suspicious",
+          "inspectionRisk"
+        ],
         "weight": "",
         "price": "8–20 А",
         "isVisibleToPlayers": true
@@ -6545,8 +8067,19 @@
         "slot": "none",
         "description": "спорный препарат, не лечит Отражение",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "сомнительная бытовая помощь против тревоги, дурного сна, шума устройств или нервного напряжения; не полноценная защита от инфофона",
+        "rarity": "standard",
+        "lootAvailability": "commonLoot",
+        "condition": "working",
+        "lootTags": [
+          "medical",
+          "healing",
+          "domestic",
+          "obscuria",
+          "apis",
+          "voyage",
+          "suspicious"
+        ],
         "weight": "",
         "price": "1 А",
         "isVisibleToPlayers": true
@@ -6559,7 +8092,13 @@
         "description": "помогает в сценах Психики/Духа",
         "rules": "",
         "tags": "",
-        "rarity": "",
+        "rarity": "standard",
+        "lootAvailability": "manual",
+        "condition": "working",
+        "lootTags": [
+          "quest",
+          "clue"
+        ],
         "weight": "",
         "price": "0–500 мА",
         "isVisibleToPlayers": true
@@ -6572,7 +8111,13 @@
         "description": "полезно новичку, если есть время читать",
         "rules": "",
         "tags": "",
-        "rarity": "",
+        "rarity": "standard",
+        "lootAvailability": "manual",
+        "condition": "new",
+        "lootTags": [
+          "quest",
+          "clue"
+        ],
         "weight": "",
         "price": "0–200 мА",
         "isVisibleToPlayers": true
@@ -6586,7 +8131,13 @@
         "description": "обычная еда",
         "rules": "",
         "tags": "",
-        "rarity": "",
+        "rarity": "standard",
+        "lootAvailability": "commonLoot",
+        "condition": "working",
+        "lootTags": [
+          "food",
+          "domestic"
+        ],
         "weight": "",
         "price": "200 мА",
         "isVisibleToPlayers": true
@@ -6599,8 +8150,19 @@
         "resourceSubtype": "supplies",
         "description": "еда на день",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "универсальный походный ресурс; подходит для складов, поклажи, дорожных точек, привалов и выживших групп",
+        "rarity": "standard",
+        "lootAvailability": "commonLoot",
+        "condition": "working",
+        "lootTags": [
+          "food",
+          "domestic",
+          "horst",
+          "obscuria",
+          "storage",
+          "voyage",
+          "apis"
+        ],
         "weight": "",
         "price": "250 мА",
         "isVisibleToPlayers": true
@@ -6613,8 +8175,17 @@
         "resourceSubtype": "supplies",
         "description": "питательнее, дольше хранится",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "лучше не как мусорный лут; выдавать за удачный доступ к грузу, хороший осмотр или спасение припасов",
+        "rarity": "good",
+        "lootAvailability": "reward",
+        "condition": "working",
+        "lootTags": [
+          "food",
+          "domestic",
+          "voyage",
+          "storage",
+          "container"
+        ],
         "weight": "",
         "price": "500 мА",
         "isVisibleToPlayers": true
@@ -6627,8 +8198,17 @@
         "resourceSubtype": "supplies",
         "description": "простая еда",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "простой складской и бытовой лут; хорошо для тележек, ящиков, поклажи",
+        "rarity": "common",
+        "lootAvailability": "commonLoot",
+        "condition": "worn",
+        "lootTags": [
+          "food",
+          "domestic",
+          "storage",
+          "apis",
+          "horst"
+        ],
         "weight": "",
         "price": "100 мА",
         "isVisibleToPlayers": true
@@ -6641,8 +8221,18 @@
         "resourceSubtype": "supplies",
         "description": "плотная дорожная еда",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "нормальный походный ресурс; можно использовать как награду за осмотр груза или склада",
+        "rarity": "standard",
+        "lootAvailability": "commonLoot",
+        "condition": "working",
+        "lootTags": [
+          "food",
+          "domestic",
+          "obscuria",
+          "horst",
+          "voyage",
+          "storage"
+        ],
         "weight": "",
         "price": "",
         "isVisibleToPlayers": true
@@ -6655,8 +8245,18 @@
         "resourceSubtype": "drink",
         "description": "вода не главный дефицит, но нужна",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "базовый ресурс; можно выдавать часто, но в малом количестве",
+        "rarity": "common",
+        "lootAvailability": "starter",
+        "condition": "working",
+        "lootTags": [
+          "water",
+          "domestic",
+          "apis",
+          "voyage",
+          "horst",
+          "obscuria"
+        ],
         "weight": "",
         "price": "50–100 мА",
         "isVisibleToPlayers": true
@@ -6668,8 +8268,19 @@
         "slot": "none",
         "description": "бытовая очистка, не чудо",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "маленький полезный ресурс для сомнительной воды; снижает риск, но не делает опасный источник полностью безопасным без проверки",
+        "rarity": "common",
+        "lootAvailability": "commonLoot",
+        "condition": "working",
+        "lootTags": [
+          "medical",
+          "water",
+          "domestic",
+          "apis",
+          "voyage",
+          "horst",
+          "obscuria"
+        ],
         "weight": "",
         "price": "100 мА",
         "isVisibleToPlayers": true
@@ -6681,8 +8292,17 @@
         "slot": "none",
         "description": "готовка, кипячение",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "простая походная вещь; полезна для воды, еды, кипячения, привала и бытовой сцены",
+        "rarity": "common",
+        "lootAvailability": "starter",
+        "condition": "working",
+        "lootTags": [
+          "domestic",
+          "food",
+          "water",
+          "storage",
+          "corpse"
+        ],
         "weight": "",
         "price": "200 мА",
         "isVisibleToPlayers": true
@@ -6694,8 +8314,17 @@
         "slot": "none",
         "description": "санитарная мелочь",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "маленький, но полезный санитарный предмет; хорошо работает рядом с грязью, ранами и карантином",
+        "rarity": "common",
+        "lootAvailability": "starter",
+        "condition": "working",
+        "lootTags": [
+          "domestic",
+          "medical",
+          "healing",
+          "infection",
+          "storage"
+        ],
         "weight": "",
         "price": "50 мА",
         "isVisibleToPlayers": true
@@ -6707,8 +8336,17 @@
         "slot": "none",
         "description": "раны, холод, грязь",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "универсальный мягкий расходник; можно использовать для перевязки, сушки, фильтрации, чистки, укрытия или временной заплатки",
+        "rarity": "standard",
+        "lootAvailability": "starter",
+        "condition": "dirty",
+        "lootTags": [
+          "domestic",
+          "medical",
+          "healing",
+          "repair",
+          "storage"
+        ],
         "weight": "",
         "price": "80 мА",
         "isVisibleToPlayers": true
@@ -6720,8 +8358,17 @@
         "slot": "none",
         "description": "одежда, мешки, грубые швы",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "мелкий безопасный предмет; годится для одежды, ремней, ткани, простых повязок",
+        "rarity": "common",
+        "lootAvailability": "starter",
+        "condition": "working",
+        "lootTags": [
+          "tool",
+          "repair",
+          "domestic",
+          "medical",
+          "storage"
+        ],
         "weight": "",
         "price": "80 мА",
         "isVisibleToPlayers": true
@@ -6733,8 +8380,19 @@
         "slot": "none",
         "description": "бартер, успокоение",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "атмосферный бытовой лут; можно использовать как мелкий обмен, успокоение NPC или личную вещь",
+        "rarity": "common",
+        "lootAvailability": "starter",
+        "condition": "worn",
+        "lootTags": [
+          "healing",
+          "corpse",
+          "domestic",
+          "apis",
+          "voyage",
+          "horst",
+          "storage"
+        ],
         "weight": "",
         "price": "100–300 мА",
         "isVisibleToPlayers": true
@@ -6746,8 +8404,18 @@
         "slot": "none",
         "description": "согреть/обезболить, риск",
         "rules": "",
-        "tags": "",
-        "rarity": "",
+        "tags": "можно как бытовой лут, грязная “антисептика”, моральная сцена или проблема на досмотре",
+        "rarity": "common",
+        "lootAvailability": "commonLoot",
+        "condition": "dirty",
+        "lootTags": [
+          "medical",
+          "domestic",
+          "corpse",
+          "apis",
+          "voyage",
+          "suspicious"
+        ],
         "weight": "",
         "price": "200–500 мА",
         "isVisibleToPlayers": true
@@ -6761,7 +8429,13 @@
         "description": "первая нормальная еда после пути",
         "rules": "",
         "tags": "",
-        "rarity": "",
+        "rarity": "standard",
+        "lootAvailability": "commonLoot",
+        "condition": "working",
+        "lootTags": [
+          "food",
+          "domestic"
+        ],
         "weight": "",
         "price": "150–300 мА",
         "isVisibleToPlayers": true
@@ -6775,9 +8449,175 @@
         "description": "Средняя броня.\nПростое, дешёвое средство защиты торса от физического вреда, которое способен изготовить почти каждый умелый городской ремесленник.",
         "rules": "",
         "tags": "",
-        "rarity": "",
+        "rarity": "standard",
+        "lootAvailability": "dangerLoot",
+        "condition": "worn",
+        "lootTags": [
+          "armor",
+          "battle"
+        ],
         "weight": "",
         "price": "25 А",
+        "isVisibleToPlayers": true
+      },
+      {
+        "id": "arsenal-item-1780295906145",
+        "name": "Простая дымовая маска",
+        "category": "armor",
+        "slot": "headArmor",
+        "armorSubtype": "head",
+        "description": "",
+        "rules": "",
+        "tags": "помогает против дыма и пыли, но не является полноценной защитой от заражения или инфофона",
+        "rarity": "common",
+        "lootAvailability": "commonLoot",
+        "condition": "working",
+        "lootTags": [
+          "domestic",
+          "armor",
+          "medical",
+          "technical",
+          "storage"
+        ],
+        "weight": "",
+        "price": "",
+        "isVisibleToPlayers": true
+      },
+      {
+        "id": "arsenal-item-1780295963010",
+        "name": "Грязная дымовая маска",
+        "category": "armor",
+        "slot": "headArmor",
+        "armorSubtype": "head",
+        "description": "",
+        "rules": "",
+        "tags": "временная и сомнительная защита; может сама быть источником запаха, грязи или инфекции",
+        "rarity": "junk",
+        "lootAvailability": "starter",
+        "condition": "dirty",
+        "lootTags": [
+          "domestic",
+          "armor",
+          "medical",
+          "corpse",
+          "suspicious"
+        ],
+        "weight": "",
+        "price": "",
+        "isVisibleToPlayers": true
+      },
+      {
+        "id": "arsenal-item-1780296317202",
+        "name": "Плохая стёганка",
+        "category": "armor",
+        "slot": "torsoArmor",
+        "armorSubtype": "torso",
+        "description": "",
+        "rules": "",
+        "tags": "базовая лёгкая защита; хороша как стартовая или бедная находка",
+        "rarity": "common",
+        "lootAvailability": "commonLoot",
+        "condition": "worn",
+        "lootTags": [
+          "armor",
+          "domestic",
+          "battle",
+          "corpse",
+          "storage"
+        ],
+        "weight": "",
+        "price": "",
+        "isVisibleToPlayers": true
+      },
+      {
+        "id": "arsenal-item-1780296375818",
+        "name": "Рваный кожанный гамбезон с вставками",
+        "category": "armor",
+        "slot": "torsoArmor",
+        "armorSubtype": "torso",
+        "description": "",
+        "rules": "",
+        "tags": "защита хуже нормы, но лучше обычной одежды; хорошо как трофей или временная замена",
+        "rarity": "common",
+        "lootAvailability": "commonLoot",
+        "condition": "damaged",
+        "lootTags": [
+          "battle",
+          "armor",
+          "domestic",
+          "corpse",
+          "suspicious"
+        ],
+        "weight": "",
+        "price": "",
+        "isVisibleToPlayers": true
+      },
+      {
+        "id": "arsenal-item-1780296536275",
+        "name": "Неполный защитный комплект",
+        "category": "armor",
+        "slot": "none",
+        "armorSubtype": "torso",
+        "description": "",
+        "rules": "",
+        "tags": "комплект без одной-двух зон; удобно выдавать, если не хочется сразу давать полную броню",
+        "rarity": "standard",
+        "lootAvailability": "dangerLoot",
+        "condition": "incomplete",
+        "lootTags": [
+          "battle",
+          "corpse",
+          "storage",
+          "suspicious"
+        ],
+        "weight": "",
+        "price": "",
+        "isVisibleToPlayers": true
+      },
+      {
+        "id": "arsenal-item-1780296651154",
+        "name": "Треснувшая бронеплита",
+        "category": "armor",
+        "slot": "torsoArmor",
+        "armorSubtype": "torso",
+        "description": "",
+        "rules": "",
+        "tags": "может быть уликой боя или материалом для ремонта; как защита ненадёжна",
+        "rarity": "standard",
+        "lootAvailability": "dangerLoot",
+        "condition": "damaged",
+        "lootTags": [
+          "battle",
+          "armor",
+          "corpse",
+          "repair",
+          "fragile",
+          "suspicious"
+        ],
+        "weight": "",
+        "price": "",
+        "isVisibleToPlayers": true
+      },
+      {
+        "id": "arsenal-item-1780296708379",
+        "name": "Сломанный шлем",
+        "category": "armor",
+        "slot": "headArmor",
+        "armorSubtype": "head",
+        "description": "",
+        "rules": "",
+        "tags": "скорее деталь сцены или материал; носить можно только как плохую временную защиту",
+        "rarity": "junk",
+        "lootAvailability": "starter",
+        "condition": "damaged",
+        "lootTags": [
+          "armor",
+          "battle",
+          "corpse",
+          "repair"
+        ],
+        "weight": "",
+        "price": "",
         "isVisibleToPlayers": true
       }
     ],

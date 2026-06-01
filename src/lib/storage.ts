@@ -404,9 +404,6 @@ const ARSENAL_ITEM_CONDITIONS: ArsenalItemCondition[] = [
 ];
 
 const ARSENAL_LOOT_TAGS: ArsenalLootTag[] = [
-  "apis",
-  "voyage",
-  "horst",
   "obscuria",
   "battle",
   "technical",
@@ -437,6 +434,8 @@ const ARSENAL_LOOT_TAGS: ArsenalLootTag[] = [
   "reflectionRisk",
   "infectionRisk",
   "inspectionRisk",
+  "voyage",
+  "fief",
   "euler",
   "evergal",
   "temerat",
@@ -780,9 +779,17 @@ function guessArsenalLootTags(item: Partial<ArsenalItem>): ArsenalLootTag[] {
     addLootTag(tags, "container");
   }
 
-  if (text.includes("апис")) addLootTag(tags, "apis");
-  if (text.includes("вояж")) addLootTag(tags, "voyage");
-  if (text.includes("горст")) addLootTag(tags, "horst");
+  if (text.includes("апис") || text.includes("вояж")) addLootTag(tags, "voyage");
+
+  if (
+    text.includes("горст") ||
+    text.includes("форпост") ||
+    text.includes("феод") ||
+    text.includes("барон") ||
+    text.includes("гарнизон")
+  ) {
+    addLootTag(tags, "fief");
+  }
   if (text.includes("обскур")) addLootTag(tags, "obscuria");
   if (text.includes("труп")) addLootTag(tags, "corpse");
   if (text.includes("документ") || text.includes("накладн") || text.includes("запис")) addLootTag(tags, "document");
@@ -807,12 +814,32 @@ function guessArsenalLootTags(item: Partial<ArsenalItem>): ArsenalLootTag[] {
   return Array.from(tags);
 }
 
+function normalizeLegacyLootTag(tag: unknown): ArsenalLootTag | null {
+  if (tag === "apis") {
+    return "voyage";
+  }
+
+  if (tag === "horst") {
+    return "fief";
+  }
+
+  if (
+    typeof tag === "string" &&
+    ARSENAL_LOOT_TAGS.includes(tag as ArsenalLootTag)
+  ) {
+    return tag as ArsenalLootTag;
+  }
+
+  return null;
+}
+
 function normalizeArsenalLootTags(value: unknown, item: Partial<ArsenalItem>): ArsenalLootTag[] {
   if (Array.isArray(value)) {
-    return value
-      .filter((tag): tag is ArsenalLootTag => {
-        return typeof tag === "string" && ARSENAL_LOOT_TAGS.includes(tag as ArsenalLootTag);
-      });
+    const tags = value
+      .map(normalizeLegacyLootTag)
+      .filter((tag): tag is ArsenalLootTag => tag !== null);
+
+    return Array.from(new Set(tags));
   }
 
   return guessArsenalLootTags(item);
