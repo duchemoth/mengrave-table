@@ -27,12 +27,7 @@
 }
 
 .encounter-modal::before {
-  content: "";
-  position: absolute;
-  inset: 10px;
-  pointer-events: none;
-  border: 1px solid rgba(36, 26, 18, 0.16);
-  border-radius: 20px;
+  display: none;
 }
 
 .encounter-close-button {
@@ -732,6 +727,7 @@
 }
 
 @media (max-width: 1100px) {
+
   .scene-layout,
   .scene-layout.player-only {
     grid-template-columns: 1fr;
@@ -744,4 +740,27 @@
   .scene-image-placeholder {
     min-height: 320px;
   }
+}
+
+.encounter-master-notes {
+  margin-top: 8px;
+  border: 1px solid rgba(124, 37, 34, 0.26);
+  border-radius: 16px;
+  padding: 14px;
+  background: rgba(124, 37, 34, 0.07);
+}
+
+.encounter-master-notes h3 {
+  margin: 0 0 8px;
+  color: var(--ink);
+}
+
+.encounter-master-notes p {
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+.encounter-master-notes .eyebrow {
+  margin-bottom: 6px;
+  color: var(--blood-seal);
 }

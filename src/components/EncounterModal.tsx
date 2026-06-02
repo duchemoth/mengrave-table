@@ -836,6 +836,14 @@ export function EncounterModal({
                 <h3>Описание</h3>
                 <p>{description}</p>
 
+                {isEvent && !isPlayerMode && target.data.masterNotes.trim().length > 0 && (
+                  <div className="encounter-master-notes">
+                    <p className="eyebrow">Для мастера</p>
+                    <h3>Скрытые заметки</h3>
+                    <p>{target.data.masterNotes}</p>
+                  </div>
+                )}
+
                 {isGroup && (
                   <div className="encounter-details">
                     <h3>Состав группы</h3>

@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "exportedAt": "2026-06-01T14:33:06.278Z",
+  "exportedAt": "2026-06-02T04:06:02.308Z",
   "type": "mogila-chelovechestva-campaign",
   "campaign": {
     "locations": [
@@ -609,6 +609,10 @@
             "itemId": "arsenal-item-1778758585258",
             "note": ""
           },
+          "equipmentSlot": {
+            "itemId": "arsenal-item-1779724239406",
+            "note": ""
+          },
           "loadBearing": {
             "itemId": "arsenal-item-1778758606338",
             "note": "",
@@ -789,6 +793,10 @@
             "itemId": "arsenal-item-1778758585258",
             "note": ""
           },
+          "equipmentSlot": {
+            "itemId": null,
+            "note": ""
+          },
           "loadBearing": {
             "itemId": null,
             "note": "",
@@ -929,6 +937,10 @@
           },
           "protectionSlot": {
             "itemId": "arsenal-item-1779097810544",
+            "note": ""
+          },
+          "equipmentSlot": {
+            "itemId": null,
             "note": ""
           },
           "loadBearing": {
@@ -1090,6 +1102,10 @@
             }
           },
           "protectionSlot": {
+            "itemId": null,
+            "note": ""
+          },
+          "equipmentSlot": {
             "itemId": null,
             "note": ""
           },
@@ -8041,8 +8057,8 @@
       {
         "id": "arsenal-item-1779724239406",
         "name": "Малый генератор повреждённый",
-        "category": "loadBearing",
-        "slot": "loadBearing",
+        "category": "equipment",
+        "slot": "equipment",
         "description": "сюжетный ремонтный трофей",
         "rules": "",
         "tags": "очень ценная групповая вещь; генератор не должен выдавать случайно без решения Мастера",
@@ -8063,15 +8079,14 @@
         "weight": "10 кг",
         "price": "20–60 А",
         "slotUsage": "normal",
-        "quickSlotCount": 2,
         "isVisibleToPlayers": true
       },
       {
         "id": "arsenal-item-1779724341062",
         "name": "Поясной комген простой",
-        "category": "loadBearing",
-        "slot": "loadBearing",
-        "description": "Очень ценная вещь",
+        "category": "equipment",
+        "slot": "equipment",
+        "description": "Очень ценная вещь. Обеспечивает бесперебойную работу электронных устройств, за счёт работы двс на лютауриновых брусках",
         "rules": "",
         "tags": "не выдавать случайно; это групповая техническая ценность и отдельная причина для риска, ремонта, шума и досмотра",
         "rarity": "rare",
@@ -8091,7 +8106,6 @@
         "weight": "8 кг",
         "price": "60–100 А",
         "slotUsage": "normal",
-        "quickSlotCount": 2,
         "isVisibleToPlayers": true
       },
       {
