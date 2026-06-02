@@ -146,6 +146,11 @@ export function createEmptyInventory(): CharacterInventory {
       note: "",
     },
 
+    equipmentSlot: {
+      itemId: null,
+      note: "",
+    },
+
     loadBearing: {
       itemId: null,
       note: "",
@@ -256,6 +261,11 @@ function normalizeInventory(value: unknown): CharacterInventory {
       ...(inventory.protectionSlot ?? {}),
     },
 
+    equipmentSlot: {
+      ...emptyInventory.equipmentSlot,
+      ...(inventory.equipmentSlot ?? {}),
+    },
+
     loadBearing: {
       itemId:
         typeof inventory.loadBearing?.itemId === "string"
@@ -318,6 +328,7 @@ const ARSENAL_ITEM_CATEGORIES: ArsenalItemCategory[] = [
   "armor",
   "protection",
   "loadBearing",
+  "equipment",
   "storage",
   "tool",
   "medicine",
@@ -335,6 +346,7 @@ const ARSENAL_ITEM_SLOTS: ArsenalItemSlot[] = [
   "legsArmor",
   "protection",
   "loadBearing",
+  "equipment",
   "quick",
   "backpack",
   "none",
@@ -480,6 +492,10 @@ function normalizeArsenalCategory(
 
   if (slot === "loadBearing") {
     return "loadBearing";
+  }
+
+  if (slot === "equipment") {
+    return "equipment";
   }
 
   if (
@@ -641,7 +657,12 @@ function guessArsenalLootAvailability(item: Partial<ArsenalItem>): ArsenalLootAv
     return "commonLoot";
   }
 
-  if (item.category === "weapon" || item.category === "armor" || item.category === "protection") {
+  if (
+    item.category === "weapon" ||
+    item.category === "armor" ||
+    item.category === "protection" ||
+    item.category === "equipment"
+  ) {
     return "dangerLoot";
   }
 
@@ -766,6 +787,12 @@ function guessArsenalLootTags(item: Partial<ArsenalItem>): ArsenalLootTag[] {
     addLootTag(tags, "technical");
     addLootTag(tags, "tool");
     addLootTag(tags, "repair");
+  }
+
+  if (item.category === "equipment") {
+    addLootTag(tags, "technical");
+    addLootTag(tags, "tool");
+    addLootTag(tags, "heavy");
   }
 
   if (item.category === "resource") {

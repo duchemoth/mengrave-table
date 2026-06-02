@@ -86,6 +86,7 @@ export type ArsenalItemCategory =
   | "armor"
   | "protection"
   | "loadBearing"
+  | "equipment"
   | "storage"
   | "tool"
   | "medicine"
@@ -102,6 +103,7 @@ export type ArsenalItemSlot =
   | "legsArmor"
   | "protection"
   | "loadBearing"
+  | "equipment"
   | "quick"
   | "backpack"
   | "none";
@@ -280,6 +282,8 @@ export type CharacterInventory = {
   };
 
   protectionSlot: CharacterInventorySlot;
+
+  equipmentSlot: CharacterInventorySlot;
 
   loadBearing: {
     itemId: string | null;

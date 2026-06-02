@@ -21,6 +21,7 @@ const CATEGORY_OPTIONS: {
         { value: "armor", label: "Броня" },
         { value: "protection", label: "Защита" },
         { value: "loadBearing", label: "Разгрузка" },
+        { value: "equipment", label: "Оборудование" },
         { value: "storage", label: "Поклажа" },
         { value: "tool", label: "Инструменты" },
         { value: "medicine", label: "Медицина" },
@@ -41,6 +42,7 @@ const SLOT_OPTIONS: {
         { value: "legsArmor", label: "Броня — ноги" },
         { value: "protection", label: "Защитное снаряжение" },
         { value: "loadBearing", label: "Разгрузка" },
+        { value: "equipment", label: "Оборудование" },
         { value: "quick", label: "Быстрый слот" },
         { value: "backpack", label: "Рюкзак / спина" },
         { value: "none", label: "Обычный предмет / без слота" },
@@ -304,6 +306,7 @@ const ARSENAL_CATEGORY_GROUPS: ArsenalCategoryGroup[] = [
     { key: "armor", label: "Броня" },
     { key: "protection", label: "Защита" },
     { key: "loadBearing", label: "Разгрузка" },
+    { key: "equipment", label: "Оборудование" },
     { key: "storage", label: "Поклажа" },
     { key: "medicine", label: "Медицина" },
     { key: "resource", label: "Ресурсы" },
@@ -335,6 +338,7 @@ export function ArsenalEditor({
         armor: false,
         protection: false,
         loadBearing: false,
+        equipment: false,
         storage: false,
         medicine: false,
         resource: false,
@@ -449,6 +453,20 @@ export function ArsenalEditor({
             return;
         }
 
+        if (category === "equipment") {
+            updateItem({
+                category,
+                slot: "equipment",
+                weaponSubtype: undefined,
+                armorSubtype: undefined,
+                resourceSubtype: undefined,
+                slotUsage: "normal",
+                quickSlotCount: undefined,
+                backpackSlotCount: undefined,
+            });
+            return;
+        }
+
         if (category === "storage") {
             updateItem({
                 category,
@@ -508,6 +526,20 @@ export function ArsenalEditor({
             return;
         }
 
+        if (slot === "equipment") {
+            updateItem({
+                slot,
+                category: "equipment",
+                weaponSubtype: undefined,
+                armorSubtype: undefined,
+                resourceSubtype: undefined,
+                slotUsage: "normal",
+                quickSlotCount: undefined,
+                backpackSlotCount: undefined,
+            });
+            return;
+        }
+
         const armorSubtype = getArmorSubtypeFromSlot(slot);
 
         if (armorSubtype) {
@@ -539,6 +571,7 @@ export function ArsenalEditor({
         updateItem({
             slot,
             slotUsage: "normal",
+            quickSlotCount: undefined,
             backpackSlotCount: undefined,
         });
     }

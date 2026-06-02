@@ -168,6 +168,7 @@ type CharacterTab =
 type EquipmentSection =
     | "weapons"
     | "armor"
+    | "equipment"
     | "quickAccess"
     | "backpack"
     | "cryptotoken";
@@ -259,6 +260,7 @@ export function CharacterRoster({
     >({
         weapons: true,
         armor: false,
+        equipment: false,
         quickAccess: false,
         backpack: false,
         cryptotoken: false,
@@ -532,6 +534,50 @@ export function CharacterRoster({
             ...selectedCharacter.inventory,
             protectionSlot: {
                 ...selectedCharacter.inventory.protectionSlot,
+                note,
+            },
+        });
+    }
+
+    function getEquippedEquipmentSlot() {
+        if (!selectedCharacter) {
+            return {
+                itemId: null,
+                note: "",
+            };
+        }
+
+        return (
+            selectedCharacter.inventory.equipmentSlot ?? {
+                itemId: null,
+                note: "",
+            }
+        );
+    }
+
+    function updateEquipmentSlot(itemId: string | null) {
+        if (!selectedCharacter) {
+            return;
+        }
+
+        updateInventory({
+            ...selectedCharacter.inventory,
+            equipmentSlot: {
+                ...getEquippedEquipmentSlot(),
+                itemId,
+            },
+        });
+    }
+
+    function updateEquipmentSlotNote(note: string) {
+        if (!selectedCharacter) {
+            return;
+        }
+
+        updateInventory({
+            ...selectedCharacter.inventory,
+            equipmentSlot: {
+                ...getEquippedEquipmentSlot(),
                 note,
             },
         });
@@ -2245,6 +2291,46 @@ export function CharacterRoster({
                                                                 placeholder="Режим Венца, фильтры, заряд, побочные эффекты..."
                                                             />
                                                         </div>
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        <div className="character-accordion">
+                                            <button
+                                                className="character-accordion-header"
+                                                type="button"
+                                                onClick={() => toggleEquipmentSection("equipment")}
+                                            >
+                                                <span>
+                                                    {openEquipmentSections.equipment ? "▼" : "▶"} Оборудование
+                                                </span>
+                                                <small>комген, носимые агрегаты, полевые аппараты</small>
+                                            </button>
+
+                                            {openEquipmentSections.equipment && (
+                                                <div className="character-accordion-body">
+                                                    <div className="character-inventory-slot-card wide">
+                                                        <p className="eyebrow">Оборудование</p>
+                                                        <h4>{getInventoryItemName(getEquippedEquipmentSlot().itemId)}</h4>
+
+                                                        {renderInventorySelect(
+                                                            getEquippedEquipmentSlot().itemId,
+                                                            ["equipment"],
+                                                            updateEquipmentSlot,
+                                                        )}
+
+                                                        <input
+                                                            value={getEquippedEquipmentSlot().note}
+                                                            onChange={(event) => updateEquipmentSlotNote(event.target.value)}
+                                                            placeholder="Комген, кабели, шум, нагрев, режим работы, состояние..."
+                                                        />
+
+                                                        <p className="character-help-text">
+                                                            Сюда ставится навесное техническое снаряжение: комген,
+                                                            носимый агрегат, тяжёлый датчик, полевой аппарат или особый
+                                                            контейнер с креплением.
+                                                        </p>
                                                     </div>
                                                 </div>
                                             )}
