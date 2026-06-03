@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "exportedAt": "2026-06-03T06:25:01.494Z",
+  "exportedAt": "2026-06-03T06:30:55.894Z",
   "type": "mogila-chelovechestva-campaign",
   "campaign": {
     "locations": [
@@ -8727,7 +8727,17 @@
       "suggestedRoutePointY": null,
       "note": ""
     },
-    "journalEntries": [],
+    "journalEntries": [
+      {
+        "id": "journal-entry-1780468241565-k1rssaei01",
+        "createdAt": 1780468241565,
+        "type": "map",
+        "title": "Экран игроков возвращён к карте",
+        "text": "Игрокам снова показан обзор глобальной карты.",
+        "details": "",
+        "isHiddenFromPlayers": false
+      }
+    ],
     "relations": {
       "entries": [
         {
