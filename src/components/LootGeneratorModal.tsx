@@ -64,13 +64,13 @@ export function LootGeneratorModal({
     }
 
     return (
-        <div className="loot-generator-backdrop" role="presentation" onMouseDown={onClose}>
+        <div className="loot-generator-backdrop" role="presentation" onClick={onClose}>
             <section
                 className="loot-generator-modal"
                 role="dialog"
                 aria-modal="true"
                 aria-label="Генератор находок"
-                onMouseDown={(event) => event.stopPropagation()}
+                onClick={(event) => event.stopPropagation()}
             >
                 <header className="loot-generator-header">
                     <div>
