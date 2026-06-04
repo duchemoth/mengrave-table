@@ -56,6 +56,7 @@ type EncounterMode = EncounterDisplayMode | "eventEdit";
 type EncounterModalProps = {
   target: EncounterTarget | null;
   isPlayerMode: boolean;
+  isDeveloperMode: boolean;
   initialMode: EncounterMode;
   canShowToPlayers: boolean;
   dossierArticles: ReferenceArticle[];
@@ -384,6 +385,65 @@ function getLocalMapStorageKey(target: EncounterTarget) {
   return `nri-table-local-map-${target.kind}-${target.data.id}`;
 }
 
+function hasTextValue(value: unknown) {
+  return typeof value === "string" && value.trim().length > 0;
+}
+
+function hasLocalMapLevelContent(value: unknown) {
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    return false;
+  }
+
+  const level = value as {
+    imageUrl?: unknown;
+    notes?: unknown;
+    points?: unknown;
+  };
+
+  return (
+    hasTextValue(level.imageUrl) ||
+    hasTextValue(level.notes) ||
+    (Array.isArray(level.points) && level.points.length > 0)
+  );
+}
+
+function hasLocalMapDraftContent(storageKey: string | null) {
+  if (!storageKey) {
+    return false;
+  }
+
+  const savedLocalMap = localStorage.getItem(storageKey);
+
+  if (!savedLocalMap) {
+    return false;
+  }
+
+  try {
+    const parsedLocalMap = JSON.parse(savedLocalMap) as {
+      imageUrl?: unknown;
+      notes?: unknown;
+      points?: unknown;
+      levels?: unknown;
+    };
+
+    if (
+      hasTextValue(parsedLocalMap.imageUrl) ||
+      hasTextValue(parsedLocalMap.notes) ||
+      (Array.isArray(parsedLocalMap.points) && parsedLocalMap.points.length > 0)
+    ) {
+      return true;
+    }
+
+    if (Array.isArray(parsedLocalMap.levels)) {
+      return parsedLocalMap.levels.some(hasLocalMapLevelContent);
+    }
+
+    return false;
+  } catch {
+    return false;
+  }
+}
+
 function loadSceneDraft(storageKey: string): SceneDraft {
   try {
     const savedScene = localStorage.getItem(storageKey);
@@ -419,6 +479,7 @@ function saveSceneDraft(storageKey: string, draft: SceneDraft) {
 export function EncounterModal({
   target,
   isPlayerMode,
+  isDeveloperMode,
   initialMode,
   canShowToPlayers,
   dossierArticles,
@@ -478,6 +539,10 @@ export function EncounterModal({
 
     return getLocalMapStorageKey(target);
   }, [target]);
+
+  const hasPreparedLocalMap = useMemo(() => {
+    return hasLocalMapDraftContent(localMapStorageKey);
+  }, [localMapStorageKey, mode]);
 
   useEffect(() => {
     if (!target) {
@@ -882,13 +947,27 @@ export function EncounterModal({
                 Открыть сцену
               </button>
 
-              <button
-                className="secondary-button"
-                type="button"
-                onClick={() => setMode("localMap")}
-              >
-                Открыть локальную карту
-              </button>
+              {hasPreparedLocalMap ? (
+                <button
+                  className="secondary-button"
+                  type="button"
+                  onClick={() => setMode("localMap")}
+                >
+                  Открыть локальную карту
+                </button>
+              ) : isDeveloperMode && !isPlayerMode ? (
+                <button
+                  className="secondary-button"
+                  type="button"
+                  onClick={() => setMode("localMap")}
+                >
+                  Создать локальную карту
+                </button>
+              ) : !isPlayerMode ? (
+                <span className="encounter-action-hint">
+                  Локальная карта не подготовлена
+                </span>
+              ) : null}
 
               {!isPlayerMode && (
                 <>
@@ -1036,13 +1115,27 @@ export function EncounterModal({
                 </button>
               )}
 
-              <button
-                className="secondary-button"
-                type="button"
-                onClick={() => setMode("localMap")}
-              >
-                Открыть локальную карту
-              </button>
+              {hasPreparedLocalMap ? (
+                <button
+                  className="secondary-button"
+                  type="button"
+                  onClick={() => setMode("localMap")}
+                >
+                  Открыть локальную карту
+                </button>
+              ) : isDeveloperMode && !isPlayerMode ? (
+                <button
+                  className="secondary-button"
+                  type="button"
+                  onClick={() => setMode("localMap")}
+                >
+                  Создать локальную карту
+                </button>
+              ) : !isPlayerMode ? (
+                <span className="encounter-action-hint">
+                  Локальная карта не подготовлена
+                </span>
+              ) : null}
 
               <button className="secondary-button" type="button" onClick={closeModal}>
                 Закрыть

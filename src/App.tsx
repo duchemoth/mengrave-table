@@ -2782,6 +2782,7 @@ function App() {
       <EncounterModal
         target={encounterTarget}
         isPlayerMode={isPlayerMode}
+        isDeveloperMode={isDeveloperMode}
         initialMode={encounterInitialMode}
         canShowToPlayers={!isPlayerMode && !isPlayerScreen}
         dossierArticles={dossierArticles}
