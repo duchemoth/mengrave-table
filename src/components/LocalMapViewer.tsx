@@ -389,6 +389,7 @@ export function LocalMapViewer({
     const [levelHistory, setLevelHistory] = useState<string[]>([]);
 
     const [isLootGeneratorOpen, setIsLootGeneratorOpen] = useState(false);
+    const [lootGeneratorPointId, setLootGeneratorPointId] = useState<string | null>(null);
 
     const localMapFrameRef = useRef<HTMLDivElement | null>(null);
 
@@ -414,6 +415,9 @@ export function LocalMapViewer({
 
     const selectedPoint =
         activeLevel.points.find((point) => point.id === selectedPointId) ?? null;
+
+    const lootGeneratorPoint =
+        activeLevel.points.find((point) => point.id === lootGeneratorPointId) ?? null;
 
     const entranceTargetLevel = useMemo(() => {
         if (!selectedPoint?.targetLocalMapId) {
@@ -446,6 +450,7 @@ export function LocalMapViewer({
             setIsPlacingPoint(false);
             setLevelHistory([]);
             setIsLootGeneratorOpen(false);
+            setLootGeneratorPointId(null);
             return;
         }
 
@@ -466,6 +471,7 @@ export function LocalMapViewer({
         setIsPlacingPoint(false);
         setLevelHistory([]);
         setIsLootGeneratorOpen(false);
+        setLootGeneratorPointId(null);
     }, [storageKey]);
 
     useEffect(() => {
@@ -665,23 +671,39 @@ export function LocalMapViewer({
     }
 
     function insertGeneratedFindings(text: string) {
-        if (!selectedPoint || !text.trim()) {
+        if (!lootGeneratorPoint || !text.trim()) {
             return;
         }
 
         const nextFindings = [
-            selectedPoint.findings.trim(),
+            lootGeneratorPoint.findings.trim(),
             text.trim(),
         ]
             .filter(Boolean)
             .join("\n\n");
 
-        updateSelectedPoint({
-            findings: nextFindings,
-            isKeyScene: true,
-        });
+        updateLocalMapLevels((currentLevels) =>
+            currentLevels.map((level) =>
+                level.id === activeLevel.id
+                    ? {
+                        ...level,
+                        points: level.points.map((point) =>
+                            point.id === lootGeneratorPoint.id
+                                ? {
+                                    ...point,
+                                    findings: nextFindings,
+                                    isKeyScene: true,
+                                }
+                                : point,
+                        ),
+                    }
+                    : level,
+            ),
+        );
 
+        setSelectedPointId(lootGeneratorPoint.id);
         setIsLootGeneratorOpen(false);
+        setLootGeneratorPointId(null);
     }
 
     function deleteSelectedPoint() {
@@ -867,6 +889,7 @@ export function LocalMapViewer({
         setIsPlacingPoint(false);
         setLevelHistory([]);
         setIsLootGeneratorOpen(false);
+        setLootGeneratorPointId(null);
         saveDraft(nextLevels, nextActiveLevelId);
     }
 
@@ -1246,7 +1269,10 @@ export function LocalMapViewer({
                                         <button
                                             className="secondary-button"
                                             type="button"
-                                            onClick={() => setIsLootGeneratorOpen(true)}
+                                            onClick={() => {
+                                                setLootGeneratorPointId(selectedPoint.id);
+                                                setIsLootGeneratorOpen(true);
+                                            }}
                                         >
                                             Сгенерировать находки
                                         </button>
@@ -1521,12 +1547,15 @@ export function LocalMapViewer({
                 </button>
             </footer>
 
-            {selectedPoint && (
+            {lootGeneratorPoint && (
                 <LootGeneratorModal
                     isOpen={isLootGeneratorOpen}
-                    sourceTitle={`${activeLevel.title} — ${selectedPoint.title}`}
+                    sourceTitle={`${activeLevel.title} — ${lootGeneratorPoint.title}`}
                     arsenalItems={arsenalItems}
-                    onClose={() => setIsLootGeneratorOpen(false)}
+                    onClose={() => {
+                        setIsLootGeneratorOpen(false);
+                        setLootGeneratorPointId(null);
+                    }}
                     onInsertToFindings={insertGeneratedFindings}
                 />
             )}
