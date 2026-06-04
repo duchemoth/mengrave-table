@@ -22,6 +22,7 @@ type MapViewProps = {
   locations: Location[];
   groups: MapGroup[];
   events: MapEvent[];
+  eventIdsWithPreparedLocalMap: string[];
   attachments: MapAttachment[];
   globalMapImageUrl: string;
   selectedLocationId: string;
@@ -110,6 +111,7 @@ export function MapView({
   locations,
   groups,
   events,
+  eventIdsWithPreparedLocalMap,
   attachments,
   globalMapImageUrl,
   selectedLocationId,
@@ -1086,6 +1088,7 @@ export function MapView({
             const meta = MAP_EVENT_CATEGORY_META[mapEvent.category];
             const isCompleted = mapEvent.status === "completed";
             const eventScale = getMapEventScale(mapEvent);
+            const hasPreparedLocalMap = eventIdsWithPreparedLocalMap.includes(mapEvent.id);
 
             return (
               <div
@@ -1118,6 +1121,16 @@ export function MapView({
                   title={`${eventScale === "minor" ? "Минорное событие" : "Полноценное событие"} · ${meta.label}: ${mapEvent.title}`}
                 >
                   <span className="map-event-icon">{isCompleted ? "✔" : meta.icon}</span>
+
+                  {hasPreparedLocalMap && (
+                    <span
+                      className="map-event-local-map-badge"
+                      title="Есть локальная карта"
+                      aria-label="Есть локальная карта"
+                    >
+                      ▣
+                    </span>
+                  )}
                 </button>
 
                 <button
