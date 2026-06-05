@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import { TestGuideModal } from "./TestGuideModal";
 
 type CampaignStartMenuProps = {
     isOpen: boolean;
@@ -17,6 +18,7 @@ export function CampaignStartMenu({
 }: CampaignStartMenuProps) {
     const importInputRef = useRef<HTMLInputElement | null>(null);
     const [isLoadingDemo, setIsLoadingDemo] = useState(false);
+    const [isTestGuideOpen, setIsTestGuideOpen] = useState(false);
 
     if (!isOpen) {
         return null;
@@ -75,6 +77,10 @@ export function CampaignStartMenu({
                         {isLoadingDemo ? "Загрузка демо..." : "Начать демо-кампанию"}
                     </button>
 
+                    <button type="button" onClick={() => setIsTestGuideOpen(true)}>
+                        Как провести тест
+                    </button>
+
                     <button type="button" onClick={handleImportClick}>
                         Импортировать кампанию из JSON
                     </button>
@@ -101,9 +107,14 @@ export function CampaignStartMenu({
                 <input
                     ref={importInputRef}
                     type="file"
-                    accept="application/json,.json"
+                    accept=".json,application/json"
                     hidden
                     onChange={handleImportChange}
+                />
+
+                <TestGuideModal
+                    isOpen={isTestGuideOpen}
+                    onClose={() => setIsTestGuideOpen(false)}
                 />
             </div>
         </section>
