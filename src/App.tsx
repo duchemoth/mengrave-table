@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+﻿import { useEffect, useRef, useState } from "react";
 import "./App.css";
 import "./styles/character.css";
 import "./styles/expedition.css";
@@ -31,6 +31,7 @@ import { CharacterRoster } from "./components/CharacterRoster";
 import { CampaignStartMenu } from "./components/CampaignStartMenu";
 import { SideDrawer } from "./components/SideDrawer";
 import { TopBar } from "./components/TopBar";
+import { FeedbackModal } from "./components/FeedbackModal";
 import { campaignData } from "./data/campaign";
 import { useCampaign } from "./hooks/useCampaign";
 import { useInterfaceMode } from "./hooks/useInterfaceMode";
@@ -63,6 +64,9 @@ const ROUTE_SEGMENT_DISTANCE = 4;
 const ROUTE_AUTO_REVEAL_RADIUS = 4;
 
 const ECHO_ACCESS_PASSWORD = "550034";
+
+const FEEDBACK_URL =
+  "https://vk.com/im/convo/-211624658?entrypoint=community_page&tab=all";
 
 function normalizeJournalEntry(value: unknown): SessionJournalEntry | null {
   if (!value || typeof value !== "object" || Array.isArray(value)) {
@@ -981,6 +985,8 @@ function App() {
   const [isReferenceOpen, setIsReferenceOpen] = useState(false);
 
   const [isDiceOpen, setIsDiceOpen] = useState(false);
+
+  const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
 
   const [isEchoUnlockOpen, setIsEchoUnlockOpen] = useState(false);
   const [echoUnlockPassword, setEchoUnlockPassword] = useState("");
@@ -2519,6 +2525,12 @@ function App() {
         </div>
       )}
 
+      <FeedbackModal
+        isOpen={isFeedbackOpen}
+        feedbackUrl={FEEDBACK_URL}
+        onClose={() => setIsFeedbackOpen(false)}
+      />
+
       {!isPlayerMode && !isCleanMapMode && (
         <button
           className="global-advance-turn-button"
@@ -2537,16 +2549,27 @@ function App() {
       )}
 
       {!isCleanMapMode && !isPlayerScreen && (
-        <button
-          className="campaign-menu-open-button"
-          type="button"
-          onClick={() => {
-            setIsDiceOpen(false);
-            setIsStartMenuOpen(true);
-          }}
-        >
-          Меню
-        </button>
+        <div className="campaign-quick-actions">
+          <button
+            className="campaign-menu-open-button"
+            type="button"
+            onClick={() => {
+              setIsDiceOpen(false);
+              setIsStartMenuOpen(true);
+            }}
+          >
+            Меню
+          </button>
+
+          <button
+            className="feedback-open-button"
+            type="button"
+            onClick={() => setIsFeedbackOpen(true)}
+            title="Сообщить о баге или оставить обратную связь"
+          >
+            Баг
+          </button>
+        </div>
       )}
 
       <MapView

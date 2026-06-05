@@ -1,0 +1,144 @@
+/* Feedback / bug report */
+
+.campaign-quick-actions {
+    position: fixed;
+    top: 28px;
+    right: 28px;
+    z-index: 72;
+    display: grid;
+    gap: 8px;
+    justify-items: end;
+}
+
+.campaign-quick-actions .campaign-menu-open-button {
+    position: static;
+    top: auto;
+    right: auto;
+}
+
+.feedback-open-button {
+    border: 1px solid rgba(124, 37, 34, 0.48);
+    border-radius: 999px;
+    padding: 10px 16px;
+    color: #fff3cf;
+    background:
+        linear-gradient(180deg, rgba(106, 48, 38, 0.96), rgba(43, 20, 16, 0.96));
+    box-shadow:
+        0 0 0 2px rgba(18, 10, 8, 0.24),
+        0 10px 24px rgba(18, 10, 8, 0.3);
+    cursor: pointer;
+    backdrop-filter: blur(8px);
+    font-family: Inter, system-ui, sans-serif;
+    font-size: 12px;
+    font-weight: 950;
+}
+
+.feedback-open-button:hover {
+    border-color: rgba(215, 166, 90, 0.8);
+    filter: brightness(1.08);
+}
+
+.feedback-layer {
+    position: fixed;
+    inset: 0;
+    z-index: 620;
+    display: grid;
+    place-items: center;
+    padding: 24px;
+    background:
+        radial-gradient(circle at center, rgba(124, 37, 34, 0.18), transparent 42%),
+        rgba(18, 10, 8, 0.56);
+}
+
+.feedback-card {
+    display: grid;
+    gap: 16px;
+    width: min(620px, calc(100vw - 48px));
+    max-height: calc(100dvh - 48px);
+    overflow: auto;
+    border: 1px solid rgba(36, 26, 18, 0.22);
+    border-radius: 24px;
+    padding: 22px;
+    color: var(--ink);
+    background:
+        linear-gradient(180deg, rgba(241, 224, 178, 0.98), rgba(213, 185, 127, 0.96));
+    box-shadow:
+        0 28px 90px rgba(0, 0, 0, 0.48),
+        inset 0 1px 0 rgba(255, 244, 210, 0.24);
+}
+
+.feedback-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 14px;
+}
+
+.feedback-header h2 {
+    margin: 0;
+    color: var(--ink);
+    font-size: clamp(32px, 4vw, 54px);
+    line-height: 0.95;
+}
+
+.feedback-close {
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    border: 1px solid rgba(36, 26, 18, 0.24);
+    border-radius: 999px;
+    color: var(--ink);
+    background: rgba(255, 244, 210, 0.44);
+    cursor: pointer;
+    font-size: 24px;
+    line-height: 1;
+}
+
+.feedback-close:hover {
+    border-color: rgba(124, 37, 34, 0.46);
+    background: rgba(255, 244, 210, 0.72);
+}
+
+.feedback-text {
+    margin: 0;
+    color: var(--ink-soft);
+    font-family: Inter, system-ui, sans-serif;
+    font-size: 14px;
+    font-weight: 800;
+    line-height: 1.55;
+}
+
+.feedback-template {
+    width: 100%;
+    min-height: 250px;
+    border: 1px solid rgba(36, 26, 18, 0.22);
+    border-radius: 16px;
+    padding: 14px;
+    color: var(--ink);
+    background: rgba(255, 244, 210, 0.48);
+    box-sizing: border-box;
+    resize: vertical;
+    font-family: Inter, system-ui, sans-serif;
+    font-size: 13px;
+    font-weight: 750;
+    line-height: 1.45;
+}
+
+.feedback-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+@media (max-width: 900px) {
+    .campaign-quick-actions {
+        top: 18px;
+        right: 18px;
+    }
+
+    .feedback-card {
+        width: min(560px, calc(100vw - 32px));
+        padding: 18px;
+    }
+}
