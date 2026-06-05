@@ -52,33 +52,29 @@
 /* Main menu illustrated background */
 
 .campaign-start-menu {
-  position: fixed;
-  inset: 0;
-  z-index: 500;
-  display: grid;
-  place-items: center;
-  overflow: hidden;
-  padding: 24px;
-  background:
-    linear-gradient(
-      90deg,
-      rgba(18, 10, 8, 0.56) 0%,
-      rgba(18, 10, 8, 0.18) 28%,
-      rgba(18, 10, 8, 0.08) 50%,
-      rgba(18, 10, 8, 0.18) 72%,
-      rgba(18, 10, 8, 0.56) 100%
-    ),
-    radial-gradient(
-      ellipse at center,
-      rgba(18, 10, 8, 0.08) 0%,
-      rgba(18, 10, 8, 0.18) 50%,
-      rgba(18, 10, 8, 0.62) 100%
-    ),
-    url("/mengrave-table/images/menu/main-menu-bg.webp");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  filter: none;
+    position: fixed;
+    inset: 0;
+    z-index: 500;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    padding: 24px;
+    background:
+        linear-gradient(90deg,
+            rgba(18, 10, 8, 0.56) 0%,
+            rgba(18, 10, 8, 0.18) 28%,
+            rgba(18, 10, 8, 0.08) 50%,
+            rgba(18, 10, 8, 0.18) 72%,
+            rgba(18, 10, 8, 0.56) 100%),
+        radial-gradient(ellipse at center,
+            rgba(18, 10, 8, 0.08) 0%,
+            rgba(18, 10, 8, 0.18) 50%,
+            rgba(18, 10, 8, 0.62) 100%),
+        url("/mengrave-table/images/menu/main-menu-bg.webp");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    filter: none;
 }
 
 .campaign-start-menu::before {
@@ -196,6 +192,39 @@
         linear-gradient(180deg,
             rgba(124, 55, 34, 0.98),
             rgba(64, 24, 17, 0.98));
+}
+
+.campaign-start-menu-device-note {
+    display: grid;
+    gap: 4px;
+    margin-top: 18px;
+    border: 1px solid rgba(215, 166, 90, 0.32);
+    border-radius: 16px;
+    padding: 11px 13px;
+    color: #fff3cf;
+    background:
+        linear-gradient(180deg,
+            rgba(124, 55, 34, 0.28),
+            rgba(36, 17, 13, 0.42));
+    box-shadow:
+        inset 0 1px 0 rgba(255, 244, 210, 0.1),
+        0 8px 18px rgba(0, 0, 0, 0.16);
+    text-align: left;
+    font-family: Inter, system-ui, sans-serif;
+}
+
+.campaign-start-menu-device-note strong {
+    font-size: 12px;
+    font-weight: 950;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.campaign-start-menu-device-note span {
+    color: rgba(255, 243, 207, 0.74);
+    font-size: 12px;
+    font-weight: 800;
+    line-height: 1.45;
 }
 
 .campaign-start-menu-warning {

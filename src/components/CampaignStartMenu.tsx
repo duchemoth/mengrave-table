@@ -84,6 +84,15 @@ export function CampaignStartMenu({
                     </button>
                 </div>
 
+                <div className="campaign-start-menu-device-note">
+                    <strong>Оптимизировано для ПК</strong>
+                    <span>
+                        Инструмент рассчитан на ноутбук или настольный компьютер. На
+                        телефоне могут некорректно работать карта, панели и перетаскивание
+                        маркеров.
+                    </span>
+                </div>
+
                 <p className="campaign-start-menu-warning">
                     Загрузка демо или импорт JSON заменят текущее состояние кампании. Перед
                     этим можно экспортировать текущую кампанию.
