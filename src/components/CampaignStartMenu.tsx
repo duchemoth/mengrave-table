@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import { TestGuideModal } from "./TestGuideModal";
+import { CreditsModal } from "./CreditsModal";
 
 type CampaignStartMenuProps = {
     isOpen: boolean;
@@ -19,6 +20,7 @@ export function CampaignStartMenu({
     const importInputRef = useRef<HTMLInputElement | null>(null);
     const [isLoadingDemo, setIsLoadingDemo] = useState(false);
     const [isTestGuideOpen, setIsTestGuideOpen] = useState(false);
+    const [isCreditsOpen, setIsCreditsOpen] = useState(false);
 
     if (!isOpen) {
         return null;
@@ -104,6 +106,16 @@ export function CampaignStartMenu({
                     этим можно экспортировать текущую кампанию.
                 </p>
 
+                <div className="campaign-start-menu-supporters">
+                    <button type="button" onClick={() => setIsCreditsOpen(true)}>
+                        Особая благодарность
+                    </button>
+                </div>
+
+                <div className="campaign-start-menu-meta">
+                    <span>Демо-сборка v0.1</span>
+                </div>
+
                 <input
                     ref={importInputRef}
                     type="file"
@@ -115,6 +127,11 @@ export function CampaignStartMenu({
                 <TestGuideModal
                     isOpen={isTestGuideOpen}
                     onClose={() => setIsTestGuideOpen(false)}
+                />
+
+                <CreditsModal
+                    isOpen={isCreditsOpen}
+                    onClose={() => setIsCreditsOpen(false)}
                 />
             </div>
         </section>
