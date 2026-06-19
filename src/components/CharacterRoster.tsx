@@ -1131,24 +1131,55 @@ export function CharacterRoster({
         return cleanedValue || "character";
     }
 
+    function isRecord(value: unknown): value is Record<string, unknown> {
+        return typeof value === "object" && value !== null;
+    }
+
+    function looksLikeCharacterData(value: unknown): value is Partial<PlayerCharacter> {
+        if (!isRecord(value)) {
+            return false;
+        }
+
+        return (
+            "characterName" in value ||
+            "playerName" in value ||
+            "origin" in value ||
+            "formerActivity" in value ||
+            "skills" in value ||
+            "physicalReserve" in value ||
+            "psyche" in value ||
+            "spirit" in value ||
+            "fate" in value ||
+            "inventory" in value
+        );
+    }
+
     function getImportedCharacterData(
         parsedData: unknown,
     ): Partial<PlayerCharacter> {
-        if (typeof parsedData !== "object" || parsedData === null) {
+        if (!isRecord(parsedData)) {
             throw new Error("Imported character data is not an object.");
         }
 
-        if ("character" in parsedData) {
-            const payload = parsedData as { character?: Partial<PlayerCharacter> };
+        if ("campaign" in parsedData || "locations" in parsedData) {
+            throw new Error("Campaign JSON cannot be imported as a character.");
+        }
 
-            if (!payload.character || typeof payload.character !== "object") {
+        if ("character" in parsedData) {
+            const payload = parsedData as { character?: unknown };
+
+            if (!looksLikeCharacterData(payload.character)) {
                 throw new Error("Character archive does not contain character data.");
             }
 
             return payload.character;
         }
 
-        return parsedData as Partial<PlayerCharacter>;
+        if (!looksLikeCharacterData(parsedData)) {
+            throw new Error("Imported JSON does not look like a character.");
+        }
+
+        return parsedData;
     }
 
     function exportSelectedCharacter() {
