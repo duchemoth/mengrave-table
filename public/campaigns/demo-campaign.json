@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "exportedAt": "2026-06-19T09:40:33.029Z",
+  "exportedAt": "2026-06-19T09:49:14.381Z",
   "type": "mogila-chelovechestva-campaign",
   "campaign": {
     "locations": [
@@ -11317,7 +11317,7 @@
             ]
           }
         ],
-        "activeLevelId": "local-map-1779614654506-bteiiedp27i"
+        "activeLevelId": "root"
       },
       "nri-table-local-map-event-event-1779377116568": {
         "imageUrl": "local-maps/woodroad-encounter1.webp",
