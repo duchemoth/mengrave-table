@@ -1508,15 +1508,27 @@
 
 /* Global expedition advance button */
 
-.global-advance-turn-button {
+.global-expedition-turn-cluster {
   position: fixed;
-  top: 42px;
-  left: 50%;
+  top: 34px;
+  left: calc(50% + 190px);
   z-index: 70;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  gap: 12px;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.global-expedition-turn-cluster>* {
+  pointer-events: auto;
+}
+
+.global-advance-turn-button {
   display: grid;
   gap: 2px;
   min-width: 188px;
-  transform: translateX(-50%);
   border: 1px solid rgba(234, 216, 173, 0.52);
   border-radius: 18px;
   padding: 10px 18px 9px;
@@ -1550,17 +1562,86 @@
 
 .global-advance-turn-button:hover:not(:disabled) {
   filter: brightness(1.08);
-  transform: translateX(-50%) translateY(-1px);
+  transform: translateY(-1px);
 }
 
 .global-advance-turn-button:active:not(:disabled) {
-  transform: translateX(-50%) translateY(1px);
+  transform: translateY(1px);
 }
 
 .global-advance-turn-button:disabled {
   cursor: not-allowed;
   opacity: 0.45;
   filter: grayscale(0.35);
+}
+
+.global-expedition-status-card {
+  display: grid;
+  grid-template-columns: minmax(110px, auto) minmax(96px, auto) minmax(130px, auto);
+  gap: 10px;
+  min-width: 360px;
+  border: 1px solid rgba(215, 166, 90, 0.42);
+  border-radius: 18px;
+  padding: 10px 14px;
+  color: #fff3cf;
+  background:
+    linear-gradient(180deg,
+      rgba(74, 42, 28, 0.9),
+      rgba(28, 16, 12, 0.92));
+  box-shadow:
+    0 0 0 2px rgba(18, 10, 8, 0.24),
+    0 14px 32px rgba(18, 10, 8, 0.34),
+    inset 0 1px 0 rgba(255, 244, 210, 0.12);
+  font-family: Inter, system-ui, sans-serif;
+  backdrop-filter: blur(8px);
+}
+
+.global-expedition-status-card div {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.global-expedition-status-card span {
+  overflow: hidden;
+  color: rgba(255, 243, 207, 0.58);
+  font-size: 10px;
+  font-weight: 950;
+  letter-spacing: 0.08em;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.global-expedition-status-card strong {
+  overflow: hidden;
+  color: #fff3cf;
+  font-size: 16px;
+  font-weight: 950;
+  line-height: 1.05;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 1180px) {
+  .global-expedition-turn-cluster {
+    top: 132px;
+    left: 50%;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .global-expedition-status-card {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    width: min(430px, calc(100vw - 32px));
+    min-width: 0;
+  }
+}
+
+@media (max-width: 760px) {
+  .global-expedition-status-card {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* Expedition route suggestion */

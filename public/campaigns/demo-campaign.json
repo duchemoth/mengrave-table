@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "exportedAt": "2026-06-19T09:49:14.381Z",
+  "exportedAt": "2026-06-22T08:57:43.480Z",
   "type": "mogila-chelovechestva-campaign",
   "campaign": {
     "locations": [
@@ -8727,53 +8727,7 @@
       "suggestedRoutePointY": null,
       "note": ""
     },
-    "journalEntries": [
-      {
-        "id": "journal-entry-1781862028764-9bhsqxt83d",
-        "createdAt": 1781862028764,
-        "type": "map",
-        "title": "Игрокам показан обзор",
-        "text": "Апис",
-        "details": "Экран игроков переключён на обзор.",
-        "isHiddenFromPlayers": false
-      },
-      {
-        "id": "journal-entry-1781861990436-l43b6rhnts",
-        "createdAt": 1781861990436,
-        "type": "map",
-        "title": "Экран игроков возвращён к карте",
-        "text": "Игрокам снова показан обзор глобальной карты.",
-        "details": "",
-        "isHiddenFromPlayers": false
-      },
-      {
-        "id": "journal-entry-1781861834868-gctjtpfjb4l",
-        "createdAt": 1781861834868,
-        "type": "map",
-        "title": "Игрокам показана локальная карта",
-        "text": "Место крушения",
-        "details": "Экран игроков переключён на локальная карта.",
-        "isHiddenFromPlayers": false
-      },
-      {
-        "id": "journal-entry-1781861380884-i6dunjoy79m",
-        "createdAt": 1781861380884,
-        "type": "map",
-        "title": "Игрокам показана локальная карта",
-        "text": "Апис",
-        "details": "Экран игроков переключён на локальная карта.",
-        "isHiddenFromPlayers": false
-      },
-      {
-        "id": "journal-entry-1780468241565-k1rssaei01",
-        "createdAt": 1780468241565,
-        "type": "map",
-        "title": "Экран игроков возвращён к карте",
-        "text": "Игрокам снова показан обзор глобальной карты.",
-        "details": "",
-        "isHiddenFromPlayers": false
-      }
-    ],
+    "journalEntries": [],
     "relations": {
       "entries": [
         {

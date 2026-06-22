@@ -63,6 +63,9 @@ const ROUTE_SEGMENT_DISTANCE = 4;
 
 const ROUTE_AUTO_REVEAL_RADIUS = 4;
 
+const ROUTE_SEGMENTS_PER_TIME_PHASE = 2;
+const TIME_PHASES_PER_DAY = 4;
+
 const ECHO_ACCESS_PASSWORD = "550034";
 
 const FEEDBACK_URL =
@@ -475,6 +478,22 @@ function getExpeditionTimeLabel(timeOfDay: ExpeditionTimeOfDay) {
   }
 
   return "Ночь";
+}
+
+function getExpeditionDayNumber(routeSegment: number) {
+  const safeRouteSegment = Math.max(0, Math.floor(routeSegment));
+
+  return (
+    Math.floor(
+      safeRouteSegment / (ROUTE_SEGMENTS_PER_TIME_PHASE * TIME_PHASES_PER_DAY),
+    ) + 1
+  );
+}
+
+function getExpeditionTimePhaseProgress(routeSegment: number) {
+  const safeRouteSegment = Math.max(0, Math.floor(routeSegment));
+
+  return safeRouteSegment % ROUTE_SEGMENTS_PER_TIME_PHASE;
 }
 
 function getExpeditionInfophoneLabel(level: ExpeditionState["infophoneLevel"]) {
@@ -1730,13 +1749,6 @@ function App() {
       return;
     }
 
-    savePlayerPresentation({
-      mode,
-      targetKind,
-      targetId,
-      updatedAt: Date.now(),
-    });
-
     const locationTarget =
       targetKind === "location"
         ? locations.find((location) => location.id === targetId)
@@ -1751,6 +1763,25 @@ function App() {
       targetKind === "event"
         ? events.find((mapEvent) => mapEvent.id === targetId)
         : null;
+
+    const shouldRevealEvent = Boolean(eventTarget?.isSecret);
+
+    if (eventTarget?.isSecret) {
+      const revealedEvent: MapEvent = {
+        ...eventTarget,
+        isSecret: false,
+      };
+
+      updateEvent(revealedEvent);
+      setEncounterTarget({ kind: "event", data: revealedEvent });
+    }
+
+    savePlayerPresentation({
+      mode,
+      targetKind,
+      targetId,
+      updatedAt: Date.now(),
+    });
 
     const targetTitle =
       locationTarget?.title ??
@@ -1774,7 +1805,14 @@ function App() {
             ? "Игрокам показана сцена"
             : "Игрокам показан обзор",
       text: targetTitle,
-      details: `Экран игроков переключён на ${modeTitle}.`,
+      details: [
+        `Экран игроков переключён на ${modeTitle}.`,
+        shouldRevealEvent
+          ? "Событие автоматически раскрыто на глобальной карте."
+          : null,
+      ]
+        .filter((item): item is string => item !== null)
+        .join("\n"),
       isHiddenFromPlayers: false,
     });
   }
@@ -2054,8 +2092,13 @@ function App() {
 
     const current = expeditionState;
 
-    const nextTimeOfDay = getNextTimeOfDay(current.timeOfDay);
     const nextRouteSegment = current.routeSegment + 1;
+    const shouldAdvanceTimeOfDay =
+      nextRouteSegment % ROUTE_SEGMENTS_PER_TIME_PHASE === 0;
+
+    const nextTimeOfDay = shouldAdvanceTimeOfDay
+      ? getNextTimeOfDay(current.timeOfDay)
+      : current.timeOfDay;
 
     const nextSupplies = current.segmentCosts.supplies
       ? Math.max(0, current.supplies - 1)
@@ -2181,9 +2224,9 @@ function App() {
     addSystemJournalEntry({
       type: "expedition",
       title: "Отряд продвинулся",
-      text: `Отрезок ${nextRouteSegment}. Время: ${getExpeditionTimeLabel(
-        nextTimeOfDay,
-      )}.`,
+      text: `Отрезок ${nextRouteSegment}. День ${getExpeditionDayNumber(
+        nextRouteSegment,
+      )}. Время: ${getExpeditionTimeLabel(nextTimeOfDay)}.`,
       details: [
         current.routeTarget.trim().length > 0
           ? `Маршрут: ${current.routeTarget}.`
@@ -2532,20 +2575,47 @@ function App() {
       />
 
       {!isPlayerMode && !isCleanMapMode && (
-        <button
-          className="global-advance-turn-button"
-          type="button"
-          disabled={!canAdvanceExpeditionFromMap}
-          onClick={handleAdvanceExpeditionSegment}
-          title={
-            canAdvanceExpeditionFromMap
-              ? "Сделать ход: продвинуть время, маршрут и расход экспедиции"
-              : "Нельзя сделать ход во время активного режима или открытого окна"
-          }
-        >
-          <span>Сделать ход</span>
-          <small>Space</small>
-        </button>
+        <div className="global-expedition-turn-cluster">
+          <button
+            className="global-advance-turn-button"
+            type="button"
+            disabled={!canAdvanceExpeditionFromMap}
+            onClick={handleAdvanceExpeditionSegment}
+            title={
+              canAdvanceExpeditionFromMap
+                ? "Сделать ход: продвинуть время, маршрут и расход экспедиции"
+                : "Нельзя сделать ход во время активного режима или открытого окна"
+            }
+          >
+            <span>Сделать ход</span>
+            <small>Space</small>
+          </button>
+
+          <section
+            className="global-expedition-status-card"
+            aria-label="Информация о ходе и времени"
+          >
+            <div>
+              <span>День {getExpeditionDayNumber(expeditionState.routeSegment)}</span>
+              <strong>{getExpeditionTimeLabel(expeditionState.timeOfDay)}</strong>
+            </div>
+
+            <div>
+              <span>Ход фазы</span>
+              <strong>
+                {getExpeditionTimePhaseProgress(expeditionState.routeSegment)} /{" "}
+                {ROUTE_SEGMENTS_PER_TIME_PHASE}
+              </strong>
+            </div>
+
+            <div>
+              <span>Следующая смена</span>
+              <strong>
+                {getExpeditionTimeLabel(getNextTimeOfDay(expeditionState.timeOfDay))}
+              </strong>
+            </div>
+          </section>
+        </div>
       )}
 
       {!isCleanMapMode && !isPlayerScreen && (
