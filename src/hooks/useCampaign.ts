@@ -2,11 +2,13 @@ import { useEffect, useState } from "react";
 import { campaignData } from "../data/campaign";
 import type {
   ArsenalItem,
+  CampaignFinding,
   CampaignStart,
   Location,
   MapAttachment,
   MapEvent,
   MapGroup,
+  PartyCargoItem,
   PlayerCharacter,
   Quest,
   ReferenceArticle,
@@ -23,6 +25,8 @@ import {
   LOCATIONS_STORAGE_KEY,
   NPCS_STORAGE_KEY,
   QUESTS_STORAGE_KEY,
+  FINDINGS_STORAGE_KEY,
+  PARTY_CARGO_STORAGE_KEY,
   loadSavedAttachments,
   loadSavedCharacters,
   loadSavedReferenceArticles,
@@ -37,6 +41,10 @@ import {
   createEmptyWallet,
   loadSavedArsenalItems,
   normalizeArsenalItem,
+  loadSavedFindings,
+  loadSavedPartyCargo,
+  normalizeCampaignFinding,
+  normalizePartyCargoItem,
 } from "../lib/storage";
 
 export function useCampaign() {
@@ -62,6 +70,12 @@ export function useCampaign() {
 
   const [arsenalItems, setArsenalItems] =
     useState<ArsenalItem[]>(loadSavedArsenalItems);
+
+  const [findings, setFindings] =
+    useState<CampaignFinding[]>(loadSavedFindings);
+
+  const [partyCargo, setPartyCargo] =
+    useState<PartyCargoItem[]>(loadSavedPartyCargo);
 
   useEffect(() => {
     saveToStorage(LOCATIONS_STORAGE_KEY, locations);
@@ -102,6 +116,14 @@ export function useCampaign() {
   useEffect(() => {
     saveToStorage(ARSENAL_ITEMS_STORAGE_KEY, arsenalItems);
   }, [arsenalItems]);
+
+  useEffect(() => {
+    saveToStorage(FINDINGS_STORAGE_KEY, findings);
+  }, [findings]);
+
+  useEffect(() => {
+    saveToStorage(PARTY_CARGO_STORAGE_KEY, partyCargo);
+  }, [partyCargo]);
 
   function resetLocations() {
     setLocations(campaignData.locations);
@@ -232,6 +254,8 @@ export function useCampaign() {
         npcs,
         items,
         arsenalItems,
+        findings,
+        partyCargo,
         ...extraCampaignData,
       },
     };
@@ -266,6 +290,8 @@ export function useCampaign() {
         relations?: unknown;
         sceneDrafts?: unknown;
         localMaps?: unknown;
+        findings?: unknown;
+        partyCargo?: unknown;
       },
     ) => void,
   ) {
@@ -287,6 +313,8 @@ export function useCampaign() {
             npcs?: string[];
             items?: string[];
             arsenalItems?: ArsenalItem[];
+            findings?: unknown[];
+            partyCargo?: unknown[];
             revealedAreas?: unknown[];
             masterNotes?: unknown;
             globalMap?: unknown;
@@ -377,6 +405,26 @@ export function useCampaign() {
           );
         }
 
+        if (Array.isArray(parsedData.campaign?.findings)) {
+          setFindings(
+            parsedData.campaign.findings
+              .map(normalizeCampaignFinding)
+              .filter((finding): finding is CampaignFinding => finding !== null),
+          );
+        } else {
+          setFindings([]);
+        }
+
+        if (Array.isArray(parsedData.campaign?.partyCargo)) {
+          setPartyCargo(
+            parsedData.campaign.partyCargo
+              .map(normalizePartyCargoItem)
+              .filter((item): item is PartyCargoItem => item !== null),
+          );
+        } else {
+          setPartyCargo([]);
+        }
+
         onSuccess?.(normalizedLocations[0].id, parsedData.campaign);
 
         window.alert("Кампания импортирована.");
@@ -399,11 +447,15 @@ export function useCampaign() {
     npcs,
     items,
     arsenalItems,
+    findings,
+    partyCargo,
 
     setQuests,
     setNpcs,
     setItems,
     setArsenalItems,
+    setFindings,
+    setPartyCargo,
     setCharacters,
     setReferenceArticles,
 
