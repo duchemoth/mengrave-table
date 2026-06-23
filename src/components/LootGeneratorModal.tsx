@@ -22,6 +22,14 @@ type LootGeneratorModalProps = {
     onAddToFindings: (findings: CampaignFinding[]) => void;
 };
 
+function clampGeneratorCount(value: number, min: number, max: number) {
+    if (!Number.isFinite(value)) {
+        return min;
+    }
+
+    return Math.max(min, Math.min(max, Math.floor(value)));
+}
+
 export function LootGeneratorModal({
     isOpen,
     sourceTitle,
@@ -45,6 +53,10 @@ export function LootGeneratorModal({
     const generatedItemCount = generatedResult?.items.length ?? 0;
     const generatedClueCount = generatedResult?.clues.length ?? 0;
     const generatedFindingCount = generatedItemCount + generatedClueCount;
+
+    const isItemCountDisabled = settings.mode === "clues";
+    const isClueCountDisabled =
+        settings.mode === "items" || settings.mode === "resources";
 
     if (!isOpen) {
         return null;
@@ -194,6 +206,48 @@ export function LootGeneratorModal({
                             ))}
                         </select>
                     </label>
+
+                    <label>
+                        Предметов
+                        <input
+                            type="number"
+                            min={0}
+                            max={10}
+                            step={1}
+                            value={settings.itemCount}
+                            disabled={isItemCountDisabled}
+                            onChange={(event) =>
+                                updateSettings({
+                                    itemCount: clampGeneratorCount(
+                                        Number(event.target.value),
+                                        0,
+                                        10,
+                                    ),
+                                })
+                            }
+                        />
+                    </label>
+
+                    <label>
+                        Улик и следов
+                        <input
+                            type="number"
+                            min={0}
+                            max={8}
+                            step={1}
+                            value={settings.clueCount}
+                            disabled={isClueCountDisabled}
+                            onChange={(event) =>
+                                updateSettings({
+                                    clueCount: clampGeneratorCount(
+                                        Number(event.target.value),
+                                        0,
+                                        8,
+                                    ),
+                                })
+                            }
+                        />
+                    </label>
                 </div>
 
                 <label className="loot-generator-checkbox">
@@ -211,8 +265,8 @@ export function LootGeneratorModal({
 
                 <p className="loot-generator-hint">
                     В Арсенале доступно предметов для подбора: {availableItemCount}. Материальные
-                    находки берутся только из Арсенала. Генератор ничего не выдаёт автоматически
-                    игрокам — только готовит результат для Мастера.
+                    находки берутся только из Арсенала. Количество задаёт число карточек, а
+                    щедрость, опасность и контекст влияют на качество и состав выдачи.
                 </p>
 
                 {generatedResult && (

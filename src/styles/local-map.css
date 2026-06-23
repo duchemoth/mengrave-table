@@ -1119,3 +1119,25 @@
   font-size: 12px;
   font-weight: 850;
 }
+
+.loot-generator-grid input {
+  width: 100%;
+  border: 1px solid rgba(36, 26, 18, 0.24);
+  border-radius: 12px;
+  padding: 10px 12px;
+  color: var(--ink);
+  background: rgba(255, 244, 210, 0.58);
+  outline: none;
+  font: 800 13px/1.35 Inter, system-ui, sans-serif;
+}
+
+.loot-generator-grid input:focus {
+  border-color: rgba(124, 37, 34, 0.48);
+  box-shadow: 0 0 0 3px rgba(124, 37, 34, 0.12);
+}
+
+.loot-generator-grid input:disabled {
+  opacity: 0.48;
+  cursor: not-allowed;
+  filter: grayscale(0.25);
+}

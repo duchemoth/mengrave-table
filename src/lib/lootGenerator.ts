@@ -18,6 +18,25 @@ type WeightedItem = {
     weight: number;
 };
 
+const MIN_GENERATED_ITEM_COUNT = 0;
+const MAX_GENERATED_ITEM_COUNT = 10;
+
+const MIN_GENERATED_CLUE_COUNT = 0;
+const MAX_GENERATED_CLUE_COUNT = 8;
+
+function clampGeneratedCount(
+    value: number,
+    min: number,
+    max: number,
+    fallback: number,
+) {
+    if (!Number.isFinite(value)) {
+        return fallback;
+    }
+
+    return Math.max(min, Math.min(max, Math.floor(value)));
+}
+
 export type GeneratedFindingsResult = {
     id: string;
     sourceTitle: string;
@@ -275,19 +294,12 @@ function getItemCount(settings: LootGeneratorSettings) {
         return 0;
     }
 
-    if (settings.mode === "resources") {
-        return settings.generosity === "rich" ? 3 : 2;
-    }
-
-    if (settings.generosity === "poor") {
-        return 1;
-    }
-
-    if (settings.generosity === "rich") {
-        return settings.danger === "high" || settings.danger === "critical" ? 3 : 2;
-    }
-
-    return 2;
+    return clampGeneratedCount(
+        settings.itemCount,
+        MIN_GENERATED_ITEM_COUNT,
+        MAX_GENERATED_ITEM_COUNT,
+        2,
+    );
 }
 
 function getClueCount(settings: LootGeneratorSettings) {
@@ -295,11 +307,12 @@ function getClueCount(settings: LootGeneratorSettings) {
         return 0;
     }
 
-    if (settings.mode === "clues") {
-        return settings.generosity === "rich" ? 3 : 2;
-    }
-
-    return settings.danger === "low" ? 1 : 2;
+    return clampGeneratedCount(
+        settings.clueCount,
+        MIN_GENERATED_CLUE_COUNT,
+        MAX_GENERATED_CLUE_COUNT,
+        2,
+    );
 }
 
 function getGeneratedQuantity(item: ArsenalItem, settings: LootGeneratorSettings) {
@@ -502,7 +515,10 @@ export function generateFindingsResult({
         createFindingClue(clue, settings.context, sourceTitle, createdAt),
     );
 
-    if (items.length === 0 && clues.length === 0) {
+    const shouldCreateFallbackClue =
+        settings.mode === "mixed" || settings.mode === "clues";
+
+    if (items.length === 0 && clues.length === 0 && shouldCreateFallbackClue) {
         const fallbackClue =
             getRandomItem(LOOT_CLUE_LINES[settings.context] ?? []) ??
             "Ничего ценного не найдено, но сама пустота выглядит подозрительно.";

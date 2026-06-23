@@ -24,6 +24,8 @@ export type LootGeneratorSettings = {
     danger: LootDanger;
     generosity: LootGenerosity;
     mode: LootResultMode;
+    itemCount: number;
+    clueCount: number;
     allowManual: boolean;
 };
 
@@ -123,6 +125,8 @@ export const DEFAULT_LOOT_GENERATOR_SETTINGS: LootGeneratorSettings = {
     danger: "medium",
     generosity: "normal",
     mode: "mixed",
+    itemCount: 2,
+    clueCount: 2,
     allowManual: false,
 };
 
