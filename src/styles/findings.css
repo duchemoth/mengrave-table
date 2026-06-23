@@ -253,3 +253,86 @@
     font-weight: 850;
     line-height: 1.35;
 }
+
+/* Findings modal tabs */
+
+.campaign-findings-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.campaign-findings-tab {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border: 1px solid rgba(36, 26, 18, 0.24);
+    border-radius: 999px;
+    padding: 8px 14px;
+    color: var(--ink-soft);
+    background: rgba(255, 244, 210, 0.34);
+    box-shadow: inset 0 1px 0 rgba(255, 244, 210, 0.18);
+    cursor: pointer;
+    font-family: Inter, system-ui, sans-serif;
+    font-size: 12px;
+    font-weight: 950;
+}
+
+.campaign-findings-tab:hover,
+.campaign-findings-tab.active {
+    border-color: rgba(124, 37, 34, 0.48);
+    color: var(--ink);
+    background: rgba(255, 244, 210, 0.66);
+}
+
+.campaign-findings-tab span {
+    display: inline-grid;
+    place-items: center;
+    min-width: 24px;
+    height: 22px;
+    border-radius: 999px;
+    color: #fff3cf;
+    background: linear-gradient(180deg, #5a2d22, var(--leather));
+    font-size: 11px;
+    font-weight: 950;
+}
+
+.campaign-findings-content {
+    min-height: 0;
+    display: grid;
+    flex: 1;
+}
+
+.campaign-findings-layout.findings-view {
+    height: 100%;
+}
+
+.campaign-findings-cargo-view {
+    min-height: 0;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    gap: 10px;
+    overflow: hidden;
+}
+
+.campaign-findings-cargo-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+@media (min-width: 1180px) {
+    .campaign-findings-cargo-list {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 900px) {
+    .campaign-findings-content {
+        overflow: hidden;
+    }
+
+    .campaign-findings-cargo-list {
+        grid-template-columns: 1fr;
+    }
+}
