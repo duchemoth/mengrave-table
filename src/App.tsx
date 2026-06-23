@@ -40,6 +40,7 @@ import { useInterfaceMode } from "./hooks/useInterfaceMode";
 import { ReferenceLibrary } from "./components/ReferenceLibrary";
 import type {
   CampaignFinding,
+  CampaignFindingItem,
   CampaignRelationEntry,
   CampaignRelationLevel,
   CampaignRelationsState,
@@ -895,6 +896,7 @@ function App() {
     setQuests,
     setArsenalItems,
     setFindings,
+    setCharacters,
     setPartyCargo,
     resetLocations: resetCampaignLocations,
     createLocation: createCampaignLocation,
@@ -1405,6 +1407,38 @@ function App() {
     });
   }
 
+  function getFindingItemTitle(item: CampaignFindingItem) {
+    return (
+      arsenalItems.find((arsenalItem) => arsenalItem.id === item.arsenalItemId)
+        ?.name ?? item.nameSnapshot
+    );
+  }
+
+  function getFindingResourceKey(item: CampaignFindingItem) {
+    const resourceSubtype =
+      item.resourceSubtypeSnapshot ??
+      arsenalItems.find((arsenalItem) => arsenalItem.id === item.arsenalItemId)
+        ?.resourceSubtype;
+
+    if (resourceSubtype === "supplies") {
+      return "supplies";
+    }
+
+    if (resourceSubtype === "fuel") {
+      return "fuel";
+    }
+
+    if (resourceSubtype === "ammo") {
+      return "ammo";
+    }
+
+    if (resourceSubtype === "drink") {
+      return "water";
+    }
+
+    return null;
+  }
+
   function handleAddFindings(nextFindings: CampaignFinding[]) {
     if (nextFindings.length === 0) {
       return;
@@ -1467,6 +1501,155 @@ function App() {
   function handleDeleteCargoItem(cargoItemId: string) {
     setPartyCargo((currentCargo) =>
       currentCargo.filter((item) => item.id !== cargoItemId),
+    );
+  }
+
+  function getFindingItemBySource(
+    source: "findings" | "cargo",
+    itemId: string,
+  ) {
+    if (source === "cargo") {
+      return partyCargo.find((item) => item.id === itemId) ?? null;
+    }
+
+    const finding = findings.find((currentFinding) => {
+      return currentFinding.id === itemId && currentFinding.kind === "item";
+    });
+
+    return finding?.kind === "item" ? finding : null;
+  }
+
+  function removeFindingItemBySource(
+    source: "findings" | "cargo",
+    itemId: string,
+  ) {
+    if (source === "cargo") {
+      setPartyCargo((currentCargo) =>
+        currentCargo.filter((item) => item.id !== itemId),
+      );
+
+      return;
+    }
+
+    setFindings((currentFindings) =>
+      currentFindings.filter((finding) => finding.id !== itemId),
+    );
+  }
+
+  function handleGiveFindingItemToCharacter(
+    source: "findings" | "cargo",
+    itemId: string,
+    characterId: string,
+  ) {
+    const item = getFindingItemBySource(source, itemId);
+    const character = characters.find(
+      (currentCharacter) => currentCharacter.id === characterId,
+    );
+
+    if (!item || !character) {
+      return;
+    }
+
+    const itemTitle = getFindingItemTitle(item);
+    const sourceNote =
+      item.sourceTitle.trim().length > 0 ? `Источник: ${item.sourceTitle}` : "";
+
+    setCharacters((currentCharacters) =>
+      currentCharacters.map((currentCharacter) => {
+        if (currentCharacter.id !== characterId) {
+          return currentCharacter;
+        }
+
+        return {
+          ...currentCharacter,
+          inventory: {
+            ...currentCharacter.inventory,
+            backpack: [
+              {
+                id: `backpack-${Date.now()}-${Math.random()
+                  .toString(36)
+                  .slice(2)}`,
+                itemId: item.arsenalItemId,
+                quantity: item.quantity,
+                note: sourceNote,
+              },
+              ...currentCharacter.inventory.backpack,
+            ],
+          },
+        };
+      }),
+    );
+
+    removeFindingItemBySource(source, itemId);
+
+    addSystemJournalEntry({
+      type: "inventory",
+      title: "Предмет выдан персонажу",
+      text: `${itemTitle} → ${character.characterName || "персонаж"}`,
+      details: sourceNote,
+      isHiddenFromPlayers: true,
+    });
+  }
+
+  function handleAddFindingItemToExpeditionResource(
+    source: "findings" | "cargo",
+    itemId: string,
+  ) {
+    const item = getFindingItemBySource(source, itemId);
+
+    if (!item) {
+      return;
+    }
+
+    const resourceKey = getFindingResourceKey(item);
+
+    if (!resourceKey) {
+      return;
+    }
+
+    const itemTitle = getFindingItemTitle(item);
+
+    setExpeditionState((currentExpedition) => ({
+      ...currentExpedition,
+      [resourceKey]: currentExpedition[resourceKey] + item.quantity,
+    }));
+
+    removeFindingItemBySource(source, itemId);
+
+    addSystemJournalEntry({
+      type: "inventory",
+      title: "Ресурс добавлен в экспедицию",
+      text: `${itemTitle} ×${item.quantity}`,
+      details: `Ресурс: ${resourceKey}`,
+      isHiddenFromPlayers: true,
+    });
+  }
+
+  function handleSendFindingClueToJournal(
+    clueId: string,
+    isHiddenFromPlayers: boolean,
+  ) {
+    const clue = findings.find((finding) => {
+      return finding.id === clueId && finding.kind === "clue";
+    });
+
+    if (!clue || clue.kind !== "clue") {
+      return;
+    }
+
+    addSystemJournalEntry({
+      type: "scene",
+      title: clue.title,
+      text: clue.text,
+      details:
+        clue.sourceTitle.trim().length > 0
+          ? `Источник: ${clue.sourceTitle}`
+          : "",
+      isHiddenFromPlayers,
+    });
+
+    setFindings((currentFindings) =>
+      currentFindings.filter((finding) => finding.id !== clueId),
     );
   }
 
@@ -2973,11 +3156,15 @@ function App() {
           findings={findings}
           partyCargo={partyCargo}
           arsenalItems={arsenalItems}
+          characters={characters}
           onClose={() => setIsFindingsOpen(false)}
           onMoveItemToCargo={handleMoveFindingItemToCargo}
           onReturnCargoToFindings={handleReturnCargoToFindings}
           onDeleteFinding={handleDeleteFinding}
           onDeleteCargoItem={handleDeleteCargoItem}
+          onGiveItemToCharacter={handleGiveFindingItemToCharacter}
+          onAddItemToExpeditionResource={handleAddFindingItemToExpeditionResource}
+          onSendClueToJournal={handleSendFindingClueToJournal}
         />
       )}
 

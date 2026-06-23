@@ -221,3 +221,35 @@
         max-height: none;
     }
 }
+
+.campaign-finding-character-select {
+    display: grid;
+    gap: 5px;
+    color: var(--ink-soft);
+    font-family: Inter, system-ui, sans-serif;
+    font-size: 11px;
+    font-weight: 900;
+}
+
+.campaign-finding-character-select select {
+    width: 100%;
+    border: 1px solid rgba(36, 26, 18, 0.22);
+    border-radius: 10px;
+    padding: 7px 9px;
+    color: var(--ink);
+    background: rgba(255, 244, 210, 0.58);
+    font: 800 12px/1.3 Inter, system-ui, sans-serif;
+}
+
+.campaign-finding-warning {
+    margin: 0;
+    border: 1px dashed rgba(124, 37, 34, 0.24);
+    border-radius: 12px;
+    padding: 8px 10px;
+    color: var(--blood);
+    background: rgba(124, 37, 34, 0.08);
+    font-family: Inter, system-ui, sans-serif;
+    font-size: 11px;
+    font-weight: 850;
+    line-height: 1.35;
+}

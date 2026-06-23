@@ -1,20 +1,36 @@
+import { useState } from "react";
 import type {
   ArsenalItem,
   CampaignFinding,
+  CampaignFindingClue,
   CampaignFindingItem,
   PartyCargoItem,
+  PlayerCharacter,
 } from "../types/campaign";
+
+type FindingItemSource = "findings" | "cargo";
 
 type CampaignFindingsPanelProps = {
   isOpen: boolean;
   findings: CampaignFinding[];
   partyCargo: PartyCargoItem[];
   arsenalItems: ArsenalItem[];
+  characters: PlayerCharacter[];
   onClose: () => void;
   onMoveItemToCargo: (findingId: string) => void;
   onReturnCargoToFindings: (cargoItemId: string) => void;
   onDeleteFinding: (findingId: string) => void;
   onDeleteCargoItem: (cargoItemId: string) => void;
+  onGiveItemToCharacter: (
+    source: FindingItemSource,
+    itemId: string,
+    characterId: string,
+  ) => void;
+  onAddItemToExpeditionResource: (
+    source: FindingItemSource,
+    itemId: string,
+  ) => void;
+  onSendClueToJournal: (clueId: string, isHiddenFromPlayers: boolean) => void;
 };
 
 const FINDING_CLUE_TYPE_LABELS: Record<string, string> = {
@@ -42,6 +58,13 @@ const ITEM_CATEGORY_LABELS: Record<string, string> = {
   misc: "Прочее",
 };
 
+const RESOURCE_ACTION_LABELS: Record<string, string> = {
+  supplies: "В припасы",
+  fuel: "В топливо",
+  ammo: "В боезапас",
+  drink: "В воду",
+};
+
 function getFindingItemTitle(item: CampaignFindingItem, arsenalItems: ArsenalItem[]) {
   return (
     arsenalItems.find((arsenalItem) => arsenalItem.id === item.arsenalItemId)?.name ??
@@ -59,9 +82,36 @@ function getFindingItemDescription(
   );
 }
 
-function getItemMeta(item: CampaignFindingItem) {
+function getItemResourceSubtype(
+  item: CampaignFindingItem,
+  arsenalItems: ArsenalItem[],
+) {
+  return (
+    item.resourceSubtypeSnapshot ??
+    arsenalItems.find((arsenalItem) => arsenalItem.id === item.arsenalItemId)
+      ?.resourceSubtype
+  );
+}
+
+function getResourceActionLabel(
+  item: CampaignFindingItem,
+  arsenalItems: ArsenalItem[],
+) {
+  const resourceSubtype = getItemResourceSubtype(item, arsenalItems);
+
+  if (!resourceSubtype) {
+    return null;
+  }
+
+  return RESOURCE_ACTION_LABELS[resourceSubtype] ?? null;
+}
+
+function getItemMeta(item: CampaignFindingItem, arsenalItems: ArsenalItem[]) {
+  const resourceSubtype = getItemResourceSubtype(item, arsenalItems);
+
   const meta = [
     ITEM_CATEGORY_LABELS[item.categorySnapshot] ?? item.categorySnapshot,
+    resourceSubtype ? `ресурс: ${resourceSubtype}` : "",
     item.quantity > 1 ? `×${item.quantity}` : "",
     item.raritySnapshot,
     item.conditionSnapshot,
@@ -75,17 +125,38 @@ function sortByCreatedAt<T extends { createdAt: number }>(items: T[]) {
   return [...items].sort((a, b) => b.createdAt - a.createdAt);
 }
 
+function getDefaultCharacterId(characters: PlayerCharacter[]) {
+  return characters[0]?.id ?? "";
+}
+
+function getCharacterName(character: PlayerCharacter) {
+  return (
+    character.characterName.trim() ||
+    character.nickname.trim() ||
+    character.playerName.trim() ||
+    "Безымянный персонаж"
+  );
+}
+
 export function CampaignFindingsPanel({
   isOpen,
   findings,
   partyCargo,
   arsenalItems,
+  characters,
   onClose,
   onMoveItemToCargo,
   onReturnCargoToFindings,
   onDeleteFinding,
   onDeleteCargoItem,
+  onGiveItemToCharacter,
+  onAddItemToExpeditionResource,
+  onSendClueToJournal,
 }: CampaignFindingsPanelProps) {
+  const [selectedCharacterIds, setSelectedCharacterIds] = useState<
+    Record<string, string>
+  >({});
+
   if (!isOpen) {
     return null;
   }
@@ -97,10 +168,113 @@ export function CampaignFindingsPanel({
   );
 
   const clueFindings = sortByCreatedAt(
-    findings.filter((finding) => finding.kind === "clue"),
+    findings.filter((finding): finding is CampaignFindingClue => {
+      return finding.kind === "clue";
+    }),
   );
 
   const sortedPartyCargo = sortByCreatedAt(partyCargo);
+
+  function getSelectedCharacterId(itemId: string) {
+    return selectedCharacterIds[itemId] ?? getDefaultCharacterId(characters);
+  }
+
+  function setSelectedCharacterId(itemId: string, characterId: string) {
+    setSelectedCharacterIds((current) => ({
+      ...current,
+      [itemId]: characterId,
+    }));
+  }
+
+  function renderCharacterSelect(itemId: string) {
+    if (characters.length === 0) {
+      return (
+        <p className="campaign-finding-warning">
+          В отряде нет персонажей, которым можно выдать предмет.
+        </p>
+      );
+    }
+
+    return (
+      <label className="campaign-finding-character-select">
+        Кому выдать
+        <select
+          value={getSelectedCharacterId(itemId)}
+          onChange={(event) => setSelectedCharacterId(itemId, event.target.value)}
+        >
+          {characters.map((character) => (
+            <option key={character.id} value={character.id}>
+              {getCharacterName(character)}
+            </option>
+          ))}
+        </select>
+      </label>
+    );
+  }
+
+  function renderItemActions(item: CampaignFindingItem, source: FindingItemSource) {
+    const resourceActionLabel = getResourceActionLabel(item, arsenalItems);
+    const selectedCharacterId = getSelectedCharacterId(item.id);
+
+    return (
+      <>
+        {renderCharacterSelect(item.id)}
+
+        <div className="campaign-finding-actions">
+          <button
+            className="secondary-button"
+            type="button"
+            disabled={characters.length === 0 || !selectedCharacterId}
+            onClick={() =>
+              onGiveItemToCharacter(source, item.id, selectedCharacterId)
+            }
+          >
+            Выдать в рюкзак
+          </button>
+
+          {resourceActionLabel && (
+            <button
+              className="secondary-button"
+              type="button"
+              onClick={() => onAddItemToExpeditionResource(source, item.id)}
+            >
+              {resourceActionLabel}
+            </button>
+          )}
+
+          {source === "findings" ? (
+            <button
+              className="secondary-button"
+              type="button"
+              onClick={() => onMoveItemToCargo(item.id)}
+            >
+              В груз отряда
+            </button>
+          ) : (
+            <button
+              className="secondary-button"
+              type="button"
+              onClick={() => onReturnCargoToFindings(item.id)}
+            >
+              Вернуть в находки
+            </button>
+          )}
+
+          <button
+            className="danger-button"
+            type="button"
+            onClick={() =>
+              source === "findings"
+                ? onDeleteFinding(item.id)
+                : onDeleteCargoItem(item.id)
+            }
+          >
+            Удалить
+          </button>
+        </div>
+      </>
+    );
+  }
 
   return (
     <section className="campaign-findings-window" aria-label="Находки">
@@ -138,7 +312,7 @@ export function CampaignFindingsPanel({
                   <article key={item.id} className="campaign-finding-card">
                     <div className="campaign-finding-card-main">
                       <strong>{getFindingItemTitle(item, arsenalItems)}</strong>
-                      <small>{getItemMeta(item)}</small>
+                      <small>{getItemMeta(item, arsenalItems)}</small>
                     </div>
 
                     {description.trim().length > 0 && <p>{description}</p>}
@@ -149,23 +323,7 @@ export function CampaignFindingsPanel({
                       </span>
                     )}
 
-                    <div className="campaign-finding-actions">
-                      <button
-                        className="secondary-button"
-                        type="button"
-                        onClick={() => onMoveItemToCargo(item.id)}
-                      >
-                        В груз отряда
-                      </button>
-
-                      <button
-                        className="danger-button"
-                        type="button"
-                        onClick={() => onDeleteFinding(item.id)}
-                      >
-                        Удалить
-                      </button>
-                    </div>
+                    {renderItemActions(item, "findings")}
                   </article>
                 );
               })}
@@ -203,6 +361,22 @@ export function CampaignFindingsPanel({
 
                   <div className="campaign-finding-actions">
                     <button
+                      className="secondary-button"
+                      type="button"
+                      onClick={() => onSendClueToJournal(clue.id, true)}
+                    >
+                      В журнал скрыто
+                    </button>
+
+                    <button
+                      className="secondary-button"
+                      type="button"
+                      onClick={() => onSendClueToJournal(clue.id, false)}
+                    >
+                      В журнал игрокам
+                    </button>
+
+                    <button
                       className="danger-button"
                       type="button"
                       onClick={() => onDeleteFinding(clue.id)}
@@ -235,7 +409,7 @@ export function CampaignFindingsPanel({
                   <article key={item.id} className="campaign-finding-card cargo">
                     <div className="campaign-finding-card-main">
                       <strong>{getFindingItemTitle(item, arsenalItems)}</strong>
-                      <small>{getItemMeta(item)}</small>
+                      <small>{getItemMeta(item, arsenalItems)}</small>
                     </div>
 
                     {description.trim().length > 0 && <p>{description}</p>}
@@ -246,23 +420,7 @@ export function CampaignFindingsPanel({
                       </span>
                     )}
 
-                    <div className="campaign-finding-actions">
-                      <button
-                        className="secondary-button"
-                        type="button"
-                        onClick={() => onReturnCargoToFindings(item.id)}
-                      >
-                        Вернуть в находки
-                      </button>
-
-                      <button
-                        className="danger-button"
-                        type="button"
-                        onClick={() => onDeleteCargoItem(item.id)}
-                      >
-                        Удалить
-                      </button>
-                    </div>
+                    {renderItemActions(item, "cargo")}
                   </article>
                 );
               })}
