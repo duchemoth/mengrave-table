@@ -1,0 +1,223 @@
+.campaign-findings-window {
+    position: absolute;
+    z-index: 46;
+    left: 24px;
+    bottom: 86px;
+    width: min(1120px, calc(100vw - 48px));
+    height: min(720px, calc(100dvh - 140px));
+    display: flex;
+    flex-direction: column;
+    border: 1px solid rgba(234, 216, 173, 0.28);
+    border-radius: 24px;
+    padding: 16px;
+    color: var(--ink);
+    background:
+        linear-gradient(135deg, rgba(234, 216, 173, 0.98), rgba(216, 195, 154, 0.96));
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.42);
+}
+
+.campaign-findings-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 14px;
+}
+
+.campaign-findings-header h2 {
+    margin: 0;
+    color: var(--ink);
+    font-size: 30px;
+    line-height: 1;
+}
+
+.campaign-findings-header span {
+    display: block;
+    margin-top: 5px;
+    color: var(--ink-soft);
+    font-family: Inter, system-ui, sans-serif;
+    font-size: 12px;
+    font-weight: 900;
+}
+
+.campaign-findings-layout {
+    min-height: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    flex: 1;
+}
+
+.campaign-findings-section {
+    min-height: 0;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    gap: 10px;
+    overflow: hidden;
+    border: 1px solid rgba(36, 26, 18, 0.18);
+    border-radius: 18px;
+    padding: 12px;
+    background: rgba(255, 244, 210, 0.34);
+}
+
+.campaign-findings-section.wide {
+    grid-column: 1 / -1;
+    max-height: 230px;
+}
+
+.campaign-findings-section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.campaign-findings-section-header h3 {
+    margin: 0;
+    color: var(--ink);
+    font-size: 22px;
+    line-height: 1;
+}
+
+.campaign-findings-section-header span {
+    display: inline-grid;
+    place-items: center;
+    min-width: 28px;
+    height: 24px;
+    border-radius: 999px;
+    color: #fff3cf;
+    background: linear-gradient(180deg, #5a2d22, var(--leather));
+    font-family: Inter, system-ui, sans-serif;
+    font-size: 12px;
+    font-weight: 950;
+}
+
+.campaign-findings-empty {
+    margin: 0;
+    align-self: start;
+    border: 1px dashed rgba(36, 26, 18, 0.18);
+    border-radius: 14px;
+    padding: 12px;
+    color: var(--ink-soft);
+    background: rgba(255, 244, 210, 0.22);
+    font-family: Inter, system-ui, sans-serif;
+    font-size: 13px;
+    font-weight: 800;
+    line-height: 1.4;
+}
+
+.campaign-findings-list {
+    min-height: 0;
+    display: grid;
+    align-content: start;
+    gap: 10px;
+    overflow: auto;
+    padding-right: 4px;
+}
+
+.campaign-findings-list.cargo {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.campaign-finding-card {
+    display: grid;
+    gap: 9px;
+    border: 1px solid rgba(36, 26, 18, 0.18);
+    border-radius: 16px;
+    padding: 12px;
+    background: rgba(255, 244, 210, 0.36);
+}
+
+.campaign-finding-card.clue {
+    background:
+        linear-gradient(180deg,
+            rgba(255, 244, 210, 0.38),
+            rgba(124, 37, 34, 0.06));
+}
+
+.campaign-finding-card.cargo {
+    background:
+        linear-gradient(180deg,
+            rgba(255, 244, 210, 0.38),
+            rgba(180, 122, 53, 0.1));
+}
+
+.campaign-finding-card-main {
+    display: grid;
+    gap: 3px;
+}
+
+.campaign-finding-card-main strong {
+    color: var(--ink);
+    font-size: 17px;
+    line-height: 1.1;
+}
+
+.campaign-finding-card-main small,
+.campaign-finding-source {
+    color: var(--ink-soft);
+    font-family: Inter, system-ui, sans-serif;
+    font-size: 11px;
+    font-weight: 850;
+    line-height: 1.35;
+}
+
+.campaign-finding-card p {
+    margin: 0;
+    color: var(--ink-soft);
+    font-family: Inter, system-ui, sans-serif;
+    font-size: 12px;
+    font-weight: 750;
+    line-height: 1.45;
+}
+
+.campaign-finding-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.campaign-finding-actions button {
+    min-height: 34px;
+    padding: 7px 10px;
+    font-size: 11px;
+}
+
+.hud-tool-button.with-badge {
+    position: relative;
+}
+
+.hud-tool-badge {
+    position: absolute;
+    top: -7px;
+    right: -7px;
+    display: inline-grid;
+    place-items: center;
+    min-width: 24px;
+    height: 22px;
+    border: 1px solid rgba(255, 243, 207, 0.48);
+    border-radius: 999px;
+    color: #fff3cf;
+    background: linear-gradient(180deg, #8b2f29, #4a1916);
+    box-shadow: 0 8px 16px rgba(18, 10, 8, 0.28);
+    font-family: Inter, system-ui, sans-serif;
+    font-size: 11px;
+    font-weight: 950;
+}
+
+@media (max-width: 900px) {
+    .campaign-findings-window {
+        left: 16px;
+        bottom: 76px;
+        width: min(420px, calc(100vw - 32px));
+    }
+
+    .campaign-findings-layout,
+    .campaign-findings-list.cargo {
+        grid-template-columns: 1fr;
+    }
+
+    .campaign-findings-section.wide {
+        max-height: none;
+    }
+}

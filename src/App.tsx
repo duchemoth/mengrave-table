@@ -7,6 +7,7 @@ import "./styles/reference.css";
 import "./styles/quest.css";
 import "./styles/campaign.css";
 import "./styles/local-map.css";
+import "./styles/findings.css";
 import { BottomDrawer } from "./components/BottomDrawer";
 import { PartyStatusPanel } from "./components/panels/PartyStatusPanel";
 import {
@@ -32,6 +33,7 @@ import { CampaignStartMenu } from "./components/CampaignStartMenu";
 import { SideDrawer } from "./components/SideDrawer";
 import { TopBar } from "./components/TopBar";
 import { FeedbackModal } from "./components/FeedbackModal";
+import { CampaignFindingsPanel } from "./components/CampaignFindingsPanel";
 import { campaignData } from "./data/campaign";
 import { useCampaign } from "./hooks/useCampaign";
 import { useInterfaceMode } from "./hooks/useInterfaceMode";
@@ -888,9 +890,12 @@ function App() {
     referenceArticles,
     quests,
     arsenalItems,
+    findings,
+    partyCargo,
     setQuests,
     setArsenalItems,
     setFindings,
+    setPartyCargo,
     resetLocations: resetCampaignLocations,
     createLocation: createCampaignLocation,
     updateLocation,
@@ -937,6 +942,8 @@ function App() {
   const [selectedGroupId, setSelectedGroupId] = useState<string | null>(null);
   const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
   const [isPlacingEvent, setIsPlacingEvent] = useState(false);
+
+  const [isFindingsOpen, setIsFindingsOpen] = useState(false);
 
   const [requestedAttachmentEditorId, setRequestedAttachmentEditorId] =
     useState<string | null>(null);
@@ -1419,6 +1426,48 @@ function App() {
       details: [`Предметы: ${itemCount}`, `Улики и следы: ${clueCount}`].join("\n"),
       isHiddenFromPlayers: true,
     });
+  }
+
+  function handleMoveFindingItemToCargo(findingId: string) {
+    const finding = findings.find((currentFinding) => {
+      return currentFinding.id === findingId && currentFinding.kind === "item";
+    });
+
+    if (!finding || finding.kind !== "item") {
+      return;
+    }
+
+    setFindings((currentFindings) =>
+      currentFindings.filter((currentFinding) => currentFinding.id !== findingId),
+    );
+
+    setPartyCargo((currentCargo) => [finding, ...currentCargo]);
+  }
+
+  function handleReturnCargoToFindings(cargoItemId: string) {
+    const cargoItem = partyCargo.find((item) => item.id === cargoItemId);
+
+    if (!cargoItem) {
+      return;
+    }
+
+    setPartyCargo((currentCargo) =>
+      currentCargo.filter((item) => item.id !== cargoItemId),
+    );
+
+    setFindings((currentFindings) => [cargoItem, ...currentFindings]);
+  }
+
+  function handleDeleteFinding(findingId: string) {
+    setFindings((currentFindings) =>
+      currentFindings.filter((finding) => finding.id !== findingId),
+    );
+  }
+
+  function handleDeleteCargoItem(cargoItemId: string) {
+    setPartyCargo((currentCargo) =>
+      currentCargo.filter((item) => item.id !== cargoItemId),
+    );
   }
 
   function handleExportCampaign() {
@@ -2882,9 +2931,12 @@ function App() {
           isNotesOpen={isNotesOpen}
           isCharactersOpen={isCharactersOpen}
           isReferenceOpen={isReferenceOpen}
+          isFindingsOpen={isFindingsOpen}
+          findingsCount={findings.length}
           onToggleNotes={() => setIsNotesOpen((current) => !current)}
           onToggleCharacters={() => setIsCharactersOpen((current) => !current)}
           onToggleReference={() => setIsReferenceOpen((current) => !current)}
+          onToggleFindings={() => setIsFindingsOpen((current) => !current)}
         />
       )}
 
@@ -2912,6 +2964,20 @@ function App() {
           notes={masterNotes}
           onChangeNotes={setMasterNotes}
           onClose={() => setIsNotesOpen(false)}
+        />
+      )}
+
+      {!isPlayerMode && (
+        <CampaignFindingsPanel
+          isOpen={isFindingsOpen}
+          findings={findings}
+          partyCargo={partyCargo}
+          arsenalItems={arsenalItems}
+          onClose={() => setIsFindingsOpen(false)}
+          onMoveItemToCargo={handleMoveFindingItemToCargo}
+          onReturnCargoToFindings={handleReturnCargoToFindings}
+          onDeleteFinding={handleDeleteFinding}
+          onDeleteCargoItem={handleDeleteCargoItem}
         />
       )}
 
