@@ -126,17 +126,22 @@ function sortByCreatedAt<T extends { createdAt: number }>(items: T[]) {
   return [...items].sort((a, b) => b.createdAt - a.createdAt);
 }
 
-function getDefaultCharacterId(characters: PlayerCharacter[]) {
-  return characters[0]?.id ?? "";
-}
-
 function getCharacterName(character: PlayerCharacter) {
-  return (
+  const characterName =
     character.characterName.trim() ||
     character.nickname.trim() ||
+    character.oldName.trim() ||
+    "Персонаж без имени";
+
+  const playerName =
     character.playerName.trim() ||
-    "Безымянный персонаж"
-  );
+    character.ownerPlayerName.trim();
+
+  if (!playerName) {
+    return characterName;
+  }
+
+  return `${characterName} · ${playerName}`;
 }
 
 export function CampaignFindingsPanel({
@@ -178,7 +183,7 @@ export function CampaignFindingsPanel({
   const sortedPartyCargo = sortByCreatedAt(partyCargo);
 
   function getSelectedCharacterId(itemId: string) {
-    return selectedCharacterIds[itemId] ?? getDefaultCharacterId(characters);
+    return selectedCharacterIds[itemId] ?? "";
   }
 
   function setSelectedCharacterId(itemId: string, characterId: string) {
@@ -204,6 +209,8 @@ export function CampaignFindingsPanel({
           value={getSelectedCharacterId(itemId)}
           onChange={(event) => setSelectedCharacterId(itemId, event.target.value)}
         >
+          <option value="">Выбрать персонажа</option>
+
           {characters.map((character) => (
             <option key={character.id} value={character.id}>
               {getCharacterName(character)}
