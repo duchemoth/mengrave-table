@@ -242,6 +242,58 @@ export type ArsenalItem = {
   isVisibleToPlayers: boolean;
 };
 
+export type CampaignFindingClueType =
+  | "trace"
+  | "body"
+  | "damage"
+  | "route"
+  | "obscuria"
+  | "social"
+  | "technical"
+  | "other";
+
+export type CampaignFindingItem = {
+  id: string;
+  kind: "item";
+
+  arsenalItemId: string;
+  quantity: number;
+
+  sourceTitle: string;
+  createdAt: number;
+
+  nameSnapshot: string;
+  categorySnapshot: ArsenalItemCategory;
+  slotSnapshot: ArsenalItemSlot;
+  resourceSubtypeSnapshot?: ArsenalResourceSubtype;
+  raritySnapshot: ArsenalItemRarity;
+  conditionSnapshot: ArsenalItemCondition;
+  weightSnapshot: string;
+  priceSnapshot: string;
+  lootTagsSnapshot: ArsenalLootTag[];
+
+  note: string;
+};
+
+export type CampaignFindingClue = {
+  id: string;
+  kind: "clue";
+
+  title: string;
+  text: string;
+  clueType: CampaignFindingClueType;
+
+  sourceTitle: string;
+  createdAt: number;
+
+  isHiddenFromPlayers: boolean;
+  note: string;
+};
+
+export type CampaignFinding = CampaignFindingItem | CampaignFindingClue;
+
+export type PartyCargoItem = CampaignFindingItem;
+
 export type CharacterInventorySlot = {
   itemId: string | null;
   note: string;
@@ -308,6 +360,8 @@ export type CampaignData = {
   npcs: string[];
   items: string[];
   arsenalItems: ArsenalItem[];
+  findings?: CampaignFinding[];
+  partyCargo?: PartyCargoItem[];
   relations?: CampaignRelationsState;
 };
 

@@ -3,9 +3,12 @@ type HudToolsProps = {
   isNotesOpen: boolean;
   isCharactersOpen: boolean;
   isReferenceOpen: boolean;
+  isFindingsOpen: boolean;
+  findingsCount: number;
   onToggleNotes: () => void;
   onToggleCharacters: () => void;
   onToggleReference: () => void;
+  onToggleFindings: () => void;
 };
 
 export function HudTools({
@@ -13,9 +16,12 @@ export function HudTools({
   isNotesOpen,
   isCharactersOpen,
   isReferenceOpen,
+  isFindingsOpen,
+  findingsCount,
   onToggleNotes,
   onToggleCharacters,
   onToggleReference,
+  onToggleFindings,
 }: HudToolsProps) {
   return (
     <div className="hud-tools">
@@ -35,6 +41,18 @@ export function HudTools({
             onClick={onToggleCharacters}
           >
             Персонажи
+          </button>
+
+          <button
+            className={`hud-tool-button with-badge ${isFindingsOpen ? "active" : ""}`}
+            type="button"
+            onClick={onToggleFindings}
+          >
+            Находки
+
+            {findingsCount > 0 && (
+              <span className="hud-tool-badge">{findingsCount}</span>
+            )}
           </button>
         </>
       )}

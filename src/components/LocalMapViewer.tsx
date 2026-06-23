@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { LootGeneratorModal } from "./LootGeneratorModal";
-import type { ArsenalItem, ReferenceArticle } from "../types/campaign";
+import type { ArsenalItem, CampaignFinding, ReferenceArticle } from "../types/campaign";
 
 type JournalEntryDraft = {
     type: "expedition" | "map" | "scene" | "inventory" | "master" | "other";
@@ -70,6 +70,7 @@ type LocalMapViewerProps = {
     onBackToOverview: () => void;
     onClose: () => void;
     onCreateJournalEntry: (entry: JournalEntryDraft) => void;
+    onAddFindings: (findings: CampaignFinding[]) => void;
 };
 
 const ROOT_LOCAL_MAP_ID = "root";
@@ -379,6 +380,7 @@ export function LocalMapViewer({
     onBackToOverview,
     onClose,
     onCreateJournalEntry,
+    onAddFindings,
 }: LocalMapViewerProps) {
     const [localMapLevels, setLocalMapLevels] = useState<LocalMapLevel[]>([
         createRootLocalMapLevel(),
@@ -1557,6 +1559,7 @@ export function LocalMapViewer({
                         setLootGeneratorPointId(null);
                     }}
                     onInsertToFindings={insertGeneratedFindings}
+                    onAddToFindings={onAddFindings}
                 />
             )}
         </>

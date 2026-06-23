@@ -27,6 +27,11 @@ import type {
   MapGroup,
   PlayerCharacter,
   ReferenceArticle,
+  CampaignFinding,
+  CampaignFindingClue,
+  CampaignFindingClueType,
+  CampaignFindingItem,
+  PartyCargoItem,
 } from "../types/campaign";
 import { normalizeLocation, normalizeQuest } from "./campaignNormalize";
 
@@ -40,6 +45,8 @@ export const EVENTS_STORAGE_KEY = "nri-table-events";
 export const ATTACHMENTS_STORAGE_KEY = "nri-table-attachments";
 export const CHARACTERS_STORAGE_KEY = "nri-table-characters";
 export const REFERENCE_ARTICLES_STORAGE_KEY = "nri-table-reference-articles";
+export const FINDINGS_STORAGE_KEY = "nri-table-findings";
+export const PARTY_CARGO_STORAGE_KEY = "nri-table-party-cargo";
 
 export function loadSavedLocations() {
   const savedLocations = localStorage.getItem(LOCATIONS_STORAGE_KEY);
@@ -185,6 +192,200 @@ export function createEmptyWallet(): CharacterWallet {
     miliamperies: 0,
     note: "",
   };
+}
+
+const FINDING_CLUE_TYPES: CampaignFindingClueType[] = [
+  "trace",
+  "body",
+  "damage",
+  "route",
+  "obscuria",
+  "social",
+  "technical",
+  "other",
+];
+
+function normalizeFindingClueType(value: unknown): CampaignFindingClueType {
+  return FINDING_CLUE_TYPES.includes(value as CampaignFindingClueType)
+    ? (value as CampaignFindingClueType)
+    : "other";
+}
+
+function normalizeFindingLootTags(value: unknown): ArsenalLootTag[] {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+
+  return value
+    .map(normalizeLegacyLootTag)
+    .filter((tag): tag is ArsenalLootTag => tag !== null);
+}
+
+function normalizeFindingItem(value: unknown): CampaignFindingItem | null {
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    return null;
+  }
+
+  const finding = value as Partial<CampaignFindingItem>;
+
+  if (
+    finding.kind !== "item" ||
+    typeof finding.arsenalItemId !== "string" ||
+    finding.arsenalItemId.trim().length === 0
+  ) {
+    return null;
+  }
+
+  const slot = normalizeArsenalSlot(finding.slotSnapshot);
+  const category = normalizeArsenalCategory(finding.categorySnapshot, slot);
+
+  return {
+    id:
+      typeof finding.id === "string" && finding.id.trim().length > 0
+        ? finding.id
+        : `finding-item-${Date.now()}-${Math.random().toString(36).slice(2)}`,
+    kind: "item",
+
+    arsenalItemId: finding.arsenalItemId,
+    quantity:
+      typeof finding.quantity === "number" && Number.isFinite(finding.quantity)
+        ? Math.max(1, Math.floor(finding.quantity))
+        : 1,
+
+    sourceTitle:
+      typeof finding.sourceTitle === "string" ? finding.sourceTitle : "",
+    createdAt:
+      typeof finding.createdAt === "number" && Number.isFinite(finding.createdAt)
+        ? finding.createdAt
+        : Date.now(),
+
+    nameSnapshot:
+      typeof finding.nameSnapshot === "string" &&
+        finding.nameSnapshot.trim().length > 0
+        ? finding.nameSnapshot
+        : "Неизвестный предмет",
+    categorySnapshot: category,
+    slotSnapshot: slot,
+    resourceSubtypeSnapshot:
+      category === "resource"
+        ? normalizeResourceSubtype(finding.resourceSubtypeSnapshot)
+        : undefined,
+    raritySnapshot: normalizeArsenalRarity(finding.raritySnapshot),
+    conditionSnapshot: normalizeArsenalItemCondition(finding.conditionSnapshot, {}),
+    weightSnapshot:
+      typeof finding.weightSnapshot === "string" ? finding.weightSnapshot : "",
+    priceSnapshot:
+      typeof finding.priceSnapshot === "string" ? finding.priceSnapshot : "",
+    lootTagsSnapshot: normalizeFindingLootTags(finding.lootTagsSnapshot),
+
+    note: typeof finding.note === "string" ? finding.note : "",
+  };
+}
+
+function normalizeFindingClue(value: unknown): CampaignFindingClue | null {
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    return null;
+  }
+
+  const finding = value as Partial<CampaignFindingClue>;
+
+  if (finding.kind !== "clue") {
+    return null;
+  }
+
+  return {
+    id:
+      typeof finding.id === "string" && finding.id.trim().length > 0
+        ? finding.id
+        : `finding-clue-${Date.now()}-${Math.random().toString(36).slice(2)}`,
+    kind: "clue",
+
+    title:
+      typeof finding.title === "string" && finding.title.trim().length > 0
+        ? finding.title
+        : "Улика",
+    text: typeof finding.text === "string" ? finding.text : "",
+    clueType: normalizeFindingClueType(finding.clueType),
+
+    sourceTitle:
+      typeof finding.sourceTitle === "string" ? finding.sourceTitle : "",
+    createdAt:
+      typeof finding.createdAt === "number" && Number.isFinite(finding.createdAt)
+        ? finding.createdAt
+        : Date.now(),
+
+    isHiddenFromPlayers:
+      typeof finding.isHiddenFromPlayers === "boolean"
+        ? finding.isHiddenFromPlayers
+        : true,
+    note: typeof finding.note === "string" ? finding.note : "",
+  };
+}
+
+export function normalizeCampaignFinding(value: unknown): CampaignFinding | null {
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    return null;
+  }
+
+  const finding = value as Partial<CampaignFinding>;
+
+  if (finding.kind === "item") {
+    return normalizeFindingItem(value);
+  }
+
+  if (finding.kind === "clue") {
+    return normalizeFindingClue(value);
+  }
+
+  return null;
+}
+
+export function normalizePartyCargoItem(value: unknown): PartyCargoItem | null {
+  return normalizeFindingItem(value);
+}
+
+export function loadSavedFindings() {
+  const savedFindings = localStorage.getItem(FINDINGS_STORAGE_KEY);
+
+  if (!savedFindings) {
+    return [];
+  }
+
+  try {
+    const parsedFindings = JSON.parse(savedFindings);
+
+    if (!Array.isArray(parsedFindings)) {
+      return [];
+    }
+
+    return parsedFindings
+      .map(normalizeCampaignFinding)
+      .filter((finding): finding is CampaignFinding => finding !== null);
+  } catch {
+    return [];
+  }
+}
+
+export function loadSavedPartyCargo() {
+  const savedPartyCargo = localStorage.getItem(PARTY_CARGO_STORAGE_KEY);
+
+  if (!savedPartyCargo) {
+    return [];
+  }
+
+  try {
+    const parsedPartyCargo = JSON.parse(savedPartyCargo);
+
+    if (!Array.isArray(parsedPartyCargo)) {
+      return [];
+    }
+
+    return parsedPartyCargo
+      .map(normalizePartyCargoItem)
+      .filter((item): item is PartyCargoItem => item !== null);
+  } catch {
+    return [];
+  }
 }
 
 function normalizeWallet(value: unknown): CharacterWallet {

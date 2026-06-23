@@ -7,8 +7,11 @@ import {
     LOOT_RESULT_MODE_OPTIONS,
     type LootGeneratorSettings,
 } from "../data/lootGenerator";
-import { generateLootFindings } from "../lib/lootGenerator";
-import type { ArsenalItem } from "../types/campaign";
+import {
+    generateFindingsResult,
+    type GeneratedFindingsResult,
+} from "../lib/lootGenerator";
+import type { ArsenalItem, CampaignFinding } from "../types/campaign";
 
 type LootGeneratorModalProps = {
     isOpen: boolean;
@@ -16,7 +19,16 @@ type LootGeneratorModalProps = {
     arsenalItems: ArsenalItem[];
     onClose: () => void;
     onInsertToFindings: (text: string) => void;
+    onAddToFindings: (findings: CampaignFinding[]) => void;
 };
+
+function clampGeneratorCount(value: number, min: number, max: number) {
+    if (!Number.isFinite(value)) {
+        return min;
+    }
+
+    return Math.max(min, Math.min(max, Math.floor(value)));
+}
 
 export function LootGeneratorModal({
     isOpen,
@@ -24,15 +36,27 @@ export function LootGeneratorModal({
     arsenalItems,
     onClose,
     onInsertToFindings,
+    onAddToFindings,
 }: LootGeneratorModalProps) {
     const [settings, setSettings] = useState<LootGeneratorSettings>(
         DEFAULT_LOOT_GENERATOR_SETTINGS,
     );
+    const [generatedResult, setGeneratedResult] =
+        useState<GeneratedFindingsResult | null>(null);
     const [generatedText, setGeneratedText] = useState("");
+    const [isStructuredResultAdded, setIsStructuredResultAdded] = useState(false);
 
     const availableItemCount = useMemo(() => {
         return arsenalItems.filter((item) => item.lootAvailability !== "never").length;
     }, [arsenalItems]);
+
+    const generatedItemCount = generatedResult?.items.length ?? 0;
+    const generatedClueCount = generatedResult?.clues.length ?? 0;
+    const generatedFindingCount = generatedItemCount + generatedClueCount;
+
+    const isItemCountDisabled = settings.mode === "clues";
+    const isClueCountDisabled =
+        settings.mode === "items" || settings.mode === "resources";
 
     if (!isOpen) {
         return null;
@@ -43,16 +67,19 @@ export function LootGeneratorModal({
             ...currentSettings,
             ...updatedFields,
         }));
+        setIsStructuredResultAdded(false);
     }
 
     function generateFindings() {
-        setGeneratedText(
-            generateLootFindings({
-                arsenalItems,
-                settings,
-                sourceTitle,
-            }),
-        );
+        const nextResult = generateFindingsResult({
+            arsenalItems,
+            settings,
+            sourceTitle,
+        });
+
+        setGeneratedResult(nextResult);
+        setGeneratedText(nextResult.textPreview);
+        setIsStructuredResultAdded(false);
     }
 
     function insertFindings() {
@@ -61,6 +88,24 @@ export function LootGeneratorModal({
         }
 
         onInsertToFindings(generatedText.trim());
+    }
+
+    function addStructuredFindings() {
+        if (!generatedResult) {
+            return;
+        }
+
+        const nextFindings: CampaignFinding[] = [
+            ...generatedResult.items,
+            ...generatedResult.clues,
+        ];
+
+        if (nextFindings.length === 0) {
+            return;
+        }
+
+        onAddToFindings(nextFindings);
+        setIsStructuredResultAdded(true);
     }
 
     return (
@@ -83,7 +128,7 @@ export function LootGeneratorModal({
                         className="loot-generator-close"
                         type="button"
                         onClick={onClose}
-                        aria-label="Закрыть"
+                        aria-label="Закрыть генератор находок"
                     >
                         ×
                     </button>
@@ -161,6 +206,48 @@ export function LootGeneratorModal({
                             ))}
                         </select>
                     </label>
+
+                    <label>
+                        Предметов
+                        <input
+                            type="number"
+                            min={0}
+                            max={10}
+                            step={1}
+                            value={settings.itemCount}
+                            disabled={isItemCountDisabled}
+                            onChange={(event) =>
+                                updateSettings({
+                                    itemCount: clampGeneratorCount(
+                                        Number(event.target.value),
+                                        0,
+                                        10,
+                                    ),
+                                })
+                            }
+                        />
+                    </label>
+
+                    <label>
+                        Улик и следов
+                        <input
+                            type="number"
+                            min={0}
+                            max={8}
+                            step={1}
+                            value={settings.clueCount}
+                            disabled={isClueCountDisabled}
+                            onChange={(event) =>
+                                updateSettings({
+                                    clueCount: clampGeneratorCount(
+                                        Number(event.target.value),
+                                        0,
+                                        8,
+                                    ),
+                                })
+                            }
+                        />
+                    </label>
                 </div>
 
                 <label className="loot-generator-checkbox">
@@ -173,13 +260,23 @@ export function LootGeneratorModal({
                             })
                         }
                     />
-                    Разрешить сюжетные / ручные предметы
+                    Разрешить сюжетные предметы Арсенала
                 </label>
 
                 <p className="loot-generator-hint">
-                    В Арсенале доступно предметов для подбора: {availableItemCount}. Генератор
-                    ничего не выдаёт автоматически игрокам — только готовит текст для Мастера.
+                    В Арсенале доступно предметов для подбора: {availableItemCount}. Материальные
+                    находки берутся только из Арсенала. Количество задаёт число карточек, а
+                    щедрость, опасность и контекст влияют на качество и состав выдачи.
                 </p>
+
+                {generatedResult && (
+                    <div className="loot-generator-summary">
+                        <strong>Структурный результат готов</strong>
+                        <span>
+                            Предметы: {generatedItemCount} · Улики и следы: {generatedClueCount}
+                        </span>
+                    </div>
+                )}
 
                 <div className="loot-generator-actions">
                     <button className="primary-button" type="button" onClick={generateFindings}>
@@ -189,10 +286,19 @@ export function LootGeneratorModal({
                     <button
                         className="secondary-button"
                         type="button"
+                        onClick={addStructuredFindings}
+                        disabled={!generatedResult || generatedFindingCount === 0 || isStructuredResultAdded}
+                    >
+                        {isStructuredResultAdded ? "Добавлено в Находки" : "Добавить в Находки"}
+                    </button>
+
+                    <button
+                        className="secondary-button"
+                        type="button"
                         onClick={insertFindings}
                         disabled={!generatedText.trim()}
                     >
-                        Вставить в находки точки
+                        Вставить текст в точку
                     </button>
                 </div>
 
@@ -200,7 +306,7 @@ export function LootGeneratorModal({
                     className="loot-generator-result"
                     value={generatedText}
                     onChange={(event) => setGeneratedText(event.target.value)}
-                    placeholder="Здесь появятся находки, ресурсы, улики и цена..."
+                    placeholder="Здесь появятся предметы, улики и цена."
                 />
             </section>
         </div>
