@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { LocalMapViewer } from "./LocalMapViewer";
 import type {
   ArsenalItem,
+  CampaignFinding,
   Location,
   MapEvent,
   MapEventScale,
@@ -71,6 +72,7 @@ type EncounterModalProps = {
   onClose: () => void;
   onCreateSceneNote: (note: string) => void;
   onCreateJournalEntry: (entry: JournalEntryDraft) => void;
+  onAddFindings: (findings: CampaignFinding[]) => void;
   onUpdateMapEvent: (event: MapEvent) => void;
   onCreateLocationEvent: (location: Location) => MapEvent;
 };
@@ -490,6 +492,7 @@ export function EncounterModal({
   onClose,
   onCreateSceneNote,
   onCreateJournalEntry,
+  onAddFindings,
   onUpdateMapEvent,
   onCreateLocationEvent,
 }: EncounterModalProps) {
@@ -1156,6 +1159,7 @@ export function EncounterModal({
             onBackToOverview={() => setMode("overview")}
             onClose={closeModal}
             onCreateJournalEntry={onCreateJournalEntry}
+            onAddFindings={onAddFindings}
           />
 
         ) : (

@@ -37,6 +37,7 @@ import { useCampaign } from "./hooks/useCampaign";
 import { useInterfaceMode } from "./hooks/useInterfaceMode";
 import { ReferenceLibrary } from "./components/ReferenceLibrary";
 import type {
+  CampaignFinding,
   CampaignRelationEntry,
   CampaignRelationLevel,
   CampaignRelationsState,
@@ -889,6 +890,7 @@ function App() {
     arsenalItems,
     setQuests,
     setArsenalItems,
+    setFindings,
     resetLocations: resetCampaignLocations,
     createLocation: createCampaignLocation,
     updateLocation,
@@ -1393,6 +1395,29 @@ function App() {
       setRelationsState(normalizeCampaignRelations(importedCampaign?.relations));
 
       openSidebar();
+    });
+  }
+
+  function handleAddFindings(nextFindings: CampaignFinding[]) {
+    if (nextFindings.length === 0) {
+      return;
+    }
+
+    setFindings((currentFindings) => [...nextFindings, ...currentFindings]);
+
+    const itemCount = nextFindings.filter((finding) => finding.kind === "item").length;
+    const clueCount = nextFindings.filter((finding) => finding.kind === "clue").length;
+    const sourceTitle = nextFindings[0]?.sourceTitle.trim();
+
+    addSystemJournalEntry({
+      type: "inventory",
+      title: "Находки добавлены",
+      text:
+        sourceTitle && sourceTitle.length > 0
+          ? `Источник: ${sourceTitle}`
+          : "Новые находки добавлены в нераспределённые.",
+      details: [`Предметы: ${itemCount}`, `Улики и следы: ${clueCount}`].join("\n"),
+      isHiddenFromPlayers: true,
     });
   }
 
@@ -2950,6 +2975,7 @@ function App() {
         onClose={() => setEncounterTarget(null)}
         onCreateSceneNote={handleCreateSceneNote}
         onCreateJournalEntry={addSystemJournalEntry}
+        onAddFindings={handleAddFindings}
         onUpdateMapEvent={handleUpdateEncounterEvent}
         onCreateLocationEvent={handleCreateLocationEvent}
       />
